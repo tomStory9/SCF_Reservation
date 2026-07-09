@@ -5,7 +5,7 @@ namespace App\Provider;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 
 
-class LineResourceOwner implements ResourceOwnerInterface
+class LineRessourceOwner implements ResourceOwnerInterface
 {
 
     public function __construct(
