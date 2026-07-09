@@ -7,6 +7,7 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
+use App\Provider\LineResourceOwner;
 
 class LineProvider extends AbstractProvider
 {
@@ -41,10 +42,10 @@ class LineProvider extends AbstractProvider
         return ' ';
     }
 
-    protected function getDefaultHeaders(): array
+    protected function getAuthorizationHeaders($token = null): array
     {
         return [
-            'Authorization' => 'Bearer %s',
+            'Authorization' => 'Bearer ' . $token,
             'Accept' => 'application/json',
         ];
     }
@@ -71,16 +72,5 @@ class LineProvider extends AbstractProvider
     protected function createResourceOwner(array $response, AccessToken $token): ResourceOwnerInterface
     {
         return new LineResourceOwner($response);
-    }
-
-    protected function getAuthorizationParameters(array $options): array
-    {
-        $options = parent::getAuthorizationParameters($options);
-
-        if (isset($options['scope']) && is_array($options['scope'])) {
-            $options['scope'] = implode(' ', $options['scope']);
-        }
-
-        return $options;
     }
 }

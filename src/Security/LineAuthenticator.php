@@ -50,6 +50,7 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
                 $lineData = $lineUser->toArray();
                 $email = $lineUser->getEmail();
 
+
                 $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['lineId' => $lineUser->getId()]);
 
                 if ($existingUser) {
@@ -62,12 +63,12 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
                 if(!$user)
                 {   
                     $user = new User();
-                    $user->setEmail($email);
+                    $user->setEmail($email ?? 'simon@ledoux.cat'); //TODO : wait for email applied in line dev (should say not cause sent bad photo)
                     $user->setPassword($this->passwordHasher->hashPassword($user, bin2hex(random_bytes(32))));
                     $user->setLineId($lineUser->getId());
                     $user->setName($lineData['given_name'] ?? '');
                     $user->setLastName($lineData['family_name'] ?? '');
-                    $user->setPhone($lineData['phone_number'] ?? '');
+                    $user->setPhone($lineData['phone_number'] ?? ''); //TODO : try with a line account with phone number added and name lastname or find other solution
                 }
 
                 $this->entityManager->persist($user);

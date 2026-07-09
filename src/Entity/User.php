@@ -48,7 +48,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $googleId = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $LineId = null;
+    private ?string $lineId = null;
 
     public function getId(): ?int
     {
@@ -187,12 +187,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getLineId(): ?string
     {
-        return $this->LineId;
+        return $this->lineId;
     }
 
-    public function setLineId(?string $LineId): static
+    public function setLineId(?string $lineId): static
     {
-        $this->LineId = $LineId;
+        $this->lineId = $lineId;
 
         return $this;
     }
