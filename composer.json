@@ -88,6 +88,12 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "db": [
+            "Composer\\Config::disableProcessTimeout",
+            "php bin/console doctrine:database:drop --force",
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:schema:create"
         ]
     },
     "conflict": {
