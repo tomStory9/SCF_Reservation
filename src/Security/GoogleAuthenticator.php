@@ -16,23 +16,25 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
     private $clientRegistry;
     private $entityManager;
     private $router;
-
-    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router)
+    private $passwordHasher;
+    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router,UserPasswordHasherInterface $passwordHasher )
     {
         $this->clientRegistry = $clientRegistry;
         $this->entityManager = $entityManager;
         $this->router = $router;
+        $this->passwordHasher = $passwordHasher;
     }
 
     public function supports(Request $request): ?bool
     {
-        // continue ONLY if the current ROUTE matches the check ROUTE
+        
         return $request->attributes->get('_route') === 'connect_google_check';
     }
 
@@ -43,9 +45,9 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
 
         return new SelfValidatingPassport(
             new UserBadge($accessToken->getToken(), function() use ($accessToken, $client) {
-                /** @var GoogleUser $googleUser */
-                $googleUser = $client->fetchUserFromToken($accessToken);
 
+                $googleUser = $client->fetchUserFromToken($accessToken);
+                $googleData = $googleUser->toArray();
                 $email = $googleUser->getEmail();
 
                 $existingUser = $this->entityManager->getRepository(User::class)->findOneBy(['googleId' => $googleUser->getId()]);
@@ -57,9 +59,17 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                 // 2) do we have a matching user by email?
                 $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-                // 3) Maybe you just want to "register" them by creating
-                // a User object
-                $user->setGoogleId($googleUser->getId());
+                if(!$user)
+                {   
+                    $user = new User();
+                    $user->setEmail($email);
+                    $user->setPassword($this->passwordHasher->hashPassword($user, bin2hex(random_bytes(32))));
+                    $user->setGoogleId($googleUser->getId());
+                    $user->setName($googleData['given_name'] ?? '');
+                    $user->setLastName($googleData['family_name'] ?? '');
+                    $user->setPhone($googleData['phone_number'] ?? '');
+                }
+
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
 

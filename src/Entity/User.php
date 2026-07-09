@@ -170,12 +170,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getGoogleId(): ?int
+    public function getGoogleId(): ?string
     {
         return $this->googleId;
     }
 
-    public function setGoogleId(?int $googleId): static
+    public function setGoogleId(?string $googleId): static
     {
         $this->googleId = $googleId;
 
