@@ -5,27 +5,23 @@ namespace App\Controller\Security;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 
-
-final class GoogleController extends AbstractController
+final class LineController extends AbstractController
 {
-    #[Route('/connect/google', name: 'connect_google')]
+    #[Route('/connect/line', name: 'connect_line')]
         public function connectAction(ClientRegistry $clientRegistry)
     {
         return $clientRegistry
-            ->getClient('google') 
+            ->getClient('line') 
             ->redirect([
                'openid',
                 'email',
                 'profile',
             ]);
     }
-    #[Route('/connect/google/check',name:'connect_google_check')]
+    #[Route('/connect/line/check',name:'connect_line_check')]
         public function connectCheckAction(Request $request, ClientRegistry $clientRegistry)
     {
        
     }
-
-
 }
