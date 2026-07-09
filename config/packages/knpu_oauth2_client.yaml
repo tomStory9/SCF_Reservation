@@ -21,7 +21,7 @@ knpu_oauth2_client:
             # use_state: true
         line:
             type: generic
-            provider_class: App\Provider\Line
+            provider_class: App\Provider\LineProvider
             client_id: '%env(OAUTH_LINE_CLIENT_ID)%'
             client_secret: '%env(OAUTH_LINE_CLIENT_SECRET)%'
             redirect_route: connect_line_check

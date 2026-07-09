@@ -15,9 +15,9 @@ final class LineController extends AbstractController
         return $clientRegistry
             ->getClient('line')
             ->redirect([
-                'openid',
-                'email',
                 'profile',
+                'openid',
+                'email'
             ]);
     }
 
