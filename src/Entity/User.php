@@ -50,6 +50,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $lineId = null;
 
+    #[ORM\Column]
+    private ?bool $filledInfo = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -193,6 +196,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLineId(?string $lineId): static
     {
         $this->lineId = $lineId;
+
+        return $this;
+    }
+
+    public function isFilledInfo(): ?bool
+    {
+        return $this->filledInfo;
+    }
+
+    public function setFilledInfo(bool $filledInfo): static
+    {
+        $this->filledInfo = $filledInfo;
 
         return $this;
     }
