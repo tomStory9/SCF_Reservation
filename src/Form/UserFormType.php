@@ -37,32 +37,13 @@ class UserFormType extends AbstractType
                 ]),
                 ],
             ])
-            ->add('plainPassword',PasswordType::class,
-            [   'mapped' => false,
-                'label' => 'form.password.label',
-                'attr' => [
-                    'placeholder' => 'form.password.placeholder',
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'form.password.not_blank',
-                    ]),
-                    new Length([
-                        'min' => 10,
-                        'minMessage' => 'form.password.min_length',
-                    ]),
-                    new Regex([
-                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{10,}$/', // At least one uppercase letter, one lowercase letter, one digit, and one special character
-                        'message' => 'form.password.pattern',
-                    ]),
-                ],
-            ])
             ->add('name',TextType::class,
             [
                 'label' => 'form.name.label',
                 'attr' => [
                     'placeholder' => 'form.name.placeholder',
                 ],
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'form.name.not_blank',
@@ -75,6 +56,7 @@ class UserFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'form.lastname.placeholder',
                 ],
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'form.lastname.not_blank',
@@ -87,6 +69,7 @@ class UserFormType extends AbstractType
                 'attr' => [
                     'placeholder' => 'form.phone.placeholder',
                 ],
+                'required' => true,
                 'constraints' => [
                     new NotBlank([
                         'message' => 'form.phone.not_blank',

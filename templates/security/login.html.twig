@@ -1,38 +1,211 @@
+
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% trans_default_domain 'register' %}
+
+{% block title %}{{ 'login.title'|trans }}{% endblock %}
 
 {% block body %}
-    <form method="post">
-        {% if error %}
-            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-        {% endif %}
 
-        {% if app.user %}
-            <div class="mb-3">
-                You are logged in as {{ app.user.userIdentifier }}, <a href="{{ logout_path() }}">Logout</a>
+<div class="flex min-h-screen bg-white">
+
+    <main class="flex w-full items-center justify-center p-4 lg:w-1/2 lg:p-8">
+
+        <div class="w-full max-w-lg">
+
+            <div class="mb-6 flex items-center justify-center gap-4">
+                <img
+                    src="{{ asset('build/images/scf.svg') }}"
+                    alt="{{ 'app.logo_1'|trans }}"
+                    class="h-14 w-auto"
+                >
+
+                <img
+                    src="{{ asset('build/images/logo2.svg') }}"
+                    alt="{{ 'app.logo_2'|trans }}"
+                    class="h-14 w-auto"
+                >
             </div>
-        {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
-        <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
-        <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+            <div class="mb-6 text-center">
 
-        {#
-            Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-            See https://symfony.com/doc/current/security/remember_me.html
+                <h1 class="text-3xl font-bold text-primary">
+                    {{ 'login.title'|trans }}
+                </h1>
 
-            <div class="checkbox mb-3">
-                <input type="checkbox" name="_remember_me" id="_remember_me">
-                <label for="_remember_me">Remember me</label>
+                <p class="mt-2 text-secondary">
+                    {{ 'login.subtitle'|trans }}
+                </p>
+
             </div>
-        #}
 
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
-        </button>
-    </form>
+            {% if error %}
+                <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <div class="mb-6 grid grid-cols-2 gap-3">
+
+                <a
+                    href="{{ path('connect_google') }}"
+                    class="group flex h-12 items-center justify-center gap-3 rounded-xl border border-state bg-white transition hover:border-primary hover:bg-primary/5"
+                >
+                    <img
+                        src="{{ asset('build/images/google.svg') }}"
+                        alt="Google"
+                        class="h-5 w-5"
+                    >
+
+                    <span class="font-medium text-secondary transition-colors group-hover:text-primary">
+                        Google
+                    </span>
+
+                </a>
+
+                <a
+                    href="{{ path('connect_line') }}"
+                    class="group flex h-12 items-center justify-center gap-3 rounded-xl border border-state bg-white transition hover:border-primary hover:bg-primary/5"
+                >
+                    <img
+                        src="{{ asset('build/images/line.svg') }}"
+                        alt="LINE"
+                        class="h-5 w-5"
+                    >
+
+                    <span class="font-medium text-secondary transition-colors group-hover:text-primary">
+                        LINE
+                    </span>
+
+                </a>
+
+            </div>
+
+            <div class="relative mb-6">
+
+                <div class="absolute inset-0 flex items-center">
+                    <div class="w-full border-t border-state"></div>
+                </div>
+
+                <div class="relative flex justify-center">
+                    <span class="bg-white px-3 text-sm text-state">
+                        {{ 'login.or_continue_with'|trans }}
+                    </span>
+                </div>
+
+            </div>
+
+            <form method="post" class="space-y-4">
+
+                <input
+                    type="hidden"
+                    name="_csrf_token"
+                    value="{{ csrf_token('authenticate') }}"
+                >
+
+                <div>
+
+                    <label
+                        for="username"
+                        class="mb-2 block text-sm font-medium text-state"
+                    >
+                        {{ 'login.email'|trans }}
+                    </label>
+
+                    <input
+                        id="username"
+                        name="_username"
+                        type="email"
+                        value="{{ last_username }}"
+                        autocomplete="email"
+                        autofocus
+                        required
+                        placeholder="{{ 'login.email_placeholder'|trans }}"
+                        class="w-full rounded-xl border border-state bg-white px-4 py-3 text-state outline-none transition placeholder:text-state focus:border-primary focus:ring-2 focus:ring-primary"
+                    >
+
+                </div>
+
+                <div>
+
+                    <label
+                        for="password"
+                        class="mb-2 block text-sm font-medium text-state"
+                    >
+                        {{ 'login.password'|trans }}
+                    </label>
+
+                    <input
+                        id="password"
+                        name="_password"
+                        type="password"
+                        autocomplete="current-password"
+                        required
+                        placeholder="{{ 'login.password_placeholder'|trans }}"
+                        class="w-full rounded-xl border border-state bg-white px-4 py-3 text-state outline-none transition placeholder:text-state focus:border-primary focus:ring-2 focus:ring-primary"
+                    >
+
+                </div>
+
+                <div class="flex items-center justify-between text-sm">
+
+                    <label class="flex items-center gap-2">
+
+                        <input
+                            type="checkbox"
+                            name="_remember_me"
+                            class="rounded border-state text-primary focus:ring-primary"
+                        >
+
+                        <span class="text-state">
+                            {{ 'login.remember_me'|trans }}
+                        </span>
+
+                    </label>
+
+                    <a
+                        href="#"
+                        class="font-medium text-secondary transition-colors hover:text-primary hover:underline"
+                    >
+                        {{ 'login.forgot_password'|trans }}
+                    </a>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition hover:opacity-90"
+                >
+                    {{ 'login.submit'|trans }}
+                </button>
+
+            </form>
+
+            <div class="mt-6 text-center text-sm text-state">
+
+                {{ 'login.no_account'|trans }}
+
+                <a
+                    href="{{ path('app_register') }}"
+                    class="font-semibold text-secondary transition-colors hover:text-primary hover:underline"
+                >
+                    {{ 'login.create_account'|trans }}
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <aside class="hidden lg:block lg:w-1/2">
+        <img
+            src="{{ asset('build/images/login-background.jpg') }}"
+            alt=""
+            class="h-screen w-full object-cover"
+        >
+    </aside>
+
+</div>
+
 {% endblock %}
