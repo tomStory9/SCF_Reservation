@@ -6,7 +6,7 @@
   ],
   "files": [
     {
-      "pattern": "translations/fr/*.yaml"
+      "pattern": "translations/fr/*.yml"
     }
   ],
   "orgId": "org_vReT2VKTM90fgSsK",
