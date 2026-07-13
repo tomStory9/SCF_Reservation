@@ -1,0 +1,4 @@
+user:
+  notBlank: "Ce champ ne peut pas être vide."
+  email: "Veuillez saisir une adresse email valide."
+  phone: "Veuillez saisir un numéro de téléphone valide."
