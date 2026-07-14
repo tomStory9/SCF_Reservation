@@ -1,0 +1,12 @@
+login:
+    remember_me: Se souvenir de moi
+    or_continue_with: ou continuer avec
+    no_account: Vous n'avez pas encore de compte ?
+    title: Se connecter
+    subtitle: Veuillez vous connecter pour accéder à votre compte.
+    forgot_password: Mot de passe oublié ?
+    submit: Se connecter
+    create_account: pas de compte ?
+app:
+    logo_1: Logo principal
+    logo_2: Logo partenaire

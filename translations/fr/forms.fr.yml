@@ -1,0 +1,9 @@
+user:
+  notBlank_error: "Ce champ ne peut pas être vide."
+  email_error: "Veuillez saisir une adresse email valide."
+  phone_error: "Veuillez saisir un numéro de téléphone valide."
+login:
+  email: Votre email 
+  password: Votre mot de passe
+  email_placeholder: Entrez votre email
+  password_placeholder: Entrez votre mot de passe
