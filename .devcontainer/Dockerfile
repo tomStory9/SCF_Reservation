@@ -1,9 +1,9 @@
 FROM mcr.microsoft.com/devcontainers/php:3-8.5-trixie
 
 # Install MariaDB client
-# RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-#     && apt-get install -y mariadb-client \ 
-#     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
+     && apt-get install -y libpq-dev \ 
+     && apt-get clean -y && rm -rf /var/lib/apt/lists/*
 
 # Install php-mysql driver
 RUN  docker-php-ext-install pdo pdo_pgsql
