@@ -22,14 +22,24 @@ class Location
     private ?string $typeLocation = null;
 
     /**
-     * @var Collection<int, PriceByType>
+     * @var Collection<int, Pricing>
      */
-    #[ORM\OneToMany(targetEntity: PriceByType::class, mappedBy: 'location')]
-    private Collection $priceByTypes;
+    #[ORM\OneToMany(targetEntity: Pricing::class, mappedBy: 'location')]
+    private Collection $pricings;
+
+    /**
+     * @var Collection<int, Booking>
+     */
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'location')]
+    private Collection $bookings;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $maxCapacity = null;
 
     public function __construct()
     {
-        $this->priceByTypes = new ArrayCollection();
+        $this->pricings = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -62,31 +72,73 @@ class Location
     }
 
     /**
-     * @return Collection<int, PriceByType>
+     * @return Collection<int, Pricing>
      */
-    public function getPriceByTypes(): Collection
+    public function getPricings(): Collection
     {
-        return $this->priceByTypes;
+        return $this->pricings;
     }
 
-    public function addPriceByType(PriceByType $priceByType): static
+    public function addPricing(Pricing $pricing): static
     {
-        if (!$this->priceByTypes->contains($priceByType)) {
-            $this->priceByTypes->add($priceByType);
-            $priceByType->setLocation($this);
+        if (!$this->pricings->contains($pricing)) {
+            $this->pricings->add($pricing);
+            $pricing->setLocation($this);
         }
 
         return $this;
     }
 
-    public function removePriceByType(PriceByType $priceByType): static
+    public function removePricing(Pricing $pricing): static
     {
-        if ($this->priceByTypes->removeElement($priceByType)) {
+        if ($this->pricings->removeElement($pricing)) {
             // set the owning side to null (unless already changed)
-            if ($priceByType->getLocation() === $this) {
-                $priceByType->setLocation(null);
+            if ($pricing->getLocation() === $this) {
+                $pricing->setLocation(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->setLocation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getLocation() === $this) {
+                $booking->setLocation(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getMaxCapacity(): ?int
+    {
+        return $this->maxCapacity;
+    }
+
+    public function setMaxCapacity(?int $maxCapacity): static
+    {
+        $this->maxCapacity = $maxCapacity;
 
         return $this;
     }
