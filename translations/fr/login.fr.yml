@@ -6,7 +6,7 @@ login:
     subtitle: Veuillez vous connecter pour accéder à votre compte.
     forgot_password: Mot de passe oublié ?
     submit: Se connecter
-    create_account: pas de compte ?
+    create_account: Inscription
 app:
     logo_1: Logo principal
     logo_2: Logo partenaire

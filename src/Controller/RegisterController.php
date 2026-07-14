@@ -2,29 +2,57 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\RegistrationFormType;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 final class RegisterController extends AbstractController
-{   #[Route('/register', name: 'app_register')]
-    public function index(AuthenticationUtils $authenticationUtils): Response
-    {
-     // if the user is already logged in, redirect to home page
+{  #[Route('/register', name: 'app_register')]
+    public function register(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher,
+    ): Response {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
 
-        // last error if there is one
-        $error = $authenticationUtils->getLastAuthenticationError();
+        $user = new User();
 
-        // last email typed by the user
-        $lastUsername = $authenticationUtils->getLastUsername();
+        $form = $this->createForm(RegistrationFormType::class, $user);
 
-        return $this->render('security/login.html.twig', [
-            'last_username' => $lastUsername,
-            'error' => $error,
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            $user->setPassword(
+                $passwordHasher->hashPassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            $user->setFilledInfo(false);
+            $user->setCompany(null);
+            $user->setPhone('');
+            $user->setName('');
+            $user->setLastname('');
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre compte a été créé.');
+
+            return $this->redirectToRoute('app_login');
+        }
+
+        return $this->render('register/index.html.twig', [
+            'registrationForm' => $form,
         ]);
     }
 
