@@ -9,10 +9,10 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
-use Symfony\Component\Validator\Constraints\Email;
 
 class RegistrationFormType extends AbstractType
 {
@@ -31,7 +31,7 @@ class RegistrationFormType extends AbstractType
                         message: 'errors.email_not_blank',
                     ),
                     new Email(
-                        message:'errors.email_invalid',
+                        message: 'errors.email_invalid',
                     ),
                 ],
             ])
@@ -58,7 +58,7 @@ class RegistrationFormType extends AbstractType
                         message: 'errors.password_not_blank'
                     ),
                     new Length(min: 8, minMessage: 'errors.password_too_short'),
-                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', message: 'errors.password_invalid') // regex pattern 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
+                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', message: 'errors.password_invalid'), // regex pattern 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
                 ],
             ]);
     }

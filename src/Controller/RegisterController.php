@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +12,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 final class RegisterController extends AbstractController
-{  #[Route('/register', name: 'app_register')]
+{
+    #[Route('/register', name: 'app_register')]
     public function register(
         Request $request,
         EntityManagerInterface $entityManager,
@@ -30,7 +30,6 @@ final class RegisterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-
             $user->setPassword(
                 $passwordHasher->hashPassword(
                     $user,
@@ -58,17 +57,16 @@ final class RegisterController extends AbstractController
 
     #[Route('/register/information', name: 'app_register_information')]
     public function info(): Response
-    {   
+    {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
         $user = $this->getUser();
-        if ($user->isFilledInfo() === true) {
+        if (true === $user->isFilledInfo()) {
             return $this->redirectToRoute('app_home');
         }
 
         $form = $this->createForm(UserType::class, $user);
-        
-        if ($form->isSubmitted() && $form->isValid()) {
 
+        if ($form->isSubmitted() && $form->isValid()) {
             $user->setFilledInfo(true);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
@@ -76,7 +74,7 @@ final class RegisterController extends AbstractController
 
             return $this->redirectToRoute('app_home');
         }
-        
+
         return $this->render('register/form.html.twig', [
             'form' => $form->createView(),
         ]);
