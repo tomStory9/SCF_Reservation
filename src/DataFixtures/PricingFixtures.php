@@ -104,13 +104,15 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourLab = new Pricing();
                 $pricingDayHourLab->setWeekDay($weekDay);
                 $pricingDayHourLab->setTimeSlot($timeSlot);
+                $pricingDayHourLab->setLocation($lab);
                 $pricingDayHourLab->setPrice(500);
                 $manager->persist($pricingDayHourLab);
 
                 $pricingDayHourKanda = new Pricing();
                 $pricingDayHourKanda->setWeekDay($weekDay);
                 $pricingDayHourKanda->setTimeSlot($timeSlot);
-                $pricingDayHourLab->setPrice(500);
+                $pricingDayHourKanda->setLocation($kanda);
+                $pricingDayHourKanda->setPrice(500);
                 $manager->persist($pricingDayHourKanda);
             }
         }
