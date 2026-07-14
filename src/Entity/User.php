@@ -57,6 +57,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->bookings = new ArrayCollection();
     }
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $googleId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lineId = null;
+
+    #[ORM\Column]
+    private ?bool $filledInfo = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -206,6 +215,42 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $booking->setUserBooking(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getGoogleId(): ?string
+    {
+        return $this->googleId;
+    }
+
+    public function setGoogleId(?string $googleId): static
+    {
+        $this->googleId = $googleId;
+
+        return $this;
+    }
+
+    public function getLineId(): ?string
+    {
+        return $this->lineId;
+    }
+
+    public function setLineId(?string $lineId): static
+    {
+        $this->lineId = $lineId;
+
+        return $this;
+    }
+
+    public function isFilledInfo(): ?bool
+    {
+        return $this->filledInfo;
+    }
+
+    public function setFilledInfo(bool $filledInfo): static
+    {
+        $this->filledInfo = $filledInfo;
 
         return $this;
     }

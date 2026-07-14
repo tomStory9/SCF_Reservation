@@ -1,3 +1,10 @@
+@import "tailwindcss";
+@source not "../../public";
+
 body {
-    background-color: skyblue;
+    background-color: lightgray;
+}
+@theme {
+  --color-primary: #e9b94d;
+  --color-secondary: #033862;
 }

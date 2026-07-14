@@ -11,11 +11,12 @@
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6",
         "friendsofphp/php-cs-fixer": "^3.95",
+        "knpuniversity/oauth2-client-bundle": "^2.20",
+        "league/oauth2-google": "^5.0",
         "phpdocumentor/reflection-docblock": "^6.0",
         "phpro/grumphp": "^2.22",
         "phpstan/phpdoc-parser": "^2.3",
         "symfony/asset": "8.1.*",
-        "symfony/asset-mapper": "8.1.*",
         "symfony/console": "8.1.*",
         "symfony/doctrine-messenger": "8.1.*",
         "symfony/dotenv": "8.1.*",
@@ -42,6 +43,7 @@
         "symfony/ux-turbo": "^3.2",
         "symfony/validator": "8.1.*",
         "symfony/web-link": "8.1.*",
+        "symfony/webpack-encore-bundle": "^2.4",
         "symfony/yaml": "8.1.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
@@ -81,8 +83,7 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
@@ -98,6 +99,12 @@
         "db-migrate": [
             "php bin/console make:migration --no-interaction",
             "php bin/console doctrine:migrations:migrate --no-interaction"
+        ],
+        "db": [
+            "Composer\\Config::disableProcessTimeout",
+            "php bin/console doctrine:database:drop --force",
+            "php bin/console doctrine:database:create",
+            "php bin/console doctrine:schema:create"
         ]
     },
     "conflict": {

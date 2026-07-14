@@ -1,0 +1,6 @@
+register:
+  title: Inscription
+  subtitle: Veuillez remplir le formulaire pour créer un compte.
+  already_account: Vous avez déjà un compte ? 
+  login: Connectez-vous
+  submit: S'inscrire

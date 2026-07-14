@@ -1,0 +1,14 @@
+{
+  "sourceLocale": "fr",
+  "targetLocales": [
+    "ja",
+    "en"
+  ],
+  "files": [
+    {
+      "pattern": "translations/fr/*.yml"
+    }
+  ],
+  "orgId": "org_vReT2VKTM90fgSsK",
+  "engineId": "eng_Ar1WajcBk1Xz1umV"
+}
