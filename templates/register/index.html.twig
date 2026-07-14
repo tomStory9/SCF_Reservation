@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% trans_default_domain 'register' %}
+
+{% block title %}{{ 'register.title'|trans }}{% endblock %}
+
+{% block body %}
+
+<div class="flex min-h-screen bg-white">
+
+    <main class="flex w-full items-center justify-center p-4 lg:w-1/2 lg:p-8">
+
+        <div class="w-full max-w-lg">
+
+            <div class="mb-6 flex items-center justify-center gap-4">
+                <img
+                    src="{{ asset('build/images/scf.svg') }}"
+                    alt="{{ 'app.logo_1'|trans }}"
+                    class="h-14 w-auto"
+                >
+
+                <img
+                    src="{{ asset('build/images/kitokuras.svg') }}"
+                    alt="{{ 'app.logo_2'|trans }}"
+                    class="h-14 w-auto"
+                >
+            </div>
+
+            <div class="mb-6 text-center">
+
+                <h1 class="text-3xl font-bold text-primary">
+                    {{ 'register.title'|trans }}
+                </h1>
+
+                <p class="mt-2 text-secondary">
+                    {{ 'register.subtitle'|trans }}
+                </p>
+
+            </div>
+
+            {{ form_start(registrationForm, {
+                attr: {
+                    class: 'space-y-4'
+                }
+            }) }}
+
+                <div>
+
+                    {{ form_label(registrationForm.email, null, {
+                        label_attr: {
+                            class: 'mb-2 block text-sm font-medium text-state'
+                        }
+                    }) }}
+
+                    {{
+                        form_widget(registrationForm.email, {
+                            attr: {
+                                class: 'w-full rounded-xl border border-state bg-white px-4 py-3 text-state outline-none transition placeholder:text-state focus:border-primary focus:ring-2 focus:ring-primary'
+                            }
+                        })
+                    }}
+
+                    {{ form_errors(registrationForm.email) }}
+
+                </div>
+
+                <div>
+
+                    {{ form_label(registrationForm.plainPassword.first, null, {
+                        label_attr: {
+                            class: 'mb-2 block text-sm font-medium text-state'
+                        }
+                    }) }}
+
+                    {{
+                        form_widget(registrationForm.plainPassword.first, {
+                            attr: {
+                                class: 'w-full rounded-xl border border-state bg-white px-4 py-3 text-state outline-none transition placeholder:text-state focus:border-primary focus:ring-2 focus:ring-primary'
+                            }
+                        })
+                    }}
+
+                    {{ form_errors(registrationForm.plainPassword.first) }}
+
+                </div>
+
+                <div>
+
+                    {{ form_label(registrationForm.plainPassword.second, null, {
+                        label_attr: {
+                            class: 'mb-2 block text-sm font-medium text-state'
+                        }
+                    }) }}
+
+                    {{
+                        form_widget(registrationForm.plainPassword.second, {
+                            attr: {
+                                class: 'w-full rounded-xl border border-state bg-white px-4 py-3 text-state outline-none transition placeholder:text-state focus:border-primary focus:ring-2 focus:ring-primary'
+                            }
+                        })
+                    }}
+
+                    {{ form_errors(registrationForm.plainPassword.second) }}
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition hover:opacity-90"
+                >
+                    {{ 'register.submit'|trans }}
+                </button>
+
+            {{ form_end(registrationForm) }}
+
+            <div class="mt-6 text-center text-sm text-state">
+
+                {{ 'register.already_account'|trans }}
+
+                <a
+                    href="{{ path('app_login') }}"
+                    class="font-semibold text-secondary transition-colors hover:text-primary hover:underline"
+                >
+                    {{ 'register.login'|trans }}
+                </a>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <aside class="hidden lg:block lg:w-1/2">
+        <img
+            src="{{ asset('build/images/loginBG.png') }}"
+            alt=""
+            class="h-screen w-full object-cover"
+        >
+    </aside>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+errors:
+  email_not_blank: "L'email ne peut pas être vide."
+  email_invalid: "Veuillez saisir une adresse email valide."
+  password_not_blank: "Le mot de passe ne peut pas être vide."
+  password_mismatch: "Les mots de passe ne correspondent pas."
+  password_invalid: "Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial."
+  password_too_short: "Le mot de passe doit contenir au moins 8 caractères."
+  phone_invalid: "Veuillez saisir un numéro de téléphone valide."

@@ -1,0 +1,12 @@
+login:
+  email: Votre email 
+  password: Votre mot de passe
+  email_placeholder: Entrez votre email
+  password_placeholder: Entrez votre mot de passe
+register:
+  email: Votre email
+  password: Votre mot de passe
+  password_confirmation: Confirmez votre mot de passe
+  email_placeholder: Entrez votre email
+  password_placeholder: Entrez votre mot de passe
+  password_confirmation_placeholder: Confirmez votre mot de passe
