@@ -10,6 +10,7 @@ class LocationFixtures extends Fixture
 {
     public const string CUBE = 'cube';
     public const string LAB = 'lab';
+    public const string KANDA = 'kanda';
     public const string ROOM1 = 'room1';
     public const string ROOM2 = 'room2';
     public const string ROOM3 = 'room3';
@@ -28,6 +29,13 @@ class LocationFixtures extends Fixture
         $cube->setTypeLocation('Entrainement');
         $manager->persist($cube);
         $this->addReference(self::CUBE, $cube);
+
+        $kanda = new Location();
+        $kanda->setName('Ecole primaire Kanda');
+        $kanda->setTypeLocation('Entrainement');
+        $kanda->setMaxCapacity(4);
+        $manager->persist($kanda);
+        $this->addReference(self::KANDA, $kanda);
 
         // Hébergement
         $chambre1 = new Location();

@@ -45,34 +45,4 @@ class WeekDay
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Pricing>
-     */
-    public function getPricings(): Collection
-    {
-        return $this->pricings;
-    }
-
-    public function addPricing(Pricing $pricing): static
-    {
-        if (!$this->pricings->contains($pricing)) {
-            $this->pricings->add($pricing);
-            $pricing->setWeekDay($this);
-        }
-
-        return $this;
-    }
-
-    public function removePricing(Pricing $pricing): static
-    {
-        if ($this->pricings->removeElement($pricing)) {
-            // set the owning side to null (unless already changed)
-            if ($pricing->getWeekDay() === $this) {
-                $pricing->setWeekDay(null);
-            }
-        }
-
-        return $this;
-    }
 }
