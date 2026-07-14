@@ -38,7 +38,7 @@ class RegistrationFormType extends AbstractType
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,
-                'invalid_message' => 'register.password_mismatch',
+                'invalid_message' => 'errors.password_mismatch',
                 'first_options' => [
                     'label' => 'register.password',
                     'attr' => [
