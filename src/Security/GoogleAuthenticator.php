@@ -2,13 +2,14 @@
 
 namespace App\Security;
 
-use App\Entity\User; 
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
@@ -16,7 +17,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
@@ -24,7 +24,8 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
     private $entityManager;
     private $router;
     private $passwordHasher;
-    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router,UserPasswordHasherInterface $passwordHasher )
+
+    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router, UserPasswordHasherInterface $passwordHasher)
     {
         $this->clientRegistry = $clientRegistry;
         $this->entityManager = $entityManager;
@@ -34,8 +35,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
 
     public function supports(Request $request): ?bool
     {
-        
-        return $request->attributes->get('_route') === 'connect_google_check';
+        return 'connect_google_check' === $request->attributes->get('_route');
     }
 
     public function authenticate(Request $request): Passport
@@ -44,8 +44,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         $accessToken = $this->fetchAccessToken($client);
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function() use ($accessToken, $client) {
-
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
                 $googleUser = $client->fetchUserFromToken($accessToken);
                 $googleData = $googleUser->toArray();
                 $email = $googleUser->getEmail();
@@ -59,8 +58,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                 // 2) do we have a matching user by email?
                 $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email]);
 
-                if(!$user)
-                {   
+                if (!$user) {
                     $user = new User();
                     $user->setEmail($email);
                     $user->setPassword($this->passwordHasher->hashPassword($user, bin2hex(random_bytes(32))));
@@ -84,9 +82,9 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         $targetUrl = $this->router->generate('app_homepage');
 
         return new RedirectResponse($targetUrl);
-    
+
         // or, on success, let the request continue to be handled by the controller
-        //return null;
+        // return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
@@ -95,12 +93,12 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
 
         return new Response($message, Response::HTTP_FORBIDDEN);
     }
-    
-   /**
+
+    /**
      * Called when authentication is needed, but it's not sent.
      * This redirects to the 'login'.
      */
-    public function start(Request $request, AuthenticationException $authException = null): Response
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         return new RedirectResponse(
             '/connect/', // might be the site, where users choose their oauth provider

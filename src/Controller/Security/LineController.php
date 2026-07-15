@@ -17,7 +17,7 @@ final class LineController extends AbstractController
             ->redirect([
                 'profile',
                 'openid',
-                'email'
+                'email',
             ]);
     }
 
