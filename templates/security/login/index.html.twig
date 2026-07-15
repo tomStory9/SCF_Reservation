@@ -40,6 +40,8 @@
 
             </div>
 
+            {# Flash messages #}
+
             {% set flashes = app.flashes %}
 
             {% if flashes is not empty %}
@@ -51,19 +53,19 @@
                         {% for message in messages %}
 
                             <div
-                                class="flex items-center gap-4 rounded-2xl border p-4 shadow-sm
+                                class="flex items-center gap-4 rounded-2xl border p-4
 
                                 {% if label == 'success' %}
                                     border-primary/30 bg-primary/10
 
                                 {% elseif label == 'error' %}
-                                    border-red-200 bg-red-50
+                                    border-danger bg-danger/10
 
                                 {% elseif label == 'warning' %}
                                     border-amber-200 bg-amber-50
 
                                 {% else %}
-                                    border-primary bg-primary
+                                    border-secondary/20 bg-secondary/5
 
                                 {% endif %}
                             ">
@@ -75,10 +77,10 @@
                                         bg-primary text-secondary
 
                                     {% elseif label == 'error' %}
-                                        bg-red-100 text-red-600
+                                        bg-danger text-white
 
                                     {% elseif label == 'warning' %}
-                                        bg-amber-100 text-amber-600
+                                        bg-amber-100 text-amber-700
 
                                     {% else %}
                                         bg-secondary text-white
@@ -86,37 +88,65 @@
                                     {% endif %}
                                 ">
 
-                                </div>
-
-                                <div class="flex-1">
-
-                                    <p
-                                        class="text-sm leading-6
-
-                                        {% if label == 'success' %}
-                                            text-secondary
-
-                                        {% elseif label == 'error' %}
-                                            text-red-700
-
-                                        {% elseif label == 'warning' %}
-                                            text-amber-700
-
-                                        {% else %}
-                                            text-secondary
-
-                                        {% endif %}
-                                    ">
-                                        {{ message|trans }}
-                                    </p>
+                                    {% if label == 'success' %}
+                                        ✓
+                                    {% elseif label == 'error' %}
+                                        !
+                                    {% elseif label == 'warning' %}
+                                        !
+                                    {% else %}
+                                        i
+                                    {% endif %}
 
                                 </div>
+
+                                <p
+                                    class="text-sm leading-6
+
+                                    {% if label == 'success' %}
+                                        text-secondary
+
+                                    {% elseif label == 'error' %}
+                                        text-danger
+
+                                    {% elseif label == 'warning' %}
+                                        text-amber-700
+
+                                    {% else %}
+                                        text-secondary
+
+                                    {% endif %}
+                                ">
+                                    {{ message|trans }}
+                                </p>
 
                             </div>
 
                         {% endfor %}
 
                     {% endfor %}
+
+                </div>
+
+            {% endif %}
+
+            {# Login error #}
+
+            {% if error %}
+
+                <div class="mb-6">
+
+                    <div class="flex items-center gap-4 rounded-2xl border border-danger bg-danger/10 p-4">
+
+                        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-danger font-bold text-white">
+                            !
+                        </div>
+
+                        <p class="text-sm font-medium leading-6 text-danger">
+                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -202,7 +232,7 @@
                         autofocus
                         required
                         placeholder="{{ 'login.email_placeholder'|trans({}, 'forms') }}"
-                        class="w-full rounded-xl border border-state bg-white px-4 py-3 text-state outline-none transition placeholder:text-state focus:border-primary focus:ring-2 focus:ring-primary"
+                        class="w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state {{ error ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger' : 'border-state focus:border-primary focus:ring-2 focus:ring-primary' }}"
                     >
 
                 </div>
@@ -222,7 +252,7 @@
                         autocomplete="current-password"
                         required
                         placeholder="{{ 'login.password_placeholder'|trans({}, 'forms') }}"
-                        class="w-full rounded-xl border border-state bg-white px-4 py-3 text-state outline-none transition placeholder:text-state focus:border-primary focus:ring-2 focus:ring-primary"
+                        class="w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state {{ error ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger' : 'border-state focus:border-primary focus:ring-2 focus:ring-primary' }}"
                     >
 
                 </div>
