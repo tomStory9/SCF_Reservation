@@ -4,28 +4,29 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
-use Symfony\Component\Mime\Address;
-use App\Security\EmailVerifier;
-use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 final class RegisterController extends AbstractController
 {
     public function __construct(
-      private EmailVerifier $emailVerifier
+        private EmailVerifier $emailVerifier
     ) {
     }
+
     #[Route('/register', name: 'app_register')]
     public function register(
-      #[Autowire(env: 'MAILER_ADDRESS')]
+        #[Autowire(env: 'MAILER_ADDRESS')]
         string $mailerAddress,
         Request $request,
         EntityManagerInterface $entityManager,
@@ -54,23 +55,26 @@ final class RegisterController extends AbstractController
             $user->setPhone('');
             $user->setName('');
             $user->setLastname('');
+            $user->setIsVerified(false);
 
             $entityManager->persist($user);
             $entityManager->flush();
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
+            $this->emailVerifier->sendEmailConfirmation(
+                'app_verify_email',
+                $user,
+                new TemplatedEmail()
                     ->from(new Address($mailerAddress, 'Setoushi Circus Factory'))
                     ->to($user->getEmail())
                     ->subject($translator->trans('registration_email.subject'))
-                    ->htmlTemplate('register/mails/confirmation_email.html.twig')
+                    ->htmlTemplate('security/register/mails/confirmation_email.html.twig')
             );
 
-            $this->addFlash('information', $translator->trans('flash.info_email'));
+            $this->addFlash('info', $translator->trans('flash.info_email', domain: 'validators'));
 
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('register/index.html.twig', [
+        return $this->render('security/register/index.html.twig', [
             'registrationForm' => $form,
         ]);
     }
@@ -95,10 +99,11 @@ final class RegisterController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
-        return $this->render('register/form.html.twig', [
+        return $this->render('security/register/form.html.twig', [
             'form' => $form->createView(),
         ]);
     }
+
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
@@ -112,7 +117,6 @@ final class RegisterController extends AbstractController
 
             return $this->redirectToRoute('app_register');
         }
-
 
         $this->addFlash('success', 'Your email address has been verified.');
 

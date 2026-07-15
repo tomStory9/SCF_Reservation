@@ -5,6 +5,7 @@ body {
     background-color: lightgray;
 }
 @theme {
-  --color-primary: #e9b94d;
-  --color-secondary: #033862;
+    --color-primary: #e9b94d;
+    --color-secondary: #033862;
+    --color-state: #6b7280;
 }
