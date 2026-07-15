@@ -6,3 +6,6 @@ errors:
   password_invalid: "Le mot de passe doit contenir au moins 8 caractères, dont une majuscule, une minuscule, un chiffre et un caractère spécial."
   password_too_short: "Le mot de passe doit contenir au moins 8 caractères."
   phone_invalid: "Veuillez saisir un numéro de téléphone valide."
+
+flash:
+  info_email: Un email de confirmation vous a été envoyé, veuillez suivre les indications pour verifier votre compte avant de vous authentifier.
