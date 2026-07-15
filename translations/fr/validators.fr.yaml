@@ -9,3 +9,4 @@ errors:
 
 flash:
   info_email: Un email de confirmation vous a été envoyé, veuillez suivre les indications pour verifier votre compte avant de vous authentifier.
+  error_email: Cette email est déjà utilisé, veuillez en choisir un autre ou vous connecter si vous avez déjà un compte.

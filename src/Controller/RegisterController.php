@@ -9,6 +9,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
@@ -44,6 +45,20 @@ final class RegisterController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($entityManager->getRepository(User::class)->findOneBy([
+                'email' => $user->getEmail(),
+            ])) {
+                $form->get('email')->addError(
+                    new FormError(
+                        $translator->trans('flash.error_email', domain: 'validators')
+                    )
+                );
+
+                return $this->render('security/register/index.html.twig', [
+                    'registrationForm' => $form,
+                ]);
+            }
+
             $user->setPassword(
                 $passwordHasher->hashPassword(
                     $user,

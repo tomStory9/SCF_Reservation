@@ -1,2 +1,2 @@
 symfonycasts_verify_email:
-    lifetime: 0 // The time in seconds that the signed URL will be valid for. 0 means it never expires.
+    lifetime: 0  #The time in seconds that the signed URL will be valid for. 0 means it never expires.
