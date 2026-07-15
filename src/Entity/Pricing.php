@@ -33,6 +33,9 @@ class Pricing
     #[ORM\Column]
     private ?int $reducedPriceB = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $guestCount = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +109,18 @@ class Pricing
     public function setReducedPriceB(int $reducedPriceB): static
     {
         $this->reducedPriceB = $reducedPriceB;
+
+        return $this;
+    }
+
+    public function getGuestCount(): ?int
+    {
+        return $this->guestCount;
+    }
+
+    public function setGuestCount(?int $guestCount): static
+    {
+        $this->guestCount = $guestCount;
 
         return $this;
     }

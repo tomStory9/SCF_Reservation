@@ -18,6 +18,7 @@ final class Version20260715070236 extends AbstractMigration
     {
         $this->addSql('ALTER TABLE pricing ADD reduced_price_a INT NOT NULL');
         $this->addSql('ALTER TABLE pricing ADD reduced_price_b INT NOT NULL');
+        $this->addSql('ALTER TABLE pricing ADD guest_count INT DEFAULT NULL');
         $this->addSql('ALTER TABLE pricing RENAME COLUMN price TO full_price');
     }
 
@@ -27,5 +28,6 @@ final class Version20260715070236 extends AbstractMigration
         $this->addSql('ALTER TABLE pricing DROP full_price');
         $this->addSql('ALTER TABLE pricing DROP reduced_price_a');
         $this->addSql('ALTER TABLE pricing DROP reduced_price_b');
+        $this->addSql('ALTER TABLE pricing DROP guest_count');
     }
 }
