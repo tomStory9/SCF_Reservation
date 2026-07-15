@@ -18,11 +18,14 @@ security:
             security: false
         main:
             lazy: true
+            user_checker: App\Security\UserChecker
             provider: app_user_provider
             entry_point: form_login
             form_login:
                 login_path: app_login
                 check_path: app_login
+                username_parameter: email
+                password_parameter: _password
                 enable_csrf: true
             logout:
                 path: app_logout
