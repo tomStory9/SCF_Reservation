@@ -40,6 +40,9 @@ class Booking
     #[ORM\Column]
     private ?bool $isFullDay = null;
 
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdDate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -93,12 +96,12 @@ class Booking
         return $this;
     }
 
-    public function getBookingStatus(): ?string
+    public function getBookingStatus(): ?BookingStatus
     {
         return $this->bookingStatus;
     }
 
-    public function setBookingStatus(string $bookingStatus): static
+    public function setBookingStatus(BookingStatus $bookingStatus): static
     {
         $this->bookingStatus = $bookingStatus;
 
@@ -137,6 +140,18 @@ class Booking
     public function setIsFullDay(bool $isFullDay): static
     {
         $this->isFullDay = $isFullDay;
+
+        return $this;
+    }
+
+    public function getCreatedDate(): ?\DateTimeImmutable
+    {
+        return $this->createdDate;
+    }
+
+    public function setCreatedDate(\DateTimeImmutable $createdDate): static
+    {
+        $this->createdDate = $createdDate;
 
         return $this;
     }
