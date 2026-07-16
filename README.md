@@ -2,27 +2,19 @@
 
 <div align="center">
 
-![PHP](https://img.shields.io/badge/PHP-84.7%25-777BB4?style=flat-square&logo=php)
-![Twig](https://img.shields.io/badge/Twig-11.5%25-90c53f?style=flat-square)
-![JavaScript](https://img.shields.io/badge/JavaScript-3.4%25-F7DF1E?style=flat-square&logo=javascript)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![PHP](https://img.shields.io/badge/PHP-84.7%25-777BB4?style=for-the-badge&logo=php&logoColor=white)
+![Twig](https://img.shields.io/badge/Twig-11.5%25-90c53f?style=for-the-badge&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-3.4%25-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge&logoColor=white)
 
-[English](#english) | [日本語](#japanese)
+![Commits](https://img.shields.io/github/commit-activity/m/tomStory9/SCF_Reservation?style=for-the-badge&label=Commits&color=blue&logo=git)
+![Contributors](https://img.shields.io/github/contributors/tomStory9/SCF_Reservation?style=for-the-badge&label=Contributors&color=purple&logo=github)
+![Pull Requests](https://img.shields.io/github/issues-pr/tomStory9/SCF_Reservation?style=for-the-badge&label=Pull%20Requests&color=brightgreen&logo=git)
+![Issues](https://img.shields.io/github/issues/tomStory9/SCF_Reservation?style=for-the-badge&label=Issues&color=red&logo=exclamation)
+![Repo Size](https://img.shields.io/github/repo-size/tomStory9/SCF_Reservation?style=for-the-badge&label=Repo%20Size&color=orange&logo=files)
+![Last Commit](https://img.shields.io/github/last-commit/tomStory9/SCF_Reservation?style=for-the-badge&label=Last%20Commit&color=lightgrey&logo=clockwise)
 
-</div>
-
----
-
-## 📊 Project Statistics
-
-<div align="center">
-
-![Commits](https://img.shields.io/github/commit-activity/m/tomStory9/SCF_Reservation?style=flat-square&label=Commits&color=blue)
-![Contributors](https://img.shields.io/github/contributors/tomStory9/SCF_Reservation?style=flat-square&label=Contributors&color=purple)
-![Pull Requests](https://img.shields.io/github/issues-pr/tomStory9/SCF_Reservation?style=flat-square&label=Pull%20Requests&color=brightgreen)
-![Issues](https://img.shields.io/github/issues/tomStory9/SCF_Reservation?style=flat-square&label=Issues&color=red)
-![Repo Size](https://img.shields.io/github/repo-size/tomStory9/SCF_Reservation?style=flat-square&label=Repo%20Size&color=orange)
-![Last Commit](https://img.shields.io/github/last-commit/tomStory9/SCF_Reservation?style=flat-square&label=Last%20Commit&color=lightgrey)
+[🌐 English](#english) | [🇯🇵 日本語](#japanese)
 
 </div>
 
@@ -32,16 +24,11 @@
 
 <div align="center">
 
-![Contributors Graph](https://img.shields.io/github/contributors/tomStory9/SCF_Reservation?style=flat-square)
-
-| Avatar | Contributor | Contributions |
-|--------|-------------|----------------|
-| [![tomStory9](https://avatars.githubusercontent.com/u/97254191?v=4&s=50)](https://github.com/tomStory9) | [**tomStory9**](https://github.com/tomStory9) | 👨‍💻 Lead Developer |
-| [![Diodoru](https://avatars.githubusercontent.com/u/93346994?v=4&s=50)](https://github.com/Diodoru) | [**Diodoru**](https://github.com/Diodoru) | 👨‍💻 Developer |
-
-### 🙏 Special Thanks
-
-We appreciate all contributions and feedback from our community!
+| [![tomStory9](https://avatars.githubusercontent.com/u/97254191?v=4&s=100)](https://github.com/tomStory9) | [![Diodoru](https://avatars.githubusercontent.com/u/93346994?v=4&s=100)](https://github.com/Diodoru) |
+|:---:|:---:|
+| **[tomStory9](https://github.com/tomStory9)** | **[Diodoru](https://github.com/Diodoru)** |
+| 👨‍💻 Lead Developer | 👨‍💻 Developer |
+| 46 Contributions | 16 Contributions |
 
 </div>
 
@@ -182,7 +169,7 @@ For support, please:
 
 - **バックエンド**: PHP 8.x
 - **テンプレートエンジン**: Twig 2.x/3.x
-- **フロントエンド**: JavaScript（バ���ラJS）
+- **フロントエンド**: JavaScript（バニラJS）
 - **データベース**: MySQL/PostgreSQL対応
 - **アーキテクチャ**: MVCパターン
 - **認証**: Symfony Security、OAuth2（SSO）
