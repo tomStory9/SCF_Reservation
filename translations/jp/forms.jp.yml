@@ -1,0 +1,39 @@
+login:
+  email: メールアドレス
+  password: パスワード
+  email_placeholder: メールアドレスを入力してください
+  password_placeholder: パスワードを入力してください
+
+register:
+  email: メールアドレス
+  password: パスワード
+  password_confirmation: パスワード（確認）
+  email_placeholder: メールアドレスを入力してください
+  password_placeholder: パスワードを入力してください
+  password_confirmation_placeholder: パスワードをもう一度入力してください
+
+information:
+  email:
+    label: "メールアドレス"
+    placeholder: "メールアドレスを入力してください"
+    not_blank: "メールアドレスは必須です。"
+    invalid: "有効なメールアドレスを入力してください。"
+
+  name:
+    label: "名"
+    placeholder: "名を入力してください"
+    not_blank: "名は必須です。"
+
+  lastname:
+    label: "姓"
+    placeholder: "姓を入力してください"
+    not_blank: "姓は必須です。"
+
+  phone:
+    label: "電話番号"
+    placeholder: "電話番号を入力してください"
+    not_blank: "電話番号は必須です。"
+
+  company:
+    label: "関連会社"
+    placeholder: "関連会社を入力してください"
