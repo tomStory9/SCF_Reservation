@@ -10,3 +10,14 @@ body {
     --color-state: #6b7280;
     --color-danger: #ef4444;
 }
+.iti {
+    width: 100%;
+}
+
+.iti__tel-input {
+    width: 100%;
+}
+
+.iti input {
+    padding-left: 90px !important;
+}

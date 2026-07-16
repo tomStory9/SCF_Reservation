@@ -10,3 +10,29 @@ register:
   email_placeholder: Entrez votre email
   password_placeholder: Entrez votre mot de passe
   password_confirmation_placeholder: Confirmez votre mot de passe
+
+information:
+  email:
+    label: "Adresse email"
+    placeholder: "Votre adresse email"
+    not_blank: "L'adresse email est obligatoire."
+    invalid: "Veuillez renseigner une adresse email valide."
+
+  name:
+    label: "Prénom"
+    placeholder: "Votre prénom"
+    not_blank: "Le prénom est obligatoire."
+
+  lastname:
+    label: "Nom"
+    placeholder: "Votre nom"
+    not_blank: "Le nom est obligatoire."
+
+  phone:
+    label: "Téléphone"
+    placeholder: "Votre numéro de téléphone"
+    not_blank: "Le numéro de téléphone est obligatoire."
+
+  company:
+    label: "Compagnie associé"
+    placeholder: "Votre compagnie associée"
