@@ -36,6 +36,9 @@ class Location
     #[ORM\Column(nullable: true)]
     private ?int $maxCapacity = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $code = null;
+
     public function __construct()
     {
         $this->pricings = new ArrayCollection();
@@ -139,6 +142,18 @@ class Location
     public function setMaxCapacity(?int $maxCapacity): static
     {
         $this->maxCapacity = $maxCapacity;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
+    }
+
+    public function setCode(?string $code): static
+    {
+        $this->code = $code;
 
         return $this;
     }
