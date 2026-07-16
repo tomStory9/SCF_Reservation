@@ -96,7 +96,7 @@ final class RegisterController extends AbstractController
     }
 
     #[Route('/register/information', name: 'app_register_information')]
-    public function info(): Response
+    public function info(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
@@ -106,10 +106,9 @@ final class RegisterController extends AbstractController
         }
 
         $form = $this->createForm(UserFormType::class, $user);
-
+        $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setFilledInfo(true);
-            $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 

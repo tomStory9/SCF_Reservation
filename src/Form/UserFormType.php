@@ -97,6 +97,7 @@ class UserFormType extends AbstractType
                     'attr' => [
                         'placeholder' => 'information.company.placeholder',
                     ],
+                    'required' => false,
                 ]
             )
         ;
