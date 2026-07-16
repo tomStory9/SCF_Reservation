@@ -13,6 +13,40 @@
 
 ---
 
+## 📊 Project Statistics
+
+<div align="center">
+
+![Commits](https://img.shields.io/github/commit-activity/m/tomStory9/SCF_Reservation?style=flat-square&label=Commits&color=blue)
+![Contributors](https://img.shields.io/github/contributors/tomStory9/SCF_Reservation?style=flat-square&label=Contributors&color=purple)
+![Pull Requests](https://img.shields.io/github/issues-pr/tomStory9/SCF_Reservation?style=flat-square&label=Pull%20Requests&color=brightgreen)
+![Issues](https://img.shields.io/github/issues/tomStory9/SCF_Reservation?style=flat-square&label=Issues&color=red)
+![Repo Size](https://img.shields.io/github/repo-size/tomStory9/SCF_Reservation?style=flat-square&label=Repo%20Size&color=orange)
+![Last Commit](https://img.shields.io/github/last-commit/tomStory9/SCF_Reservation?style=flat-square&label=Last%20Commit&color=lightgrey)
+
+</div>
+
+---
+
+## 👥 Contributors
+
+<div align="center">
+
+![Contributors Graph](https://img.shields.io/github/contributors/tomStory9/SCF_Reservation?style=flat-square)
+
+| Avatar | Contributor | Contributions |
+|--------|-------------|----------------|
+| [![tomStory9](https://avatars.githubusercontent.com/u/97254191?v=4&s=50)](https://github.com/tomStory9) | [**tomStory9**](https://github.com/tomStory9) | 👨‍💻 Lead Developer |
+| [![Diodoru](https://avatars.githubusercontent.com/u/93346994?v=4&s=50)](https://github.com/Diodoru) | [**Diodoru**](https://github.com/Diodoru) | 👨‍💻 Developer |
+
+### 🙏 Special Thanks
+
+We appreciate all contributions and feedback from our community!
+
+</div>
+
+---
+
 ## English
 
 ### 📋 Overview
@@ -24,10 +58,11 @@
 - 🗓️ **Intuitive Booking System** - Easy-to-use reservation interface
 - 📊 **Advanced Scheduling** - Manage multiple time slots and availability
 - 👥 **Customer Management** - Track and organize customer information
-- 🔐 **Secure Authentication** - Protected access with role-based permissions
+- 🔐 **Secure Authentication** - Protected access with role-based permissions including SSO (Google, LINE)
 - 📱 **Responsive Design** - Mobile-friendly interface for all devices
 - 📈 **Real-time Updates** - Live reservation status and notifications
 - 🎨 **Modern UI/UX** - Clean and professional design
+- 🌍 **Multi-language Support** - English, French, Japanese translations
 
 ### 🛠️ Tech Stack
 
@@ -36,6 +71,8 @@
 - **Frontend**: JavaScript (Vanilla JS)
 - **Database**: MySQL/PostgreSQL compatible
 - **Architecture**: MVC Pattern
+- **Authentication**: Symfony Security, OAuth2 (SSO)
+- **Code Quality**: GrumPHP, PHP-CS-Fixer
 
 ### 📦 Installation
 
@@ -135,18 +172,21 @@ For support, please:
 - 🗓️ **直感的な予約システム** - 使いやすい予約インターフェース
 - 📊 **高度なスケジューリング** - 複数のタイムスロットと空き状況を管理
 - 👥 **顧客管理** - 顧客情報を追跡・整理
-- 🔐 **セキュアな認証** - ロールベースのアクセス権限で保護
+- 🔐 **セキュアな認証** - SSO（Google、LINE）を含むロールベースのアクセス権限で保護
 - 📱 **レスポンシブデザイン** - すべてのデバイスに対応
 - 📈 **リアルタイム更新** - ライブ予約ステータスと通知
 - 🎨 **モダンなUI/UX** - クリーンで専門的なデザイン
+- 🌍 **多言語対応** - 英語、フランス語、日本語の翻訳
 
 ### 🛠️ 技術スタック
 
 - **バックエンド**: PHP 8.x
 - **テンプレートエンジン**: Twig 2.x/3.x
-- **フロントエンド**: JavaScript（バニラJS）
+- **フロントエンド**: JavaScript（バ���ラJS）
 - **データベース**: MySQL/PostgreSQL対応
 - **アーキテクチャ**: MVCパターン
+- **認証**: Symfony Security、OAuth2（SSO）
+- **コード品質**: GrumPHP、PHP-CS-Fixer
 
 ### 📦 インストール
 
@@ -237,7 +277,7 @@ SCF_Reservation/
 
 <div align="center">
 
-**Made with ❤️ by tomStory9**
+**Made with ❤️ by tomStory9 & Diodoru**
 
 ⭐ If you find this project helpful, please give it a star!
 
