@@ -116,6 +116,16 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotKandaFull->setGuestCount(4);
                 $manager->persist($pricingDayWideSlotKandaFull);
 
+                $pricingDayWideSlotKanda3 = new Pricing();
+                $pricingDayWideSlotKanda3->setWeekDay($weekDay);
+                $pricingDayWideSlotKanda3->setTimeSlot($wideTimeSlot);
+                $pricingDayWideSlotKanda3->setLocation($kanda);
+                $pricingDayWideSlotKanda3->setFullPrice(4000);
+                $pricingDayWideSlotKanda3->setReducedPriceA(3000);
+                $pricingDayWideSlotKanda3->setReducedPriceB(1500);
+                $pricingDayWideSlotKanda3->setGuestCount(3);
+                $manager->persist($pricingDayWideSlotKanda3);
+
                 $pricingDayWideSlotKandaDemi = new Pricing();
                 $pricingDayWideSlotKandaDemi->setWeekDay($weekDay);
                 $pricingDayWideSlotKandaDemi->setTimeSlot($wideTimeSlot);
@@ -165,6 +175,16 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourKandaFull->setReducedPriceB(1000);
                 $pricingDayHourKandaFull->setGuestCount(4);
                 $manager->persist($pricingDayHourKandaFull);
+
+                $pricingDayHourKanda3 = new Pricing();
+                $pricingDayHourKanda3->setWeekDay($weekDay);
+                $pricingDayHourKanda3->setTimeSlot($timeSlot);
+                $pricingDayHourKanda3->setLocation($kanda);
+                $pricingDayHourKanda3->setFullPrice(1500);
+                $pricingDayHourKanda3->setReducedPriceA(1000);
+                $pricingDayHourKanda3->setReducedPriceB(500);
+                $pricingDayHourKanda3->setGuestCount(3);
+                $manager->persist($pricingDayHourKanda3);
 
                 $pricingDayHourKandaDemi = new Pricing();
                 $pricingDayHourKandaDemi->setWeekDay($weekDay);
