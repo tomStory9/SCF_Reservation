@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\TimeSlotPeriod;
 use App\Repository\TimeSlotRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,6 +28,9 @@ class TimeSlot
      */
     #[ORM\OneToMany(targetEntity: Pricing::class, mappedBy: 'timeSlot')]
     private Collection $pricings;
+
+    #[ORM\Column(type: 'string', enumType: TimeSlotPeriod::class)]
+    private ?TimeSlotPeriod $period = TimeSlotPeriod::HOURLY;
 
     public function __construct()
     {
@@ -88,6 +92,18 @@ class TimeSlot
                 $pricing->setTimeSlot(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPeriod(): ?TimeSlotPeriod
+    {
+        return $this->period;
+    }
+
+    public function setPeriod(TimeSlotPeriod $period): static
+    {
+        $this->period = $period;
 
         return $this;
     }
