@@ -21,18 +21,20 @@ class UserFormType extends AbstractType
                 'email',
                 EmailType::class,
                 [
-                    'label' => 'form.email.label',
+                    'label' => 'information.email.label',
                     'attr' => [
-                        'placeholder' => 'form.email.placeholder',
+                        'placeholder' => 'information.email.placeholder',
                     ],
+                    'translation_domain' => 'forms',
+
                     'required' => true,
                     'empty_data' => '',
                     'constraints' => [
                         new NotBlank(
-                            message: 'form.email.not_blank',
+                            message: 'information.email.not_blank',
                         ),
                         new Email(
-                            message: 'form.email.invalid',
+                            message: 'information.email.invalid',
                         ),
                     ],
                 ]
@@ -41,14 +43,15 @@ class UserFormType extends AbstractType
                 'name',
                 TextType::class,
                 [
-                    'label' => 'form.name.label',
+                    'label' => 'information.name.label',
+                    'translation_domain' => 'forms',
                     'attr' => [
-                        'placeholder' => 'form.name.placeholder',
+                        'placeholder' => 'information.name.placeholder',
                     ],
                     'required' => true,
                     'constraints' => [
                         new NotBlank(
-                            message: 'form.name.not_blank',
+                            message: 'information.name.not_blank',
                         ),
                     ],
                 ]
@@ -57,14 +60,15 @@ class UserFormType extends AbstractType
                 'lastname',
                 TextType::class,
                 [
-                    'label' => 'form.lastname.label',
+                    'translation_domain' => 'forms',
+                    'label' => 'information.lastname.label',
                     'attr' => [
-                        'placeholder' => 'form.lastname.placeholder',
+                        'placeholder' => 'information.lastname.placeholder',
                     ],
                     'required' => true,
                     'constraints' => [
                         new NotBlank(
-                            message: 'form.lastname.not_blank',
+                            message: 'information.lastname.not_blank',
                         ),
                     ],
                 ]
@@ -72,15 +76,15 @@ class UserFormType extends AbstractType
             ->add(
                 'phone',
                 TelType::class,
-                [
-                    'label' => 'form.phone.label',
+                ['translation_domain' => 'forms',
+                    'label' => 'information.phone.label',
                     'attr' => [
-                        'placeholder' => 'form.phone.placeholder',
+                        'placeholder' => 'information.phone.placeholder',
                     ],
                     'required' => true,
                     'constraints' => [
                         new NotBlank(
-                            message: 'form.phone.not_blank',
+                            message: 'information.phone.not_blank',
                         ),
                     ],
                 ]
@@ -88,10 +92,10 @@ class UserFormType extends AbstractType
             ->add(
                 'company',
                 TextType::class,
-                [
-                    'label' => 'form.company.label',
+                ['translation_domain' => 'forms',
+                    'label' => 'information.company.label',
                     'attr' => [
-                        'placeholder' => 'form.company.placeholder',
+                        'placeholder' => 'information.company.placeholder',
                     ],
                 ]
             )

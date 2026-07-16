@@ -18,3 +18,13 @@ registration_email:
 
 app:
   name: "Setoushi Circus Factory - Réservation System"
+  logo_1: "Logo SCF"
+  logo_2: "Logo Kitokuras"
+
+profile:
+  complete:
+    title: "Complétez vos informations"
+    subtitle: "Renseignez vos informations personnelles pour finaliser votre inscription et accéder à l'ensemble du site."
+    submit: "Enregistrer mes informations"
+
+
