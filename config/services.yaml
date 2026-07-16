@@ -18,6 +18,9 @@ services:
     # this creates a service per class whose id is the fully-qualified class name
     App\:
         resource: '../src/'
+    App\Middleware\LocaleSubscriber:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     App\Middleware\PreventUserWithoutFilledInfoToConnect:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

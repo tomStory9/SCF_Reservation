@@ -30,18 +30,18 @@
             {% set currentRoute = app.request.attributes.get('_route') %}
             {% set routeParams = app.request.attributes.get('_route_params') %}
 
-            <a href="{{ path(currentRoute, routeParams|merge({'_locale':'fr'})) }}"
+            <a href="{{ path('app_switch_locale', {'locale': 'fr'}) }}"
                class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'fr' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
                 🇫🇷 FR
             </a>
 
-            <a href="{{ path(currentRoute, routeParams|merge({'_locale':'en'})) }}"
+            <a href="{{ path('app_switch_locale', {'locale': 'en'}) }}"
                class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'en' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
                 🇬🇧 EN
             </a>
 
-            <a href="{{ path(currentRoute, routeParams|merge({'_locale':'ja'})) }}"
-               class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'ja' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
+            <a href="{{ path('app_switch_locale', {'locale': 'jp'}) }}"
+               class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'jp' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
                 🇯🇵 日本語
             </a>
 
