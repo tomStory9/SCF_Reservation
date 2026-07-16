@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Location;
 use App\Entity\Pricing;
+use App\Entity\TimeSlot;
+use App\Entity\WeekDay;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +19,33 @@ class PricingRepository extends ServiceEntityRepository
         parent::__construct($registry, Pricing::class);
     }
 
-    //    /**
-    //     * @return Pricing[] Returns an array of Pricing objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('p.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    // pour les lieux d'entrainement SAUF KANDA !!!
+    public function getPricingByTrainingLocationWeekDayAndTimeSlot(Location $location, TimeSlot $timeSlot, WeekDay $weekDay): ?Pricing
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.location = :location')
+            ->andWhere('p.timeSlot = :timeSlot')
+            ->andWhere('p.weekDay = :weekDay')
+            ->setParameter('location', $location)
+            ->setParameter('timeSlot', $timeSlot)
+            ->setParameter('weekDay', $weekDay)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Pricing
-    //    {
-    //        return $this->createQueryBuilder('p')
-    //            ->andWhere('p.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function getPrincingKandaByWeekDayTimeSlotAndGuestCount(WeekDay $weekDay, TimeSlot $timeSlot, int $guestCount): ?Pricing
+    {
+        return $this->createQueryBuilder('p')
+            ->join('p.location', 'pl')
+            ->andWhere('pl.code = :locationCode')
+            ->andWhere('p.weekDay = :weekDay')
+            ->andWhere('p.timeSlot = :timeSlot')
+            ->andWhere('p.guestCount = :guestCount')
+            ->setParameter('locationCode', 'KANDA')
+            ->setParameter('weekDay', $weekDay)
+            ->setParameter('timeSlot', $timeSlot)
+            ->setParameter('guestCount', $guestCount)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

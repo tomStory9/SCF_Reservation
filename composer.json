@@ -10,6 +10,7 @@
         "doctrine/doctrine-bundle": "^3.2",
         "doctrine/doctrine-migrations-bundle": "^4.0",
         "doctrine/orm": "^3.6",
+        "easycorp/easyadmin-bundle": "^5.2",
         "friendsofphp/php-cs-fixer": "^3.95",
         "knpuniversity/oauth2-client-bundle": "^2.20",
         "league/oauth2-google": "^5.0",

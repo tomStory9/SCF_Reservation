@@ -20,18 +20,21 @@ class LocationFixtures extends Fixture
         // Entrainement
         $lab = new Location();
         $lab->setName('Cirque-MA LAB');
+        $lab->setCode('LAB');
         $lab->setTypeLocation('Entrainement');
         $manager->persist($lab);
         $this->addReference(self::LAB, $lab);
 
         $cube = new Location();
         $cube->setName('Cirque-MA CUBE');
+        $cube->setCode('CUBE');
         $cube->setTypeLocation('Entrainement');
         $manager->persist($cube);
         $this->addReference(self::CUBE, $cube);
 
         $kanda = new Location();
         $kanda->setName('Ecole primaire Kanda');
+        $kanda->setCode('KANDA');
         $kanda->setTypeLocation('Entrainement');
         $kanda->setMaxCapacity(4);
         $manager->persist($kanda);

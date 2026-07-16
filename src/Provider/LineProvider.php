@@ -7,7 +7,6 @@ use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\ResourceOwnerInterface;
 use League\OAuth2\Client\Token\AccessToken;
 use Psr\Http\Message\ResponseInterface;
-use App\Provider\LineResourceOwner;
 
 class LineProvider extends AbstractProvider
 {
@@ -45,7 +44,7 @@ class LineProvider extends AbstractProvider
     protected function getAuthorizationHeaders($token = null): array
     {
         return [
-            'Authorization' => 'Bearer ' . $token,
+            'Authorization' => 'Bearer '.$token,
             'Accept' => 'application/json',
         ];
     }
@@ -53,19 +52,11 @@ class LineProvider extends AbstractProvider
     protected function checkResponse(ResponseInterface $response, $data): void
     {
         if ($response->getStatusCode() >= 400) {
-            throw new IdentityProviderException(
-                is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE) : (string) $response->getBody(),
-                $response->getStatusCode(),
-                is_array($data) ? $data : []
-            );
+            throw new IdentityProviderException(is_array($data) ? json_encode($data, JSON_UNESCAPED_UNICODE) : (string) $response->getBody(), $response->getStatusCode(), is_array($data) ? $data : []);
         }
 
         if (is_array($data) && isset($data['error'])) {
-            throw new IdentityProviderException(
-                $data['error_description'] ?? $data['error'],
-                $response->getStatusCode(),
-                $data
-            );
+            throw new IdentityProviderException($data['error_description'] ?? $data['error'], $response->getStatusCode(), $data);
         }
     }
 

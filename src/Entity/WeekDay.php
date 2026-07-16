@@ -24,6 +24,9 @@ class WeekDay
     #[ORM\OneToMany(targetEntity: Pricing::class, mappedBy: 'weekDay')]
     private Collection $pricings;
 
+    #[ORM\Column]
+    private ?int $dayNumber = null;
+
     public function __construct()
     {
         $this->pricings = new ArrayCollection();
@@ -42,6 +45,18 @@ class WeekDay
     public function setLabel(string $label): static
     {
         $this->label = $label;
+
+        return $this;
+    }
+
+    public function getDayNumber(): ?int
+    {
+        return $this->dayNumber;
+    }
+
+    public function setDayNumber(int $dayNumber): static
+    {
+        $this->dayNumber = $dayNumber;
 
         return $this;
     }

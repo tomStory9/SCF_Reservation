@@ -21,11 +21,20 @@ class Pricing
     private ?TimeSlot $timeSlot = null;
 
     #[ORM\Column]
-    private ?int $price = null;
+    private ?int $fullPrice = null;
 
     #[ORM\ManyToOne(inversedBy: 'pricings')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Location $location = null;
+
+    #[ORM\Column]
+    private ?int $reducedPriceA = null;
+
+    #[ORM\Column]
+    private ?int $reducedPriceB = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $guestCount = null;
 
     public function getId(): ?int
     {
@@ -56,14 +65,14 @@ class Pricing
         return $this;
     }
 
-    public function getPrice(): ?int
+    public function getFullPrice(): ?int
     {
-        return $this->price;
+        return $this->fullPrice;
     }
 
-    public function setPrice(int $price): static
+    public function setFullPrice(int $fullPrice): static
     {
-        $this->price = $price;
+        $this->fullPrice = $fullPrice;
 
         return $this;
     }
@@ -76,6 +85,42 @@ class Pricing
     public function setLocation(?Location $location): static
     {
         $this->location = $location;
+
+        return $this;
+    }
+
+    public function getReducedPriceA(): ?int
+    {
+        return $this->reducedPriceA;
+    }
+
+    public function setReducedPriceA(int $reducedPriceA): static
+    {
+        $this->reducedPriceA = $reducedPriceA;
+
+        return $this;
+    }
+
+    public function getReducedPriceB(): ?int
+    {
+        return $this->reducedPriceB;
+    }
+
+    public function setReducedPriceB(int $reducedPriceB): static
+    {
+        $this->reducedPriceB = $reducedPriceB;
+
+        return $this;
+    }
+
+    public function getGuestCount(): ?int
+    {
+        return $this->guestCount;
+    }
+
+    public function setGuestCount(?int $guestCount): static
+    {
+        $this->guestCount = $guestCount;
 
         return $this;
     }

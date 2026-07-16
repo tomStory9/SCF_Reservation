@@ -48,6 +48,11 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
         $h19 = $this->getReference(TimeSlotFixtures::H19, TimeSlot::class);
         $h20 = $this->getReference(TimeSlotFixtures::H20, TimeSlot::class);
 
+        $matin_ete = $this->getReference(TimeSlotFixtures::MATIN_ETE, TimeSlot::class);
+        $matin_autre = $this->getReference(TimeSlotFixtures::MATIN_AUTRE, TimeSlot::class);
+        $apresMidi = $this->getReference(TimeSlotFixtures::APRES_MIDI, TimeSlot::class);
+        $soir = $this->getReference(TimeSlotFixtures::SOIR, TimeSlot::class);
+
         $weekDays = [
             $lundi,
             $mardi,
@@ -74,46 +79,132 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
             $h20,
         ];
 
+        $wideTimeSlots = [
+            $matin_ete,
+            $matin_autre,
+            $apresMidi,
+            $soir,
+        ];
+
         foreach ($weekDays as $weekDay) {
-            $pricingDayCube = new Pricing();
-            $pricingDayCube->setWeekDay($weekDay);
-            $pricingDayCube->setLocation($cube);
-            $pricingDayCube->setPrice(6000);
-            $manager->persist($pricingDayCube);
+            foreach ($wideTimeSlots as $wideTimeSlot) {
+                $pricingDayWideSlotCube = new Pricing();
+                $pricingDayWideSlotCube->setWeekDay($weekDay);
+                $pricingDayWideSlotCube->setTimeSlot($wideTimeSlot);
+                $pricingDayWideSlotCube->setLocation($cube);
+                $pricingDayWideSlotCube->setFullPrice(6000);
+                $pricingDayWideSlotCube->setReducedPriceA(5000);
+                $pricingDayWideSlotCube->setReducedPriceB(3000);
+                $manager->persist($pricingDayWideSlotCube);
 
-            $pricingDayLab = new Pricing();
-            $pricingDayLab->setWeekDay($weekDay);
-            $pricingDayLab->setLocation($lab);
-            $pricingDayLab->setPrice(6000);
-            $manager->persist($pricingDayLab);
+                $pricingDayWideSlotLab = new Pricing();
+                $pricingDayWideSlotLab->setWeekDay($weekDay);
+                $pricingDayWideSlotLab->setTimeSlot($wideTimeSlot);
+                $pricingDayWideSlotLab->setLocation($lab);
+                $pricingDayWideSlotLab->setFullPrice(3000);
+                $pricingDayWideSlotLab->setReducedPriceA(2000);
+                $pricingDayWideSlotLab->setReducedPriceB(1000);
+                $manager->persist($pricingDayWideSlotLab);
 
-            $pricingDayKanda = new Pricing();
-            $pricingDayKanda->setWeekDay($weekDay);
-            $pricingDayKanda->setLocation($kanda);
-            $pricingDayKanda->setPrice(6000);
-            $manager->persist($pricingDayKanda);
+                $pricingDayWideSlotKandaFull = new Pricing();
+                $pricingDayWideSlotKandaFull->setWeekDay($weekDay);
+                $pricingDayWideSlotKandaFull->setTimeSlot($wideTimeSlot);
+                $pricingDayWideSlotKandaFull->setLocation($kanda);
+                $pricingDayWideSlotKandaFull->setFullPrice(6000);
+                $pricingDayWideSlotKandaFull->setReducedPriceA(5000);
+                $pricingDayWideSlotKandaFull->setReducedPriceB(3000);
+                $pricingDayWideSlotKandaFull->setGuestCount(4);
+                $manager->persist($pricingDayWideSlotKandaFull);
+
+                $pricingDayWideSlotKanda3 = new Pricing();
+                $pricingDayWideSlotKanda3->setWeekDay($weekDay);
+                $pricingDayWideSlotKanda3->setTimeSlot($wideTimeSlot);
+                $pricingDayWideSlotKanda3->setLocation($kanda);
+                $pricingDayWideSlotKanda3->setFullPrice(4000);
+                $pricingDayWideSlotKanda3->setReducedPriceA(3000);
+                $pricingDayWideSlotKanda3->setReducedPriceB(1500);
+                $pricingDayWideSlotKanda3->setGuestCount(3);
+                $manager->persist($pricingDayWideSlotKanda3);
+
+                $pricingDayWideSlotKandaDemi = new Pricing();
+                $pricingDayWideSlotKandaDemi->setWeekDay($weekDay);
+                $pricingDayWideSlotKandaDemi->setTimeSlot($wideTimeSlot);
+                $pricingDayWideSlotKandaDemi->setLocation($kanda);
+                $pricingDayWideSlotKandaDemi->setFullPrice(4000);
+                $pricingDayWideSlotKandaDemi->setReducedPriceA(3000);
+                $pricingDayWideSlotKandaDemi->setReducedPriceB(1500);
+                $pricingDayWideSlotKandaDemi->setGuestCount(2);
+                $manager->persist($pricingDayWideSlotKandaDemi);
+
+                $pricingDayWideSlotKandaQuart = new Pricing();
+                $pricingDayWideSlotKandaQuart->setWeekDay($weekDay);
+                $pricingDayWideSlotKandaQuart->setTimeSlot($wideTimeSlot);
+                $pricingDayWideSlotKandaQuart->setLocation($kanda);
+                $pricingDayWideSlotKandaQuart->setFullPrice(2000);
+                $pricingDayWideSlotKandaQuart->setReducedPriceA(1000);
+                $pricingDayWideSlotKandaQuart->setReducedPriceB(500);
+                $pricingDayWideSlotKandaQuart->setGuestCount(1);
+                $manager->persist($pricingDayWideSlotKandaQuart);
+            }
 
             foreach ($timeSlots as $timeSlot) {
                 $pricingDayHourCube = new Pricing();
                 $pricingDayHourCube->setWeekDay($weekDay);
                 $pricingDayHourCube->setTimeSlot($timeSlot);
                 $pricingDayHourCube->setLocation($cube);
-                $pricingDayHourCube->setPrice(500);
+                $pricingDayHourCube->setFullPrice(2000);
+                $pricingDayHourCube->setReducedPriceA(1500);
+                $pricingDayHourCube->setReducedPriceB(1000);
                 $manager->persist($pricingDayHourCube);
 
                 $pricingDayHourLab = new Pricing();
                 $pricingDayHourLab->setWeekDay($weekDay);
                 $pricingDayHourLab->setTimeSlot($timeSlot);
                 $pricingDayHourLab->setLocation($lab);
-                $pricingDayHourLab->setPrice(500);
+                $pricingDayHourLab->setFullPrice(2000);
+                $pricingDayHourLab->setReducedPriceA(1000);
+                $pricingDayHourLab->setReducedPriceB(500);
                 $manager->persist($pricingDayHourLab);
 
-                $pricingDayHourKanda = new Pricing();
-                $pricingDayHourKanda->setWeekDay($weekDay);
-                $pricingDayHourKanda->setTimeSlot($timeSlot);
-                $pricingDayHourKanda->setLocation($kanda);
-                $pricingDayHourKanda->setPrice(500);
-                $manager->persist($pricingDayHourKanda);
+                $pricingDayHourKandaFull = new Pricing();
+                $pricingDayHourKandaFull->setWeekDay($weekDay);
+                $pricingDayHourKandaFull->setTimeSlot($timeSlot);
+                $pricingDayHourKandaFull->setLocation($kanda);
+                $pricingDayHourKandaFull->setFullPrice(3000);
+                $pricingDayHourKandaFull->setReducedPriceA(2000);
+                $pricingDayHourKandaFull->setReducedPriceB(1000);
+                $pricingDayHourKandaFull->setGuestCount(4);
+                $manager->persist($pricingDayHourKandaFull);
+
+                $pricingDayHourKanda3 = new Pricing();
+                $pricingDayHourKanda3->setWeekDay($weekDay);
+                $pricingDayHourKanda3->setTimeSlot($timeSlot);
+                $pricingDayHourKanda3->setLocation($kanda);
+                $pricingDayHourKanda3->setFullPrice(1500);
+                $pricingDayHourKanda3->setReducedPriceA(1000);
+                $pricingDayHourKanda3->setReducedPriceB(500);
+                $pricingDayHourKanda3->setGuestCount(3);
+                $manager->persist($pricingDayHourKanda3);
+
+                $pricingDayHourKandaDemi = new Pricing();
+                $pricingDayHourKandaDemi->setWeekDay($weekDay);
+                $pricingDayHourKandaDemi->setTimeSlot($timeSlot);
+                $pricingDayHourKandaDemi->setLocation($kanda);
+                $pricingDayHourKandaDemi->setFullPrice(1500);
+                $pricingDayHourKandaDemi->setReducedPriceA(1000);
+                $pricingDayHourKandaDemi->setReducedPriceB(500);
+                $pricingDayHourKandaDemi->setGuestCount(2);
+                $manager->persist($pricingDayHourKandaDemi);
+
+                $pricingDayHourKandaQuart = new Pricing();
+                $pricingDayHourKandaQuart->setWeekDay($weekDay);
+                $pricingDayHourKandaQuart->setTimeSlot($timeSlot);
+                $pricingDayHourKandaQuart->setLocation($kanda);
+                $pricingDayHourKandaQuart->setFullPrice(1000);
+                $pricingDayHourKandaQuart->setReducedPriceA(500);
+                $pricingDayHourKandaQuart->setReducedPriceB(200);
+                $pricingDayHourKandaQuart->setGuestCount(1);
+                $manager->persist($pricingDayHourKandaQuart);
             }
         }
 
