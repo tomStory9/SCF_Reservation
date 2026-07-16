@@ -2,6 +2,8 @@
 
 <div align="center">
 
+![SCF Logo](https://raw.githubusercontent.com/tomStory9/SCF_Reservation/master/public/images/scf.svg)
+
 ![PHP](https://img.shields.io/badge/PHP-84.7%25-777BB4?style=for-the-badge&logo=php&logoColor=white)
 ![Twig](https://img.shields.io/badge/Twig-11.5%25-90c53f?style=for-the-badge&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/JavaScript-3.4%25-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
@@ -27,7 +29,6 @@
 | [![tomStory9](https://avatars.githubusercontent.com/u/97254191?v=4&s=100)](https://github.com/tomStory9) | [![Diodoru](https://avatars.githubusercontent.com/u/93346994?v=4&s=100)](https://github.com/Diodoru) |
 |:---:|:---:|
 | **[tomStory9](https://github.com/tomStory9)** | **[Diodoru](https://github.com/Diodoru)** |
-| 👨‍💻 Lead Developer | 👨‍💻 Developer |
 | 46 Contributions | 16 Contributions |
 
 </div>
