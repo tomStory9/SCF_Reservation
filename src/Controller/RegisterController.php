@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
+use App\Form\UserFormType;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -97,13 +98,14 @@ final class RegisterController extends AbstractController
     #[Route('/register/information', name: 'app_register_information')]
     public function info(): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+
         $user = $this->getUser();
-        if (true === $user->isFilledInfo()) {
+        if ($user->isFilledInfo()) {
             return $this->redirectToRoute('app_home');
         }
 
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(UserFormType::class, $user);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setFilledInfo(true);
@@ -122,7 +124,7 @@ final class RegisterController extends AbstractController
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
 
         // validate email confirmation link, set User::$isVerified=true, and persist
         try {

@@ -18,6 +18,10 @@ class PreventUserWithoutFilledInfoToConnect
         if (!$event->isMainRequest()) {
             return;
         }
+        // if route his /register/information, we don't want to redirect the user
+        if ('/register/information' === $event->getRequest()->getPathInfo()) {
+            return;
+        }
 
         $user = $this->security->getUser();
 

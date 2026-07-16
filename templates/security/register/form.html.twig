@@ -1,0 +1,220 @@
+{% extends 'base.html.twig' %}
+
+{% trans_default_domain 'register' %}
+
+{% block title %}{{ 'profile.complete.title'|trans }}{% endblock %}
+
+{% block body %}
+
+<div class="flex min-h-screen bg-white">
+
+    <main class="flex w-full items-center justify-center p-4 lg:w-1/2 lg:p-8">
+
+        <div class="w-full max-w-lg">
+
+            <div class="mb-6 flex items-center justify-center gap-4">
+
+                <img
+                    src="{{ asset('build/images/scf.svg') }}"
+                    alt="{{ 'app.logo_1'|trans }}"
+                    class="h-14 w-auto"
+                >
+
+                <img
+                    src="{{ asset('build/images/kitokuras.svg') }}"
+                    alt="{{ 'app.logo_2'|trans }}"
+                    class="h-14 w-auto"
+                >
+
+            </div>
+
+
+            <div class="mb-6 text-center">
+
+                <h1 class="text-3xl font-bold text-primary">
+                    {{ 'profile.complete.title'|trans }}
+                </h1>
+
+                <p class="mt-2 text-secondary">
+                    {{ 'profile.complete.subtitle'|trans }}
+                </p>
+
+            </div>
+
+
+            {% if form.vars.errors|length %}
+                <div class="mb-6 rounded-xl border border-danger bg-danger/10 p-4 text-sm text-danger">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
+
+
+            {{ form_start(form, {
+                attr: {
+                    class: 'space-y-4'
+                }
+            }) }}
+
+
+                <div class="grid gap-4 sm:grid-cols-2">
+
+                    <div>
+
+                        {{ form_label(form.name, null, {
+                            label_attr: {
+                                class: 'mb-2 block text-sm font-medium text-state'
+                            }
+                        }) }}
+
+                        {{ form_widget(form.name, {
+                            attr: {
+                                class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                                    ~ (form.name.vars.errors|length
+                                        ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
+                                        : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
+                            }
+                        }) }}
+
+                        <div class="mt-2 text-sm font-medium text-danger">
+                            {{ form_errors(form.name) }}
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        {{ form_label(form.lastname, null, {
+                            label_attr: {
+                                class: 'mb-2 block text-sm font-medium text-state'
+                            }
+                        }) }}
+
+                        {{ form_widget(form.lastname, {
+                            attr: {
+                                class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                                    ~ (form.lastname.vars.errors|length
+                                        ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
+                                        : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
+                            }
+                        }) }}
+
+                        <div class="mt-2 text-sm font-medium text-danger">
+                            {{ form_errors(form.lastname) }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    {{ form_label(form.email, null, {
+                        label_attr: {
+                            class: 'mb-2 block text-sm font-medium text-state'
+                        }
+                    }) }}
+
+                    {{ form_widget(form.email, {
+                        attr: {
+                            class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                                ~ (form.email.vars.errors|length
+                                    ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
+                                    : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
+                        }
+                    }) }}
+
+                    <div class="mt-2 text-sm font-medium text-danger">
+                        {{ form_errors(form.email) }}
+                    </div>
+
+                </div>
+
+
+                <div class="grid gap-4 sm:grid-cols-2">
+
+                    <div>
+
+                        {{ form_label(form.phone, null, {
+                            label_attr: {
+                                class: 'mb-2 block text-sm font-medium text-state'
+                            }
+                        }) }}
+
+               <div data-controller="phone">
+
+    {{ form_widget(form.phone, {
+        attr: {
+            class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                ~ (form.phone.vars.errors|length
+                    ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
+                    : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
+        }
+    }) }}
+
+</div>
+
+                        <div class="mt-2 text-sm font-medium text-danger">
+                            {{ form_errors(form.phone) }}
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        {{ form_label(form.company, null, {
+                            label_attr: {
+                                class: 'mb-2 block text-sm font-medium text-state'
+                            }
+                        }) }}
+
+                        {{ form_widget(form.company, {
+                            attr: {
+                                class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                                    ~ (form.company.vars.errors|length
+                                        ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
+                                        : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
+                            }
+                        }) }}
+
+                        <div class="mt-2 text-sm font-medium text-danger">
+                            {{ form_errors(form.company) }}
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition hover:opacity-90"
+                >
+                    {{ 'profile.complete.submit'|trans }}
+                </button>
+
+
+            {{ form_end(form) }}
+
+
+        </div>
+
+    </main>
+
+
+    <aside class="hidden lg:block lg:w-1/2">
+
+        <img
+            src="{{ asset('build/images/loginBG.png') }}"
+            alt=""
+            class="h-screen w-full object-cover"
+        >
+
+    </aside>
+
+
+</div>
+
+{% endblock %}
