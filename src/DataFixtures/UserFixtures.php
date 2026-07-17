@@ -31,6 +31,7 @@ class UserFixtures extends Fixture
         $admin->setEmail('admin@test.test');
         $admin->setPhone('');
         $admin->setFilledInfo(true);
+        $admin->setIsVerified(true);
         $admin->setPassword(
             $this->passwordHasher->hashPassword($admin, self::DEFAULT_PASSWORD)
         );
@@ -44,6 +45,7 @@ class UserFixtures extends Fixture
         $ca_user->setEmail('lguegan@test.test');
         $ca_user->setPhone('');
         $ca_user->setFilledInfo(true);
+        $ca_user->setIsVerified(true);
         $ca_user->setPassword(
             $this->passwordHasher->hashPassword($ca_user, self::DEFAULT_PASSWORD)
         );
@@ -57,6 +59,7 @@ class UserFixtures extends Fixture
         $aa_user->setEmail('traineri@test.test');
         $aa_user->setPhone('');
         $aa_user->setFilledInfo(true);
+        $aa_user->setIsVerified(true);
         $aa_user->setPassword(
             $this->passwordHasher->hashPassword($aa_user, self::DEFAULT_PASSWORD)
         );
@@ -70,6 +73,7 @@ class UserFixtures extends Fixture
         $fa_user->setEmail('sledoux@test.test');
         $fa_user->setPhone('');
         $fa_user->setFilledInfo(true);
+        $fa_user->setIsVerified(true);
         $fa_user->setPassword(
             $this->passwordHasher->hashPassword($fa_user, self::DEFAULT_PASSWORD)
         );
@@ -83,6 +87,7 @@ class UserFixtures extends Fixture
         $tm_user->setEmail('criendenin@test.test');
         $tm_user->setPhone('');
         $tm_user->setFilledInfo(true);
+        $tm_user->setIsVerified(true);
         $tm_user->setPassword(
             $this->passwordHasher->hashPassword($tm_user, self::DEFAULT_PASSWORD)
         );
@@ -96,6 +101,7 @@ class UserFixtures extends Fixture
         $default_user->setEmail('gciboulette@test.test');
         $default_user->setPhone('');
         $default_user->setFilledInfo(true);
+        $default_user->setIsVerified(true);
         $default_user->setPassword(
             $this->passwordHasher->hashPassword($default_user, self::DEFAULT_PASSWORD)
         );
