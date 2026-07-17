@@ -107,4 +107,21 @@ class TimeSlot
 
         return $this;
     }
+
+    public function getFormattedRange(): string
+    {
+        if (!$this->startTime || !$this->endTime) {
+            return '';
+        }
+
+        $start = $this->startTime->format('gA');
+        $end = $this->endTime->format('gA');
+
+        return sprintf('%s - %s', $start, $end);
+    }
+
+    public function __toString(): string
+    {
+        return $this->getFormattedRange();
+    }
 }

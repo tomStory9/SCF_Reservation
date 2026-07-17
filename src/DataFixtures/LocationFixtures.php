@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Location;
+use App\Enum\LocationType;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -21,21 +22,21 @@ class LocationFixtures extends Fixture
         $lab = new Location();
         $lab->setName('Cirque-MA LAB');
         $lab->setCode('LAB');
-        $lab->setTypeLocation('Entrainement');
+        $lab->setTypeLocation(LocationType::TRAINING);
         $manager->persist($lab);
         $this->addReference(self::LAB, $lab);
 
         $cube = new Location();
         $cube->setName('Cirque-MA CUBE');
         $cube->setCode('CUBE');
-        $cube->setTypeLocation('Entrainement');
+        $cube->setTypeLocation(LocationType::TRAINING);
         $manager->persist($cube);
         $this->addReference(self::CUBE, $cube);
 
         $kanda = new Location();
         $kanda->setName('Ecole primaire Kanda');
         $kanda->setCode('KANDA');
-        $kanda->setTypeLocation('Entrainement');
+        $kanda->setTypeLocation(LocationType::TRAINING);
         $kanda->setMaxCapacity(4);
         $manager->persist($kanda);
         $this->addReference(self::KANDA, $kanda);
@@ -43,19 +44,19 @@ class LocationFixtures extends Fixture
         // Hébergement
         $chambre1 = new Location();
         $chambre1->setName('Chambre 1');
-        $chambre1->setTypeLocation('Hébergement');
+        $chambre1->setTypeLocation(LocationType::BEDROOM);
         $manager->persist($chambre1);
         $this->addReference(self::ROOM1, $chambre1);
 
         $chambre2 = new Location();
         $chambre2->setName('Chambre 2');
-        $chambre2->setTypeLocation('Hébergement');
+        $chambre2->setTypeLocation(LocationType::BEDROOM);
         $manager->persist($chambre2);
         $this->addReference(self::ROOM2, $chambre2);
 
         $chambre3 = new Location();
         $chambre3->setName('Chambre 3');
-        $chambre3->setTypeLocation('Hébergement');
+        $chambre3->setTypeLocation(LocationType::BEDROOM);
         $manager->persist($chambre3);
         $this->addReference(self::ROOM3, $chambre3);
 

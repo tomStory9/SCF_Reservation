@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\LocationType;
 use App\Repository\LocationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -18,8 +19,8 @@ class Location
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $typeLocation = null;
+    #[ORM\Column(type: 'string', enumType: LocationType::class)]
+    private ?LocationType $typeLocation = null;
 
     /**
      * @var Collection<int, Pricing>
@@ -62,12 +63,12 @@ class Location
         return $this;
     }
 
-    public function getTypeLocation(): ?string
+    public function getTypeLocation(): ?LocationType
     {
         return $this->typeLocation;
     }
 
-    public function setTypeLocation(string $typeLocation): static
+    public function setTypeLocation(LocationType $typeLocation): static
     {
         $this->typeLocation = $typeLocation;
 
@@ -156,5 +157,10 @@ class Location
         $this->code = $code;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName();
     }
 }
