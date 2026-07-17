@@ -1,0 +1,31 @@
+{% extends '@EasyAdmin/crud/index.html.twig' %}
+
+{% block main %}
+    {% set current_day = app.request.query.get('day', 1) %}
+    {% set days = {
+        1: 'Monday',
+        2: 'Tuesday',
+        3: 'Wednesday',
+        4: 'Thursday',
+        5: 'Friday',
+        6: 'Saturday',
+        7: 'Sunday'
+    } %}
+
+    <div class="nav-tabs-custom mb-4">
+        <ul class="nav nav-tabs">
+            {% for number, label in days %}
+                {% set is_active = (current_day == number) %}
+                {% set url = ea_url().set('day', number) %}
+
+                <li class="nav-item">
+                    <a class="nav-link {% if is_active %}active font-weight-bold{% endif %}" href="{{ url }}">
+                        {{ label }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    {{ parent() }}
+{% endblock %}
