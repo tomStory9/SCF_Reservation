@@ -7,7 +7,8 @@ errors:
   password_too_short: "Le mot de passe doit contenir au moins 8 caractères."
   phone_invalid: "Veuillez saisir un numéro de téléphone valide."
   suspended_account: "Votre compte est suspendu, si vous pensez que c'est une erreur veuillez contacter Setoushi Circus Factory"
-
+  pending_account: "Votre compte est en attente de validation, veuillez réessayer de vous connecter plus tard,vous serez notifié par email quand celui-ci sera accepté"
+  declined_account: "Votre création de compte a été refusé, veuillez contacter Setoushi Circus factory si vous pensez que c'est une erreur"
 flash:
   info_email: Un email de confirmation vous a été envoyé, veuillez suivre les indications pour verifier votre compte avant de vous authentifier.
   error_email: Cette email est déjà utilisé, veuillez en choisir un autre ou vous connecter si vous avez déjà un compte.

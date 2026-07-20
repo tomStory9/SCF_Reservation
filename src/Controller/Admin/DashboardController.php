@@ -32,5 +32,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(LocationCrudController::class, 'Lieux', 'fa fa-map-marker');
         yield MenuItem::linkTo(PricingCrudController::class, 'Pricing', 'fa fa-money');
         yield MenuItem::linkTo(TimeSlotCrudController::class, 'Créneaux de reservation', 'fa fa-clock-o');
+        yield MenuItem::linkTo(PendingUserCrudController::class, 'Utilisateurs en attente', 'fa fa-user-clock');
     }
 }
