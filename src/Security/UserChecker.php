@@ -20,6 +20,9 @@ class UserChecker implements UserCheckerInterface
         if (!$user instanceof AppUser) {
             return;
         }
+        if ('suspended' == $user->getUserStatus()->value) {
+            throw new CustomUserMessageAccountStatusException($this->translator->trans('errors.suspended_account', domain: 'validators'));
+        }
 
         if (!$user->isVerified()) {
             // the message passed to this exception is meant to be displayed to the user

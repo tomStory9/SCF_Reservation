@@ -19,10 +19,17 @@ services:
     App\:
         resource: '../src/'
     App\Middleware\LocaleSubscriber:
+        autoconfigure: false
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
     App\Middleware\PreventUserWithoutFilledInfoToConnect:
+        autoconfigure: false
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    App\Middleware\PreventSuspendedUserToConnect:
+        autoconfigure: false
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+        
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
