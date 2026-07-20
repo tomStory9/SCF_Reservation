@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\UserStatus;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -68,6 +69,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?bool $isVerified = null;
+
+    #[ORM\Column(type: 'string', enumType: UserStatus::class)]
+    private ?UserStatus $userStatus = null;
 
     public function getId(): ?int
     {
@@ -273,5 +277,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getFullName(): ?string
     {
         return $this->getName().' '.$this->getLastname();
+    }
+
+    public function getUserStatus(): ?UserStatus
+    {
+        return $this->userStatus;
+    }
+
+    public function setUserStatus(UserStatus $userStatus): static
+    {
+        $this->userStatus = $userStatus;
+
+        return $this;
     }
 }
