@@ -3,9 +3,7 @@ services:
     image: ghcr.io/tomstory9/scf:latest
     restart: unless-stopped
     environment:
-      # Run "composer require symfony/orm-pack" to install and configure Doctrine ORM
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
-      # The two next lines can be removed after initial installation
       SYMFONY_VERSION: ${SYMFONY_VERSION:-}
       STABILITY: ${STABILITY:-stable}
       ENV: ${ENV:-dev}
@@ -38,10 +36,11 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./caddy:/etc/caddy:ro
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/var/www/reservation
     networks:
       - caddy
+      - reservation
     depends_on:
       - php
     labels:
@@ -52,15 +51,14 @@ services:
     image: postgres:${POSTGRES_VERSION:-15}-alpine
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
       POSTGRES_USER: ${POSTGRES_USER:-app}
     volumes:
       - database_data:/var/lib/postgresql/data:rw
-    ports:
-      - 5432:5432
     networks:
       - reservation
+    ports:
+      - 5432:5432
 
 networks:
   reservation:
