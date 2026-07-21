@@ -1,5 +1,5 @@
 # Base image with PHP and extensions
-FROM php:8.3.32-fpm AS symfony_php_base
+FROM php:8.3-fpm-alpine AS symfony_php_base
 
 # Composer base image
 FROM composer/composer:2-bin AS composer_upstream
