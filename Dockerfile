@@ -10,15 +10,17 @@ FROM symfony_php_base AS symfony_php
 # Set working directory
 WORKDIR /var/www/reservation
 
-# Copy project files (excluding files listed in .dockerignore)
+# Copy project files
 COPY --link . ./
 
-# Add install-php-extensions script and install necessary extensions in one step
+# Add install-php-extensions script
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 
+# Install PHP build deps, PHP extensions
 RUN set -eux; \
     chmod +x /usr/local/bin/install-php-extensions; \
-    apk add --no-cache --virtual .build-deps $PHPIZE_DEPS \
+    apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS \
     libpng-dev \
     libjpeg-turbo-dev \
     libwebp-dev \
@@ -27,7 +29,13 @@ RUN set -eux; \
     postgresql-dev; \
     install-php-extensions gd intl opcache zip pdo_pgsql apcu; \
     apk del .build-deps; \
-    apk add --no-cache acl file gettext git; \
+    apk add --no-cache \
+    acl \
+    file \
+    gettext \
+    git \
+    nodejs \
+    npm; \
     mv "/var/www/reservation/docker/php/php.ini-production" "$PHP_INI_DIR/php.ini";
 
 # Copy and set up entrypoint script
@@ -41,33 +49,29 @@ ENV COMPOSER_ALLOW_SUPERUSER=1 \
     APP_ENV=prod \
     XDEBUG_MODE=off
 
-# Copy composer from the upstream image
+# Copy composer from upstream image
 COPY --from=composer_upstream /composer /usr/bin/composer
 
-# Install Symfony Flex globally and clear cache
+# Install Symfony Flex globally
 RUN set -eux; \
     composer global config --no-plugins allow-plugins.symfony/flex true; \
     composer global require "symfony/flex" --prefer-dist --no-progress --classmap-authoritative; \
     composer clear-cache
 
-# Install project dependencies without dev dependencies and scripts
+# Install PHP dependencies
 RUN set -eux; \
     composer install --prefer-dist --no-dev --no-scripts --no-progress; \
     composer dump-autoload --no-dev --classmap-authoritative; \
     composer clear-cache
 
-# Run Symfony console commands for production
+# Build frontend assets
 RUN set -eux; \
-    php bin/console importmap:install; \
-    php bin/console tailwind:build -v; \
-    php bin/console asset-map:compile --env=prod
+    npm install; \
+    npm run build
 
-# Define volumes
+# Define volume
 VOLUME /app/var/
 
-# Set entrypoint and command
+# Entrypoint and command
 ENTRYPOINT ["docker-entrypoint"]
 CMD ["php-fpm"]
-ENV COMPOSER_ALLOW_SUPERUSER=1
-ENV PATH="${PATH}:/root/.composer/vendor/bin"
-COPY --from=composer_upstream --link /composer /usr/bin/composer
