@@ -8,7 +8,7 @@ FROM composer/composer:2-bin AS composer_upstream
 FROM symfony_php_base AS symfony_php
 
 # Set working directory
-WORKDIR /var/www/intracnac
+WORKDIR /var/www/reservation
 
 # Copy project files (excluding files listed in .dockerignore)
 COPY --link . ./
@@ -28,7 +28,7 @@ RUN set -eux; \
     install-php-extensions gd intl opcache zip pdo_pgsql apcu; \
     apk del .build-deps; \
     apk add --no-cache acl file gettext git; \
-    mv "$PHP_INI_DIR/php.ini" "$PHP_INI_DIR/php.ini";
+    mv "/var/www/reservation/docker/php/php.ini-production" "$PHP_INI_DIR/php.ini";
 RUN set -eux; \
     install-php-extensions \
     apcu \
