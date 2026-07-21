@@ -38,7 +38,7 @@ services:
     ports:
       - 8080:80
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy:/etc/caddy:ro
       - caddy_data:/var/www/reservation
     networks:
       - caddy
