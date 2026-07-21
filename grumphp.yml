@@ -1,11 +1,17 @@
 grumphp:
-    fixer:
-        enabled: true
-        fix_by_default: true
-    tasks:
-        phplint:
-            triggered_by: ['php']
+  fixer:
+    enabled: true
+    fix_by_default: true
 
-        phpcsfixer:
-            config: '.php-cs-fixer.dist.php'
-            triggered_by: ['php']
+  tasks:
+    phplint:
+      triggered_by: ['php']
+
+    phpcsfixer:
+      config: '.php-cs-fixer.dist.php'
+      triggered_by: ['php']
+
+    shell:
+      scripts:
+        - ['sh', '-c', 'composer db']
+        - ['sh', '-c', 'php bin/console doctrine:fixtures:load --no-interaction']

@@ -6,9 +6,18 @@ body {
 }
 @theme {
     --color-primary: #e9b94d;
+    --color-primary-hover: #e9b94d;
     --color-secondary: #033862;
     --color-state: #6b7280;
     --color-danger: #ef4444;
+    --color-state-success: #437a22;
+    --color-state-warning: #d19900;
+    --color-state-danger: #a12c7b;
+    --color-state-info: #006494;
+
+    
+    --font-body: 'Inter', 'Segoe UI', sans-serif;
+
 }
 .iti {
     width: 100%;
