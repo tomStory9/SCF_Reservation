@@ -29,14 +29,7 @@ RUN set -eux; \
     apk del .build-deps; \
     apk add --no-cache acl file gettext git; \
     mv "/var/www/reservation/docker/php/php.ini-production" "$PHP_INI_DIR/php.ini";
-RUN set -eux; \
-    install-php-extensions \
-    apcu \
-    intl \
-    opcache \
-    zip \
-    pdo_pgsql \
-    ;
+
 # Copy and set up entrypoint script
 COPY ./docker/php/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 RUN chmod +x /usr/local/bin/docker-entrypoint \
