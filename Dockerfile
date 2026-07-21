@@ -28,7 +28,7 @@ RUN set -eux; \
     install-php-extensions gd intl opcache zip pdo_pgsql apcu; \
     apk del .build-deps; \
     apk add --no-cache acl file gettext git; \
-    mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini";
+    mv "$PHP_INI_DIR/php.ini" "$PHP_INI_DIR/php.ini";
 RUN set -eux; \
     install-php-extensions \
     apcu \
