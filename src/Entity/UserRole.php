@@ -22,6 +22,9 @@ class UserRole
     #[ORM\Column]
     private ?int $allocatedHoursPerMonth = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $maxAdvanceBookingDays = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,5 +69,17 @@ class UserRole
     public function __toString(): string
     {
         return sprintf('%s (%dh)', $this->label, $this->allocatedHoursPerMonth);
+    }
+
+    public function getMaxAdvanceBookingDays(): ?int
+    {
+        return $this->maxAdvanceBookingDays;
+    }
+
+    public function setMaxAdvanceBookingDays(?int $maxAdvanceBookingDays): static
+    {
+        $this->maxAdvanceBookingDays = $maxAdvanceBookingDays;
+
+        return $this;
     }
 }

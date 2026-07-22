@@ -33,13 +33,16 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         $locationsTraining = [
-            ZoneFixtures::CUBE,
-            ZoneFixtures::LAB,
-            ZoneFixtures::KANDA,
+            ZoneFixtures::KUMA_CUBE,
+            ZoneFixtures::KUMA_LAB,
+            ZoneFixtures::KODA1A,
+            ZoneFixtures::KODA1B,
+            ZoneFixtures::KODA1C,
+            ZoneFixtures::KODA1D,
         ];
 
         $timeSlotPeriod = [
-            TimeSlotFixtures::MATIN_ETE,
+            TimeSlotFixtures::MATIN,
             TimeSlotFixtures::APRES_MIDI,
             TimeSlotFixtures::SOIR,
             TimeSlotFixtures::H11,
@@ -47,10 +50,17 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
             TimeSlotFixtures::H20,
         ];
 
+        $codeKoda = [
+            'ZONEA',
+            'ZONEB',
+            'ZONEC',
+            'ZONED',
+        ];
+
         foreach ($users as $user) {
             $day = 1;
             for ($i = 0; $i < 3; ++$i) {
-                $location = $this->getReference($locationsTraining[$i], Zone::class);
+                $zone = $this->getReference($locationsTraining[$i], Zone::class);
                 $period = $this->getReference($timeSlotPeriod[rand(0, 5)], TimeSlot::class);
 
                 $randomDays = mt_rand(0, 60);
@@ -70,15 +80,13 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                 $dayNumber = (int) $randomDate->format('N');
                 $weekDay = $this->dayRepository->getWeekDayByDayNumber($dayNumber);
 
-                $guestCount = rand(1, 4);
+                $guestCount = in_array($zone->getCode(), $codeKoda) ? 1 : rand(1, 4);
 
-                $pricing = 'KANDA' === $location->getCode()
-                    ? $this->pricingRepository->getPrincingKandaByWeekDayTimeSlotAndGuestCount($weekDay, $period, $guestCount)
-                    : $this->pricingRepository->getPricingByTrainingLocationWeekDayAndTimeSlot($location, $period, $weekDay);
+                $pricing = $this->pricingRepository->getPricingByTrainingLocationWeekDayAndTimeSlot($zone, $period, $weekDay);
 
                 $booking = new Booking();
                 $booking->setUserBooking($user);
-                $booking->setZone($location);
+                $booking->setZone($zone);
                 $booking->setGuestCount($guestCount);
                 $booking->setIsFullDay(false);
                 $booking->setBookingStatus(BookingStatus::PENDING);
