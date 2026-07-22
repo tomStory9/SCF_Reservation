@@ -23,8 +23,7 @@ class TimeSlotFixtures extends Fixture
     public const string H19 = '19heure';
     public const string H20 = '20heure';
 
-    public const string MATIN_ETE = 'matin_ete';
-    public const string MATIN_AUTRE = 'matin_autre';
+    public const string MATIN = 'matin';
     public const string APRES_MIDI = 'apres_midi';
     public const string SOIR = 'soir';
 
@@ -121,19 +120,12 @@ class TimeSlotFixtures extends Fixture
         $manager->persist($h20);
         $this->addReference(self::H20, $h20);
 
-        $matin_ete = new TimeSlot();
-        $matin_ete->setStartTime(new \DateTimeImmutable('08:00:00'));
-        $matin_ete->setEndTime(new \DateTimeImmutable('13:00:00'));
-        $matin_ete->setPeriod(TimeSlotPeriod::MORNING);
-        $manager->persist($matin_ete);
-        $this->addReference(self::MATIN_ETE, $matin_ete);
-
-        $matin_autre = new TimeSlot();
-        $matin_autre->setStartTime(new \DateTimeImmutable('09:00:00'));
-        $matin_autre->setEndTime(new \DateTimeImmutable('13:00:00'));
-        $matin_autre->setPeriod(TimeSlotPeriod::MORNING);
-        $manager->persist($matin_autre);
-        $this->addReference(self::MATIN_AUTRE, $matin_autre);
+        $matin = new TimeSlot();
+        $matin->setStartTime(new \DateTimeImmutable('09:00:00'));
+        $matin->setEndTime(new \DateTimeImmutable('13:00:00'));
+        $matin->setPeriod(TimeSlotPeriod::MORNING);
+        $manager->persist($matin);
+        $this->addReference(self::MATIN, $matin);
 
         $apres_midi = new TimeSlot();
         $apres_midi->setStartTime(new \DateTimeImmutable('13:00:00'));

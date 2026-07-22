@@ -33,13 +33,16 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         $locationsTraining = [
-            ZoneFixtures::CUBE,
-            ZoneFixtures::LAB,
-            ZoneFixtures::KANDA,
+            ZoneFixtures::KUMA_CUBE,
+            ZoneFixtures::KUMA_LAB,
+            ZoneFixtures::KODA1A,
+            ZoneFixtures::KODA1B,
+            ZoneFixtures::KODA1C,
+            ZoneFixtures::KODA1D,
         ];
 
         $timeSlotPeriod = [
-            TimeSlotFixtures::MATIN_ETE,
+            TimeSlotFixtures::MATIN,
             TimeSlotFixtures::APRES_MIDI,
             TimeSlotFixtures::SOIR,
             TimeSlotFixtures::H11,
