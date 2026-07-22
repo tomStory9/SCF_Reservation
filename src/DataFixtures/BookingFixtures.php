@@ -51,10 +51,10 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         $codeKoda = [
-          'ZONEA',
-          'ZONEB',
-          'ZONEC',
-          'ZONED',
+            'ZONEA',
+            'ZONEB',
+            'ZONEC',
+            'ZONED',
         ];
 
         foreach ($users as $user) {
