@@ -23,6 +23,7 @@ class UserRoleFixtures extends Fixture
         $roleCA->setRoleName($roleCAEnum->value);
         $roleCA->setLabel($roleCAEnum->getLabel());
         $roleCA->setAllocatedHoursPerMonth(20);
+        $roleCA->setMaxAdvanceBookingDays(60);
         $manager->persist($roleCA);
 
         $roleAA = new UserRole();
@@ -30,6 +31,7 @@ class UserRoleFixtures extends Fixture
         $roleAA->setRoleName($roleAAEnum->value);
         $roleAA->setLabel($roleAAEnum->getLabel());
         $roleAA->setAllocatedHoursPerMonth(10);
+        $roleAA->setMaxAdvanceBookingDays(40);
         $manager->persist($roleAA);
 
         $roleFA = new UserRole();
@@ -37,6 +39,7 @@ class UserRoleFixtures extends Fixture
         $roleFA->setRoleName($roleFAEnum->value);
         $roleFA->setLabel($roleFAEnum->getLabel());
         $roleFA->setAllocatedHoursPerMonth(0);
+        $roleFA->setMaxAdvanceBookingDays(30);
         $manager->persist($roleFA);
 
         $roleTM = new UserRole();
@@ -44,6 +47,7 @@ class UserRoleFixtures extends Fixture
         $roleTM->setRoleName($roleTMEnum->value);
         $roleTM->setLabel($roleTMEnum->getLabel());
         $roleTM->setAllocatedHoursPerMonth(20);
+        $roleTM->setMaxAdvanceBookingDays(3);
         $manager->persist($roleTM);
 
         $roleDefault = new UserRole();
@@ -51,6 +55,7 @@ class UserRoleFixtures extends Fixture
         $roleDefault->setRoleName($roleDefaultEnum->value);
         $roleDefault->setLabel($roleDefaultEnum->getLabel());
         $roleDefault->setAllocatedHoursPerMonth(0);
+        $roleDefault->setMaxAdvanceBookingDays(1);
         $manager->persist($roleDefault);
 
         $manager->flush();
