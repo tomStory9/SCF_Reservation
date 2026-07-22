@@ -3,9 +3,9 @@
 namespace App\DataFixtures;
 
 use App\Entity\Booking;
-use App\Entity\Location;
 use App\Entity\TimeSlot;
 use App\Entity\User;
+use App\Entity\Zone;
 use App\Enum\BookingStatus;
 use App\Repository\PricingRepository;
 use App\Repository\WeekDayRepository;
@@ -33,9 +33,9 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         $locationsTraining = [
-            LocationFixtures::CUBE,
-            LocationFixtures::LAB,
-            LocationFixtures::KANDA,
+            ZoneFixtures::CUBE,
+            ZoneFixtures::LAB,
+            ZoneFixtures::KANDA,
         ];
 
         $timeSlotPeriod = [
@@ -50,7 +50,7 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
         foreach ($users as $user) {
             $day = 1;
             for ($i = 0; $i < 3; ++$i) {
-                $location = $this->getReference($locationsTraining[$i], Location::class);
+                $location = $this->getReference($locationsTraining[$i], Zone::class);
                 $period = $this->getReference($timeSlotPeriod[rand(0, 5)], TimeSlot::class);
 
                 $randomDays = mt_rand(0, 60);
@@ -78,7 +78,7 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
 
                 $booking = new Booking();
                 $booking->setUserBooking($user);
-                $booking->setLocation($location);
+                $booking->setZone($location);
                 $booking->setGuestCount($guestCount);
                 $booking->setIsFullDay(false);
                 $booking->setBookingStatus(BookingStatus::PENDING);

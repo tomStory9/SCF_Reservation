@@ -20,7 +20,7 @@ class BookingCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('location', 'Location')
+        yield AssociationField::new('zone', 'Zone')
             ->formatValue(fn ($value, $entity) => $value?->getName())
             ->setFormTypeOption('choice_label', 'name');
         yield AssociationField::new('userBooking', 'User')

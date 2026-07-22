@@ -2,14 +2,14 @@
 
 namespace App\Entity;
 
-use App\Enum\LocationType;
-use App\Repository\LocationRepository;
+use App\Enum\ZoneType;
+use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: LocationRepository::class)]
-class Location
+#[ORM\Entity(repositoryClass: ZoneRepository::class)]
+class Zone
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -19,19 +19,19 @@ class Location
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: 'string', enumType: LocationType::class)]
-    private ?LocationType $typeLocation = null;
+    #[ORM\Column(type: 'string', enumType: ZoneType::class)]
+    private ?ZoneType $typeZone = null;
 
     /**
      * @var Collection<int, Pricing>
      */
-    #[ORM\OneToMany(targetEntity: Pricing::class, mappedBy: 'location')]
+    #[ORM\OneToMany(targetEntity: Pricing::class, mappedBy: 'zone')]
     private Collection $pricings;
 
     /**
      * @var Collection<int, Booking>
      */
-    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'location')]
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'zone')]
     private Collection $bookings;
 
     #[ORM\Column(nullable: true)]
@@ -40,10 +40,20 @@ class Location
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $code = null;
 
+    #[ORM\ManyToOne(inversedBy: 'zones')]
+    private ?Facility $facility = null;
+
+    /**
+     * @var Collection<int, ZoneEquipment>
+     */
+    #[ORM\OneToMany(targetEntity: ZoneEquipment::class, mappedBy: 'zone')]
+    private Collection $zoneEquipment;
+
     public function __construct()
     {
         $this->pricings = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->zoneEquipment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -63,14 +73,14 @@ class Location
         return $this;
     }
 
-    public function getTypeLocation(): ?LocationType
+    public function getTypeZone(): ?ZoneType
     {
-        return $this->typeLocation;
+        return $this->typeZone;
     }
 
-    public function setTypeLocation(LocationType $typeLocation): static
+    public function setTypeZone(ZoneType $typeZone): static
     {
-        $this->typeLocation = $typeLocation;
+        $this->typeZone = $typeZone;
 
         return $this;
     }
@@ -87,7 +97,7 @@ class Location
     {
         if (!$this->pricings->contains($pricing)) {
             $this->pricings->add($pricing);
-            $pricing->setLocation($this);
+            $pricing->setZone($this);
         }
 
         return $this;
@@ -97,8 +107,8 @@ class Location
     {
         if ($this->pricings->removeElement($pricing)) {
             // set the owning side to null (unless already changed)
-            if ($pricing->getLocation() === $this) {
-                $pricing->setLocation(null);
+            if ($pricing->getZone() === $this) {
+                $pricing->setZone(null);
             }
         }
 
@@ -117,7 +127,7 @@ class Location
     {
         if (!$this->bookings->contains($booking)) {
             $this->bookings->add($booking);
-            $booking->setLocation($this);
+            $booking->setZone($this);
         }
 
         return $this;
@@ -127,8 +137,8 @@ class Location
     {
         if ($this->bookings->removeElement($booking)) {
             // set the owning side to null (unless already changed)
-            if ($booking->getLocation() === $this) {
-                $booking->setLocation(null);
+            if ($booking->getZone() === $this) {
+                $booking->setZone(null);
             }
         }
 
@@ -162,5 +172,47 @@ class Location
     public function __toString(): string
     {
         return $this->getName();
+    }
+
+    public function getFacility(): ?Facility
+    {
+        return $this->facility;
+    }
+
+    public function setFacility(?Facility $facility): static
+    {
+        $this->facility = $facility;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ZoneEquipment>
+     */
+    public function getZoneEquipment(): Collection
+    {
+        return $this->zoneEquipment;
+    }
+
+    public function addZoneEquipment(ZoneEquipment $zoneEquipment): static
+    {
+        if (!$this->zoneEquipment->contains($zoneEquipment)) {
+            $this->zoneEquipment->add($zoneEquipment);
+            $zoneEquipment->setZone($this);
+        }
+
+        return $this;
+    }
+
+    public function removeZoneEquipment(ZoneEquipment $zoneEquipment): static
+    {
+        if ($this->zoneEquipment->removeElement($zoneEquipment)) {
+            // set the owning side to null (unless already changed)
+            if ($zoneEquipment->getZone() === $this) {
+                $zoneEquipment->setZone(null);
+            }
+        }
+
+        return $this;
     }
 }
