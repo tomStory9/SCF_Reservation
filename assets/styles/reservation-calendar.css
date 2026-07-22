@@ -1,0 +1,243 @@
+html,
+body {
+    overflow-x: hidden;
+}
+
+.reservation-calendar .fc {
+    --fc-border-color: #e2e8f0;
+    --fc-page-bg-color: #ffffff;
+    --fc-neutral-bg-color: #f8fafc;
+    --fc-today-bg-color: rgba(1, 105, 111, 0.08);
+    --fc-event-bg-color: #01696f;
+    --fc-event-border-color: #01696f;
+    --fc-button-bg-color: #334155;
+    --fc-button-border-color: #334155;
+    --fc-button-hover-bg-color: #1e293b;
+    --fc-button-hover-border-color: #1e293b;
+    --fc-button-active-bg-color: #0f172a;
+    --fc-button-active-border-color: #0f172a;
+}
+
+.reservation-calendar .fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 1.25rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.reservation-calendar .fc .fc-toolbar-title {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.reservation-calendar .fc .fc-button {
+    border-radius: 0.85rem;
+    padding: 0.6rem 0.95rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    box-shadow: none;
+}
+
+.reservation-calendar .fc .fc-scrollgrid {
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.reservation-calendar .fc .fc-col-header-cell {
+    background: #f8fafc;
+}
+
+.reservation-calendar .fc .fc-col-header-cell-cushion {
+    padding: 0.85rem 0.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    text-decoration: none;
+}
+
+.reservation-calendar .fc .fc-daygrid-day-number {
+    padding: 0.55rem;
+    font-weight: 600;
+    color: #334155;
+    text-decoration: none;
+}
+
+.reservation-calendar .fc .fc-daygrid-day-frame {
+    min-height: 7.25rem;
+}
+
+.reservation-calendar .fc .fc-timegrid-slot {
+    height: 3rem;
+}
+
+.reservation-calendar .fc .fc-timegrid-axis,
+.reservation-calendar .fc .fc-timegrid-slot-label,
+.reservation-calendar .fc .fc-timegrid-slot-lane {
+    color: #64748b;
+    font-size: 0.8rem;
+}
+
+.reservation-calendar .fc .fc-event {
+    overflow: hidden;
+    border-radius: 0.75rem;
+    padding: 0.2rem 0.4rem;
+    font-size: 0.78rem;
+    line-height: 1.25;
+}
+
+.reservation-calendar .fc .fc-event-main {
+    overflow: hidden;
+}
+
+.reservation-calendar .fc .fc-event-title,
+.reservation-calendar .fc .fc-list-event-title {
+    display: block;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.reservation-calendar .fc .fc-event-time {
+    margin-right: 0.25rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.reservation-calendar .fc .fc-daygrid-event {
+    margin-top: 2px;
+}
+
+.reservation-calendar .fc .fc-daygrid-day-events {
+    margin-top: 0.3rem;
+}
+
+.reservation-calendar .fc .fc-daygrid-more-link {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.reservation-calendar .fc .fc-timegrid-allday {
+    background: #f8fafc;
+}
+
+.reservation-calendar .fc .fc-timegrid-allday .fc-timegrid-slot-lane {
+    cursor: pointer;
+}
+
+.reservation-calendar .fc .fc-highlight {
+    background: rgba(1, 105, 111, 0.18);
+}
+
+.reservation-calendar .fc .fc-day-today {
+    background: rgba(1, 105, 111, 0.08) !important;
+}
+
+.reservation-calendar .fc-theme-standard td,
+.reservation-calendar .fc-theme-standard th {
+    border-color: #e2e8f0;
+}
+
+.location-tab.is-active {
+    border-color: #e2e8f0;
+    border-bottom-color: #ffffff;
+    background: #ffffff;
+    color: #01696f;
+}
+
+.booking-mode-link {
+    position: relative;
+}
+
+.booking-mode-link.is-active {
+    color: #01696f;
+}
+
+.booking-mode-link.is-active::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -0.45rem;
+    width: 100%;
+    height: 2px;
+    border-radius: 9999px;
+    background: #01696f;
+}
+
+#location-description {
+    max-width: 60ch;
+}
+
+.reservation-calendar .fc-bg-period-morning {
+    background: rgba(250, 204, 21, 0.16);
+}
+
+.reservation-calendar .fc-bg-period-afternoon {
+    background: rgba(251, 146, 60, 0.14);
+}
+
+.reservation-calendar .fc-bg-period-evening {
+    background: rgba(168, 85, 247, 0.12);
+}
+
+.reservation-calendar .fc-event.period-preview-event,
+.reservation-calendar .fc-timegrid-event.fc-event-mirror,
+.reservation-calendar .fc-timegrid-col-event .fc-event-mirror,
+.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror {
+    background: rgba(1, 105, 111, 0.16) !important;
+    border: 1px solid rgba(1, 105, 111, 0.45) !important;
+    color: #0f172a !important;
+    box-shadow: none !important;
+}
+
+.reservation-calendar .fc-event.period-preview-event .fc-event-main,
+.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-event-main,
+.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-event-main,
+.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-event-main {
+    color: #0f172a !important;
+    font-weight: 600;
+}
+
+.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-event-time,
+.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-event-time,
+.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-event-time,
+.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-event-title,
+.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-event-title,
+.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-event-title {
+    color: #0f172a !important;
+}
+
+.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-bg,
+.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-bg,
+.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-bg {
+    opacity: 0 !important;
+}
+
+.reservation-calendar .fc-daygrid-day.day-usage-25 {
+    background-color: rgba(253, 224, 71, 0.30);
+}
+
+.reservation-calendar .fc-daygrid-day.day-usage-50 {
+    background-color: rgba(251, 146, 60, 0.25);
+}
+
+.reservation-calendar .fc-daygrid-day.day-usage-75 {
+    background-color: rgba(239, 68, 68, 0.18);
+}
+
+.reservation-calendar .fc-daygrid-day.day-usage-100 {
+    background-color: rgba(148, 163, 184, 0.35);
+}
+
+@media (max-width: 1024px) {
+    .reservation-calendar .fc .fc-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .reservation-calendar .fc .fc-toolbar-chunk {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+}
