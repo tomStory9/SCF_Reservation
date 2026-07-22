@@ -47,6 +47,7 @@
         "symfony/webpack-encore-bundle": "^2.4",
         "symfony/yaml": "8.1.*",
         "symfonycasts/verify-email-bundle": "^1.18",
+        "tattali/calendar-bundle": "^8.2",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
     },

@@ -4,11 +4,943 @@
 	{{ 'account.reservation.title'|trans }}
 {% endblock %}
 
-
 {% block body %}
-	<div class="min-h-screen bg-slate-50 text-slate-900">
+	<div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
 		{% include 'user/_partials/_navbar.html.twig' %}
+
+		<div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
+			<div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
+				<section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+					<div class="mb-5">
+						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
+							Planning
+						</p>
+						<h2 class="text-xl font-semibold text-secondary">
+							Calendrier des réservations
+						</h2>
+					</div>
+
+					<div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+						<div>
+							<p class="text-sm font-semibold text-secondary">Mode de réservation</p>
+							<div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
+								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
+									Par heure
+								</button>
+
+								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
+									Par période
+								</button>
+							</div>
+						</div>
+
+						<p class="text-sm text-state">
+							<span class="font-semibold text-secondary">Mode actif :</span>
+							<span id="active-booking-mode-label" class="font-semibold text-primary">Par heure</span>
+						</p>
+					</div>
+
+					<div class="flex justify-center">
+						<div id="calendar-holder" class="reservation-calendar w-full max-w-[940px]"></div>
+					</div>
+
+					<div class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+						<p class="text-sm font-semibold text-secondary">
+							Lecture du taux d’occupation
+						</p>
+
+						<div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-slate-400"></span>
+								<span class="text-sm text-secondary">100% occupé : grisé</span>
+							</div>
+
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-red-500"></span>
+								<span class="text-sm text-secondary">75% occupé : rouge</span>
+							</div>
+
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-orange-400"></span>
+								<span class="text-sm text-secondary">50% occupé : orange</span>
+							</div>
+
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-yellow-300"></span>
+								<span class="text-sm text-secondary">25% occupé : jaune</span>
+							</div>
+						</div>
+
+						<ul class="mt-4 space-y-2 text-sm text-state">
+							<li>- En vue mois, clique sur un jour pour ouvrir la vue semaine sur cette date.</li>
+							<li>- En vue semaine, la ligne all-day permet une réservation journée complète seulement si la journée est vide.</li>
+							<li>- En mode heure, tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement avec un autre événement.</li>
+							<li>- En mode période, la période choisie s’affiche comme un vrai bloc dans le calendrier.</li>
+						</ul>
+					</div>
+				</section>
+
+				<aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+					<div class="mb-5 border-b border-slate-200">
+						<nav class="-mb-px flex flex-wrap gap-2 sm:gap-3" aria-label="Lieux">
+							<button type="button" class="location-tab is-active rounded-t-xl border border-b-0 border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-primary" data-location="grande-salle" aria-selected="true">
+								Grande salle
+							</button>
+
+							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="studio-a" aria-selected="false">
+								Studio A
+							</button>
+
+							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="studio-b" aria-selected="false">
+								Studio B
+							</button>
+
+							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="exterieur" aria-selected="false">
+								Extérieur
+							</button>
+						</nav>
+					</div>
+
+					<div class="rounded-b-2xl rounded-tr-2xl border border-t-0 border-slate-200 bg-white p-6">
+						<div class="mb-6">
+							<p class="text-base font-semibold text-secondary">
+								Informations du lieu
+							</p>
+							<p class="mt-2 text-sm text-state">
+								Choisis d’abord le lieu et le mode de réservation, puis termine la sélection dans le calendrier.
+							</p>
+						</div>
+
+						<div class="mb-6">
+							<p class="text-sm text-state">
+								<span class="font-semibold text-secondary">Lieu sélectionné :</span>
+								<span id="selected-location-label" class="font-semibold text-primary">Grande salle</span>
+							</p>
+
+							<p class="mt-4 text-sm font-semibold text-secondary">Description</p>
+							<p id="location-description" class="mt-2 text-sm leading-6 text-state">
+								Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.
+							</p>
+						</div>
+
+						<div class="mb-6 border-b border-slate-200 pb-3">
+							<div class="flex flex-wrap items-center gap-6 text-sm">
+								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
+									Par heure
+								</button>
+
+								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
+									Par période
+								</button>
+							</div>
+						</div>
+
+						<div class="min-h-[360px]">
+							<p class="text-base font-semibold text-secondary">Début du formulaire</p>
+							<p class="mt-2 text-sm text-state">
+								La sélection finale se fait dans le calendrier. Ce panneau affiche le récapitulatif avant l’envoi.
+							</p>
+
+							<div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
+								Aucune sélection pour le moment.
+							</div>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</div>
 	</div>
+{% endblock %}
 
+{% block stylesheets %}
+	{{ parent() }}
 
+	<style>
+		html,
+		body {
+			overflow-x: hidden;
+		}
+
+		.reservation-calendar .fc {
+			--fc-border-color: #e2e8f0;
+			--fc-page-bg-color: #ffffff;
+			--fc-neutral-bg-color: #f8fafc;
+			--fc-today-bg-color: rgba(1, 105, 111, 0.08);
+			--fc-event-bg-color: #01696f;
+			--fc-event-border-color: #01696f;
+			--fc-button-bg-color: #334155;
+			--fc-button-border-color: #334155;
+			--fc-button-hover-bg-color: #1e293b;
+			--fc-button-hover-border-color: #1e293b;
+			--fc-button-active-bg-color: #0f172a;
+			--fc-button-active-border-color: #0f172a;
+		}
+
+		.reservation-calendar .fc .fc-toolbar.fc-header-toolbar {
+			margin-bottom: 1.25rem;
+			gap: 1rem;
+			flex-wrap: wrap;
+		}
+
+		.reservation-calendar .fc .fc-toolbar-title {
+			font-size: 1.35rem;
+			font-weight: 700;
+			color: #0f172a;
+		}
+
+		.reservation-calendar .fc .fc-button {
+			border-radius: 0.85rem;
+			padding: 0.6rem 0.95rem;
+			font-size: 0.875rem;
+			font-weight: 600;
+			box-shadow: none;
+		}
+
+		.reservation-calendar .fc .fc-scrollgrid {
+			overflow: hidden;
+			border-radius: 1rem;
+		}
+
+		.reservation-calendar .fc .fc-col-header-cell {
+			background: #f8fafc;
+		}
+
+		.reservation-calendar .fc .fc-col-header-cell-cushion {
+			padding: 0.85rem 0.25rem;
+			font-weight: 700;
+			color: #0f172a;
+			text-decoration: none;
+		}
+
+		.reservation-calendar .fc .fc-daygrid-day-number {
+			padding: 0.55rem;
+			font-weight: 600;
+			color: #334155;
+			text-decoration: none;
+		}
+
+		.reservation-calendar .fc .fc-daygrid-day-frame {
+			min-height: 7.25rem;
+		}
+
+		.reservation-calendar .fc .fc-timegrid-slot {
+			height: 3rem;
+		}
+
+		.reservation-calendar .fc .fc-timegrid-axis,
+		.reservation-calendar .fc .fc-timegrid-slot-label,
+		.reservation-calendar .fc .fc-timegrid-slot-lane {
+			color: #64748b;
+			font-size: 0.8rem;
+		}
+
+		.reservation-calendar .fc .fc-event {
+			overflow: hidden;
+			border-radius: 0.75rem;
+			padding: 0.2rem 0.4rem;
+			font-size: 0.78rem;
+			line-height: 1.25;
+		}
+
+		.reservation-calendar .fc .fc-event-main {
+			overflow: hidden;
+		}
+
+		.reservation-calendar .fc .fc-event-title,
+		.reservation-calendar .fc .fc-list-event-title {
+			display: block;
+			max-width: 100%;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		.reservation-calendar .fc .fc-event-time {
+			margin-right: 0.25rem;
+			font-weight: 700;
+			white-space: nowrap;
+		}
+
+		.reservation-calendar .fc .fc-daygrid-event {
+			margin-top: 2px;
+		}
+
+		.reservation-calendar .fc .fc-daygrid-day-events {
+			margin-top: 0.3rem;
+		}
+
+		.reservation-calendar .fc .fc-daygrid-more-link {
+			font-size: 0.75rem;
+			font-weight: 600;
+			color: #334155;
+		}
+
+		.reservation-calendar .fc .fc-timegrid-allday {
+			background: #f8fafc;
+		}
+
+		.reservation-calendar .fc .fc-timegrid-allday .fc-timegrid-slot-lane {
+			cursor: pointer;
+		}
+
+		.reservation-calendar .fc .fc-highlight {
+			background: rgba(1, 105, 111, 0.18);
+		}
+
+		.reservation-calendar .fc .fc-day-today {
+			background: rgba(1, 105, 111, 0.08) !important;
+		}
+
+		.reservation-calendar .fc-theme-standard td,
+		.reservation-calendar .fc-theme-standard th {
+			border-color: #e2e8f0;
+		}
+
+		.location-tab.is-active {
+			border-color: #e2e8f0;
+			border-bottom-color: #ffffff;
+			background: #ffffff;
+			color: #01696f;
+		}
+
+		.booking-mode-link {
+			position: relative;
+		}
+
+		.booking-mode-link.is-active {
+			color: #01696f;
+		}
+
+		.booking-mode-link.is-active::after {
+			content: "";
+			position: absolute;
+			left: 0;
+			bottom: -0.45rem;
+			width: 100%;
+			height: 2px;
+			border-radius: 9999px;
+			background: #01696f;
+		}
+
+		#location-description {
+			max-width: 60ch;
+		}
+
+		.reservation-calendar .fc-bg-period-morning {
+			background: rgba(250, 204, 21, 0.16);
+		}
+
+		.reservation-calendar .fc-bg-period-afternoon {
+			background: rgba(251, 146, 60, 0.14);
+		}
+
+		.reservation-calendar .fc-bg-period-evening {
+			background: rgba(168, 85, 247, 0.12);
+		}
+
+		.reservation-calendar .fc-event.period-preview-event,
+		.reservation-calendar .fc-timegrid-event.fc-event-mirror,
+		.reservation-calendar .fc-timegrid-col-event .fc-event-mirror,
+		.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror {
+			background: rgba(1, 105, 111, 0.16) !important;
+			border: 1px solid rgba(1, 105, 111, 0.45) !important;
+			color: #0f172a !important;
+			box-shadow: none !important;
+		}
+
+		.reservation-calendar .fc-event.period-preview-event .fc-event-main,
+		.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-event-main,
+		.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-event-main,
+		.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-event-main {
+			color: #0f172a !important;
+			font-weight: 600;
+		}
+
+		.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-event-time,
+		.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-event-time,
+		.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-event-time,
+		.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-event-title,
+		.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-event-title,
+		.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-event-title {
+			color: #0f172a !important;
+		}
+
+		.reservation-calendar .fc-timegrid-event.fc-event-mirror .fc-bg,
+		.reservation-calendar .fc-timegrid-col-event .fc-event-mirror .fc-bg,
+		.reservation-calendar .fc-timegrid-event-harness .fc-event-mirror .fc-bg {
+			opacity: 0 !important;
+		}
+
+		.reservation-calendar .fc-daygrid-day.day-usage-25 {
+			background-color: rgba(253, 224, 71, 0.30);
+		}
+
+		.reservation-calendar .fc-daygrid-day.day-usage-50 {
+			background-color: rgba(251, 146, 60, 0.25);
+		}
+
+		.reservation-calendar .fc-daygrid-day.day-usage-75 {
+			background-color: rgba(239, 68, 68, 0.18);
+		}
+
+		.reservation-calendar .fc-daygrid-day.day-usage-100 {
+			background-color: rgba(148, 163, 184, 0.35);
+		}
+
+		@media(max-width: 1024px) {
+			.reservation-calendar .fc .fc-toolbar {
+				flex-direction: column;
+				align-items: flex-start;
+			}
+
+			.reservation-calendar .fc .fc-toolbar-chunk {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+		}
+	</style>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+
+ <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+	 <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/interaction@6.1.11/index.global.min.js"></script>
+
+	 <script>
+	        document.addEventListener('DOMContentLoaded', function () {
+	            const calendarEl = document.getElementById('calendar-holder');
+	            const locationTabs = document.querySelectorAll('.location-tab');
+	            const bookingModeLinks = document.querySelectorAll('.booking-mode-link');
+	            const locationLabel = document.getElementById('selected-location-label');
+	            const locationDescription = document.getElementById('location-description');
+	            const selectionPreview = document.getElementById('selection-preview');
+	            const activeBookingModeLabel = document.getElementById('active-booking-mode-label');
+	
+	            if (!calendarEl || typeof FullCalendar === 'undefined') {
+	                return;
+	            }
+	
+	            let activeLocation = 'grande-salle';
+	            let bookingMode = 'hour';
+	            let selectedPeriodPreviewEvent = null;
+	
+	            const locationLabels = {
+	                'grande-salle': 'Grande salle',
+	                'studio-a': 'Studio A',
+	                'studio-b': 'Studio B',
+	                'exterieur': 'Extérieur'
+	            };
+	
+	            const locationDescriptions = {
+	                'grande-salle': 'Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.',
+	                'studio-a': 'Studio A, espace plus intimiste pour sessions techniques, enregistrements et petits groupes.',
+	                'studio-b': 'Studio B pensé pour les répétitions, essais techniques et occupations régulières en journée.',
+	                'exterieur': 'Espace extérieur adapté aux installations, tournages et événements ponctuels.'
+	            };
+	
+	            const mockEventsByLocation = {
+	                'grande-salle': [
+	                    { id: 'gs-1', title: 'Cours', start: '2026-07-22T08:00:00', end: '2026-07-22T09:00:00', allDay: false },
+	                    { id: 'gs-2', title: 'Répétition', start: '2026-07-22T13:00:00', end: '2026-07-22T14:00:00', allDay: false },
+	                    { id: 'gs-3', title: 'Privatisation journée', start: '2026-07-24', end: '2026-07-25', allDay: true }
+	                ],
+	                'studio-a': [
+	                    { id: 'sa-1', title: 'Session audio', start: '2026-07-21T10:00:00', end: '2026-07-21T11:00:00', allDay: false },
+	                    { id: 'sa-2', title: 'Studio fermé', start: '2026-07-26', end: '2026-07-27', allDay: true }
+	                ],
+	                'studio-b': [
+	                    { id: 'sb-1', title: 'Répétition compagnie', start: '2026-07-22T08:00:00', end: '2026-07-22T09:00:00', allDay: false }
+	                ],
+	                'exterieur': [
+	                    { id: 'ex-1', title: 'Tournage', start: '2026-07-20T08:00:00', end: '2026-07-20T09:00:00', allDay: false }
+	                ]
+	            };
+	
+	            const dailyUsage = {};
+	            const allDayBlockedDates = new Set();
+	
+	            function normalizeDate(dateLike) {
+	                const date = new Date(dateLike);
+	                const year = date.getFullYear();
+	                const month = String(date.getMonth() + 1).padStart(2, '0');
+	                const day = String(date.getDate()).padStart(2, '0');
+	                return `${year}-${month}-${day}`;
+	            }
+	
+	            function getEventsForActiveLocation() {
+	                return mockEventsByLocation[activeLocation] || [];
+	            }
+	
+	            function clearPeriodPreviewEvent() {
+	                selectedPeriodPreviewEvent = null;
+	            }
+	
+	            function getUsageClass(dateStr) {
+	                const usage = dailyUsage[dateStr];
+	
+	                if (!usage || !usage.percentage) {
+	                    return '';
+	                }
+	
+	                if (usage.percentage >= 100) return 'day-usage-100';
+	                if (usage.percentage >= 75) return 'day-usage-75';
+	                if (usage.percentage >= 50) return 'day-usage-50';
+	                if (usage.percentage >= 25) return 'day-usage-25';
+	
+	                return '';
+	            }
+	
+	            function recomputeDailyUsage(events) {
+	                Object.keys(dailyUsage).forEach(function (key) {
+	                    delete dailyUsage[key];
+	                });
+	
+	                allDayBlockedDates.clear();
+	
+	                const dailyHoursLimit = 12;
+	
+	                events.forEach(function (event) {
+	                    if (!event.start) {
+	                        return;
+	                    }
+	
+	                    if (event.allDay) {
+	                        const start = new Date(event.start);
+	                        const end = event.end ? new Date(event.end) : new Date(event.start);
+	                        const cursor = new Date(start);
+	
+	                        while (cursor < end) {
+	                            const loopDate = normalizeDate(cursor);
+	
+	                            if (!dailyUsage[loopDate]) {
+	                                dailyUsage[loopDate] = {
+	                                    usedHours: 0,
+	                                    percentage: 0
+	                                };
+	                            }
+	
+	                            allDayBlockedDates.add(loopDate);
+	                            dailyUsage[loopDate].usedHours = dailyHoursLimit;
+	                            dailyUsage[loopDate].percentage = 100;
+	
+	                            cursor.setDate(cursor.getDate() + 1);
+	                        }
+	
+	                        return;
+	                    }
+	
+	                    const dateStr = normalizeDate(event.start);
+	
+	                    if (!dailyUsage[dateStr]) {
+	                        dailyUsage[dateStr] = {
+	                            usedHours: 0,
+	                            percentage: 0
+	                        };
+	                    }
+	
+	                    if (event.start && event.end) {
+	                        const start = new Date(event.start);
+	                        const end = new Date(event.end);
+	                        const duration = Math.max(0, (end - start) / 36e5);
+	
+	                        dailyUsage[dateStr].usedHours += duration;
+	                        dailyUsage[dateStr].percentage = Math.min(
+	                            100,
+	                            Math.round((dailyUsage[dateStr].usedHours / dailyHoursLimit) * 100)
+	                        );
+	                    }
+	                });
+	            }
+	
+	            function hasAnyEventOnDate(dateStr) {
+	                return getEventsForActiveLocation().some(function (event) {
+	                    if (!event.start) {
+	                        return false;
+	                    }
+	
+	                    if (event.allDay) {
+	                        const start = new Date(event.start);
+	                        const end = event.end ? new Date(event.end) : new Date(event.start);
+	                        const cursor = new Date(start);
+	
+	                        while (cursor < end) {
+	                            if (normalizeDate(cursor) === dateStr) {
+	                                return true;
+	                            }
+	                            cursor.setDate(cursor.getDate() + 1);
+	                        }
+	
+	                        return false;
+	                    }
+	
+	                    return normalizeDate(event.start) === dateStr;
+	                });
+	            }
+	
+	            function selectionOverlapsExistingEvent(selectInfo) {
+	                if (bookingMode !== 'hour' || selectInfo.allDay) {
+	                    return false;
+	                }
+	
+	                return getEventsForActiveLocation().some(function (event) {
+	                    if (event.allDay || !event.start || !event.end) {
+	                        return false;
+	                    }
+	
+	                    const eventStart = new Date(event.start).getTime();
+	                    const eventEnd = new Date(event.end).getTime();
+	                    const selectStart = selectInfo.start.getTime();
+	                    const selectEnd = selectInfo.end.getTime();
+	
+	                    return selectStart < eventEnd && selectEnd > eventStart;
+	                });
+	            }
+	
+	            function getPeriodFromDate(date) {
+	                const hour = date.getHours();
+	
+	                if (hour >= 8 && hour < 12) {
+	                    return { key: 'morning', label: 'Matin', start: '08:00', end: '12:00' };
+	                }
+	
+	                if (hour >= 13 && hour < 17) {
+	                    return { key: 'afternoon', label: 'Après-midi', start: '13:00', end: '17:00' };
+	                }
+	
+	                if (hour >= 17 && hour < 21) {
+	                    return { key: 'evening', label: 'Soir', start: '17:00', end: '21:00' };
+	                }
+	
+	                return null;
+	            }
+	
+	            function getBackgroundPeriodEvents(fetchInfo) {
+	                if (bookingMode !== 'period' || !calendar.view || calendar.view.type !== 'timeGridWeek') {
+	                    return [];
+	                }
+	
+	                const events = [];
+	                const cursor = new Date(fetchInfo.start);
+	
+	                while (cursor < fetchInfo.end) {
+	                    const dateStr = normalizeDate(cursor);
+	
+	                    events.push(
+	                        {
+	                            id: `bg-morning-${dateStr}`,
+	                            start: `${dateStr}T08:00:00`,
+	                            end: `${dateStr}T12:00:00`,
+	                            display: 'background',
+	                            classNames: ['fc-bg-period-morning']
+	                        },
+	                        {
+	                            id: `bg-afternoon-${dateStr}`,
+	                            start: `${dateStr}T13:00:00`,
+	                            end: `${dateStr}T17:00:00`,
+	                            display: 'background',
+	                            classNames: ['fc-bg-period-afternoon']
+	                        },
+	                        {
+	                            id: `bg-evening-${dateStr}`,
+	                            start: `${dateStr}T17:00:00`,
+	                            end: `${dateStr}T21:00:00`,
+	                            display: 'background',
+	                            classNames: ['fc-bg-period-evening']
+	                        }
+	                    );
+	
+	                    cursor.setDate(cursor.getDate() + 1);
+	                }
+	
+	                if (selectedPeriodPreviewEvent) {
+	                    events.push(selectedPeriodPreviewEvent);
+	                }
+	
+	                return events;
+	            }
+	
+	            function updatePreview(content) {
+	                if (selectionPreview) {
+	                    selectionPreview.innerHTML = content;
+	                }
+	            }
+	
+	            function updateLocationDescription() {
+	                if (locationDescription && locationDescriptions[activeLocation]) {
+	                    locationDescription.textContent = locationDescriptions[activeLocation];
+	                }
+	            }
+	
+	            function updateBookingModeUI() {
+	                bookingModeLinks.forEach(function (button) {
+	                    const isActive = button.dataset.mode === bookingMode;
+	                    button.classList.toggle('is-active', isActive);
+	                    button.classList.toggle('text-secondary', isActive);
+	                    button.classList.toggle('text-state', !isActive);
+	                    button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+	                });
+	
+	                if (activeBookingModeLabel) {
+	                    activeBookingModeLabel.textContent = bookingMode === 'period' ? 'Par période' : 'Par heure';
+	                }
+	            }
+	
+	            function selectionAllowed(info) {
+	                const dateStr = normalizeDate(info.start);
+	
+	                if (info.allDay) {
+	                    return !hasAnyEventOnDate(dateStr);
+	                }
+	
+	                if (bookingMode === 'period') {
+	                    return false;
+	                }
+	
+	                if (allDayBlockedDates.has(dateStr)) {
+	                    return false;
+	                }
+	
+	                if (selectionOverlapsExistingEvent(info)) {
+	                    return false;
+	                }
+	
+	                const startHour = info.start.getHours() + (info.start.getMinutes() / 60);
+	                const endHour = info.end.getHours() + (info.end.getMinutes() / 60);
+	
+	                if (!(startHour >= 8 && endHour <= 20)) {
+	                    return false;
+	                }
+	
+	                const durationMs = info.end.getTime() - info.start.getTime();
+	                const oneHourMs = 60 * 60 * 1000;
+	
+	                return durationMs >= oneHourMs;
+	            }
+	
+	            const calendar = new FullCalendar.Calendar(calendarEl, {
+	                initialView: 'dayGridMonth',
+	                locale: 'fr',
+	                firstDay: 1,
+	                height: 'auto',
+	                contentHeight: 'auto',
+	                expandRows: false,
+	                nowIndicator: true,
+	                selectable: true,
+	                editable: false,
+	                weekends: true,
+	                allDaySlot: true,
+	                slotMinTime: '08:00:00',
+	                slotMaxTime: '21:00:00',
+	                slotDuration: '01:00:00',
+	                snapDuration: '01:00:00',
+	                selectMirror: true,
+	                selectOverlap: function(event) {
+	                    return event.display === 'background';
+	                },
+	                eventOverlap: false,
+	                businessHours: {
+	                    daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
+	                    startTime: '08:00',
+	                    endTime: '21:00'
+	                },
+	                views: {
+	                    dayGridMonth: {
+	                        dayMaxEventRows: 3
+	                    }
+	                },
+	                headerToolbar: {
+	                    left: 'prev,next today',
+	                    center: 'title',
+	                    right: 'dayGridMonth,timeGridWeek,listWeek'
+	                },
+	                buttonText: {
+	                    today: 'Aujourd’hui',
+	                    month: 'Mois',
+	                    week: 'Semaine',
+	                    list: 'Liste'
+	                },
+	                displayEventTime: true,
+	                displayEventEnd: true,
+	                eventTimeFormat: {
+	                    hour: '2-digit',
+	                    minute: '2-digit',
+	                    hour12: false
+	                },
+	                events: function(fetchInfo, successCallback) {
+	                    const baseEvents = getEventsForActiveLocation();
+	                    recomputeDailyUsage(baseEvents);
+	                    successCallback(baseEvents.concat(getBackgroundPeriodEvents(fetchInfo)));
+	                },
+	                dayCellClassNames: function(arg) {
+	                    const dateStr = normalizeDate(arg.date);
+	                    const usageClass = getUsageClass(dateStr);
+	                    return usageClass ? [usageClass] : [];
+	                },
+	                dayCellDidMount: function(arg) {
+	                    const dateStr = normalizeDate(arg.date);
+	                    const usage = dailyUsage[dateStr];
+	
+	                    if (usage && usage.usedHours > 0) {
+	                        arg.el.title = usage.usedHours.toFixed(1) + 'h utilisées sur 12h';
+	                    }
+	                },
+	                datesSet: function() {
+	                    calendar.refetchEvents();
+	                },
+	                dateClick: function(info) {
+	                    if (calendar.view.type === 'dayGridMonth') {
+	                        calendar.changeView('timeGridWeek', info.dateStr);
+	                        updatePreview(
+	                            '<span class="font-semibold text-secondary">Jour sélectionné :</span> ' +
+	                            '<span class="font-semibold text-primary">' + info.dateStr + '</span>'
+	                        );
+	                        return;
+	                    }
+	
+	                    if (bookingMode === 'period' && calendar.view.type === 'timeGridWeek') {
+	                        const period = getPeriodFromDate(info.date);
+	
+	                        if (!period) {
+	                            return;
+	                        }
+	
+	                        const dateStr = normalizeDate(info.date);
+	
+	                        if (hasAnyEventOnDate(dateStr)) {
+	                            alert('Impossible de réserver une période : un événement existe déjà sur cette journée.');
+	                            return;
+	                        }
+	
+	                        selectedPeriodPreviewEvent = {
+	                            id: `period-preview-${dateStr}-${period.key}`,
+	                            title: `Période sélectionnée · ${period.label}`,
+	                            start: `${dateStr}T${period.start}:00`,
+	                            end: `${dateStr}T${period.end}:00`,
+	                            allDay: false,
+	                            classNames: ['period-preview-event']
+	                        };
+	
+	                        calendar.refetchEvents();
+	
+	                        updatePreview(
+	                            '<span class="font-semibold text-secondary">Réservation par période :</span> ' +
+	                            '<span class="font-semibold text-primary">' + period.label + '</span>' +
+	                            '<br><span class="text-state">Date : ' + dateStr + '</span>' +
+	                            '<br><span class="text-state">Horaires : ' + period.start + ' → ' + period.end + '</span>' +
+	                            '<br><span class="text-state">Lieu : ' + locationLabels[activeLocation] + '</span>'
+	                        );
+	
+	                        return;
+	                    }
+	                },
+	                selectAllow: function(selectInfo) {
+	                    return selectionAllowed(selectInfo);
+	                },
+	                select: function(info) {
+	                    const dateStr = normalizeDate(info.start);
+	
+	                    if (info.allDay) {
+	                        if (hasAnyEventOnDate(dateStr)) {
+	                            calendar.unselect();
+	                            alert('Impossible de créer un événement journée complète : un événement existe déjà sur cette journée.');
+	                            return;
+	                        }
+	
+	                        clearPeriodPreviewEvent();
+	                        calendar.refetchEvents();
+	
+	                        updatePreview(
+	                            '<span class="font-semibold text-secondary">Sélection all day :</span> ' +
+	                            '<span class="font-semibold text-primary">' + info.startStr + '</span>' +
+	                            '<br><span class="text-state">Lieu : ' + locationLabels[activeLocation] + '</span>'
+	                        );
+	
+	                        return;
+	                    }
+	
+	                    if (bookingMode === 'period') {
+	                        calendar.unselect();
+	                        return;
+	                    }
+	
+	                    if (allDayBlockedDates.has(dateStr)) {
+	                        calendar.unselect();
+	                        alert('Impossible de réserver des heures sur cette journée : elle est bloquée en all day.');
+	                        return;
+	                    }
+	
+	                    if (selectionOverlapsExistingEvent(info)) {
+	                        calendar.unselect();
+	                        alert('Impossible de créer ce créneau : il chevauche déjà un événement existant.');
+	                        return;
+	                    }
+	
+	                    clearPeriodPreviewEvent();
+	                    calendar.refetchEvents();
+	
+	                    const startHour = info.startStr.slice(11, 16);
+	                    const endHour = info.endStr.slice(11, 16);
+	                    const durationMs = info.end.getTime() - info.start.getTime();
+	                    const durationHours = durationMs / (60 * 60 * 1000);
+	
+	                    updatePreview(
+	                        '<span class="font-semibold text-secondary">Créneau horaire :</span> ' +
+	                        '<span class="font-semibold text-primary">' + info.startStr + '</span> → ' +
+	                        '<span class="font-semibold text-primary">' + info.endStr + '</span>' +
+	                        '<br><span class="text-state">Plage : ' + startHour + ' → ' + endHour + '</span>' +
+	                        '<br><span class="text-state">Durée : ' + durationHours + ' heure(s)</span>' +
+	                        '<br><span class="text-state">Lieu : ' + locationLabels[activeLocation] + '</span>'
+	                    );
+	                }
+	            });
+	
+	            calendar.render();
+	            updateLocationDescription();
+	            updateBookingModeUI();
+	
+	            bookingModeLinks.forEach(function (button) {
+	                button.addEventListener('click', function () {
+	                    bookingMode = button.dataset.mode;
+	                    clearPeriodPreviewEvent();
+	                    updateBookingModeUI();
+	                    calendar.unselect();
+	                    calendar.refetchEvents();
+	
+	                    updatePreview(
+	                        bookingMode === 'period'
+	                            ? 'Mode de réservation actif : par période. Clique directement dans une zone Matin, Après-midi ou Soir dans la vue semaine.'
+	                            : 'Mode de réservation actif : par heure. Tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement.'
+	                    );
+	                });
+	            });
+	
+	            locationTabs.forEach(function (tab) {
+	                tab.addEventListener('click', function () {
+	                    activeLocation = tab.dataset.location;
+	                    clearPeriodPreviewEvent();
+	
+	                    locationTabs.forEach(function (item) {
+	                        item.classList.remove('is-active', 'border-slate-200', 'bg-white', 'text-primary');
+	                        item.classList.add('border-transparent', 'text-slate-500');
+	                        item.setAttribute('aria-selected', 'false');
+	                    });
+	
+	                    tab.classList.add('is-active', 'border-slate-200', 'bg-white', 'text-primary');
+	                    tab.classList.remove('border-transparent', 'text-slate-500');
+	                    tab.setAttribute('aria-selected', 'true');
+	
+	                    if (locationLabel && locationLabels[activeLocation]) {
+	                        locationLabel.textContent = locationLabels[activeLocation];
+	                    }
+	
+	                    updateLocationDescription();
+	                    updatePreview('Aucune sélection pour le moment.');
+	                    calendar.unselect();
+	                    calendar.refetchEvents();
+	                });
+	            });
+	        });
+	    </script>
 {% endblock %}

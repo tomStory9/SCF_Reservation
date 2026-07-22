@@ -9,3 +9,6 @@
 
 controllers:
     resource: routing.controllers
+    
+calendar:
+    resource: '@CalendarBundle/config/routing.yaml'
