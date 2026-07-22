@@ -1,0 +1,113 @@
+<nav class="sticky top-0 z-50 border-b border-slate-200 bg-white">
+	<div class="mx-auto w-full px-4 py-4 sm:px-6 lg:px-10 xl:px-12">
+		<div
+			class="flex w-full items-center">
+			{# Gauche : logo + identité #}
+			<div class="flex flex-1 items-center justify-start gap-4 lg:gap-6">
+				<a href="{{ path('app_home') }}" class="flex shrink-0 items-center justify-center rounded-2xl bg-white p-2">
+					<img src="{{ asset('build/images/scf.svg') }}" alt="SCF" class="h-10 w-auto">
+				</a>
+
+				<div class="min-w-0">
+					<p class="hidden text-xs font-medium uppercase tracking-[0.2em] text-state sm:block">
+						{{ 'account.dashboard.space'|trans }}
+					</p>
+					<h1 class="truncate text-sm font-semibold text-secondary sm:text-lg">
+						{{ app.user.name }}
+						{{ app.user.lastname }}
+					</h1>
+				</div>
+			</div>
+
+			{# Centre : navigation #}
+			<div class="hidden flex-1 items-center justify-center lg:flex">
+				<div class="flex items-center gap-6 xl:gap-8">
+					<a href="{{ path('app_reservation') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') == 'app_reservation' ? 'text-primary' : 'text-secondary' }}">
+						{{ 'account.dashboard.new_booking'|trans }}
+					</a>
+
+					<a href="{{ path('app_home') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') starts with 'app_home' ? 'text-primary' : 'text-secondary' }}">
+						{{ 'account.dashboard.my_account'|trans }}
+					</a>
+				</div>
+			</div>
+
+			{# Droite : langues + profil #}
+			<div class="flex flex-1 items-center justify-end gap-4 sm:gap-5 lg:gap-6">
+				<div class="hidden items-center gap-1 rounded-2xl border border-secondary/10 bg-secondary/5 p-1 sm:flex">
+					<a href="{{ path('app_switch_locale', {'locale': 'fr'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'fr' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
+						FR
+					</a>
+
+					<a href="{{ path('app_switch_locale', {'locale': 'en'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'en' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
+						EN
+					</a>
+
+					<a href="{{ path('app_switch_locale', {'locale': 'jp'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'jp' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
+						JP
+					</a>
+				</div>
+
+				<details class="relative">
+					<summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-xl px-2 py-2 text-sm text-secondary transition hover:text-primary">
+						<div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f3e7d7] text-[#7a4b2a]">
+							<svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.118a7.5 7.5 0 0115 0A17.933 17.933 0 0112 21.75a17.933 17.933 0 01-7.5-1.632z"/>
+							</svg>
+						</div>
+
+						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-secondary" fill="none" viewbox="0 0 24 24" stroke="currentColor">
+							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 9l-7 7-7-7"/>
+						</svg>
+					</summary>
+
+					<div class="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-[#dcc3a5] bg-white shadow-lg">
+						<div class="border-b border-[#ead8c2] bg-[#fbf5ed] px-4 py-3">
+							<p class="truncate text-sm font-semibold text-secondary">
+								{{ app.user.name }}
+								{{ app.user.lastname }}
+							</p>
+							<p class="truncate text-xs text-state">
+								{{ app.user.email }}
+							</p>
+						</div>
+
+						<div class="flex flex-col p-2">
+							<a href="{{ path('app_home') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-secondary transition hover:bg-[#f8efe4]">
+								{{ 'account.dashboard.my_info'|trans }}
+							</a>
+
+							<a href="" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-secondary transition hover:bg-[#f8efe4]">
+								{{ 'account.dashboard.change_password'|trans }}
+							</a>
+
+							<div class="my-1 border-t border-slate-100"></div>
+
+							<a href="{{ path('app_logout') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-danger transition hover:bg-red-50">
+								{{ 'account.dashboard.logout'|trans }}
+							</a>
+						</div>
+
+						<div class="border-t border-slate-100 p-2 sm:hidden">
+							<div class="grid grid-cols-3 gap-2">
+								<a href="{{ path('app_switch_locale', {'locale': 'fr'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'fr' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
+									FR
+								</a>
+
+								<a href="{{ path('app_switch_locale', {'locale': 'en'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'en' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
+									EN
+								</a>
+
+								<a href="{{ path('app_switch_locale', {'locale': 'jp'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'jp' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
+									JP
+								</a>
+							</div>
+						</div>
+					</div>
+				</details>
+			</div>
+		</div>
+	</div>
+
+	<div class="h-1 w-full bg-secondary"></div>
+</nav>
