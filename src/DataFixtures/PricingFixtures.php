@@ -2,10 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Location;
 use App\Entity\Pricing;
 use App\Entity\TimeSlot;
 use App\Entity\WeekDay;
+use App\Entity\Zone;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -15,14 +15,14 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
     public function load(ObjectManager $manager): void
     {
         // lieu d'entrainement
-        $cube = $this->getReference(LocationFixtures::CUBE, Location::class);
-        $lab = $this->getReference(LocationFixtures::LAB, Location::class);
-        $kanda = $this->getReference(LocationFixtures::KANDA, Location::class);
+        $cube = $this->getReference(ZoneFixtures::CUBE, Zone::class);
+        $lab = $this->getReference(ZoneFixtures::LAB, Zone::class);
+        $kanda = $this->getReference(ZoneFixtures::KANDA, Zone::class);
 
         // chambre
-        $room1 = $this->getReference(LocationFixtures::ROOM1, Location::class);
-        $room2 = $this->getReference(LocationFixtures::ROOM2, Location::class);
-        $room3 = $this->getReference(LocationFixtures::ROOM3, Location::class);
+        $room1 = $this->getReference(ZoneFixtures::ROOM1, Zone::class);
+        $room2 = $this->getReference(ZoneFixtures::ROOM2, Zone::class);
+        $room3 = $this->getReference(ZoneFixtures::ROOM3, Zone::class);
 
         // jour de la semaine
         $lundi = $this->getReference(WeekDayFixtures::LUNDI, WeekDay::class);
@@ -91,7 +91,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotCube = new Pricing();
                 $pricingDayWideSlotCube->setWeekDay($weekDay);
                 $pricingDayWideSlotCube->setTimeSlot($wideTimeSlot);
-                $pricingDayWideSlotCube->setLocation($cube);
+                $pricingDayWideSlotCube->setZone($cube);
                 $pricingDayWideSlotCube->setFullPrice(6000);
                 $pricingDayWideSlotCube->setReducedPriceA(5000);
                 $pricingDayWideSlotCube->setReducedPriceB(3000);
@@ -100,7 +100,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotLab = new Pricing();
                 $pricingDayWideSlotLab->setWeekDay($weekDay);
                 $pricingDayWideSlotLab->setTimeSlot($wideTimeSlot);
-                $pricingDayWideSlotLab->setLocation($lab);
+                $pricingDayWideSlotLab->setZone($lab);
                 $pricingDayWideSlotLab->setFullPrice(3000);
                 $pricingDayWideSlotLab->setReducedPriceA(2000);
                 $pricingDayWideSlotLab->setReducedPriceB(1000);
@@ -109,7 +109,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotKandaFull = new Pricing();
                 $pricingDayWideSlotKandaFull->setWeekDay($weekDay);
                 $pricingDayWideSlotKandaFull->setTimeSlot($wideTimeSlot);
-                $pricingDayWideSlotKandaFull->setLocation($kanda);
+                $pricingDayWideSlotKandaFull->setZone($kanda);
                 $pricingDayWideSlotKandaFull->setFullPrice(6000);
                 $pricingDayWideSlotKandaFull->setReducedPriceA(5000);
                 $pricingDayWideSlotKandaFull->setReducedPriceB(3000);
@@ -119,7 +119,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotKanda3 = new Pricing();
                 $pricingDayWideSlotKanda3->setWeekDay($weekDay);
                 $pricingDayWideSlotKanda3->setTimeSlot($wideTimeSlot);
-                $pricingDayWideSlotKanda3->setLocation($kanda);
+                $pricingDayWideSlotKanda3->setZone($kanda);
                 $pricingDayWideSlotKanda3->setFullPrice(4000);
                 $pricingDayWideSlotKanda3->setReducedPriceA(3000);
                 $pricingDayWideSlotKanda3->setReducedPriceB(1500);
@@ -129,7 +129,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotKandaDemi = new Pricing();
                 $pricingDayWideSlotKandaDemi->setWeekDay($weekDay);
                 $pricingDayWideSlotKandaDemi->setTimeSlot($wideTimeSlot);
-                $pricingDayWideSlotKandaDemi->setLocation($kanda);
+                $pricingDayWideSlotKandaDemi->setZone($kanda);
                 $pricingDayWideSlotKandaDemi->setFullPrice(4000);
                 $pricingDayWideSlotKandaDemi->setReducedPriceA(3000);
                 $pricingDayWideSlotKandaDemi->setReducedPriceB(1500);
@@ -139,7 +139,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotKandaQuart = new Pricing();
                 $pricingDayWideSlotKandaQuart->setWeekDay($weekDay);
                 $pricingDayWideSlotKandaQuart->setTimeSlot($wideTimeSlot);
-                $pricingDayWideSlotKandaQuart->setLocation($kanda);
+                $pricingDayWideSlotKandaQuart->setZone($kanda);
                 $pricingDayWideSlotKandaQuart->setFullPrice(2000);
                 $pricingDayWideSlotKandaQuart->setReducedPriceA(1000);
                 $pricingDayWideSlotKandaQuart->setReducedPriceB(500);
@@ -151,7 +151,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourCube = new Pricing();
                 $pricingDayHourCube->setWeekDay($weekDay);
                 $pricingDayHourCube->setTimeSlot($timeSlot);
-                $pricingDayHourCube->setLocation($cube);
+                $pricingDayHourCube->setZone($cube);
                 $pricingDayHourCube->setFullPrice(2000);
                 $pricingDayHourCube->setReducedPriceA(1500);
                 $pricingDayHourCube->setReducedPriceB(1000);
@@ -160,7 +160,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourLab = new Pricing();
                 $pricingDayHourLab->setWeekDay($weekDay);
                 $pricingDayHourLab->setTimeSlot($timeSlot);
-                $pricingDayHourLab->setLocation($lab);
+                $pricingDayHourLab->setZone($lab);
                 $pricingDayHourLab->setFullPrice(2000);
                 $pricingDayHourLab->setReducedPriceA(1000);
                 $pricingDayHourLab->setReducedPriceB(500);
@@ -169,7 +169,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourKandaFull = new Pricing();
                 $pricingDayHourKandaFull->setWeekDay($weekDay);
                 $pricingDayHourKandaFull->setTimeSlot($timeSlot);
-                $pricingDayHourKandaFull->setLocation($kanda);
+                $pricingDayHourKandaFull->setZone($kanda);
                 $pricingDayHourKandaFull->setFullPrice(3000);
                 $pricingDayHourKandaFull->setReducedPriceA(2000);
                 $pricingDayHourKandaFull->setReducedPriceB(1000);
@@ -179,7 +179,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourKanda3 = new Pricing();
                 $pricingDayHourKanda3->setWeekDay($weekDay);
                 $pricingDayHourKanda3->setTimeSlot($timeSlot);
-                $pricingDayHourKanda3->setLocation($kanda);
+                $pricingDayHourKanda3->setZone($kanda);
                 $pricingDayHourKanda3->setFullPrice(1500);
                 $pricingDayHourKanda3->setReducedPriceA(1000);
                 $pricingDayHourKanda3->setReducedPriceB(500);
@@ -189,7 +189,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourKandaDemi = new Pricing();
                 $pricingDayHourKandaDemi->setWeekDay($weekDay);
                 $pricingDayHourKandaDemi->setTimeSlot($timeSlot);
-                $pricingDayHourKandaDemi->setLocation($kanda);
+                $pricingDayHourKandaDemi->setZone($kanda);
                 $pricingDayHourKandaDemi->setFullPrice(1500);
                 $pricingDayHourKandaDemi->setReducedPriceA(1000);
                 $pricingDayHourKandaDemi->setReducedPriceB(500);
@@ -199,7 +199,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourKandaQuart = new Pricing();
                 $pricingDayHourKandaQuart->setWeekDay($weekDay);
                 $pricingDayHourKandaQuart->setTimeSlot($timeSlot);
-                $pricingDayHourKandaQuart->setLocation($kanda);
+                $pricingDayHourKandaQuart->setZone($kanda);
                 $pricingDayHourKandaQuart->setFullPrice(1000);
                 $pricingDayHourKandaQuart->setReducedPriceA(500);
                 $pricingDayHourKandaQuart->setReducedPriceB(200);
@@ -214,7 +214,7 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
     public function getDependencies(): array
     {
         return [
-            LocationFixtures::class,
+            ZoneFixtures::class,
             TimeSlotFixtures::class,
             WeekDayFixtures::class,
         ];

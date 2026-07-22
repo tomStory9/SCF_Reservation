@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\Location;
 use App\Entity\Pricing;
 use App\Entity\TimeSlot;
 use App\Entity\WeekDay;
+use App\Entity\Zone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -20,13 +20,13 @@ class PricingRepository extends ServiceEntityRepository
     }
 
     // pour les lieux d'entrainement SAUF KANDA !!!
-    public function getPricingByTrainingLocationWeekDayAndTimeSlot(Location $location, TimeSlot $timeSlot, WeekDay $weekDay): ?Pricing
+    public function getPricingByTrainingLocationWeekDayAndTimeSlot(Zone $zone, TimeSlot $timeSlot, WeekDay $weekDay): ?Pricing
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.location = :location')
+            ->andWhere('p.zone = :zone')
             ->andWhere('p.timeSlot = :timeSlot')
             ->andWhere('p.weekDay = :weekDay')
-            ->setParameter('location', $location)
+            ->setParameter('zone', $zone)
             ->setParameter('timeSlot', $timeSlot)
             ->setParameter('weekDay', $weekDay)
             ->getQuery()
@@ -36,12 +36,12 @@ class PricingRepository extends ServiceEntityRepository
     public function getPrincingKandaByWeekDayTimeSlotAndGuestCount(WeekDay $weekDay, TimeSlot $timeSlot, int $guestCount): ?Pricing
     {
         return $this->createQueryBuilder('p')
-            ->join('p.location', 'pl')
-            ->andWhere('pl.code = :locationCode')
+            ->join('p.zone', 'pl')
+            ->andWhere('pl.code = :zoneCode')
             ->andWhere('p.weekDay = :weekDay')
             ->andWhere('p.timeSlot = :timeSlot')
             ->andWhere('p.guestCount = :guestCount')
-            ->setParameter('locationCode', 'KANDA')
+            ->setParameter('zoneCode', 'KANDA')
             ->setParameter('weekDay', $weekDay)
             ->setParameter('timeSlot', $timeSlot)
             ->setParameter('guestCount', $guestCount)

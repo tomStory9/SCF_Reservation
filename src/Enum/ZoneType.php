@@ -2,7 +2,7 @@
 
 namespace App\Enum;
 
-enum LocationType: string
+enum ZoneType: string
 {
     case TRAINING = 'training';
     case BEDROOM = 'bedroom';

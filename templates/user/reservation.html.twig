@@ -1,0 +1,163 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ 'account.reservation.title'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{{ encore_entry_link_tags('reservation') }}
+{% endblock %}
+
+{% block body %}
+	<div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
+		{% include 'user/_partials/_navbar.html.twig' %}
+
+		<div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
+			<div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
+				<section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+					<div class="mb-5">
+						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
+							Planning
+						</p>
+						<h2 class="text-xl font-semibold text-secondary">
+							Calendrier des réservations
+						</h2>
+					</div>
+
+					<div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+						<div>
+							<p class="text-sm font-semibold text-secondary">Mode de réservation</p>
+							<div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
+								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
+									Par heure
+								</button>
+
+								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
+									Par période
+								</button>
+							</div>
+						</div>
+
+						<p class="text-sm text-state">
+							<span class="font-semibold text-secondary">Mode actif :</span>
+							<span id="active-booking-mode-label" class="font-semibold text-primary">Par heure</span>
+						</p>
+					</div>
+
+					<div class="flex justify-center">
+						<div id="calendar-holder" class="reservation-calendar w-full max-w-[940px]"></div>
+					</div>
+
+					<div id="calendar-legend" class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+						<p class="text-sm font-semibold text-secondary">
+							Lecture du taux d’occupation
+						</p>
+
+						<div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-slate-400"></span>
+								<span class="text-sm text-secondary">100% occupé : grisé</span>
+							</div>
+
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-red-500"></span>
+								<span class="text-sm text-secondary">75% occupé : rouge</span>
+							</div>
+
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-orange-400"></span>
+								<span class="text-sm text-secondary">50% occupé : orange</span>
+							</div>
+
+							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+								<span class="h-4 w-4 rounded-full bg-yellow-300"></span>
+								<span class="text-sm text-secondary">25% occupé : jaune</span>
+							</div>
+						</div>
+
+						<ul class="mt-4 space-y-2 text-sm text-state">
+							<li>- En vue mois, clique sur un jour pour ouvrir la vue semaine sur cette date.</li>
+							<li>- En vue semaine, la ligne all-day permet une réservation journée complète seulement si la journée est vide.</li>
+							<li>- En mode heure, tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement avec un autre événement.</li>
+							<li>- En mode période, la période choisie s’affiche comme un vrai bloc dans le calendrier.</li>
+						</ul>
+					</div>
+				</section>
+
+				<aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+					<div class="mb-5 border-b border-slate-200">
+						<nav class="-mb-px flex flex-wrap gap-2 sm:gap-3" aria-label="Lieux">
+							<button type="button" class="location-tab is-active rounded-t-xl border border-b-0 border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-primary" data-location="grande-salle" aria-selected="true">
+								Grande salle
+							</button>
+
+							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="studio-a" aria-selected="false">
+								Studio A
+							</button>
+
+							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="studio-b" aria-selected="false">
+								Studio B
+							</button>
+
+							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="exterieur" aria-selected="false">
+								Extérieur
+							</button>
+						</nav>
+					</div>
+
+					<div class="rounded-b-2xl rounded-tr-2xl border border-t-0 border-slate-200 bg-white p-6">
+						<div class="mb-6">
+							<p class="text-base font-semibold text-secondary">
+								Informations du lieu
+							</p>
+							<p class="mt-2 text-sm text-state">
+								Choisis d’abord le lieu et le mode de réservation, puis termine la sélection dans le calendrier.
+							</p>
+						</div>
+
+						<div class="mb-6">
+							<p class="text-sm text-state">
+								<span class="font-semibold text-secondary">Lieu sélectionné :</span>
+								<span id="selected-location-label" class="font-semibold text-primary">Grande salle</span>
+							</p>
+
+							<p class="mt-4 text-sm font-semibold text-secondary">Description</p>
+							<p id="location-description" class="mt-2 text-sm leading-6 text-state">
+								Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.
+							</p>
+						</div>
+
+						<div class="mb-6 border-b border-slate-200 pb-3">
+							<div class="flex flex-wrap items-center gap-6 text-sm">
+								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
+									Par heure
+								</button>
+
+								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
+									Par période
+								</button>
+							</div>
+						</div>
+
+						<div class="min-h-[360px]">
+							<p class="text-base font-semibold text-secondary">Début du formulaire</p>
+							<p class="mt-2 text-sm text-state">
+								La sélection finale se fait dans le calendrier. Ce panneau affiche le récapitulatif avant l’envoi.
+							</p>
+
+							<div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
+								Aucune sélection pour le moment.
+							</div>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	{{ encore_entry_script_tags('reservation') }}
+{% endblock %}

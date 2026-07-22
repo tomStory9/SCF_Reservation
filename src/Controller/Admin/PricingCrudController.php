@@ -31,7 +31,7 @@ class PricingCrudController extends AbstractCrudController
     public function configureFields(string $pageName): iterable
     {
         if (Crud::PAGE_EDIT === $pageName) {
-            yield AssociationField::new('location', 'Location')->setDisabled();
+            yield AssociationField::new('zone', 'Zone')->setDisabled();
             yield AssociationField::new('weekDay', 'Week Day')->setDisabled();
             yield AssociationField::new('timeSlot', 'Time Slot')->setDisabled();
 
@@ -43,7 +43,7 @@ class PricingCrudController extends AbstractCrudController
             return;
         }
 
-        yield AssociationField::new('location', 'Location')
+        yield AssociationField::new('zone', 'Zone')
             ->formatValue(fn ($value, $entity) => $value?->getName())
             ->setFormTypeOption('choice_label', 'name');
         yield AssociationField::new('timeSlot', 'Time Slot');
@@ -59,7 +59,7 @@ class PricingCrudController extends AbstractCrudController
     {
         return $filters
             ->add(EntityFilter::new('timeSlot', 'Time Slot'))
-            ->add(EntityFilter::new('location', 'Location'))
+            ->add(EntityFilter::new('zone', 'Zone'))
         ;
     }
 

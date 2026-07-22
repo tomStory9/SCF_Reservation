@@ -1,4 +1,5 @@
 grumphp:
+  process_timeout: 5000000
   fixer:
     enabled: true
     fix_by_default: true
@@ -13,5 +14,5 @@ grumphp:
 
     shell:
       scripts:
-        - ['sh', '-c', 'composer db']
-        - ['sh', '-c', 'php bin/console doctrine:fixtures:load --no-interaction']
+        - ['-c', 'composer db']
+        - ['-c', 'php bin/console doctrine:fixtures:load --no-interaction']

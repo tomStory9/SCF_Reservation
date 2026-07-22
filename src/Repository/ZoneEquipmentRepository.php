@@ -2,39 +2,39 @@
 
 namespace App\Repository;
 
-use App\Entity\Location;
+use App\Entity\ZoneEquipment;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Location>
+ * @extends ServiceEntityRepository<ZoneEquipment>
  */
-class LocationRepository extends ServiceEntityRepository
+class ZoneEquipmentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Location::class);
+        parent::__construct($registry, ZoneEquipment::class);
     }
 
     //    /**
-    //     * @return Location[] Returns an array of Location objects
+    //     * @return ZoneEquipment[] Returns an array of ZoneEquipment objects
     //     */
     //    public function findByExampleField($value): array
     //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
+    //        return $this->createQueryBuilder('z')
+    //            ->andWhere('z.exampleField = :val')
     //            ->setParameter('val', $value)
-    //            ->orderBy('l.id', 'ASC')
+    //            ->orderBy('z.id', 'ASC')
     //            ->setMaxResults(10)
     //            ->getQuery()
     //            ->getResult()
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Location
+    //    public function findOneBySomeField($value): ?ZoneEquipment
     //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
+    //        return $this->createQueryBuilder('z')
+    //            ->andWhere('z.exampleField = :val')
     //            ->setParameter('val', $value)
     //            ->getQuery()
     //            ->getOneOrNullResult()

@@ -25,7 +25,7 @@ class Pricing
 
     #[ORM\ManyToOne(inversedBy: 'pricings')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Location $location = null;
+    private ?Zone $zone = null;
 
     #[ORM\Column]
     private ?int $reducedPriceA = null;
@@ -77,14 +77,14 @@ class Pricing
         return $this;
     }
 
-    public function getLocation(): ?Location
+    public function getZone(): ?Zone
     {
-        return $this->location;
+        return $this->zone;
     }
 
-    public function setLocation(?Location $location): static
+    public function setZone(?Zone $zone): static
     {
-        $this->location = $location;
+        $this->zone = $zone;
 
         return $this;
     }

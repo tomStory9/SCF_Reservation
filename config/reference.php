@@ -1507,6 +1507,10 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  * @psalm-type SymfonycastsVerifyEmailConfig = array{
  *     lifetime?: int|Param, // The length of time in seconds that a signed URI is valid for after it is created. // Default: 3600
  * }
+ * @psalm-type CalendarConfig = array{
+ *     cache_max_age?: int|Param, // HTTP cache max-age in seconds (0 to disable) // Default: 300
+ *     json_max_depth?: int|Param, // Maximum JSON nesting depth for filters parameter // Default: 4
+ * }
  * @psalm-type ConfigType = array{
  *     imports?: ImportsConfig,
  *     parameters?: ParametersConfig,
@@ -1524,6 +1528,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     webpack_encore?: WebpackEncoreConfig,
  *     twig_component?: TwigComponentConfig,
  *     symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *     calendar?: CalendarConfig,
  *     "when@dev"?: array{
  *         imports?: ImportsConfig,
  *         parameters?: ParametersConfig,
@@ -1544,6 +1549,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         twig_component?: TwigComponentConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         calendar?: CalendarConfig,
  *     },
  *     "when@prod"?: array{
  *         imports?: ImportsConfig,
@@ -1562,6 +1568,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         twig_component?: TwigComponentConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         calendar?: CalendarConfig,
  *     },
  *     "when@test"?: array{
  *         imports?: ImportsConfig,
@@ -1581,6 +1588,7 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         webpack_encore?: WebpackEncoreConfig,
  *         twig_component?: TwigComponentConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
+ *         calendar?: CalendarConfig,
  *     },
  *     ...<string, ExtensionType|array{ // extra keys must follow the when@%env% pattern or match an extension alias
  *         imports?: ImportsConfig,
