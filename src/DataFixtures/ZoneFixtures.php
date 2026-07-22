@@ -73,6 +73,7 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $koda1C->setFacility($koda);
         $koda1C->setMaxCapacity(1);
         $manager->persist($koda1C);
+        $this->addReference(self::KODA1C, $koda1C);
 
         $koda1D = new Zone();
         $koda1D->setName('KODA ZONE D (1/4)');
@@ -81,6 +82,7 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $koda1D->setFacility($koda);
         $koda1D->setMaxCapacity(1);
         $manager->persist($koda1D);
+        $this->addReference(self::KODA1D, $koda1D);
 
         $manager->flush();
     }
