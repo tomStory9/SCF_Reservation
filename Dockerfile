@@ -21,7 +21,8 @@ RUN <<-EOF
 	apt-get update
 	apt-get install -y --no-install-recommends \
 		file \
-		git
+		git \
+		gnupg2
 	install-php-extensions \
 		@composer \
 		apcu \
@@ -83,13 +84,6 @@ COPY --link frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 COPY --link composer.* symfony.* ./
 RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
-COPY package.json yarn.lock ./
-RUN yarn install
-
-COPY assets assets/
-COPY webpack.config.js ./
-RUN yarn build
-
 # copy sources
 COPY --link --exclude=frankenphp/ . ./
 
@@ -122,6 +116,14 @@ RUN <<-'EOF'
 	rm -rf /var/lib/apt/lists/*
 EOF
 
+FROM node:24 AS assets
+
+COPY --link --exclude=var --from=frankenphp_prod_builder /app /app
+
+WORKDIR /app
+
+RUN npm install && npm run build
+
 # Prod FrankenPHP image
 FROM debian:13-slim AS frankenphp_prod
 
@@ -147,6 +149,8 @@ COPY --from=frankenphp_prod_builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/
 COPY --from=frankenphp_prod_builder /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf
 COPY --from=frankenphp_prod_builder /usr/bin/file /usr/bin/file
 COPY --from=frankenphp_prod_builder /usr/lib/file/magic.mgc /usr/lib/file/magic.mgc
+
+COPY --from=assets /app/public/build /app/public/build
 
 ENV  OPENSSL_CONF=/etc/ssl/openssl.cnf XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
