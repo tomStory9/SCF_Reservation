@@ -1,0 +1,15 @@
+errors:
+  email_not_blank: "Email cannot be blank."
+  email_invalid: "Please enter a valid email address."
+  password_not_blank: "Password cannot be blank."
+  password_mismatch: "Passwords do not match."
+  password_invalid: "Password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one number, and one special character."
+  password_too_short: "Password must be at least 8 characters long."
+  phone_invalid: "Please enter a valid phone number."
+  suspended_account: "Your account has been suspended. If you believe this is an error, please contact Setoushi Circus Factory."
+  pending_account: "Your account is pending approval. Please try logging in again later — you will be notified by email once it has been accepted."
+  declined_account: "Your account registration has been declined. Please contact Setoushi Circus Factory if you believe this is an error."
+flash:
+  info_email: A confirmation email has been sent to you. Please follow the instructions to verify your account before signing in.
+  error_email: This email is already in use. Please choose a different one, or sign in if you already have an account.
+  error_not_verified: Your account has not been verified yet. Please check your email to activate your account.

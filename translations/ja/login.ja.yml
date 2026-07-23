@@ -1,0 +1,9 @@
+login:
+  remember_me: ログイン状態を保持する
+  or_continue_with: または次で続ける
+  no_account: アカウントをお持ちでないですか？
+  title: ログイン
+  subtitle: アカウントにアクセスして予約するには、ログインしてください。
+  forgot_password: パスワードをお忘れですか？
+  submit: ログイン
+  create_account: 新規登録

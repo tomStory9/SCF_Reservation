@@ -1,0 +1,25 @@
+register:
+  title: Sign Up
+  subtitle: Please fill in the form to create an account.
+  already_account: Already have an account?
+  login: Log in
+  submit: Sign Up
+registration_email:
+  subject: "Please confirm your email address"
+  title: "Confirm your email address"
+  hello: "Hello, Thank you for registering on our website."
+  description: "Please click the button below to confirm your email address and activate your account."
+  button: "Confirm my email address"
+  expiration_title: "This confirmation will expire in"
+  expiration: "If you have not confirmed your email address within this time, you will need to register again to create a new account."
+  ignore: "If you did not create an account, you can ignore this email."
+  footer: "This email was sent automatically, please do not reply to it."
+app:
+  name: "Setoushi Circus Factory - Booking System"
+  logo_1: "SCF Logo"
+  logo_2: "Kitokuras Logo"
+profile:
+  complete:
+    title: "Complete your information"
+    subtitle: "Enter your personal details to finalize your registration and access the full site."
+    submit: "Save my information"
