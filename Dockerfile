@@ -84,11 +84,11 @@ COPY --link composer.* symfony.* ./
 RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
 COPY package.json package-lock.json ./
-RUN npm install
+RUN yarn install
 
 COPY assets assets/
 COPY webpack.config.js ./
-RUN npm run build
+RUN yarn build
 
 # copy sources
 COPY --link --exclude=frankenphp/ . ./
