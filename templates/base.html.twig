@@ -1,60 +1,61 @@
 <!DOCTYPE html>
 <html lang="{{ app.request.locale }}">
-<head>
-    <meta charset="UTF-8">
+	<head>
+		<meta charset="UTF-8">
 
-    <title>{% block title %}{{ 'app.title'|trans }}{% endblock %}</title>
+		<title>
+			{% block title %}
+				{{ 'app.title'|trans }}
+			{% endblock %}
+		</title>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <meta name="description" content="{% block description %}{{ 'app.description'|trans }}{% endblock %}">
+		<meta name="description" content="{% block description %}{{ 'app.description'|trans }}{% endblock %}">
 
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
+		<link rel="icon" href="{{ asset('favicon.ico') }}">
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
 
-    {% block stylesheets %}
-      {{ encore_entry_link_tags('app') }}
-    {% endblock %}
-</head>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+	</head>
 
-<body class="bg-slate-100 text-slate-800 antialiased font-[Inter]">
+	<body class="bg-slate-100 text-slate-800 antialiased font-[Inter]">
 
-    <header class="absolute top-0 right-0 p-6 z-50">
+		<header class="absolute top-0 right-0 p-6 z-50">
 
-        <div class="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full shadow px-2 py-2">
+			<div class="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full shadow px-2 py-2">
 
-            {% set currentRoute = app.request.attributes.get('_route') %}
-            {% set routeParams = app.request.attributes.get('_route_params') %}
+				{% set currentRoute = app.request.attributes.get('_route') %}
+				{% set routeParams = app.request.attributes.get('_route_params') %}
 
-            <a href="{{ path('app_switch_locale', {'locale': 'fr'}) }}"
-               class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'fr' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
-                🇫🇷 FR
-            </a>
+				<a href="{{ path('app_switch_locale', {'locale': 'fr'}) }}" class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'fr' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
+					🇫🇷 FR
+				</a>
 
-            <a href="{{ path('app_switch_locale', {'locale': 'en'}) }}"
-               class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'en' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
-                🇬🇧 EN
-            </a>
+				<a href="{{ path('app_switch_locale', {'locale': 'en'}) }}" class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'en' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
+					🇬🇧 EN
+				</a>
 
-            <a href="{{ path('app_switch_locale', {'locale': 'jp'}) }}"
-               class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'jp' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
-                🇯🇵 日本語
-            </a>
+				<a href="{{ path('app_switch_locale', {'locale': 'jp'}) }}" class="px-3 py-1 rounded-full text-sm {{ app.request.locale == 'jp' ? 'bg-blue-600 text-white' : 'hover:bg-gray-100' }}">
+					🇯🇵 日本語
+				</a>
 
-        </div>
+			</div>
 
-    </header>
+		</header>
 
-    {% block body %}{% endblock %}
+		{% block body %}{% endblock %}
 
-    {{ encore_entry_script_tags('app') }}
+		{{ encore_entry_script_tags('app') }}
 
-    {% block javascripts %}{% endblock %}
-            {{ encore_entry_script_tags('app') }}
+		{% block javascripts %}{% endblock %}
+		{{ encore_entry_script_tags('app') }}
 
-</body>
+	</body>
 </html>
