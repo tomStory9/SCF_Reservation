@@ -83,7 +83,7 @@ COPY --link frankenphp/conf.d/20-app.prod.ini $PHP_INI_DIR/app.conf.d/
 COPY --link composer.* symfony.* ./
 RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scripts --no-progress
 
-COPY package.json package-lock.json ./
+COPY package.json yarn.lock ./
 RUN yarn install
 
 COPY assets assets/
