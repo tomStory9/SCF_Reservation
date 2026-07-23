@@ -11,6 +11,12 @@ services:
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@scf_database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
+      APP_SUPPORTED_LOCALES: fr|en|jp
+      MAILER_ADDRESS: ${MAILER_ADDRESS}
+      OAUTH_LINE_CLIENT_ID: ${OAUTH_LINE_CLIENT_ID}
+      OAUTH_LINE_CLIENT_SECRET: ${OAUTH_LINE_CLIENT_SECRET}
+      OAUTH_GOOGLE_CLIENT_ID: ${OAUTH_GOOGLE_CLIENT_ID}
+      OAUTH_GOOGLE_CLIENT_SECRET: ${OAUTH_GOOGLE_CLIENT_SECRET}
     ports: !override []
     networks:
       default:
@@ -18,10 +24,10 @@ services:
     labels:
       caddy: reservation.scf.panini.simon511000.fr
       caddy.reverse_proxy: "{{upstreams 80}}"
-  
+
   database:
     hostname: scf_database
-  
+
   adminer:
     ports: !override []
     networks:
