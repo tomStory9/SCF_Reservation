@@ -26,13 +26,13 @@ final class Version20260722011251 extends AbstractMigration
         $this->addSql('ALTER TABLE zone ADD CONSTRAINT FK_A0EBC007A7014910 FOREIGN KEY (facility_id) REFERENCES facility (id)');
         $this->addSql('ALTER TABLE zone_equipment ADD CONSTRAINT FK_5DAE86F69F2C3FAB FOREIGN KEY (zone_id) REFERENCES zone (id) NOT DEFERRABLE');
         $this->addSql('ALTER TABLE zone_equipment ADD CONSTRAINT FK_5DAE86F6517FE9FE FOREIGN KEY (equipment_id) REFERENCES equipment (id) NOT DEFERRABLE');
-        $this->addSql('DROP TABLE location');
         $this->addSql('ALTER TABLE booking DROP CONSTRAINT fk_e00cedde64d218e');
+        $this->addSql('ALTER TABLE pricing DROP CONSTRAINT fk_e5f1ac3364d218e');
+        $this->addSql('DROP TABLE location');
         $this->addSql('DROP INDEX idx_e00cedde64d218e');
         $this->addSql('ALTER TABLE booking RENAME COLUMN location_id TO zone_id');
         $this->addSql('ALTER TABLE booking ADD CONSTRAINT FK_E00CEDDE9F2C3FAB FOREIGN KEY (zone_id) REFERENCES zone (id) NOT DEFERRABLE');
         $this->addSql('CREATE INDEX IDX_E00CEDDE9F2C3FAB ON booking (zone_id)');
-        $this->addSql('ALTER TABLE pricing DROP CONSTRAINT fk_e5f1ac3364d218e');
         $this->addSql('DROP INDEX idx_e5f1ac3364d218e');
         $this->addSql('ALTER TABLE pricing RENAME COLUMN location_id TO zone_id');
         $this->addSql('ALTER TABLE pricing ADD CONSTRAINT FK_E5F1AC339F2C3FAB FOREIGN KEY (zone_id) REFERENCES zone (id) NOT DEFERRABLE');
