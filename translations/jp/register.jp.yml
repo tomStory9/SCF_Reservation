@@ -1,0 +1,25 @@
+register:
+  title: 新規登録
+  subtitle: アカウントを作成するには、フォームにご記入ください。
+  already_account: すでにアカウントをお持ちですか？
+  login: ログイン
+  submit: 登録する
+registration_email:
+  subject: "メールアドレスの確認をお願いします"
+  title: "メールアドレスを確認してください"
+  hello: "こんにちは。当サイトにご登録いただきありがとうございます。"
+  description: "下のボタンをクリックして、メールアドレスを確認し、アカウントを有効化してください。"
+  button: "メールアドレスを確認する"
+  expiration_title: "この確認の有効期限は"
+  expiration: "この期間内にメールアドレスの確認が完了しなかった場合、新しいアカウントを作成するために再度ご登録いただく必要があります。"
+  ignore: "アカウントを作成した覚えがない場合は、このメールを無視してください。"
+  footer: "このメールは自動送信されています。返信はご遠慮ください。"
+app:
+  name: "Setoushi Circus Factory - Réservation System"
+  logo_1: "Logo SCF"
+  logo_2: "Logo Kitokuras"
+profile:
+  complete:
+    title: "プロフィール情報を入力してください"
+    subtitle: "登録を完了してサイト全体にアクセスするために、個人情報をご入力ください。"
+    submit: "情報を保存する"

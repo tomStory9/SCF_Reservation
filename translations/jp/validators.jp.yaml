@@ -1,0 +1,15 @@
+errors:
+  email_not_blank: "メールアドレスを入力してください。"
+  email_invalid: "有効なメールアドレスを入力してください。"
+  password_not_blank: "パスワードを入力してください。"
+  password_mismatch: "パスワードが一致しません。"
+  password_invalid: "パスワードは8文字以上で、大文字・小文字・数字・特殊文字をそれぞれ1つ以上含める必要があります。"
+  password_too_short: "パスワードは8文字以上である必要があります。"
+  phone_invalid: "有効な電話番号を入力してください。"
+  suspended_account: "アカウントが停止されています。誤りだと思われる場合は、Setoushi Circus Factoryまでお問い合わせください。"
+  pending_account: "アカウントは現在承認待ちです。後ほど再度ログインをお試しください。承認されましたらメールにてお知らせします。"
+  declined_account: "アカウントの作成が拒否されました。誤りだと思われる場合は、Setoushi Circus Factoryまでお問い合わせください。"
+flash:
+  info_email: 確認メールをお送りしました。ログイン前にアカウントを有効化するため、メールの案内に従ってください。
+  error_email: このメールアドレスはすでに使用されています。別のアドレスをお選びいただくか、すでにアカウントをお持ちの場合はログインしてください。
+  error_not_verified: アカウントがまだ認証されていません。アカウントを有効化するため、メールをご確認ください。

@@ -1,0 +1,33 @@
+login:
+  email: Your email
+  password: Your password
+  email_placeholder: Enter your email
+  password_placeholder: Enter your password
+register:
+  email: Your email
+  password: Your password
+  password_confirmation: Confirm your password
+  email_placeholder: Enter your email
+  password_placeholder: Enter your password
+  password_confirmation_placeholder: Confirm your password
+information:
+  email:
+    label: "Email address"
+    placeholder: "Your email address"
+    not_blank: "Email address is required."
+    invalid: "Please enter a valid email address."
+  name:
+    label: "First name"
+    placeholder: "Your first name"
+    not_blank: "First name is required."
+  lastname:
+    label: "Last name"
+    placeholder: "Your last name"
+    not_blank: "Last name is required."
+  phone:
+    label: "Phone"
+    placeholder: "Your phone number"
+    not_blank: "Phone number is required."
+  company:
+    label: "Associated company"
+    placeholder: "Your associated company"

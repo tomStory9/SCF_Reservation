@@ -1,0 +1,22 @@
+{
+  "version": "1.15",
+  "locale": {
+    "source": "fr",
+    "targets": [
+      "ja",
+      "en"
+    ]
+  },
+  "buckets": {
+    "yaml": {
+      "include": [
+        "translations/[locale]/register.[locale].yml",
+        "translations/[locale]/login.[locale].yml",
+        "translations/[locale]/forms.[locale].yml",
+        "translations/[locale]/validators.[locale].yaml"
+      ]
+    }
+  },
+  "engineId":"eng_2o6cDkiCNdEjcQnxlHeW",
+  "$schema": "https://lingo.dev/schema/i18n.json"
+}
