@@ -31,7 +31,6 @@ services:
 
 ###> doctrine/doctrine-bundle ###
   database:
-    hostname: scf_database
     ports:
       - "5432"
 ###< doctrine/doctrine-bundle ###

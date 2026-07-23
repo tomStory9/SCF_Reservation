@@ -15,9 +15,21 @@ services:
     networks:
       default:
       caddy:
+    labels:
+      caddy: reservation.scf.panini.simon511000.fr
+      caddy.reverse_proxy: "{{upstreams 80}}"
   
   database:
     hostname: scf_database
+  
+  adminer:
+    ports: !override []
+    networks:
+      default:
+      caddy:
+    labels:
+      caddy: adminer.reservation.scf.panini.simon511000.fr
+      caddy.reverse_proxy: "{{upstreams 8080}}"
 
 networks:
   caddy:
