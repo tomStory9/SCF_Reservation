@@ -14,7 +14,7 @@ final class UserController extends AbstractController
     ) {
     }
 
-    #[Route('/user', name: 'app_home')]
+    #[Route('/user', name: 'app_home_user')]
     public function index(): Response
     {
         $user = $this->getUser();
