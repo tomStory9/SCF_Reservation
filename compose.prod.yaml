@@ -11,6 +11,8 @@ services:
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       DATABASE_URL: postgresql://${POSTGRES_USER:-app}:${POSTGRES_PASSWORD:-!ChangeMe!}@scf_database:5432/${POSTGRES_DB:-app}?serverVersion=${POSTGRES_VERSION:-15}&charset=${POSTGRES_CHARSET:-utf8}
+      SYMFONY_TRUSTED_PROXIES: 172.24.0.0/16
+      SYMFONY_TRUSTED_HEADERS: 'x-forwarded-for, x-forwarded-host, x-forwarded-proto, x-forwarded-port, x-forwarded-prefix'
       APP_SUPPORTED_LOCALES: fr|en|jp
       MAILER_ADDRESS: ${MAILER_ADDRESS}
       MAILER_DSN: ${MAILER_DSN}
