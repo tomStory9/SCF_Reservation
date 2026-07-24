@@ -11,7 +11,7 @@ registration_email:
   hello: "Bonjour, Merci de vous être inscrit sur notre site. "
   description: "Veuillez cliquer sur le bouton ci-dessous pour confirmer votre adresse email et activer votre compte."
   button: "Confirmer mon adresse email"
-  expiration_title: "Cette confirmation expirera dans"
+  expiration_title: "Ce mail de confirmation n'expire pas"
   expiration: "Si vous n'avez pas confirmé votre adresse email dans ce délai, vous devrez vous réinscrire pour créer un nouveau compte."
   ignore: "Si vous n'avez pas créé de compte, vous pouvez ignorer cet email."
   footer: "Ce mail vous a été envoyer automatiquement, merci de ne pas y répondre"

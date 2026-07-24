@@ -83,7 +83,7 @@ final class RegisterController extends AbstractController
                 new TemplatedEmail()
                     ->from(new Address($mailerAddress, 'Setoushi Circus Factory'))
                     ->to($user->getEmail())
-                    ->subject($translator->trans('registration_email.subject'))
+                    ->subject($translator->trans('registration_email.subject', domain: 'register'))
                     ->htmlTemplate('security/register/mails/confirmation_email.html.twig')
             );
 
