@@ -58,7 +58,7 @@ services:
 ###< doctrine/doctrine-bundle ###
 
   adminer:
-    image: wodby/adminer:5.1.1
+    image: wodby/adminer:5-5.1.1
     ports:
       - 8083:80
     environment:
