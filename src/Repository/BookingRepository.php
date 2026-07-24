@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Booking;
 use App\Entity\User;
+use App\Entity\Zone;
+use App\Enum\BookingStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
@@ -49,6 +51,16 @@ class BookingRepository extends ServiceEntityRepository
             ->andWhere('b.startDate < :dayEnd')
             ->setParameter('dayStart', $targetDayStart)
             ->setParameter('dayEnd', $targetDayEnd)
+            ->getQuery()
+            ->getResult();
+    }
+    public function getBookingsByZone(Zone $zone): array
+    {
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.zone = :zone')
+            ->andWhere('b.bookingStatus = :status')
+            ->setParameter('zone', $zone)
+            ->setParameter('status', BookingStatus::APPROVED)
             ->getQuery()
             ->getResult();
     }

@@ -87,22 +87,17 @@
 
 				<aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
 					<div class="mb-5 border-b border-slate-200">
-						<nav class="-mb-px flex flex-wrap gap-2 sm:gap-3" aria-label="Lieux">
-							<button type="button" class="location-tab is-active rounded-t-xl border border-b-0 border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-primary" data-location="grande-salle" aria-selected="true">
-								Grande salle
-							</button>
+						<nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="Lieux">
+                            {% for facility in facilities %}
+                                {% set isActive = loop.first %}
 
-							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="studio-a" aria-selected="false">
-								Studio A
-							</button>
-
-							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="studio-b" aria-selected="false">
-								Studio B
-							</button>
-
-							<button type="button" class="location-tab rounded-t-xl border border-transparent px-5 py-3 text-sm font-semibold text-slate-500 transition hover:text-secondary" data-location="exterieur" aria-selected="false">
-								Extérieur
-							</button>
+                                <button type="button"
+                                        class="location-tab rounded-t-xl border px-5 py-3 text-sm font-semibold transition {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}"
+                                        data-location="{{ facility.id }}"
+                                        aria-selected="{{ isActive ? 'true' : 'false' }}">
+                                    {{ facility.name }}
+                                </button>
+                            {% endfor %}
 						</nav>
 					</div>
 
@@ -117,10 +112,13 @@
 						</div>
 
 						<div class="mb-6">
-							<p class="text-sm text-state">
-								<span class="font-semibold text-secondary">Lieu sélectionné :</span>
-								<span id="selected-location-label" class="font-semibold text-primary">Grande salle</span>
-							</p>
+                            <label for="zone-select" class="block text-sm font-semibold text-secondary mb-2">
+                                Zone sélectionnée :
+                            </label>
+
+                            <select id="zone-select" name="zone" class="w-full">
+                                <option value="">Chargement des zones...</option>
+                            </select>
 
 							<p class="mt-4 text-sm font-semibold text-secondary">Description</p>
 							<p id="location-description" class="mt-2 text-sm leading-6 text-state">
@@ -149,6 +147,13 @@
 							<div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
 								Aucune sélection pour le moment.
 							</div>
+
+                            <div id="price-container" class="hidden mt-4 border-t border-slate-200 pt-4">
+                                <p class="text-sm text-state">
+                                    <span class="font-semibold text-secondary">Tarif :</span>
+                                    <span id="price-display" class="text-base font-bold text-primary">0 ¥</span>
+                                </p>
+                            </div>
 						</div>
 					</div>
 				</aside>
