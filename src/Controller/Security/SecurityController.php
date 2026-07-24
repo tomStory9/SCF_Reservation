@@ -35,7 +35,7 @@ class SecurityController extends AbstractController
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    #[Route(path: '/', name: 'app_redirect')]
+    #[Route(path: '/', name: 'app_home')]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function redirectUser(): Response
     {
