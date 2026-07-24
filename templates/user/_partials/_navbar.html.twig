@@ -22,7 +22,7 @@
 			{# Centre : navigation #}
 			<div class="hidden flex-1 items-center justify-center lg:flex">
 				<div class="flex items-center gap-6 xl:gap-8">
-					<a href="{{ path('app_reservation') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') == 'app_reservation' ? 'text-primary' : 'text-secondary' }}">
+					<a href="{{ path('app_booking_index') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') == 'app_reservation' ? 'text-primary' : 'text-secondary' }}">
 						{{ 'account.dashboard.new_booking'|trans }}
 					</a>
 

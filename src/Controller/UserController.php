@@ -24,14 +24,4 @@ final class UserController extends AbstractController
             'bookings' => $user->getBookings(),
         ]);
     }
-
-    #[Route('/reservation', name: 'app_reservation')]
-    public function reservation(): Response
-    {
-        $user = $this->getUser();
-
-        return $this->render('user/reservation.html.twig', [
-            'user' => $user,
-        ]);
-    }
 }
