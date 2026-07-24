@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Enum\UserStatus;
 use App\Form\RegistrationFormType;
 use App\Form\UserFormType;
 use App\Security\EmailVerifier;
@@ -72,6 +73,7 @@ final class RegisterController extends AbstractController
             $user->setName('');
             $user->setLastname('');
             $user->setIsVerified(false);
+            $user->setUserStatus(UserStatus::PENDING);
 
             $entityManager->persist($user);
             $entityManager->flush();
