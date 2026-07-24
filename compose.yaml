@@ -58,17 +58,14 @@ services:
 ###< doctrine/doctrine-bundle ###
 
   adminer:
-    image: michalhosna/adminer
+    image: wodby/adminer:5.1.1
     ports:
-      - 8083:8080
+      - 8083:80
     environment:
-      ADMINER_DB: ${POSTGRES_DB:-app}
-      ADMINER_DRIVER: pgsql
-      ADMINER_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      ADMINER_SERVER: database
-      ADMINER_USERNAME: ${POSTGRES_USER:-app}
-      ADMINER_AUTOLOGIN: 1
-      ADMINER_NAME: Reservation
+      ADMINER_DEFAULT_DB_DRIVER: pgsql
+      ADMINER_DEFAULT_DB_HOST: scf_database
+      ADMINER_DEFAULT_DB_NAME: ${POSTGRES_DB:-app}
+      ADMINER_DESIGN: nette
     networks:
       default:
 

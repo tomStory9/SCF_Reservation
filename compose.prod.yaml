@@ -48,7 +48,7 @@ services:
       caddy:
     labels:
       caddy: adminer.reservation.scf.panini.simon511000.fr
-      caddy.reverse_proxy: "{{upstreams 8080}}"
+      caddy.reverse_proxy: "{{upstreams 80}}"
 
 networks:
   caddy:
