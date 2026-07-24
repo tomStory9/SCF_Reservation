@@ -1,7 +1,7 @@
 ---
 # Production environment override
 services:
-  php:
+  php: &php
     image: ${IMAGES_PREFIX:-}app-php-prod
     build:
       context: .
@@ -27,6 +27,16 @@ services:
     labels:
       caddy: reservation.scf.panini.simon511000.fr
       caddy.reverse_proxy: "{{upstreams 80}}"
+
+  messenger:
+    <<: *php
+    command: php bin/console messenger:consume async
+    ports: []
+    networks:
+      default:
+    labels: {}
+    healthcheck:
+      disable: true
 
   database:
     hostname: scf_database
