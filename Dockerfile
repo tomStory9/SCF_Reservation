@@ -122,7 +122,9 @@ COPY --link --exclude=var --from=frankenphp_prod_builder /app /app
 
 WORKDIR /app
 
-RUN npm install && npm run build
+RUN npm install \
+    && rm -f node_modules/@symfony/ux-turbo/tsconfig.json \
+    && npm run build
 
 # Prod FrankenPHP image
 FROM debian:13-slim AS frankenphp_prod
