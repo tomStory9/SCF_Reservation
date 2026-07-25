@@ -38,7 +38,7 @@ class PricingCrudController extends AbstractCrudController
             yield IntegerField::new('fullPrice', 'Full Price');
             yield IntegerField::new('reducedPriceA', 'Reduced Price A');
             yield IntegerField::new('reducedPriceB', 'Reduced Price B');
-            yield IntegerField::new('guestCount', 'Guest Count');
+            //yield IntegerField::new('guestCount', 'Guest Count');
 
             return;
         }
@@ -52,7 +52,7 @@ class PricingCrudController extends AbstractCrudController
         yield IntegerField::new('fullPrice', 'Full Price');
         yield IntegerField::new('reducedPriceA', 'Reduced Price A');
         yield IntegerField::new('reducedPriceB', 'Reduced Price B');
-        yield IntegerField::new('guestCount', 'Guest Count');
+        //yield IntegerField::new('guestCount', 'Guest Count');
     }
 
     public function configureFilters(Filters $filters): Filters
