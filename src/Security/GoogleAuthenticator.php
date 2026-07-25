@@ -66,6 +66,8 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                     $user->setName($googleData['given_name'] ?? '');
                     $user->setLastName($googleData['family_name'] ?? '');
                     $user->setPhone($googleData['phone_number'] ?? '');
+                    $user->setFilledInfo(false);
+                    $user->setIsVerified(true);
                 }
 
                 $this->entityManager->persist($user);

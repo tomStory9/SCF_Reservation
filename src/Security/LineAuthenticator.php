@@ -65,6 +65,8 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
                     $user->setLineId($lineUser->getId());
                     $user->setName($lineData['given_name'] ?? '');
                     $user->setLastName($lineData['family_name'] ?? '');
+                    $user->setFilledInfo(false);
+                    $user->setIsVerified(true);
                     $user->setPhone($lineData['phone_number'] ?? ''); // TODO : try with a line account with phone number added and name lastname or find other solution
                 }
 
