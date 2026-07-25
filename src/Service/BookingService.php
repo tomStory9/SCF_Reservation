@@ -60,7 +60,7 @@ class BookingService
                 continue;
             }
 
-            $dayKey = $weekDay->getId();
+            $dayKey = $weekDay->getDayNumber();
             $periodType = $timeSlot->getPeriod()->value;
 
             if (!isset($pricingsData[$dayKey])) {
