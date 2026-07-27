@@ -43,6 +43,12 @@ class Booking
     #[ORM\Column]
     private ?\DateTimeImmutable $createdDate = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $CheckedInAt = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $CheckedOutAt = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -152,6 +158,30 @@ class Booking
     public function setCreatedDate(\DateTimeImmutable $createdDate): static
     {
         $this->createdDate = $createdDate;
+
+        return $this;
+    }
+
+    public function getCheckedInAt(): ?\DateTimeImmutable
+    {
+        return $this->CheckedInAt;
+    }
+
+    public function setCheckedInAt(?\DateTimeImmutable $CheckedInAt): static
+    {
+        $this->CheckedInAt = $CheckedInAt;
+
+        return $this;
+    }
+
+    public function getCheckedOutAt(): ?\DateTimeImmutable
+    {
+        return $this->CheckedOutAt;
+    }
+
+    public function setCheckedOutAt(?\DateTimeImmutable $CheckedOutAt): static
+    {
+        $this->CheckedOutAt = $CheckedOutAt;
 
         return $this;
     }

@@ -1,0 +1,184 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Check-in / Check-out{% endblock %}
+
+{% block body %}
+<div class="min-h-screen bg-slate-50">
+    <div class="mx-auto flex min-h-screen max-w-5xl flex-col px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+
+        <header class="mb-6 flex flex-col gap-3">
+            <span class="inline-flex w-fit items-center rounded-full bg-secondary px-3 py-1 text-sm font-medium text-white">
+                Réservation
+            </span>
+
+            <h1 class="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+                Check-in / Check-out
+            </h1>
+
+            <p class="text-sm text-slate-600 sm:text-base">
+                Consultez instantanément votre statut de présence et les informations de votre réservation.
+            </p>
+        </header>
+
+        {# Flash messages #}
+        <div class="mb-6 flex flex-col gap-3">
+            {% for message in app.flashes('success') %}
+                <div class="rounded-2xl border border-primary bg-primary px-4 py-3 text-sm font-medium text-white shadow-sm">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('info') %}
+                <div class="rounded-2xl border border-secondary bg-secondary px-4 py-3 text-sm font-medium text-white shadow-sm">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('warning') %}
+                <div class="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800 shadow-sm">
+                    {{ message }}
+                </div>
+            {% endfor %}
+
+            {% for message in app.flashes('danger') %}
+                <div class="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-800 shadow-sm">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <main class="flex flex-1 items-center justify-center">
+            <section class="w-full rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6 lg:p-8">
+
+                {% if booking %}
+                    {% set statusLabel =
+                        status == 'checked_in' ? 'CHECK-IN VALIDÉ' :
+                        (status == 'checked_out' ? 'CHECK-OUT VALIDÉ' :
+                        (status == 'checked_in_waiting_checkout' ? 'CHECK-IN DÉJÀ EFFECTUÉ' :
+                        (status == 'waiting_check_in' ? 'CHECK-IN INDISPONIBLE' :
+                        (status == 'waiting_check_out' ? 'CHECK-OUT INDISPONIBLE' :
+                        (status == 'already_done' ? 'RÉSERVATION TERMINÉE' :
+                        (status == 'outside_window' ? 'ACTION INDISPONIBLE' :
+                        (status == 'no_booking' ? 'AUCUNE RÉSERVATION' : 'STATUT INCONNU')))))))
+                    %}
+
+                    {% set computedStatusMessage =
+                        status == 'checked_in' ? 'Votre arrivée a bien été enregistrée. Vous pouvez poursuivre normalement.' :
+                        (status == 'checked_out' ? 'Votre départ a bien été enregistré. La réservation est terminée.' :
+                        (status == 'checked_in_waiting_checkout' ? 'Votre check-in est bien enregistré. Vous devez encore patienter avant de pouvoir effectuer le check-out.' :
+                        (status == 'waiting_check_in' ? 'Vous n’êtes pas encore dans la plage autorisée pour effectuer votre check-in.' :
+                        (status == 'waiting_check_out' ? 'Votre check-in est déjà validé, mais la plage de check-out n’est pas encore ouverte.' :
+                        (status == 'already_done' ? 'Le check-in et le check-out ont déjà été enregistrés pour cette réservation.' :
+                        (status == 'outside_window' ? 'Vous n’êtes pas actuellement dans une plage autorisée pour effectuer un check-in ou un check-out.' :
+                        (status == 'no_booking' ? 'Aucune réservation n’a été trouvée pour votre compte.' : 'Le système n’a pas pu déterminer précisément votre état actuel.')))))))
+                    %}
+
+                    {% set finalStatusMessage = status_message is defined and status_message ? status_message : computedStatusMessage %}
+
+                    {% set statusClass =
+                        status == 'checked_in' ? 'bg-primary text-white border-primary' :
+                        (status == 'checked_out' ? 'bg-secondary text-white border-secondary' :
+                        (status == 'checked_in_waiting_checkout' ? 'bg-primary text-white border-primary' :
+                        (status == 'already_done' ? 'bg-secondary text-white border-secondary' :
+                        'bg-slate-100 text-slate-700 border-slate-200')))
+                    %}
+
+                    {% set dotClass =
+                        status in ['checked_in', 'checked_out', 'checked_in_waiting_checkout', 'already_done'] ? 'bg-white' : 'bg-slate-400'
+                    %}
+
+                    <div class="flex flex-col gap-6">
+
+                        {# Bloc principal : statut très visible #}
+                        <div class="rounded-3xl border px-6 py-8 text-center shadow-sm sm:px-8 sm:py-10 lg:px-10 lg:py-12 {{ statusClass }}">
+                            <p class="text-sm font-semibold uppercase tracking-[0.25em] opacity-90">
+                                Statut actuel
+                            </p>
+
+                            <div class="mt-5 flex justify-center">
+                                <div class="h-4 w-4 rounded-full {{ dotClass }}"></div>
+                            </div>
+
+                            <h2 class="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
+                                {{ statusLabel }}
+                            </h2>
+
+                            <p class="mx-auto mt-5 max-w-3xl text-base leading-7 sm:text-lg lg:text-xl">
+                                {{ finalStatusMessage }}
+                            </p>
+
+                            {% if remaining_time_message is defined and remaining_time_message %}
+                                <div class="mt-5 inline-flex rounded-2xl border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold text-white">
+                                    Temps restant avant check-out : {{ remaining_time_message }}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {# Infos réservation #}
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div class="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
+                                <p class="text-sm font-medium text-slate-500">
+                                    Début
+                                </p>
+                                <p class="mt-2 text-xl font-semibold text-slate-900 sm:text-2xl">
+                                    {{ booking.startDate|date('d/m/Y H:i') }}
+                                </p>
+                            </div>
+
+                            <div class="rounded-2xl bg-slate-50 p-5 ring-1 ring-slate-200">
+                                <p class="text-sm font-medium text-slate-500">
+                                    Fin
+                                </p>
+                                <p class="mt-2 text-xl font-semibold text-slate-900 sm:text-2xl">
+                                    {{ booking.endDate|date('d/m/Y H:i') }}
+                                </p>
+                            </div>
+                        </div>
+
+                        {# Enregistrements #}
+                        <div class="grid gap-4 md:grid-cols-2">
+                            <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                                <p class="text-sm font-medium text-slate-500">
+                                    Check-in enregistré
+                                </p>
+                                <p class="mt-2 text-base font-semibold text-slate-900 sm:text-lg">
+                                    {{ booking.checkedInAt ? booking.checkedInAt|date('d/m/Y H:i') : 'Non enregistré' }}
+                                </p>
+                            </div>
+
+                            <div class="rounded-2xl border border-slate-200 bg-white p-5">
+                                <p class="text-sm font-medium text-slate-500">
+                                    Check-out enregistré
+                                </p>
+                                <p class="mt-2 text-base font-semibold text-slate-900 sm:text-lg">
+                                    {{ booking.checkedOutAt ? booking.checkedOutAt|date('d/m/Y H:i') : 'Non enregistré' }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="flex flex-col gap-6">
+                        <div class="rounded-3xl border border-slate-200 bg-slate-100 px-6 py-8 text-center text-slate-700 shadow-sm sm:px-8 sm:py-10 lg:px-10 lg:py-12">
+                            <p class="text-sm font-semibold uppercase tracking-[0.25em] opacity-90">
+                                Statut actuel
+                            </p>
+
+                            <div class="mt-5 flex justify-center">
+                                <div class="h-4 w-4 rounded-full bg-slate-400"></div>
+                            </div>
+
+                            <h2 class="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl">
+                                AUCUNE RÉSERVATION
+                            </h2>
+
+                            <p class="mx-auto mt-5 max-w-3xl text-base leading-7 sm:text-lg lg:text-xl">
+                                {{ status_message is defined and status_message ? status_message : 'Nous n’avons trouvé aucune réservation associée à votre compte pour le moment.' }}
+                            </p>
+                        </div>
+                    </div>
+                {% endif %}
+            </section>
+        </main>
+    </div>
+</div>
+{% endblock %}
