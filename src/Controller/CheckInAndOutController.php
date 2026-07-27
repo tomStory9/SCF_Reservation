@@ -8,12 +8,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class CheckInAndOutController extends AbstractController
 {
     public function __construct(
         private BookingRepository $bookingRepository,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -31,11 +33,31 @@ final class CheckInAndOutController extends AbstractController
         $nearestUserBooking = $this->bookingRepository->findNearestBooking($user, $tokyoNow);
 
         if (!$nearestUserBooking) {
+            $status = 'no_booking';
+            $statusMessage = $this->translator->trans(
+                'status.no_booking.message',
+                [],
+                'checkInAndOut'
+            );
+
+            $statusLabel = $this->translator->trans(
+                'status.no_booking.label',
+                [],
+                'checkInAndOut'
+            );
+
+            $statusClass = 'bg-slate-100 text-slate-700 border-slate-200';
+            $dotClass = 'bg-slate-400';
+
             return $this->render('check_in_out/index.html.twig', [
                 'controller_name' => 'CheckInOutController',
                 'booking' => null,
-                'status' => 'no_booking',
-                'status_message' => 'Aucune réservation trouvée.',
+                'status' => $status,
+                'status_label' => $statusLabel,
+                'status_message' => $statusMessage,
+                'remaining_time_message' => null,
+                'status_class' => $statusClass,
+                'dot_class' => $dotClass,
             ]);
         }
 
@@ -75,7 +97,11 @@ final class CheckInAndOutController extends AbstractController
             && $now <= $checkOutWindowEnd;
 
         $status = 'outside_window';
-        $statusMessage = 'Vous n’êtes pas dans une plage autorisée de check-in ou check-out.';
+        $statusMessage = $this->translator->trans(
+            'status.outside_window.message',
+            [],
+            'checkInAndOut'
+        );
         $remainingTimeMessage = null;
 
         if ($canCheckIn) {
@@ -89,7 +115,11 @@ final class CheckInAndOutController extends AbstractController
             $this->entityManager->flush();
 
             $status = 'checked_in';
-            $statusMessage = 'Check-in enregistré avec succès.';
+            $statusMessage = $this->translator->trans(
+                'status.checked_in.message',
+                [],
+                'checkInAndOut'
+            );
         } elseif ($canCheckOut) {
             $checkedOutAt = \DateTimeImmutable::createFromFormat(
                 'Y-m-d H:i:s',
@@ -101,7 +131,11 @@ final class CheckInAndOutController extends AbstractController
             $this->entityManager->flush();
 
             $status = 'checked_out';
-            $statusMessage = 'Check-out enregistré avec succès.';
+            $statusMessage = $this->translator->trans(
+                'status.checked_out.message',
+                [],
+                'checkInAndOut'
+            );
         } elseif (null !== $nearestUserBooking->getCheckedInAt() && null === $nearestUserBooking->getCheckedOutAt()) {
             $status = 'checked_in_waiting_checkout';
 
@@ -117,27 +151,67 @@ final class CheckInAndOutController extends AbstractController
                     $remainingTimeMessage = sprintf('%dmin', $minutes);
                 }
 
-                $statusMessage = sprintf(
-                    'Votre check-in est déjà enregistré. Vous devez encore attendre %s avant de pouvoir effectuer le check-out.',
-                    $remainingTimeMessage
+                $statusMessage = $this->translator->trans(
+                    'status.checked_in_waiting_checkout.message_with_remaining_time',
+                    ['%time%' => $remainingTimeMessage],
+                    'checkInAndOut'
                 );
             } else {
-                $statusMessage = 'Votre check-in est déjà enregistré. Vous pouvez bientôt effectuer votre check-out.';
+                $statusMessage = $this->translator->trans(
+                    'status.checked_in_waiting_checkout.message',
+                    [],
+                    'checkInAndOut'
+                );
             }
         } elseif (null !== $nearestUserBooking->getCheckedInAt() && null !== $nearestUserBooking->getCheckedOutAt()) {
             $status = 'already_done';
-            $statusMessage = 'Le check-in et le check-out sont déjà enregistrés.';
+            $statusMessage = $this->translator->trans(
+                'status.already_done.message',
+                [],
+                'checkInAndOut'
+            );
         } elseif (null === $nearestUserBooking->getCheckedInAt()) {
             $status = 'waiting_check_in';
-            $statusMessage = 'Vous n’êtes pas encore dans la plage autorisée pour le check-in.';
+            $statusMessage = $this->translator->trans(
+                'status.waiting_check_in.message',
+                [],
+                'checkInAndOut'
+            );
         }
+
+        $statusLabel = match ($status) {
+            'checked_in' => $this->translator->trans('status.checked_in.label', [], 'checkInAndOut'),
+            'checked_out' => $this->translator->trans('status.checked_out.label', [], 'checkInAndOut'),
+            'checked_in_waiting_checkout' => $this->translator->trans('status.checked_in_waiting_checkout.label', [], 'checkInAndOut'),
+            'waiting_check_in' => $this->translator->trans('status.waiting_check_in.label', [], 'checkInAndOut'),
+            'waiting_check_out' => $this->translator->trans('status.waiting_check_out.label', [], 'checkInAndOut'),
+            'already_done' => $this->translator->trans('status.already_done.label', [], 'checkInAndOut'),
+            'outside_window' => $this->translator->trans('status.outside_window.label', [], 'checkInAndOut'),
+            'no_booking' => $this->translator->trans('status.no_booking.label', [], 'checkInAndOut'),
+            default => $this->translator->trans('status.unknown.label', [], 'checkInAndOut'),
+        };
+
+        $statusClass = match ($status) {
+            'checked_in' => 'bg-primary text-white border-primary',
+            'checked_out' => 'bg-secondary text-white border-secondary',
+            'checked_in_waiting_checkout' => 'bg-primary text-white border-primary',
+            'already_done' => 'bg-secondary text-white border-secondary',
+            default => 'bg-slate-100 text-slate-700 border-slate-200',
+        };
+
+        $dotClass = in_array($status, ['checked_in', 'checked_out', 'checked_in_waiting_checkout', 'already_done'], true)
+            ? 'bg-white'
+            : 'bg-slate-400';
 
         return $this->render('check_in_out/index.html.twig', [
             'controller_name' => 'CheckInOutController',
             'booking' => $nearestUserBooking,
             'status' => $status,
+            'status_label' => $statusLabel,
             'status_message' => $statusMessage,
             'remaining_time_message' => $remainingTimeMessage,
+            'status_class' => $statusClass,
+            'dot_class' => $dotClass,
         ]);
     }
 }

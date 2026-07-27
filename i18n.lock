@@ -116,7 +116,7 @@ checksums:
     registration_email/hello: f78946e861724e0f5930d96c53eb3cac
     registration_email/description: 0bba94d49c99cc25f7439128294a18c8
     registration_email/button: be4844b4e1a2070fbad3ce553dc09ea5
-    registration_email/expiration_title: 37bfee87af3bfc2ee6d69e183d1400fc
+    registration_email/expiration_title: c89712eeb0362906527bb4116610bfd3
     registration_email/expiration: cc49a9c07783fe19a52d199342f2ed8c
     registration_email/ignore: b7cda19fe595220dc698640584d11f9e
     registration_email/footer: 6beb3210dd9446a9205352fbd0d9b807
@@ -175,3 +175,34 @@ checksums:
     login/forgot_password: fbf9d0b6d9aa9cbfaeb62fd12ef29683
     login/submit: 2e20d9f50f715ea1d717c992f920d991
     login/create_account: 310a1ae3d86a280f6d72199e46091c70
+  541123016bb120bd80db0e3890deb731:
+    page/title: 56ba73a2ce4934e015b1108d4b3f94a9
+    page/heading: 56ba73a2ce4934e015b1108d4b3f94a9
+    page/description: d2ec2f8176336cfc5761b8a4066c2c44
+    header/badge: 7ad4a84d323e45d591e5a5cc3a1bfbea
+    section/current_status: ab89700506138b83f77ef3cd9b9f469d
+    remaining_time/before_checkout: 52d9079a1e6e08ac5209147fa3e9116e
+    booking/start: 1a45315514d2d3654b6af5f718904980
+    booking/end: 5e8ebe4701e14b8a75e45ec886004d02
+    booking/checked_in_at: f805ba90f7e63db0d71b19ef6b76282d
+    booking/checked_out_at: 94babd1a9ad5f8ffc31f855a0e6e80de
+    booking/not_recorded: 4aef410958c0e337b7d425a465c802b5
+    status/checked_in/label: aed0f702291dbb28660cd88a232fc226
+    status/checked_in/message: 7f7b63d68b80544d2b0df20b15cf2329
+    status/checked_out/label: 5afb114da5515a451c1815b02bfe18d9
+    status/checked_out/message: df9b235339b60746a096a39f24d4f1cb
+    status/checked_in_waiting_checkout/label: 0e78ebba88abe61e1a98c6076562e27f
+    status/checked_in_waiting_checkout/message: 67de891d48b1576d7ce18333a5c947e2
+    status/checked_in_waiting_checkout/message_with_remaining_time: 4794690344257d07bc96b49111107af6
+    status/waiting_check_in/label: e85ddd8665a4a6eccbcd41aebdbc3258
+    status/waiting_check_in/message: c884783732ce133133163630f5534631
+    status/waiting_check_out/label: 020258329c417d79c76397a913b7b926
+    status/waiting_check_out/message: 911d890c1f7804b5b6b5385c5da5e320
+    status/already_done/label: 52b206d579f3772a796046458d1c9823
+    status/already_done/message: a140dd77e75c1d49471c7432abb31e85
+    status/outside_window/label: 361fbe840ec4b2ecb28860593af38ba6
+    status/outside_window/message: 68396eb42e4700da1166b87cfd2b593d
+    status/no_booking/label: e4850b22322f87094ae1cb0f2c55264f
+    status/no_booking/message: b716d67a26b7002817500983d5cc43d5
+    status/unknown/label: 137b0496fc94e841018034d1bd637efd
+    status/unknown/message: c23b6eaf7452668af199229f15f1ec35

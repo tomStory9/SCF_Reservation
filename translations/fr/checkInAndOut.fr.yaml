@@ -1,0 +1,58 @@
+page:
+  title: "Check-in / Check-out"
+  heading: "Check-in / Check-out"
+  description: "Consultez instantanément votre statut de présence et les informations de votre réservation."
+
+header:
+  badge: "Réservation"
+
+section:
+  current_status: "Statut actuel"
+
+remaining_time:
+  before_checkout: "Temps restant avant check-out : %time%"
+
+booking:
+  start: "Début"
+  end: "Fin"
+  checked_in_at: "Check-in enregistré"
+  checked_out_at: "Check-out enregistré"
+  not_recorded: "Non enregistré"
+
+status:
+  checked_in:
+    label: "CHECK-IN VALIDÉ"
+    message: "Check-in enregistré avec succès."
+
+  checked_out:
+    label: "CHECK-OUT VALIDÉ"
+    message: "Check-out enregistré avec succès."
+
+  checked_in_waiting_checkout:
+    label: "CHECK-IN DÉJÀ EFFECTUÉ"
+    message: "Votre check-in est déjà enregistré. Vous pouvez bientôt effectuer votre check-out."
+    message_with_remaining_time: "Votre check-in est déjà enregistré. Vous devez encore attendre %time% avant de pouvoir effectuer le check-out."
+
+  waiting_check_in:
+    label: "CHECK-IN INDISPONIBLE"
+    message: "Vous n’êtes pas encore dans la plage autorisée pour le check-in."
+
+  waiting_check_out:
+    label: "CHECK-OUT INDISPONIBLE"
+    message: "Votre check-in est déjà validé, mais la plage de check-out n’est pas encore ouverte."
+
+  already_done:
+    label: "RÉSERVATION TERMINÉE"
+    message: "Le check-in et le check-out sont déjà enregistrés."
+
+  outside_window:
+    label: "ACTION INDISPONIBLE"
+    message: "Vous n’êtes pas dans une plage autorisée de check-in ou check-out."
+
+  no_booking:
+    label: "AUCUNE RÉSERVATION"
+    message: "Aucune réservation trouvée."
+
+  unknown:
+    label: "STATUT INCONNU"
+    message: "Le système n’a pas pu déterminer précisément votre état actuel."

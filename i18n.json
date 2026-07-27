@@ -13,7 +13,8 @@
         "translations/[locale]/register.[locale].yml",
         "translations/[locale]/login.[locale].yml",
         "translations/[locale]/forms.[locale].yml",
-        "translations/[locale]/validators.[locale].yaml"
+        "translations/[locale]/validators.[locale].yaml",
+        "translations/[locale]/checkInAndOut.[locale].yaml"
       ]
     }
   },
