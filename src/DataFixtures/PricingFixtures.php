@@ -25,7 +25,11 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
             $kodaD = $this->getReference(ZoneFixtures::KODA1D, Zone::class),
         ];
 
-        $kodaDemi = $this->getReference(ZoneFixtures::KODA_DEMI, Zone::class);
+        $kodaDemi = [
+            $kodaAB = $this->getReference(ZoneFixtures::KODA_AB, Zone::class),
+            $kodaCD = $this->getReference(ZoneFixtures::KODA_CD, Zone::class),
+        ];
+
         $kodaFull = $this->getReference(ZoneFixtures::KODA_FULL, Zone::class);
 
         // jour de la semaine
@@ -108,14 +112,16 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayWideSlotLab->setReducedPriceB(1000);
                 $manager->persist($pricingDayWideSlotLab);
 
-                $pricingDayWideSlotKodaDemi = new Pricing();
-                $pricingDayWideSlotKodaDemi->setWeekDay($weekDay);
-                $pricingDayWideSlotKodaDemi->setTimeSlot($wideTimeSlot);
-                $pricingDayWideSlotKodaDemi->setZone($kodaDemi);
-                $pricingDayWideSlotKodaDemi->setFullPrice(4000);
-                $pricingDayWideSlotKodaDemi->setReducedPriceA(3000);
-                $pricingDayWideSlotKodaDemi->setReducedPriceB(1500);
-                $manager->persist($pricingDayWideSlotKodaDemi);
+                foreach ($kodaDemi as $koda) {
+                    $pricingDayWideSlotKodaDemi = new Pricing();
+                    $pricingDayWideSlotKodaDemi->setWeekDay($weekDay);
+                    $pricingDayWideSlotKodaDemi->setTimeSlot($wideTimeSlot);
+                    $pricingDayWideSlotKodaDemi->setZone($koda);
+                    $pricingDayWideSlotKodaDemi->setFullPrice(4000);
+                    $pricingDayWideSlotKodaDemi->setReducedPriceA(3000);
+                    $pricingDayWideSlotKodaDemi->setReducedPriceB(1500);
+                    $manager->persist($pricingDayWideSlotKodaDemi);
+                }
 
                 $pricingDayWideSlotKodaFull = new Pricing();
                 $pricingDayWideSlotKodaFull->setWeekDay($weekDay);
@@ -157,14 +163,16 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingDayHourLab->setReducedPriceB(500);
                 $manager->persist($pricingDayHourLab);
 
-                $pricingDayHourKodaDemi = new Pricing();
-                $pricingDayHourKodaDemi->setWeekDay($weekDay);
-                $pricingDayHourKodaDemi->setTimeSlot($timeSlot);
-                $pricingDayHourKodaDemi->setZone($kodaDemi);
-                $pricingDayHourKodaDemi->setFullPrice(1500);
-                $pricingDayHourKodaDemi->setReducedPriceA(1000);
-                $pricingDayHourKodaDemi->setReducedPriceB(500);
-                $manager->persist($pricingDayHourKodaDemi);
+                foreach ($kodaDemi as $koda) {
+                    $pricingDayHourKodaDemi = new Pricing();
+                    $pricingDayHourKodaDemi->setWeekDay($weekDay);
+                    $pricingDayHourKodaDemi->setTimeSlot($timeSlot);
+                    $pricingDayHourKodaDemi->setZone($koda);
+                    $pricingDayHourKodaDemi->setFullPrice(1500);
+                    $pricingDayHourKodaDemi->setReducedPriceA(1000);
+                    $pricingDayHourKodaDemi->setReducedPriceB(500);
+                    $manager->persist($pricingDayHourKodaDemi);
+                }
 
                 $pricingDayHourKodaFull = new Pricing();
                 $pricingDayHourKodaFull->setWeekDay($weekDay);
