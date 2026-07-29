@@ -64,4 +64,22 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function hasOverlap($zone, \DateTimeInterface $start, \DateTimeInterface $end, ?int $excludeBookingId = null): bool
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->where('b.zone = :zone')
+            ->andWhere('b.startDate < :end')
+            ->andWhere('b.endDate > :start')
+            ->setParameter('zone', $zone)
+            ->setParameter('start', $start)
+            ->setParameter('end', $end);
+
+        if (null !== $excludeBookingId) {
+            $qb->andWhere('b.id != :excludeId')
+                ->setParameter('excludeId', $excludeBookingId);
+        }
+
+        return count($qb->getQuery()->getResult()) > 0;
+    }
 }
