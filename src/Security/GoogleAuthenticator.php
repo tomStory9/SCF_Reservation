@@ -14,6 +14,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAccountStatusException;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
@@ -90,27 +91,12 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
 
         $user = $token->getUser();
 
-        if ('pending' == $user->getUserStatus()->value) {
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                $this->translator->trans('errors.pending_account', domain: 'validators')
-            );
-
-            return new RedirectResponse(
-                $this->router->generate('app_login')
-            );
-        }
-
-        if ('suspended' == $user->getUserStatus()->value) {
-            $request->getSession()->getFlashBag()->add(
-                'error',
-                $this->translator->trans('errors.suspended_account', domain: 'validators')
-            );
-
-            return new RedirectResponse(
-                $this->router->generate('app_login')
-            );
-        }
+        match ($user->getUserStatus()->value) {
+            'suspended' => throw new CustomUserMessageAccountStatusException($this->translator->trans('errors.suspended_account', domain: 'validators')),
+            'pending' => throw new CustomUserMessageAccountStatusException($this->translator->trans('errors.pending_account', domain: 'validators')),
+            'declined' => throw new CustomUserMessageAccountStatusException($this->translator->trans('errors.declined_account', domain: 'validators')),
+            default => null,
+        };
 
         return new RedirectResponse($targetUrl);
     }
