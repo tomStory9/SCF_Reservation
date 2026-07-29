@@ -18,6 +18,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationEntryPointInterface
 {
@@ -25,13 +26,15 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
     private $entityManager;
     private $router;
     private $passwordHasher;
+    private $translator;
 
-    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator)
     {
         $this->clientRegistry = $clientRegistry;
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->passwordHasher = $passwordHasher;
+        $this->translator = $translator;
     }
 
     public function supports(Request $request): ?bool
@@ -85,10 +88,31 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
         // change "app_homepage" to some route in your app
         $targetUrl = $this->router->generate('app_register_information');
 
-        return new RedirectResponse($targetUrl);
+        $user = $token->getUser();
 
-        // or, on success, let the request continue to be handled by the controller
-        // return null;
+        if ('pending' == $user->getUserStatus()->value) {
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                $this->translator->trans('errors.pending_account', domain: 'validators')
+            );
+
+            return new RedirectResponse(
+                $this->router->generate('app_login')
+            );
+        }
+
+        if ('suspended' == $user->getUserStatus()->value) {
+            $request->getSession()->getFlashBag()->add(
+                'error',
+                $this->translator->trans('errors.suspended_account', domain: 'validators')
+            );
+
+            return new RedirectResponse(
+                $this->router->generate('app_login')
+            );
+        }
+
+        return new RedirectResponse($targetUrl);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
