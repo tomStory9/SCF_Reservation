@@ -35,4 +35,21 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findAllBookingInACertainTime(string $time): array
+    {
+        $targetDayStart = new \DateTimeImmutable()
+            ->modify($time)
+            ->setTime(0, 0, 0);
+
+        $targetDayEnd = $targetDayStart->modify('+1 day');
+
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.startDate >= :dayStart')
+            ->andWhere('b.startDate < :dayEnd')
+            ->setParameter('dayStart', $targetDayStart)
+            ->setParameter('dayEnd', $targetDayEnd)
+            ->getQuery()
+            ->getResult();
+    }
 }

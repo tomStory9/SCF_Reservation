@@ -7,6 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Email;
@@ -35,6 +36,40 @@ class RegistrationFormType extends AbstractType
                     ),
                 ],
             ])
+             ->add(
+                 'name',
+                 TextType::class,
+                 [
+                     'label' => 'information.name.label',
+                     'translation_domain' => 'forms',
+                     'attr' => [
+                         'placeholder' => 'information.name.placeholder',
+                     ],
+                     'required' => true,
+                     'constraints' => [
+                         new NotBlank(
+                             message: 'information.name.not_blank',
+                         ),
+                     ],
+                 ]
+             )
+            ->add(
+                'lastname',
+                TextType::class,
+                [
+                    'translation_domain' => 'forms',
+                    'label' => 'information.lastname.label',
+                    'attr' => [
+                        'placeholder' => 'information.lastname.placeholder',
+                    ],
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank(
+                            message: 'information.lastname.not_blank',
+                        ),
+                    ],
+                ]
+            )
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'mapped' => false,

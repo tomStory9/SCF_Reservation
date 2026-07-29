@@ -43,7 +43,6 @@ final class RegisterController extends AbstractController
         $user = new User();
 
         $form = $this->createForm(RegistrationFormType::class, $user);
-
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -57,7 +56,7 @@ final class RegisterController extends AbstractController
                 );
 
                 return $this->render('security/register/index.html.twig', [
-                    'registrationForm' => $form,
+                    'registrationForm' => $form->createView(),
                 ]);
             }
 
@@ -67,16 +66,16 @@ final class RegisterController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+
             $user->setFilledInfo(false);
             $user->setCompany(null);
             $user->setPhone('');
-            $user->setName('');
-            $user->setLastname('');
             $user->setIsVerified(false);
             $user->setUserStatus(UserStatus::PENDING);
 
             $entityManager->persist($user);
             $entityManager->flush();
+
             $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
                 $user,
@@ -93,7 +92,7 @@ final class RegisterController extends AbstractController
         }
 
         return $this->render('security/register/index.html.twig', [
-            'registrationForm' => $form,
+            'registrationForm' => $form->createView(),
         ]);
     }
 
@@ -102,13 +101,16 @@ final class RegisterController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
 
+        /** @var User $user */
         $user = $this->getUser();
+
         if ($user->isFilledInfo()) {
             return $this->redirectToRoute('app_home');
         }
 
         $form = $this->createForm(UserFormType::class, $user);
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $user->setFilledInfo(true);
             $entityManager->persist($user);
@@ -127,11 +129,13 @@ final class RegisterController extends AbstractController
     {
         $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
 
-        // validate email confirmation link, set User::$isVerified=true, and persist
         try {
             $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
         } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+            $this->addFlash(
+                'verify_email_error',
+                $translator->trans($exception->getReason(), [], 'VerifyEmailBundle')
+            );
 
             return $this->redirectToRoute('app_register');
         }

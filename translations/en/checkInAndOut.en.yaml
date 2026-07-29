@@ -1,0 +1,45 @@
+page:
+  title: "Check-in / Check-out"
+  heading: "Check-in / Check-out"
+  description: "Instantly view your attendance status and booking information."
+header:
+  badge: "Booking"
+section:
+  current_status: "Current status"
+remaining_time:
+  before_checkout: "Time remaining before check-out: %time%"
+booking:
+  start: "Start"
+  end: "End"
+  checked_in_at: "Check-in recorded"
+  checked_out_at: "Check-out recorded"
+  not_recorded: "Not recorded"
+status:
+  checked_in:
+    label: "CHECK-IN CONFIRMED"
+    message: "Check-in successfully recorded."
+  checked_out:
+    label: "CHECK-OUT CONFIRMED"
+    message: "Check-out successfully recorded."
+  checked_in_waiting_checkout:
+    label: "ALREADY CHECKED IN"
+    message: "Your check-in has already been recorded. You will be able to check out soon."
+    message_with_remaining_time: "Your check-in has already been recorded. You still need to wait %time% before you can check out."
+  waiting_check_in:
+    label: "CHECK-IN UNAVAILABLE"
+    message: "You are not yet within the allowed check-in window."
+  waiting_check_out:
+    label: "CHECK-OUT UNAVAILABLE"
+    message: "Your check-in has already been confirmed, but the check-out window is not yet open."
+  already_done:
+    label: "BOOKING COMPLETED"
+    message: "Check-in and check-out have already been recorded."
+  outside_window:
+    label: "ACTION UNAVAILABLE"
+    message: "You are not within an authorized check-in or check-out window."
+  no_booking:
+    label: "NO BOOKING"
+    message: "No booking found."
+  unknown:
+    label: "UNKNOWN STATUS"
+    message: "The system was unable to accurately determine your current status."
