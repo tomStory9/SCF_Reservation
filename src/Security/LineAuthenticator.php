@@ -81,7 +81,7 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         // change "app_homepage" to some route in your app
-        $targetUrl = $this->router->generate('app_home');
+        $targetUrl = $this->router->generate('app_register_information');
 
         return new RedirectResponse($targetUrl);
 
