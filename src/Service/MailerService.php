@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
@@ -30,6 +31,20 @@ class MailerService
                 'timezone' => 'Asia/Tokyo',
             ]);
 
+        $this->mailerInterface->send($email);
+    }
+
+    public function sendApprovedEmail(User $user): void
+    {
+        $email = new TemplatedEmail()
+           ->from($this->mailerAddress)
+           ->to($user->getEmail())
+           ->subject('Booking reminder')
+           ->htmlTemplate('security/mails/account_creation_accepted.html.twig')
+           ->context(
+               [
+                   'user' => $user]
+           );
         $this->mailerInterface->send($email);
     }
 }

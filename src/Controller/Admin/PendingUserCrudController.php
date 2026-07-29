@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Entity\User;
 use App\Enum\UserStatus;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
@@ -25,6 +26,7 @@ final class PendingUserCrudController extends AbstractCrudController
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly AdminUrlGenerator $adminUrlGenerator,
+        private readonly MailerService $mailerService,
     ) {
     }
 
@@ -119,9 +121,9 @@ final class PendingUserCrudController extends AbstractCrudController
         $user->setUserStatus(UserStatus::APPROVED);
         $this->entityManager->flush();
 
-        $this->addFlash('success', 'Le compte a été approuvé.');
+        $this->mailerService->sendApprovedEmail($user);
 
-        return $this->redirect($this->getIndexUrl());
+        $this->addFlash('success', 'Le compte a été approuvé.');
 
         return $this->redirect($this->getIndexUrl());
     }
