@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Enum\UserStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
@@ -68,6 +69,7 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                     $user->setPhone($googleData['phone_number'] ?? '');
                     $user->setFilledInfo(false);
                     $user->setIsVerified(true);
+                    $user->setUserStatus(UserStatus::PENDING);
                 }
 
                 $this->entityManager->persist($user);

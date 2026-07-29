@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\User;
+use App\Enum\UserStatus;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
@@ -68,6 +69,8 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
                     $user->setFilledInfo(false);
                     $user->setIsVerified(true);
                     $user->setPhone($lineData['phone_number'] ?? ''); // TODO : try with a line account with phone number added and name lastname or find other solution
+                    $user->setIsVerified(false);
+                    $user->setUserStatus(UserStatus::PENDING);
                 }
 
                 $this->entityManager->persist($user);
