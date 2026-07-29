@@ -96,7 +96,9 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
     {
         $message = strtr($exception->getMessageKey(), $exception->getMessageData());
 
-        return new Response($message, Response::HTTP_FORBIDDEN);
+        $request->getSession()->getFlashBag()->add('error', $message);
+
+        return new RedirectResponse('/login');
     }
 
     /**
