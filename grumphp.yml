@@ -11,8 +11,3 @@ grumphp:
     phpcsfixer:
       config: '.php-cs-fixer.dist.php'
       triggered_by: ['php']
-
-    shell:
-      scripts:
-        - ['-c', 'composer db']
-        - ['-c', 'php bin/console doctrine:fixtures:load --no-interaction']

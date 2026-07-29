@@ -13,10 +13,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const locationTabs = document.querySelectorAll('.location-tab');
     const bookingModeLinks = document.querySelectorAll('.booking-mode-link');
     const locationLabel = document.getElementById('selected-location-label');
-    const locationDescription = document.getElementById('location-description');
     const selectionPreview = document.getElementById('selection-preview');
     const activeBookingModeLabel = document.getElementById('active-booking-mode-label');
     const zoneSelectEl = document.getElementById('zone-select');
+    const submitButton = document.getElementById('submit_booking');
 
     if (!zoneSelectEl) return;
 
@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let currentZoneBookings = [];
 
     let currentZonePricings = {};
+    let currentSelection = null;
 
     const zoneTomSelect = new TomSelect(zoneSelectEl, {
         valueField: 'id',
@@ -36,13 +37,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             activeZoneId = zoneId;
             updatePriceUI(null);
+            currentSelection = null;
 
             try {
                 const response = await fetch(`/zone/${activeZoneId}/pricings`);
                 if (!response.ok) throw new Error('Erreur lors du chargement des tarifs');
 
                 currentZonePricings = await response.json();
-                console.log('Tarifs :', currentZonePricings);
             } catch (error) {
                 console.error('Erreur :', error);
                 currentZonePricings = {};
@@ -64,22 +65,21 @@ document.addEventListener('DOMContentLoaded', function () {
         zoneTomSelect.clear();
         zoneTomSelect.clearOptions();
 
-            const response = await fetch(`/facility/${facilityId}/zones`);
-            if (!response.ok) throw new Error('Erreur lors de la récupération des zones');
+        const response = await fetch(`/facility/${facilityId}/zones`);
+        if (!response.ok) throw new Error('Erreur lors de la récupération des zones');
 
-            const zones = await response.json();
+        const zones = await response.json();
 
-            if (zones.length === 0) {
-                zoneTomSelect.settings.placeholder = 'Aucune zone disponible';
-                zoneTomSelect.input.placeholder = 'Aucune zone disponible';
-                zoneTomSelect.updatePlaceholder();
-                return;
-            }
+        if (zones.length === 0) {
+            zoneTomSelect.settings.placeholder = 'Aucune zone disponible';
+            zoneTomSelect.input.placeholder = 'Aucune zone disponible';
+            zoneTomSelect.updatePlaceholder();
+            return;
+        }
 
-            zoneTomSelect.addOptions(zones);
+        zoneTomSelect.addOptions(zones);
 
-            zoneTomSelect.setValue(zones[0].id);
-
+        zoneTomSelect.setValue(zones[0].id);
     }
 
     locationTabs.forEach(function (tab) {
@@ -96,6 +96,10 @@ document.addEventListener('DOMContentLoaded', function () {
             tab.classList.remove('border-transparent', 'text-slate-500');
             tab.setAttribute('aria-selected', 'true');
 
+            if (locationLabel) {
+                locationLabel.textContent = tab.textContent.trim();
+            }
+
             loadZonesForFacility(facilityId);
         });
     });
@@ -109,42 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
         return;
     }
 
-    let activeLocation = 'grande-salle';
     let bookingMode = 'hour';
     let selectedPeriodPreviewEvent = null;
     let currentViewType = 'dayGridMonth';
-
-    const locationLabels = {
-        'grande-salle': 'Grande salle',
-        'studio-a': 'Studio A',
-        'studio-b': 'Studio B',
-        'exterieur': 'Extérieur'
-    };
-
-    const locationDescriptions = {
-        'grande-salle': 'Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.',
-        'studio-a': 'Studio A, espace plus intimiste pour sessions techniques, enregistrements et petits groupes.',
-        'studio-b': 'Studio B pensé pour les répétitions, essais techniques et occupations régulières en journée.',
-        'exterieur': 'Espace extérieur adapté aux installations, tournages et événements ponctuels.'
-    };
-
-    const mockEventsByLocation = {
-        'grande-salle': [
-            { id: 'gs-1', title: 'Cours', start: '2026-07-22T08:00:00', end: '2026-07-22T09:00:00', allDay: false },
-            { id: 'gs-2', title: 'Répétition', start: '2026-07-22T13:00:00', end: '2026-07-22T14:00:00', allDay: false },
-            { id: 'gs-3', title: 'Privatisation journée', start: '2026-07-24', end: '2026-07-25', allDay: true }
-        ],
-        'studio-a': [
-            { id: 'sa-1', title: 'Session audio', start: '2026-07-21T10:00:00', end: '2026-07-21T11:00:00', allDay: false },
-            { id: 'sa-2', title: 'Studio fermé', start: '2026-07-26', end: '2026-07-27', allDay: true }
-        ],
-        'studio-b': [
-            { id: 'sb-1', title: 'Répétition compagnie', start: '2026-07-22T08:00:00', end: '2026-07-22T09:00:00', allDay: false }
-        ],
-        'exterieur': [
-            { id: 'ex-1', title: 'Tournage', start: '2026-07-20T08:00:00', end: '2026-07-20T09:00:00', allDay: false }
-        ]
-    };
 
     const dailyUsage = {};
     const allDayBlockedDates = new Set();
@@ -155,10 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
-    }
-
-    function getEventsForActiveLocation() {
-        return mockEventsByLocation[activeLocation] || [];
     }
 
     function clearPeriodPreviewEvent() {
@@ -255,10 +222,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function hasAnyEventOnDate(dateStr) {
-        return getEventsForActiveLocation().some(function (event) {
-            if (!event.start) {
-                return false;
-            }
+        return currentZoneBookings.some(function (event) {
+            if (!event.start) return false;
 
             if (event.allDay) {
                 const start = new Date(event.start);
@@ -285,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
 
-        return getEventsForActiveLocation().some(function (event) {
+        return currentZoneBookings.some(function (event) {
             if (event.allDay || !event.start || !event.end) {
                 return false;
             }
@@ -302,8 +267,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function getPeriodFromDate(date) {
         const hour = date.getHours();
 
-        if (hour >= 8 && hour < 12) {
-            return { key: 'morning', label: 'Matin', start: '08:00', end: '12:00' };
+        if (hour >= 9 && hour < 13) {
+            return { key: 'morning', label: 'Matin', start: '09:00', end: '13:00' };
         }
 
         if (hour >= 13 && hour < 17) {
@@ -331,8 +296,8 @@ document.addEventListener('DOMContentLoaded', function () {
             events.push(
                 {
                     id: `bg-morning-${dateStr}`,
-                    start: `${dateStr}T08:00:00`,
-                    end: `${dateStr}T12:00:00`,
+                    start: `${dateStr}T09:00:00`,
+                    end: `${dateStr}T13:00:00`,
                     display: 'background',
                     classNames: ['fc-bg-period-morning']
                 },
@@ -363,15 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updatePreview(content) {
-        if (selectionPreview) {
-            selectionPreview.innerHTML = content;
-        }
-    }
-
-    function updateLocationDescription() {
-        if (locationDescription && locationDescriptions[activeLocation]) {
-            locationDescription.textContent = locationDescriptions[activeLocation];
-        }
+        if (selectionPreview) selectionPreview.innerHTML = content;
     }
 
     function updateBookingModeUI() {
@@ -632,6 +589,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+                currentSelection = {
+                    bookingMode: 'period',
+                    startDate: data.dateIso,
+                    startTime: period.start,
+                    endTime: period.end,
+                    periodKey: period.key,
+                    isFullDay: false,
+                    price: prices ? prices.full : 0
+                };
+
                 selectedPeriodPreviewEvent = {
                     id: `period-preview-${dateStr}-${period.key}`,
                     title: `Période sélectionnée · ${period.label}`,
@@ -669,6 +636,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+                currentSelection = {
+                    bookingMode: 'hour',
+                    startDate: startData.dateIso,
+                    startTime: '00:00',
+                    endTime: '23:59',
+                    periodKey: null,
+                    isFullDay: true,
+                    price: prices ? prices.full : 0
+                };
+
                 clearPeriodPreviewEvent();
                 calendar.refetchEvents();
 
@@ -697,6 +674,16 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            currentSelection = {
+                bookingMode: 'hour',
+                startDate: startData.dateIso,
+                startTime: startData.time,
+                endTime: endData.time,
+                periodKey: null,
+                isFullDay: false,
+                price: prices ? prices.full : 0
+            };
+
             clearPeriodPreviewEvent();
             calendar.refetchEvents();
 
@@ -714,13 +701,13 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     calendar.render();
-    updateLocationDescription();
     updateBookingModeUI();
     updateLegendVisibility();
 
     bookingModeLinks.forEach(function (button) {
         button.addEventListener('click', function () {
             bookingMode = button.dataset.mode;
+            currentSelection = null;
             clearPeriodPreviewEvent();
             updateBookingModeUI();
             updatePriceUI(null);
@@ -737,7 +724,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     locationTabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
-            activeLocation = tab.dataset.location;
+            currentSelection = null;
             clearPeriodPreviewEvent();
 
             locationTabs.forEach(function (item) {
@@ -750,14 +737,57 @@ document.addEventListener('DOMContentLoaded', function () {
             tab.classList.remove('border-transparent', 'text-slate-500');
             tab.setAttribute('aria-selected', 'true');
 
-            if (locationLabel && locationLabels[activeLocation]) {
-                locationLabel.textContent = locationLabels[activeLocation];
-            }
-
-            updateLocationDescription();
             updatePreview('Aucune sélection pour le moment.');
+            updatePriceUI(null);
             calendar.unselect();
             calendar.refetchEvents();
         });
     });
+
+    if (submitButton) {
+        submitButton.addEventListener('click', async function() {
+            if (!currentSelection || !activeZoneId) {
+                alert('Veuillez sélectionner un créneau sur le calendrier.');
+                return;
+            }
+
+            const payload = {
+                ...currentSelection,
+                zoneId: activeZoneId
+            };
+
+            try {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Enregistrement...';
+
+                const response = await fetch('/booking/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert('Réservation confirmée !');
+                    calendar.unselect();
+                    calendar.refetchEvents();
+                    updatePreview('Aucune sélection pour le moment.');
+                    updatePriceUI(null);
+                    currentSelection = null;
+                } else {
+                    alert('Erreur : ' + (result.error || 'Impossible d\'enregistrer la réservation.'));
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Une erreur réseau est survenue.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Réserver le créneau';
+            }
+        });
+    }
 });

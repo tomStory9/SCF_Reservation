@@ -2,15 +2,24 @@
 
 namespace App\Service;
 
+use App\Entity\Booking;
+use App\Entity\User;
 use App\Entity\Zone;
+use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use App\Repository\PricingRepository;
+use App\Repository\ZoneRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class BookingService
 {
     public function __construct(
         private readonly BookingRepository $bookingRepository,
         private readonly PricingRepository $pricingRepository,
+        private readonly ZoneRepository $zoneRepository,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly ValidatorInterface $validator,
     ) {
     }
 
@@ -85,5 +94,46 @@ class BookingService
         }
 
         return $pricingsData;
+    }
+
+    /**
+     * @throws \DateMalformedStringException
+     * @throws \Exception
+     */
+    public function createBooking(array $data, User $user): array
+    {
+        $zone = $this->zoneRepository->find($data['zoneId']);
+
+        if (!$zone) {
+            throw new \Exception('Zone introuvable.');
+        }
+
+        $booking = new Booking();
+        $booking->setUserBooking($user);
+        $booking->setZone($zone);
+        $booking->setPrice((int) $data['price']);
+        $booking->setBookingStatus(BookingStatus::PENDING);
+
+        $startDateStr = $data['startDate'];
+
+        if ($data['isFullDay']) {
+            $start = new \DateTimeImmutable($startDateStr.' 09:00:00');
+            $end = new \DateTimeImmutable($startDateStr.' 21:00:00');
+        } else {
+            $start = new \DateTimeImmutable($startDateStr.' '.$data['startTime'].':00');
+            $end = new \DateTimeImmutable($startDateStr.' '.$data['endTime'].':00');
+        }
+
+        $booking->setStartDate($start);
+        $booking->setEndDate($end);
+
+        $errors = $this->validator->validate($booking);
+
+        if (count($errors) > 0) {
+            throw new \Exception($errors[0]->getMessage());
+        }
+
+        $this->entityManager->persist($booking);
+        $this->entityManager->flush();
     }
 }

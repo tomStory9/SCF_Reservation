@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\Entity\Facility;
 use App\Entity\Zone;
-use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
 use App\Repository\ZoneRepository;
 use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -17,7 +17,6 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class BookingController extends AbstractController
 {
     public function __construct(
-        private readonly BookingRepository $bookingRepository,
         private readonly FacilityRepository $facilityRepository,
         private readonly ZoneRepository $zoneRepository,
         private readonly BookingService $bookingService,
@@ -69,5 +68,20 @@ final class BookingController extends AbstractController
         $pricingsData = $this->bookingService->getPrincingsByZone($zone);
 
         return new JsonResponse($pricingsData);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/booking/create', name: 'app_booking_create', methods: ['GET', 'POST'])]
+    public function createBooking(Request $request): JsonResponse
+    {
+        $user = $this->getUser();
+
+        $data = json_decode($request->getContent(), true);
+
+        if (!$data) {
+            return new JsonResponse(['success' => false, 'error' => 'Données invalides.'], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse([]);
     }
 }
