@@ -149,6 +149,7 @@ final class PendingUserCrudController extends AbstractCrudController
         $user->setUserStatus(UserStatus::DECLINED);
         $this->entityManager->flush();
 
+        $this->mailerService->sendDeniedEmail($user);
         $this->addFlash('success', 'Le compte a été refusé.');
 
         return $this->redirect($this->getIndexUrl());

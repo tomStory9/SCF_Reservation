@@ -39,8 +39,22 @@ class MailerService
         $email = new TemplatedEmail()
            ->from($this->mailerAddress)
            ->to($user->getEmail())
-           ->subject('Booking reminder')
+           ->subject('アカウント作成が承認されました')
            ->htmlTemplate('security/mails/account_creation_accepted.html.twig')
+           ->context(
+               [
+                   'user' => $user]
+           );
+        $this->mailerInterface->send($email);
+    }
+
+    public function sendDeniedEmail(User $user): void
+    {
+        $email = new TemplatedEmail()
+           ->from($this->mailerAddress)
+           ->to($user->getEmail())
+           ->subject('アカウント作成が拒否されました')
+           ->htmlTemplate('security/mails/account_creation_denied.html.twig')
            ->context(
                [
                    'user' => $user]
