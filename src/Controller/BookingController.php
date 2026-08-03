@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Facility;
+use App\Entity\User;
 use App\Entity\Zone;
 use App\Repository\FacilityRepository;
 use App\Repository\ZoneRepository;
@@ -70,11 +71,18 @@ final class BookingController extends AbstractController
         return new JsonResponse($pricingsData);
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     #[IsGranted('ROLE_USER')]
     #[Route('/booking/create', name: 'app_booking_create', methods: ['GET', 'POST'])]
     public function createBooking(Request $request): JsonResponse
     {
         $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
+        }
 
         $data = json_decode($request->getContent(), true);
 
@@ -82,6 +90,8 @@ final class BookingController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => 'Données invalides.'], Response::HTTP_BAD_REQUEST);
         }
 
-        return new JsonResponse([]);
+        $status = $this->bookingService->createBooking($data, $user);
+
+        return new JsonResponse($status);
     }
 }

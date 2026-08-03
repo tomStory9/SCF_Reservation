@@ -112,7 +112,10 @@ class BookingService
         $booking->setUserBooking($user);
         $booking->setZone($zone);
         $booking->setPrice((int) $data['price']);
+        $booking->setGuestCount((int) $data['guestNb']);
+        $booking->setIsFullDay($data['isFullDay']);
         $booking->setBookingStatus(BookingStatus::PENDING);
+        $booking->setCreatedDate(new \DateTimeImmutable());
 
         $startDateStr = $data['startDate'];
 
@@ -135,5 +138,7 @@ class BookingService
 
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
+
+        return ['success' => true];
     }
 }

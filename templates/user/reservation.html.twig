@@ -112,13 +112,33 @@
 						</div>
 
 						<div class="mb-6">
-                            <label for="zone-select" class="block text-sm font-semibold text-secondary mb-2">
-                                Zone sélectionnée :
-                            </label>
+                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-6">
 
-                            <select id="zone-select" name="zone" class="w-full">
-                                <option value="">Chargement des zones...</option>
-                            </select>
+                                <div>
+                                    <label for="zone-select" class="block mb-2 text-sm font-semibold text-secondary">
+                                        Zone sélectionnée :
+                                    </label>
+                                    <select id="zone-select" name="zone" class="w-full">
+                                        <option value="">Chargement des zones...</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label for="guest-count-input" class="block mb-2 text-sm font-semibold text-secondary">
+                                        Nombre de personnes :
+                                    </label>
+                                    <input
+                                        type="number"
+                                        id="guest-count-input"
+                                        name="guest_count"
+                                        min="1"
+                                        value="1"
+                                        style="border: 1px solid #d1d5db"
+                                        class="block w-full h-[35px] rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                    >
+                                </div>
+
+                            </div>
 
 							<p class="mt-4 text-sm font-semibold text-secondary">Description</p>
 							<p id="location-description" class="mt-2 text-sm leading-6 text-state">

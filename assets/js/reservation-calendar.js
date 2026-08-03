@@ -17,6 +17,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const activeBookingModeLabel = document.getElementById('active-booking-mode-label');
     const zoneSelectEl = document.getElementById('zone-select');
     const submitButton = document.getElementById('submit_booking');
+    const guestNbInput = document.getElementById('guest-count-input');
 
     if (!zoneSelectEl) return;
 
@@ -596,6 +597,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     endTime: period.end,
                     periodKey: period.key,
                     isFullDay: false,
+                    guestNb: guestNbInput.value,
                     price: prices ? prices.full : 0
                 };
 
@@ -643,6 +645,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     endTime: '23:59',
                     periodKey: null,
                     isFullDay: true,
+                    guestNb: guestNbInput.value,
                     price: prices ? prices.full : 0
                 };
 
@@ -681,6 +684,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 endTime: endData.time,
                 periodKey: null,
                 isFullDay: false,
+                guestNb: guestNbInput.value,
                 price: prices ? prices.full : 0
             };
 
@@ -773,11 +777,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 if (response.ok && result.success) {
                     alert('Réservation confirmée !');
-                    calendar.unselect();
-                    calendar.refetchEvents();
-                    updatePreview('Aucune sélection pour le moment.');
-                    updatePriceUI(null);
-                    currentSelection = null;
+                    win
                 } else {
                     alert('Erreur : ' + (result.error || 'Impossible d\'enregistrer la réservation.'));
                 }
