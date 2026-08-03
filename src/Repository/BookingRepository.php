@@ -4,12 +4,16 @@ namespace App\Repository;
 
 use App\Entity\Booking;
 use App\Entity\User;
+use App\Entity\UserRole;
 use App\Entity\Zone;
 use App\Enum\BookingStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Booking>
+ */
 class BookingRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -81,5 +85,48 @@ class BookingRepository extends ServiceEntityRepository
         }
 
         return count($qb->getQuery()->getResult()) > 0;
+    }
+
+    public function getRemainingFreeHoursThisMonth(\App\Entity\User $user): float
+    {
+        $em = $this->getEntityManager();
+
+        $allocatedHours = (float) $em->createQueryBuilder()
+            ->select('MAX(ur.allocatedHoursPerMonth)')
+            ->from(UserRole::class, 'ur')
+            ->where('ur.roleName IN (:roles)')
+            ->setParameter('roles', $user->getRoles())
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if ($allocatedHours <= 0) {
+            return 0.0;
+        }
+
+        $startOfMonth = new \DateTimeImmutable('first day of this month midnight');
+        $endOfMonth = new \DateTimeImmutable('first day of next month midnight');
+
+        $bookings = $this->createQueryBuilder('b')
+            ->where('b.userBooking = :user')
+            ->andWhere('b.startDate >= :startOfMonth')
+            ->andWhere('b.startDate < :endOfMonth')
+            ->andWhere('b.bookingStatus IN (:validStatuses)')
+            ->setParameter('user', $user)
+            ->setParameter('startOfMonth', $startOfMonth)
+            ->setParameter('endOfMonth', $endOfMonth)
+            ->setParameter('validStatuses', [
+                BookingStatus::PENDING,
+                BookingStatus::APPROVED,
+            ])
+            ->getQuery()
+            ->getResult();
+
+        $usedHours = 0.0;
+        foreach ($bookings as $booking) {
+            $diffInSeconds = $booking->getEndDate()->getTimestamp() - $booking->getStartDate()->getTimestamp();
+            $usedHours += $diffInSeconds / 3600;
+        }
+
+        return max(0.0, $allocatedHours - $usedHours);
     }
 }
