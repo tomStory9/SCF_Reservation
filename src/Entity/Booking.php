@@ -50,7 +50,7 @@ class Booking
     private ?\DateTimeImmutable $CheckedOutAt = null;
 
     #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
-    private ?Transactions $transactions = null;
+    private ?Transaction $transactions = null;
 
     public function getId(): ?int
     {
@@ -189,12 +189,12 @@ class Booking
         return $this;
     }
 
-    public function getTransactions(): ?Transactions
+    public function getTransactions(): ?Transaction
     {
         return $this->transactions;
     }
 
-    public function setTransactions(?Transactions $transactions): static
+    public function setTransactions(?Transaction $transactions): static
     {
         // unset the owning side of the relation if necessary
         if (null === $transactions && null !== $this->transactions) {

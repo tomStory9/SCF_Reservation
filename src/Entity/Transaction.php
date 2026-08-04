@@ -13,8 +13,8 @@ class Transaction
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'transactions', cascade: ['persist', 'remove'])]
-    private ?booking $booking = null;
+    #[ORM\OneToOne(inversedBy: 'transaction', cascade: ['persist', 'remove'])]
+    private ?Booking $booking = null;
 
     #[ORM\Column]
     private ?int $paidPrice = null;

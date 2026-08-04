@@ -35,11 +35,10 @@ final class PaiementController extends AbstractController
         );
 
         $transaction = new Transaction();
-        dd($session);
         $transaction->setPaidPrice($session->amount_total);
         $transaction->setStripeFee($session->payment_intent->latest_charge->balance_transaction->fee);
         $transaction->setTimestamp(new \DateTime());
-        $transaction->setBooking($bookingRepository->find($session->metadata->booking_id));
+        $transaction->setBooking($bookingRepository->findById($session->metadata->booking_id));
 
         $entityManager->persist($transaction);
         $entityManager->flush();
