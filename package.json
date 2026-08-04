@@ -31,6 +31,7 @@
         "postcss": "^8.5.18",
         "postcss-loader": "^8.2.1",
         "tailwindcss": "^4.3.2",
-        "temporal-polyfill": "^1.0.1"
+        "temporal-polyfill": "^1.0.1",
+        "tom-select": "^2.6.2"
     }
 }

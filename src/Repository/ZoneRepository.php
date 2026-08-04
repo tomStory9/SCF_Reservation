@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Facility;
 use App\Entity\Zone;
+use App\Enum\ZoneType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -16,28 +18,14 @@ class ZoneRepository extends ServiceEntityRepository
         parent::__construct($registry, Zone::class);
     }
 
-    //    /**
-    //     * @return Zone[] Returns an array of Zone objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('l.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Zone
-    //    {
-    //        return $this->createQueryBuilder('l')
-    //            ->andWhere('l.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function getTrainingZonesByFacility(Facility $facility): array
+    {
+        return $this->createQueryBuilder('z')
+            ->AndWhere('z.facility = :facility')
+            ->andWhere('z.typeZone = :zoneType')
+            ->setParameter('facility', $facility)
+            ->setParameter('zoneType', ZoneType::TRAINING)
+            ->getQuery()
+            ->getResult();
+    }
 }

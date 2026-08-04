@@ -18,6 +18,9 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
     public const string KODA1B = 'koda1b';
     public const string KODA1C = 'koda1c';
     public const string KODA1D = 'koda1d';
+    public const string KODA_AB = 'koda_ab';
+    public const string KODA_CD = 'koda_cd';
+    public const string KODA_FULL = 'koda_full';
 
     public function load(ObjectManager $manager): void
     {
@@ -83,6 +86,32 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $koda1D->setMaxCapacity(1);
         $manager->persist($koda1D);
         $this->addReference(self::KODA1D, $koda1D);
+
+        $kodaDemiAB = new Zone();
+        $kodaDemiAB->setName('KODA A+B (2/4)');
+        $kodaDemiAB->setCode('ZONE_AB');
+        $kodaDemiAB->setTypeZone(ZoneType::TRAINING);
+        $kodaDemiAB->setFacility($koda);
+        $kodaDemiAB->setMaxCapacity(2);
+        $manager->persist($kodaDemiAB);
+        $this->addReference(self::KODA_AB, $kodaDemiAB);
+
+        $kodaDemiCD = new Zone();
+        $kodaDemiCD->setName('KODA C+D (2/4)');
+        $kodaDemiCD->setCode('ZONE_CD');
+        $kodaDemiCD->setTypeZone(ZoneType::TRAINING);
+        $kodaDemiCD->setFacility($koda);
+        $kodaDemiCD->setMaxCapacity(2);
+        $manager->persist($kodaDemiCD);
+        $this->addReference(self::KODA_CD, $kodaDemiCD);
+
+        $kodaFull = new Zone();
+        $kodaFull->setName('KODA FULL (4/4)');
+        $kodaFull->setCode('ZONEFULL');
+        $kodaFull->setTypeZone(ZoneType::TRAINING);
+        $kodaFull->setFacility($koda);
+        $manager->persist($kodaFull);
+        $this->addReference(self::KODA_FULL, $kodaFull);
 
         $manager->flush();
     }

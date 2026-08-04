@@ -4,9 +4,11 @@ namespace App\Entity;
 
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
+use App\Validator\NoBookingOverlap;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
+#[NoBookingOverlap]
 class Booking
 {
     #[ORM\Id]

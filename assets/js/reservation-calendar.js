@@ -5,6 +5,7 @@ import frLocale from '@fullcalendar/core/locales/fr';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import TomSelect from "tom-select";
 
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar-holder');
@@ -12,50 +13,110 @@ document.addEventListener('DOMContentLoaded', function () {
     const locationTabs = document.querySelectorAll('.location-tab');
     const bookingModeLinks = document.querySelectorAll('.booking-mode-link');
     const locationLabel = document.getElementById('selected-location-label');
-    const locationDescription = document.getElementById('location-description');
     const selectionPreview = document.getElementById('selection-preview');
     const activeBookingModeLabel = document.getElementById('active-booking-mode-label');
+    const zoneSelectEl = document.getElementById('zone-select');
+    const submitButton = document.getElementById('submit_booking');
+    const guestNbInput = document.getElementById('guest-count-input');
+
+    if (!zoneSelectEl) return;
+
+    let activeZoneId = null;
+    let currentZoneBookings = [];
+
+    let currentZonePricings = {};
+    let currentSelection = null;
+
+    const zoneTomSelect = new TomSelect(zoneSelectEl, {
+        valueField: 'id',
+        labelField: 'name',
+        searchField: 'name',
+        placeholder: 'Sélectionnez une zone...',
+        allowEmptyOption: false,
+        onChange: async function(zoneId) {
+            if (!zoneId) return;
+
+            activeZoneId = zoneId;
+            updatePriceUI(null);
+            currentSelection = null;
+
+            try {
+                const response = await fetch(`/zone/${activeZoneId}/pricings`);
+                if (!response.ok) throw new Error('Erreur lors du chargement des tarifs');
+
+                currentZonePricings = await response.json();
+            } catch (error) {
+                console.error('Erreur :', error);
+                currentZonePricings = {};
+            }
+
+            if (calendar) {
+                calendar.refetchEvents();
+            }
+        }
+    });
+
+    function getSelectedZoneName() {
+        if (!activeZoneId || !zoneTomSelect) return 'Non défini';
+        const option = zoneTomSelect.options[activeZoneId] || zoneTomSelect.options[String(activeZoneId)] || zoneTomSelect.options[Number(activeZoneId)];
+        return option ? option.name : 'Non défini';
+    }
+
+    async function loadZonesForFacility(facilityId) {
+        zoneTomSelect.clear();
+        zoneTomSelect.clearOptions();
+
+        const response = await fetch(`/facility/${facilityId}/zones`);
+        if (!response.ok) throw new Error('Erreur lors de la récupération des zones');
+
+        const zones = await response.json();
+
+        if (zones.length === 0) {
+            zoneTomSelect.settings.placeholder = 'Aucune zone disponible';
+            zoneTomSelect.input.placeholder = 'Aucune zone disponible';
+            zoneTomSelect.updatePlaceholder();
+            return;
+        }
+
+        zoneTomSelect.addOptions(zones);
+
+        zoneTomSelect.setValue(zones[0].id);
+    }
+
+    locationTabs.forEach(function (tab) {
+        tab.addEventListener('click', function () {
+            const facilityId = tab.dataset.location;
+
+            locationTabs.forEach(item => {
+                item.classList.remove('is-active', 'border-slate-200', 'bg-white', 'text-primary');
+                item.classList.add('border-transparent', 'text-slate-500');
+                item.setAttribute('aria-selected', 'false');
+            });
+
+            tab.classList.add('is-active', 'border-slate-200', 'bg-white', 'text-primary');
+            tab.classList.remove('border-transparent', 'text-slate-500');
+            tab.setAttribute('aria-selected', 'true');
+
+            if (locationLabel) {
+                locationLabel.textContent = tab.textContent.trim();
+            }
+
+            loadZonesForFacility(facilityId);
+        });
+    });
+
+    const initialActiveTab = document.querySelector('.location-tab.is-active');
+    if (initialActiveTab) {
+        loadZonesForFacility(initialActiveTab.dataset.location);
+    }
 
     if (!calendarEl) {
         return;
     }
 
-    let activeLocation = 'grande-salle';
     let bookingMode = 'hour';
     let selectedPeriodPreviewEvent = null;
     let currentViewType = 'dayGridMonth';
-
-    const locationLabels = {
-        'grande-salle': 'Grande salle',
-        'studio-a': 'Studio A',
-        'studio-b': 'Studio B',
-        'exterieur': 'Extérieur'
-    };
-
-    const locationDescriptions = {
-        'grande-salle': 'Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.',
-        'studio-a': 'Studio A, espace plus intimiste pour sessions techniques, enregistrements et petits groupes.',
-        'studio-b': 'Studio B pensé pour les répétitions, essais techniques et occupations régulières en journée.',
-        'exterieur': 'Espace extérieur adapté aux installations, tournages et événements ponctuels.'
-    };
-
-    const mockEventsByLocation = {
-        'grande-salle': [
-            { id: 'gs-1', title: 'Cours', start: '2026-07-22T08:00:00', end: '2026-07-22T09:00:00', allDay: false },
-            { id: 'gs-2', title: 'Répétition', start: '2026-07-22T13:00:00', end: '2026-07-22T14:00:00', allDay: false },
-            { id: 'gs-3', title: 'Privatisation journée', start: '2026-07-24', end: '2026-07-25', allDay: true }
-        ],
-        'studio-a': [
-            { id: 'sa-1', title: 'Session audio', start: '2026-07-21T10:00:00', end: '2026-07-21T11:00:00', allDay: false },
-            { id: 'sa-2', title: 'Studio fermé', start: '2026-07-26', end: '2026-07-27', allDay: true }
-        ],
-        'studio-b': [
-            { id: 'sb-1', title: 'Répétition compagnie', start: '2026-07-22T08:00:00', end: '2026-07-22T09:00:00', allDay: false }
-        ],
-        'exterieur': [
-            { id: 'ex-1', title: 'Tournage', start: '2026-07-20T08:00:00', end: '2026-07-20T09:00:00', allDay: false }
-        ]
-    };
 
     const dailyUsage = {};
     const allDayBlockedDates = new Set();
@@ -66,10 +127,6 @@ document.addEventListener('DOMContentLoaded', function () {
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
-    }
-
-    function getEventsForActiveLocation() {
-        return mockEventsByLocation[activeLocation] || [];
     }
 
     function clearPeriodPreviewEvent() {
@@ -166,10 +223,8 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function hasAnyEventOnDate(dateStr) {
-        return getEventsForActiveLocation().some(function (event) {
-            if (!event.start) {
-                return false;
-            }
+        return currentZoneBookings.some(function (event) {
+            if (!event.start) return false;
 
             if (event.allDay) {
                 const start = new Date(event.start);
@@ -196,7 +251,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return false;
         }
 
-        return getEventsForActiveLocation().some(function (event) {
+        return currentZoneBookings.some(function (event) {
             if (event.allDay || !event.start || !event.end) {
                 return false;
             }
@@ -213,8 +268,8 @@ document.addEventListener('DOMContentLoaded', function () {
     function getPeriodFromDate(date) {
         const hour = date.getHours();
 
-        if (hour >= 8 && hour < 12) {
-            return { key: 'morning', label: 'Matin', start: '08:00', end: '12:00' };
+        if (hour >= 9 && hour < 13) {
+            return { key: 'morning', label: 'Matin', start: '09:00', end: '13:00' };
         }
 
         if (hour >= 13 && hour < 17) {
@@ -242,8 +297,8 @@ document.addEventListener('DOMContentLoaded', function () {
             events.push(
                 {
                     id: `bg-morning-${dateStr}`,
-                    start: `${dateStr}T08:00:00`,
-                    end: `${dateStr}T12:00:00`,
+                    start: `${dateStr}T09:00:00`,
+                    end: `${dateStr}T13:00:00`,
                     display: 'background',
                     classNames: ['fc-bg-period-morning']
                 },
@@ -274,15 +329,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function updatePreview(content) {
-        if (selectionPreview) {
-            selectionPreview.innerHTML = content;
-        }
-    }
-
-    function updateLocationDescription() {
-        if (locationDescription && locationDescriptions[activeLocation]) {
-            locationDescription.textContent = locationDescriptions[activeLocation];
-        }
+        if (selectionPreview) selectionPreview.innerHTML = content;
     }
 
     function updateBookingModeUI() {
@@ -301,6 +348,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function selectionAllowed(info) {
         const dateStr = normalizeDate(info.start);
+        const now = new Date();
+
+        if (info.start < now) {
+            return false;
+        }
 
         if (info.allDay) {
             return !hasAnyEventOnDate(dateStr);
@@ -329,6 +381,91 @@ document.addEventListener('DOMContentLoaded', function () {
         const oneHourMs = 60 * 60 * 1000;
 
         return durationMs >= oneHourMs;
+    }
+
+    function parseCleanIso(isoString) {
+        if (!isoString) {
+            return { dateFr: '', time: '', dateIso: '', cleanIso: '' };
+        }
+
+        const dateIso = isoString.slice(0, 10);
+
+        const [year, month, day] = dateIso.split('-');
+        const dateFr = `${day}/${month}/${year}`;
+
+        const hasTime = isoString.includes('T');
+        const time = hasTime ? isoString.slice(11, 16) : '';
+
+        const cleanIso = hasTime ? `${dateIso}T${time}:00` : dateIso;
+
+        return { dateFr, time, dateIso, cleanIso };
+    }
+
+    function getTodayIsoString() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function getPricesForSelection(startIso, endIso, mode, periodKey = null) {
+        if (!startIso || !currentZonePricings || Object.keys(currentZonePricings).length === 0) {
+            return null;
+        }
+
+        const current = new Date(startIso);
+        const dayNumber = current.getDay() || 7;
+        const dayPricings = currentZonePricings[dayNumber];
+
+        if (!dayPricings) return null;
+
+        if (mode === 'period' && periodKey) {
+            return dayPricings.period[periodKey] || null;
+        }
+
+        if (mode === 'hour' && endIso) {
+            let totalFull = 0, totalReducedA = 0, totalReducedB = 0;
+            let hasValidPricing = false;
+            const end = new Date(endIso);
+
+            while (current < end) {
+                const loopDay = current.getDay() || 7;
+                const hours = String(current.getHours()).padStart(2, '0');
+                const minutes = String(current.getMinutes()).padStart(2, '0');
+                const timeKey = `${hours}:${minutes}`;
+
+                const prices = currentZonePricings[loopDay]?.hourly?.[timeKey];
+                if (prices) {
+                    totalFull += prices.full;
+                    totalReducedA += prices.reducedA;
+                    totalReducedB += prices.reducedB;
+                    hasValidPricing = true;
+                }
+                current.setHours(current.getHours() + 1);
+            }
+
+            return hasValidPricing ? { full: totalFull, reducedA: totalReducedA, reducedB: totalReducedB } : null;
+        }
+
+        return null;
+    }
+
+    function updatePriceUI(prices) {
+        const priceContainer = document.getElementById('price-container');
+        const priceDisplay = document.getElementById('price-display');
+
+        if (!priceContainer || !priceDisplay) return;
+
+        if (!prices || prices.full === null || prices.full === undefined) {
+            priceContainer.classList.add('hidden');
+        } else {
+            const selectedPrice = prices.full;
+
+            const formattedPrice = selectedPrice.toLocaleString('fr-FR');
+            priceDisplay.textContent = `${formattedPrice} ¥`;
+            priceContainer.classList.remove('hidden');
+        }
     }
 
     const calendar = new Calendar(calendarEl, {
@@ -380,10 +517,28 @@ document.addEventListener('DOMContentLoaded', function () {
             minute: '2-digit',
             hour12: false
         },
-        events: function (fetchInfo, successCallback) {
-            const baseEvents = getEventsForActiveLocation();
-            recomputeDailyUsage(baseEvents);
-            successCallback(baseEvents.concat(getBackgroundPeriodEvents(fetchInfo)));
+        validRange: {
+            start: getTodayIsoString()
+        },
+        events: async function (fetchInfo, successCallback, failureCallback) {
+            if (!activeZoneId) {
+                currentZoneBookings = [];
+                successCallback(getBackgroundPeriodEvents(fetchInfo));
+                return;
+            }
+
+            try {
+                const response = await fetch(`/zone/${activeZoneId}/bookings`);
+                if (!response.ok) throw new Error('Erreur lors du chargement des réservations');
+
+                currentZoneBookings = await response.json();
+                recomputeDailyUsage(currentZoneBookings);
+
+                successCallback(currentZoneBookings.concat(getBackgroundPeriodEvents(fetchInfo)));
+            } catch (error) {
+                console.error(error);
+                failureCallback(error);
+            }
         },
         dayCellClassNames: function (arg) {
             const dateStr = normalizeDate(arg.date);
@@ -411,26 +566,40 @@ document.addEventListener('DOMContentLoaded', function () {
         dateClick: function (info) {
             if (calendar.view.type === 'dayGridMonth') {
                 calendar.changeView('timeGridWeek', info.dateStr);
+                const data = parseCleanIso(info.dateStr);
                 updatePreview(
                     '<span class="font-semibold text-secondary">Jour sélectionné :</span> ' +
-                    '<span class="font-semibold text-primary">' + info.dateStr + '</span>'
+                    '<span class="font-semibold text-primary">' + data.dateFr + '</span>'
                 );
                 return;
             }
 
             if (bookingMode === 'period' && calendar.view.type === 'timeGridWeek') {
                 const period = getPeriodFromDate(info.date);
+                if (!period) return;
 
-                if (!period) {
-                    return;
-                }
+                const prices = getPricesForSelection(info.dateStr, null, 'period', period.key);
 
                 const dateStr = normalizeDate(info.date);
+                const data = parseCleanIso(info.dateStr);
+
+                updatePriceUI(prices);
 
                 if (hasAnyEventOnDate(dateStr)) {
                     alert('Impossible de réserver une période : un événement existe déjà sur cette journée.');
                     return;
                 }
+
+                currentSelection = {
+                    bookingMode: 'period',
+                    startDate: data.dateIso,
+                    startTime: period.start,
+                    endTime: period.end,
+                    periodKey: period.key,
+                    isFullDay: false,
+                    guestNb: guestNbInput.value,
+                    price: prices ? prices.full : 0
+                };
 
                 selectedPeriodPreviewEvent = {
                     id: `period-preview-${dateStr}-${period.key}`,
@@ -446,9 +615,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 updatePreview(
                     '<span class="font-semibold text-secondary">Réservation par période :</span> ' +
                     '<span class="font-semibold text-primary">' + period.label + '</span>' +
-                    '<br><span class="text-state">Date : ' + dateStr + '</span>' +
+                    '<br><span class="text-state">Date : ' + data.dateFr + '</span>' +
                     '<br><span class="text-state">Horaires : ' + period.start + ' → ' + period.end + '</span>' +
-                    '<br><span class="text-state">Lieu : ' + locationLabels[activeLocation] + '</span>'
+                    '<br><span class="text-state">Lieu : ' + getSelectedZoneName() + '</span>'
                 );
             }
         },
@@ -456,24 +625,38 @@ document.addEventListener('DOMContentLoaded', function () {
             return selectionAllowed(selectInfo);
         },
         select: function (info) {
-            const dateStr = normalizeDate(info.start);
+            const startData = parseCleanIso(info.startStr);
+            const endData = parseCleanIso(info.endStr);
+            const prices = getPricesForSelection(info.startStr, info.endStr, 'hour');
+
+            updatePriceUI(prices);
 
             if (info.allDay) {
-                if (hasAnyEventOnDate(dateStr)) {
+                if (hasAnyEventOnDate(startData.dateIso)) {
                     calendar.unselect();
                     alert('Impossible de créer un événement journée complète : un événement existe déjà sur cette journée.');
                     return;
                 }
+
+                currentSelection = {
+                    bookingMode: 'hour',
+                    startDate: startData.dateIso,
+                    startTime: '00:00',
+                    endTime: '23:59',
+                    periodKey: null,
+                    isFullDay: true,
+                    guestNb: guestNbInput.value,
+                    price: prices ? prices.full : 0
+                };
 
                 clearPeriodPreviewEvent();
                 calendar.refetchEvents();
 
                 updatePreview(
                     '<span class="font-semibold text-secondary">Sélection all day :</span> ' +
-                    '<span class="font-semibold text-primary">' + info.startStr + '</span>' +
-                    '<br><span class="text-state">Lieu : ' + locationLabels[activeLocation] + '</span>'
+                    '<span class="font-semibold text-primary">' + startData.dateFr + '</span>' +
+                    '<br><span class="text-state">Lieu : ' + getSelectedZoneName() + '</span>'
                 );
-
                 return;
             }
 
@@ -482,7 +665,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
-            if (allDayBlockedDates.has(dateStr)) {
+            if (allDayBlockedDates.has(startData.dateIso)) {
                 calendar.unselect();
                 alert('Impossible de réserver des heures sur cette journée : elle est bloquée en all day.');
                 return;
@@ -494,35 +677,44 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            currentSelection = {
+                bookingMode: 'hour',
+                startDate: startData.dateIso,
+                startTime: startData.time,
+                endTime: endData.time,
+                periodKey: null,
+                isFullDay: false,
+                guestNb: guestNbInput.value,
+                price: prices ? prices.full : 0
+            };
+
             clearPeriodPreviewEvent();
             calendar.refetchEvents();
 
-            const startHour = info.startStr.slice(11, 16);
-            const endHour = info.endStr.slice(11, 16);
             const durationMs = info.end.getTime() - info.start.getTime();
             const durationHours = durationMs / (60 * 60 * 1000);
 
             updatePreview(
                 '<span class="font-semibold text-secondary">Créneau horaire :</span> ' +
-                '<span class="font-semibold text-primary">' + info.startStr + '</span> → ' +
-                '<span class="font-semibold text-primary">' + info.endStr + '</span>' +
-                '<br><span class="text-state">Plage : ' + startHour + ' → ' + endHour + '</span>' +
+                '<span class="font-semibold text-primary">' + startData.time + ' → ' + endData.time + '</span>' +
+                '<br><span class="text-state">Date : ' + startData.dateFr + '</span>' +
                 '<br><span class="text-state">Durée : ' + durationHours + ' heure(s)</span>' +
-                '<br><span class="text-state">Lieu : ' + locationLabels[activeLocation] + '</span>'
+                '<br><span class="text-state">Lieu : ' + getSelectedZoneName() + '</span>'
             );
         }
     });
 
     calendar.render();
-    updateLocationDescription();
     updateBookingModeUI();
     updateLegendVisibility();
 
     bookingModeLinks.forEach(function (button) {
         button.addEventListener('click', function () {
             bookingMode = button.dataset.mode;
+            currentSelection = null;
             clearPeriodPreviewEvent();
             updateBookingModeUI();
+            updatePriceUI(null);
             calendar.unselect();
             calendar.refetchEvents();
 
@@ -536,7 +728,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     locationTabs.forEach(function (tab) {
         tab.addEventListener('click', function () {
-            activeLocation = tab.dataset.location;
+            currentSelection = null;
             clearPeriodPreviewEvent();
 
             locationTabs.forEach(function (item) {
@@ -549,14 +741,53 @@ document.addEventListener('DOMContentLoaded', function () {
             tab.classList.remove('border-transparent', 'text-slate-500');
             tab.setAttribute('aria-selected', 'true');
 
-            if (locationLabel && locationLabels[activeLocation]) {
-                locationLabel.textContent = locationLabels[activeLocation];
-            }
-
-            updateLocationDescription();
             updatePreview('Aucune sélection pour le moment.');
+            updatePriceUI(null);
             calendar.unselect();
             calendar.refetchEvents();
         });
     });
+
+    if (submitButton) {
+        submitButton.addEventListener('click', async function() {
+            if (!currentSelection || !activeZoneId) {
+                alert('Veuillez sélectionner un créneau sur le calendrier.');
+                return;
+            }
+
+            const payload = {
+                ...currentSelection,
+                zoneId: activeZoneId
+            };
+
+            try {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Enregistrement...';
+
+                const response = await fetch('/booking/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    alert('Réservation confirmée !');
+                    win
+                } else {
+                    alert('Erreur : ' + (result.error || 'Impossible d\'enregistrer la réservation.'));
+                }
+            } catch (error) {
+                console.error(error);
+                alert('Une erreur réseau est survenue.');
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Réserver le créneau';
+            }
+        });
+    }
 });

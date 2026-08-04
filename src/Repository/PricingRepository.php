@@ -19,6 +19,15 @@ class PricingRepository extends ServiceEntityRepository
         parent::__construct($registry, Pricing::class);
     }
 
+    public function getPrincingsByZone(Zone $zone): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.zone = :zone')
+            ->setParameter('zone', $zone)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getPricingByTrainingLocationWeekDayAndTimeSlot(Zone $zone, TimeSlot $timeSlot, WeekDay $weekDay): ?Pricing
     {
         return $this->createQueryBuilder('p')
