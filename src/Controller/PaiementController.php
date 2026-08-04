@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Transaction;
 use App\Repository\BookingRepository;
+use App\Repository\UserRepository;
+use App\Service\MailerService;
 use App\Service\StripePaiementService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\StripeClient;
@@ -22,7 +24,9 @@ final class PaiementController extends AbstractController
         #[Autowire(env: 'STRIPE_SECRET_KEY')]
         string $stripeSecretKey,
         EntityManagerInterface $entityManager,
-        BookingRepository $bookingRepository
+        BookingRepository $bookingRepository,
+        UserRepository $userRepository,
+        MailerService $mailerService
     ): Response {
         $stripe = new StripeClient($stripeSecretKey);
         $session = $stripe->checkout->sessions->retrieve(
@@ -38,10 +42,13 @@ final class PaiementController extends AbstractController
         $transaction->setPaidPrice($session->amount_total);
         $transaction->setStripeFee($session->payment_intent->latest_charge->balance_transaction->fee);
         $transaction->setTimestamp(new \DateTime());
-        $transaction->setBooking($bookingRepository->findById($session->metadata->booking_id));
+        $transaction->setBooking($bookingRepository->findOneById($session->metadata->booking_id));
+
+        $user = $userRepository->findOneById($session->metadata->user_id);
 
         $entityManager->persist($transaction);
         $entityManager->flush();
+        $mailerService->sendPaymentConfirmationEmail($user, $transaction);
 
         return $this->render('paiement/success.html.twig', [
             'controller_name' => 'PaiementController',
