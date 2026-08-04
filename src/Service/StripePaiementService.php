@@ -17,6 +17,8 @@ class StripePaiementService
 
     public function createPaymentLink(
         int $price,
+        int $userId,
+        int $reservationId,
         string $currency = 'jpy',
         string $name = 'Reservation',
         string $description = 'Booking entrainement'
@@ -34,7 +36,11 @@ class StripePaiementService
                 ],
                 'quantity' => 1,
             ]],
-            'success_url' => $this->defaultUri.'/paiement/success?session_id={CHECKOUT_SESSION_ID}',
+            'metadata' => [
+                'booking_id' => $reservationId,
+                'user_id' => $userId,
+            ],
+            'success_url' => 'http://localhost/paiement/success?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $this->defaultUri.'/paiement/cancel',
         ]);
 
