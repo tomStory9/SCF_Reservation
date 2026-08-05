@@ -29,6 +29,7 @@ final class PaiementController extends AbstractController
         MailerService $mailerService
     ): Response {
         $stripe = new StripeClient($stripeSecretKey);
+
         $session = $stripe->checkout->sessions->retrieve(
             $session_id,
             [
@@ -37,7 +38,16 @@ final class PaiementController extends AbstractController
                 ],
             ]
         );
-
+        while (!$session->payment_intent || !$session->payment_intent->latest_charge || !$session->payment_intent->latest_charge->balance_transaction) {
+            $session = $stripe->checkout->sessions->retrieve(
+                $session_id,
+                [
+                    'expand' => [
+                        'payment_intent.latest_charge.balance_transaction',
+                    ],
+                ]
+            );
+        }
         $transaction = new Transaction();
         $transaction->setPaidPrice($session->amount_total);
         $transaction->setStripeFee($session->payment_intent->latest_charge->balance_transaction->fee);
