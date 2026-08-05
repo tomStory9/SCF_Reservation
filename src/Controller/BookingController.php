@@ -5,7 +5,9 @@ namespace App\Controller;
 use App\Entity\Facility;
 use App\Entity\User;
 use App\Entity\Zone;
+use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
+use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
 use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,19 +23,38 @@ final class BookingController extends AbstractController
         private readonly FacilityRepository $facilityRepository,
         private readonly ZoneRepository $zoneRepository,
         private readonly BookingService $bookingService,
+        private readonly UserRoleRepository $userRoleRepository,
+        private readonly BookingRepository $bookingRepository,
     ) {
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     #[IsGranted('ROLE_USER')]
     #[Route('/booking', name: 'app_booking_index', methods: ['GET'])]
     public function index(): Response
     {
         $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $remainingHours = $this->bookingRepository->getRemainingFreeHoursThisMonth($user);
+
+        $userRole = $this->userRoleRepository->findRoleForUser($user);
+        $maxAdvanceDays = $userRole && null !== $userRole->getMaxAdvanceBookingDays() ? $userRole->getMaxAdvanceBookingDays() : 30;
+
+        $maxEndDate = new \DateTimeImmutable('today')->modify(sprintf('+%d days', $maxAdvanceDays + 1))->format('Y-m-d');
+
         $facilities = $this->facilityRepository->findAll();
 
         return $this->render('user/reservation.html.twig', [
             'user' => $user,
             'facilities' => $facilities,
+            'maxEndDate' => $maxEndDate,
+            'remainingHours' => $remainingHours,
         ]);
     }
 
@@ -63,10 +84,17 @@ final class BookingController extends AbstractController
         return new JsonResponse($events);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/zone/{id}/pricings', name: 'app_booking_pricings_by_zone', methods: ['GET'])]
     public function getPricingsByZone(Zone $zone): JsonResponse
     {
-        $pricingsData = $this->bookingService->getPrincingsByZone($zone);
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $pricingsData = $this->bookingService->getPrincingsByZone($zone, $user);
 
         return new JsonResponse($pricingsData);
     }

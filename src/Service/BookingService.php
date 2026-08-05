@@ -8,6 +8,7 @@ use App\Entity\Zone;
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use App\Repository\PricingRepository;
+use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -20,6 +21,7 @@ class BookingService
         private readonly ZoneRepository $zoneRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorInterface $validator,
+        private readonly UserRoleRepository $userRoleRepository,
     ) {
     }
 
@@ -55,9 +57,12 @@ class BookingService
         return $events;
     }
 
-    public function getPrincingsByZone(Zone $zone): array
+    public function getPrincingsByZone(Zone $zone, User $user): array
     {
         $pricings = $this->pricingRepository->getPrincingsByZone($zone);
+
+        $userRole = $this->userRoleRepository->findRoleForUser($user);
+        $tarifUser = $userRole->getTarif();
 
         $pricingsData = [];
 
@@ -79,17 +84,18 @@ class BookingService
                 ];
             }
 
-            $priceValues = [
-                'full' => $pricing->getFullPrice(),
-                'reducedA' => $pricing->getReducedPriceA(),
-                'reducedB' => $pricing->getReducedPriceB(),
-            ];
+            $price = match ($tarifUser) {
+                'B' => $pricing->getReducedPriceB(),
+                'A' => $pricing->getReducedPriceA(),
+                'FREE' => 0,
+                default => $pricing->getFullPrice(),
+            };
 
             if ('hourly' === $periodType) {
                 $timeKey = $timeSlot->getStartTime()->format('H:i');
-                $pricingsData[$dayKey]['hourly'][$timeKey] = $priceValues;
+                $pricingsData[$dayKey]['hourly'][$timeKey] = $price;
             } else {
-                $pricingsData[$dayKey]['period'][$periodType] = $priceValues;
+                $pricingsData[$dayKey]['period'][$periodType] = $price;
             }
         }
 
@@ -108,14 +114,15 @@ class BookingService
             throw new \Exception('Zone introuvable.');
         }
 
-        $booking = new Booking();
-        $booking->setUserBooking($user);
-        $booking->setZone($zone);
-        $booking->setPrice((int) $data['price']);
-        $booking->setGuestCount((int) $data['guestNb']);
-        $booking->setIsFullDay($data['isFullDay']);
-        $booking->setBookingStatus(BookingStatus::PENDING);
-        $booking->setCreatedDate(new \DateTimeImmutable());
+        $userRole = $this->userRoleRepository->findRoleForUser($user);
+
+        $maxAdvanceDays = $userRole && null !== $userRole->getMaxAdvanceBookingDays()
+            ? $userRole->getMaxAdvanceBookingDays()
+            : 30;
+
+        $limitDate = new \DateTimeImmutable('today')
+            ->modify(sprintf('+%d days', $maxAdvanceDays))
+            ->setTime(23, 59, 59);
 
         $startDateStr = $data['startDate'];
 
@@ -126,6 +133,50 @@ class BookingService
             $start = new \DateTimeImmutable($startDateStr.' '.$data['startTime'].':00');
             $end = new \DateTimeImmutable($startDateStr.' '.$data['endTime'].':00');
         }
+
+        if ($start > $limitDate) {
+            throw new \Exception(sprintf('Votre statut vous permet de réserver au maximum %d jours à l\'avance (jusqu\'au %s).', $maxAdvanceDays, $limitDate->format('d/m/Y')));
+        }
+
+        $durationSeconds = $end->getTimestamp() - $start->getTimestamp();
+        $durationHours = $durationSeconds / 3600;
+
+        $freeHours = $this->bookingRepository->getRemainingFreeHoursThisMonth($user);
+
+        $basePrice = (int) ($data['basePrice'] ?? $data['price']);
+        $finalPrice = $basePrice;
+
+        if (($data['bookingMode'] ?? 'hour') === 'period') {
+            if ($freeHours >= 4) {
+                $finalPrice = 0;
+            } elseif ($freeHours > 0) {
+                $finalPrice = $basePrice * ((4 - $freeHours) / 4);
+            }
+        } else {
+            if ($freeHours >= $durationHours) {
+                $finalPrice = 0;
+            } elseif ($freeHours > 0) {
+                $finalPrice = $basePrice * (($durationHours - $freeHours) / $durationHours);
+            }
+        }
+
+        $expectedPrice = (int) round($finalPrice);
+        $receivedPrice = (int) $data['price'];
+
+        if ($receivedPrice !== $expectedPrice) {
+            throw new \Exception(sprintf('Le tarif calculé (%d ¥) ne correspond pas au tarif affiché (%d ¥). Vos heures gratuites ont peut-être été mises à jour. Veuillez rafraîchir la page.', $expectedPrice, $receivedPrice));
+        }
+
+        $booking = new Booking();
+        $booking->setUserBooking($user);
+        $booking->setZone($zone);
+
+        $booking->setPrice($expectedPrice);
+
+        $booking->setGuestCount((int) $data['guestNb']);
+        $booking->setIsFullDay($data['isFullDay']);
+        $booking->setBookingStatus(BookingStatus::PENDING);
+        $booking->setCreatedDate(new \DateTimeImmutable());
 
         $booking->setStartDate($start);
         $booking->setEndDate($end);

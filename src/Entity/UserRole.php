@@ -25,6 +25,9 @@ class UserRole
     #[ORM\Column(nullable: true)]
     private ?int $maxAdvanceBookingDays = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $tarif = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -79,6 +82,18 @@ class UserRole
     public function setMaxAdvanceBookingDays(?int $maxAdvanceBookingDays): static
     {
         $this->maxAdvanceBookingDays = $maxAdvanceBookingDays;
+
+        return $this;
+    }
+
+    public function getTarif(): ?string
+    {
+        return $this->tarif;
+    }
+
+    public function setTarif(string $tarif): static
+    {
+        $this->tarif = $tarif;
 
         return $this;
     }

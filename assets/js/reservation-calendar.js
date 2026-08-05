@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const zoneSelectEl = document.getElementById('zone-select');
     const submitButton = document.getElementById('submit_booking');
     const guestNbInput = document.getElementById('guest-count-input');
+    const configEl = document.getElementById('calendar-config');
+
 
     if (!zoneSelectEl) return;
 
@@ -26,6 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentZonePricings = {};
     let currentSelection = null;
+
+    const maxAllowedDate = configEl ? configEl.dataset.maxDate : null;
 
     const zoneTomSelect = new TomSelect(zoneSelectEl, {
         valueField: 'id',
@@ -414,6 +418,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return null;
         }
 
+        const userDataEl = document.getElementById('user-booking-data');
+        const freeHours = userDataEl ? parseFloat(userDataEl.dataset.freeHours) : 0;
+
         const current = new Date(startIso);
         const dayNumber = current.getDay() || 7;
         const dayPricings = currentZonePricings[dayNumber];
@@ -421,13 +428,29 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!dayPricings) return null;
 
         if (mode === 'period' && periodKey) {
-            return dayPricings.period[periodKey] || null;
+            const basePrice = dayPricings.period[periodKey];
+            if (basePrice === undefined) return null;
+
+            let finalPrice = basePrice;
+
+            if (freeHours >= 4) {
+                finalPrice = 0;
+            } else if (freeHours > 0) {
+                finalPrice = basePrice * ((4 - freeHours) / 4);
+            }
+
+            return {
+                price: Math.round(finalPrice),
+                basePrice: basePrice
+            };
         }
 
         if (mode === 'hour' && endIso) {
-            let totalFull = 0, totalReducedA = 0, totalReducedB = 0;
+            let basePrice = 0;
             let hasValidPricing = false;
             const end = new Date(endIso);
+
+            const durationHours = (end.getTime() - new Date(startIso).getTime()) / (60 * 60 * 1000);
 
             while (current < end) {
                 const loopDay = current.getDay() || 7;
@@ -435,17 +458,27 @@ document.addEventListener('DOMContentLoaded', function () {
                 const minutes = String(current.getMinutes()).padStart(2, '0');
                 const timeKey = `${hours}:${minutes}`;
 
-                const prices = currentZonePricings[loopDay]?.hourly?.[timeKey];
-                if (prices) {
-                    totalFull += prices.full;
-                    totalReducedA += prices.reducedA;
-                    totalReducedB += prices.reducedB;
+                const hourlyPrice = currentZonePricings[loopDay]?.hourly?.[timeKey];
+
+                if (hourlyPrice !== undefined && hourlyPrice !== null) {
+                    basePrice += hourlyPrice.price;
                     hasValidPricing = true;
                 }
                 current.setHours(current.getHours() + 1);
             }
 
-            return hasValidPricing ? { full: totalFull, reducedA: totalReducedA, reducedB: totalReducedB } : null;
+            let finalPrice = basePrice;
+
+            if (freeHours >= durationHours) {
+                finalPrice = 0;
+            } else if (freeHours > 0) {
+                finalPrice = basePrice * ((durationHours - freeHours) / durationHours);
+            }
+
+            return hasValidPricing ? {
+                price: Math.round(finalPrice),
+                basePrice: basePrice
+            } : null;
         }
 
         return null;
@@ -457,12 +490,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!priceContainer || !priceDisplay) return;
 
-        if (!prices || prices.full === null || prices.full === undefined) {
+        if (!prices || prices.price === null || prices.price === undefined) {
             priceContainer.classList.add('hidden');
         } else {
-            const selectedPrice = prices.full;
-
-            const formattedPrice = selectedPrice.toLocaleString('fr-FR');
+            const formattedPrice = prices.price.toLocaleString('fr-FR');
             priceDisplay.textContent = `${formattedPrice} ¥`;
             priceContainer.classList.remove('hidden');
         }
@@ -518,7 +549,8 @@ document.addEventListener('DOMContentLoaded', function () {
             hour12: false
         },
         validRange: {
-            start: getTodayIsoString()
+            start: getTodayIsoString(),
+            end: maxAllowedDate
         },
         events: async function (fetchInfo, successCallback, failureCallback) {
             if (!activeZoneId) {
