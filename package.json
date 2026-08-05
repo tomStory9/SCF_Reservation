@@ -30,6 +30,7 @@
         "intl-tel-input": "^29.1.2",
         "postcss": "^8.5.18",
         "postcss-loader": "^8.2.1",
+        "sweetalert2": "^11.26.25",
         "tailwindcss": "^4.3.2",
         "temporal-polyfill": "^1.0.1",
         "tom-select": "^2.6.2"
