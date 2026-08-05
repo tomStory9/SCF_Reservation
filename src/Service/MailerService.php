@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Booking;
+use App\Entity\Transaction;
 use App\Entity\User;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -59,6 +60,21 @@ class MailerService
                [
                    'user' => $user]
            );
+        $this->mailerInterface->send($email);
+    }
+
+    public function sendPaymentConfirmationEmail(User $user, Transaction $transaction): void
+    {
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($user->getEmail())
+            ->subject('Payment Confirmation')
+            ->htmlTemplate('mails/payment_confirmation.html.twig')
+            ->context([
+                'user' => $user,
+                'transaction' => $transaction,
+            ]);
+
         $this->mailerInterface->send($email);
     }
 }

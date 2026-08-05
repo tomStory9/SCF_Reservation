@@ -1,0 +1,9 @@
+paiement:
+   success:
+    title: "Paiement confirmé"
+    message: "Votre transaction a bien été prise en compte."
+    close_page: "Vous pouvez maintenant fermer cette page."
+   cancel:
+    title: "Paiement annulé"
+    message: "Votre transaction a été annulée."
+    close_page: "Vous pouvez maintenant fermer cette page."

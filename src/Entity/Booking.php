@@ -51,6 +51,9 @@ class Booking
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $CheckedOutAt = null;
 
+    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
+    private ?Transaction $transactions = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -184,6 +187,28 @@ class Booking
     public function setCheckedOutAt(?\DateTimeImmutable $CheckedOutAt): static
     {
         $this->CheckedOutAt = $CheckedOutAt;
+
+        return $this;
+    }
+
+    public function getTransactions(): ?Transaction
+    {
+        return $this->transactions;
+    }
+
+    public function setTransactions(?Transaction $transactions): static
+    {
+        // unset the owning side of the relation if necessary
+        if (null === $transactions && null !== $this->transactions) {
+            $this->transactions->setBooking(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if (null !== $transactions && $transactions->getBooking() !== $this) {
+            $transactions->setBooking($this);
+        }
+
+        $this->transactions = $transactions;
 
         return $this;
     }
