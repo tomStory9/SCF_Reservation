@@ -63,10 +63,17 @@ final class BookingController extends AbstractController
         return new JsonResponse($events);
     }
 
+    #[IsGranted('ROLE_USER')]
     #[Route('/zone/{id}/pricings', name: 'app_booking_pricings_by_zone', methods: ['GET'])]
     public function getPricingsByZone(Zone $zone): JsonResponse
     {
-        $pricingsData = $this->bookingService->getPrincingsByZone($zone);
+        $user = $this->getUser();
+
+        if (!$user instanceof User) {
+            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
+        }
+
+        $pricingsData = $this->bookingService->getPrincingsByZone($zone, $user);
 
         return new JsonResponse($pricingsData);
     }

@@ -421,11 +421,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!dayPricings) return null;
 
         if (mode === 'period' && periodKey) {
-            return dayPricings.period[periodKey] || null;
+            const periodPrice = dayPricings.period[periodKey];
+            return periodPrice !== undefined ? { price: periodPrice } : null;
         }
 
         if (mode === 'hour' && endIso) {
-            let totalFull = 0, totalReducedA = 0, totalReducedB = 0;
+            let totalPrice = 0;
             let hasValidPricing = false;
             const end = new Date(endIso);
 
@@ -435,17 +436,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 const minutes = String(current.getMinutes()).padStart(2, '0');
                 const timeKey = `${hours}:${minutes}`;
 
-                const prices = currentZonePricings[loopDay]?.hourly?.[timeKey];
-                if (prices) {
-                    totalFull += prices.full;
-                    totalReducedA += prices.reducedA;
-                    totalReducedB += prices.reducedB;
+                const hourlyPrice = currentZonePricings[loopDay]?.hourly?.[timeKey];
+
+                if (hourlyPrice !== undefined && hourlyPrice !== null) {
+                    totalPrice += hourlyPrice;
                     hasValidPricing = true;
                 }
+
                 current.setHours(current.getHours() + 1);
             }
 
-            return hasValidPricing ? { full: totalFull, reducedA: totalReducedA, reducedB: totalReducedB } : null;
+            return hasValidPricing ? { price: totalPrice } : null;
         }
 
         return null;
@@ -457,12 +458,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!priceContainer || !priceDisplay) return;
 
-        if (!prices || prices.full === null || prices.full === undefined) {
+        if (!prices || prices.price === null || prices.price === undefined) {
             priceContainer.classList.add('hidden');
         } else {
-            const selectedPrice = prices.full;
-
-            const formattedPrice = selectedPrice.toLocaleString('fr-FR');
+            const formattedPrice = prices.price.toLocaleString('fr-FR');
             priceDisplay.textContent = `${formattedPrice} ¥`;
             priceContainer.classList.remove('hidden');
         }

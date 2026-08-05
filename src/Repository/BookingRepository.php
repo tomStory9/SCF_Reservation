@@ -58,6 +58,7 @@ class BookingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
     public function getBookingsByZone(Zone $zone): array
     {
         return $this->createQueryBuilder('b')
@@ -87,7 +88,7 @@ class BookingRepository extends ServiceEntityRepository
         return count($qb->getQuery()->getResult()) > 0;
     }
 
-    public function getRemainingFreeHoursThisMonth(\App\Entity\User $user): float
+    public function getRemainingFreeHoursThisMonth(User $user): float
     {
         $em = $this->getEntityManager();
 

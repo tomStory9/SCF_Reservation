@@ -8,6 +8,7 @@ use App\Entity\Zone;
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use App\Repository\PricingRepository;
+use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -20,6 +21,7 @@ class BookingService
         private readonly ZoneRepository $zoneRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly ValidatorInterface $validator,
+        private readonly UserRoleRepository $userRoleRepository,
     ) {
     }
 
@@ -55,9 +57,12 @@ class BookingService
         return $events;
     }
 
-    public function getPrincingsByZone(Zone $zone): array
+    public function getPrincingsByZone(Zone $zone, User $user): array
     {
         $pricings = $this->pricingRepository->getPrincingsByZone($zone);
+
+        $userRole = $this->userRoleRepository->findRoleForUser($user);
+        $tarifUser = $userRole->getTarif();
 
         $pricingsData = [];
 
@@ -79,17 +84,18 @@ class BookingService
                 ];
             }
 
-            $priceValues = [
-                'full' => $pricing->getFullPrice(),
-                'reducedA' => $pricing->getReducedPriceA(),
-                'reducedB' => $pricing->getReducedPriceB(),
-            ];
+            $price = match ($tarifUser) {
+                'B' => $pricing->getReducedPriceB(),
+                'A' => $pricing->getReducedPriceA(),
+                'FREE' => 0,
+                default => $pricing->getFullPrice(),
+            };
 
             if ('hourly' === $periodType) {
                 $timeKey = $timeSlot->getStartTime()->format('H:i');
-                $pricingsData[$dayKey]['hourly'][$timeKey] = $priceValues;
+                $pricingsData[$dayKey]['hourly'][$timeKey] = $price;
             } else {
-                $pricingsData[$dayKey]['period'][$periodType] = $priceValues;
+                $pricingsData[$dayKey]['period'][$periodType] = $price;
             }
         }
 
