@@ -118,8 +118,16 @@ final class BookingController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => 'Données invalides.'], Response::HTTP_BAD_REQUEST);
         }
 
-        $status = $this->bookingService->createBooking($data, $user);
+        $this->bookingService->createBooking($data, $user);
 
-        return new JsonResponse($status);
+        $this->addFlash(
+            'success',
+            'Votre réservation a bien été enregistrée et est en attente de validation.'
+        );
+
+        return new JsonResponse([
+            'success' => true,
+            'redirectUrl' => $this->generateUrl('app_home_user'),
+        ]);
     }
 }

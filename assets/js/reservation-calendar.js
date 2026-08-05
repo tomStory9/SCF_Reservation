@@ -6,6 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import TomSelect from "tom-select";
+import Swal from 'sweetalert2';
 
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar-holder');
@@ -808,14 +809,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    alert('Réservation confirmée !');
-                    win
+                    window.location.href = result.redirectUrl;
                 } else {
-                    alert('Erreur : ' + (result.error || 'Impossible d\'enregistrer la réservation.'));
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: result.error || 'Impossible d\'enregistrer la réservation.',
+                        confirmButtonColor: '#d33'
+                    });
                 }
             } catch (error) {
                 console.error(error);
-                alert('Une erreur réseau est survenue.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur réseau',
+                    text: 'Une erreur est survenue lors de la communication avec le serveur.',
+                    confirmButtonColor: '#d33'
+                });
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Réserver le créneau';
