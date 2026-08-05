@@ -418,6 +418,9 @@ document.addEventListener('DOMContentLoaded', function () {
             return null;
         }
 
+        const userDataEl = document.getElementById('user-booking-data');
+        const freeHours = userDataEl ? parseFloat(userDataEl.dataset.freeHours) : 0;
+
         const current = new Date(startIso);
         const dayNumber = current.getDay() || 7;
         const dayPricings = currentZonePricings[dayNumber];
@@ -425,14 +428,29 @@ document.addEventListener('DOMContentLoaded', function () {
         if (!dayPricings) return null;
 
         if (mode === 'period' && periodKey) {
-            const periodPrice = dayPricings.period[periodKey];
-            return periodPrice !== undefined ? { price: periodPrice } : null;
+            const basePrice = dayPricings.period[periodKey];
+            if (basePrice === undefined) return null;
+
+            let finalPrice = basePrice;
+
+            if (freeHours >= 4) {
+                finalPrice = 0;
+            } else if (freeHours > 0) {
+                finalPrice = basePrice * ((4 - freeHours) / 4);
+            }
+
+            return {
+                price: Math.round(finalPrice),
+                basePrice: basePrice
+            };
         }
 
         if (mode === 'hour' && endIso) {
-            let totalPrice = 0;
+            let basePrice = 0;
             let hasValidPricing = false;
             const end = new Date(endIso);
+
+            const durationHours = (end.getTime() - new Date(startIso).getTime()) / (60 * 60 * 1000);
 
             while (current < end) {
                 const loopDay = current.getDay() || 7;
@@ -443,14 +461,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 const hourlyPrice = currentZonePricings[loopDay]?.hourly?.[timeKey];
 
                 if (hourlyPrice !== undefined && hourlyPrice !== null) {
-                    totalPrice += hourlyPrice;
+                    basePrice += hourlyPrice.price;
                     hasValidPricing = true;
                 }
-
                 current.setHours(current.getHours() + 1);
             }
 
-            return hasValidPricing ? { price: totalPrice } : null;
+            let finalPrice = basePrice;
+
+            if (freeHours >= durationHours) {
+                finalPrice = 0;
+            } else if (freeHours > 0) {
+                finalPrice = basePrice * ((durationHours - freeHours) / durationHours);
+            }
+
+            return hasValidPricing ? {
+                price: Math.round(finalPrice),
+                basePrice: basePrice
+            } : null;
         }
 
         return null;

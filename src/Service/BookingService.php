@@ -138,10 +138,41 @@ class BookingService
             throw new \Exception(sprintf('Votre statut vous permet de réserver au maximum %d jours à l\'avance (jusqu\'au %s).', $maxAdvanceDays, $limitDate->format('d/m/Y')));
         }
 
+        $durationSeconds = $end->getTimestamp() - $start->getTimestamp();
+        $durationHours = $durationSeconds / 3600;
+
+        $freeHours = $this->bookingRepository->getRemainingFreeHoursThisMonth($user);
+
+        $basePrice = (int) ($data['basePrice'] ?? $data['price']);
+        $finalPrice = $basePrice;
+
+        if (($data['bookingMode'] ?? 'hour') === 'period') {
+            if ($freeHours >= 4) {
+                $finalPrice = 0;
+            } elseif ($freeHours > 0) {
+                $finalPrice = $basePrice * ((4 - $freeHours) / 4);
+            }
+        } else {
+            if ($freeHours >= $durationHours) {
+                $finalPrice = 0;
+            } elseif ($freeHours > 0) {
+                $finalPrice = $basePrice * (($durationHours - $freeHours) / $durationHours);
+            }
+        }
+
+        $expectedPrice = (int) round($finalPrice);
+        $receivedPrice = (int) $data['price'];
+
+        if ($receivedPrice !== $expectedPrice) {
+            throw new \Exception(sprintf('Le tarif calculé (%d ¥) ne correspond pas au tarif affiché (%d ¥). Vos heures gratuites ont peut-être été mises à jour. Veuillez rafraîchir la page.', $expectedPrice, $receivedPrice));
+        }
+
         $booking = new Booking();
         $booking->setUserBooking($user);
         $booking->setZone($zone);
-        $booking->setPrice((int) $data['price']);
+
+        $booking->setPrice($expectedPrice);
+
         $booking->setGuestCount((int) $data['guestNb']);
         $booking->setIsFullDay($data['isFullDay']);
         $booking->setBookingStatus(BookingStatus::PENDING);

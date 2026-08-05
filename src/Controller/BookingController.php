@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Facility;
 use App\Entity\User;
 use App\Entity\Zone;
+use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
 use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
@@ -22,7 +23,8 @@ final class BookingController extends AbstractController
         private readonly FacilityRepository $facilityRepository,
         private readonly ZoneRepository $zoneRepository,
         private readonly BookingService $bookingService,
-        private readonly UserRoleRepository $userRoleRepository
+        private readonly UserRoleRepository $userRoleRepository,
+        private readonly BookingRepository $bookingRepository,
     ) {
     }
 
@@ -39,6 +41,8 @@ final class BookingController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
         }
 
+        $remainingHours = $this->bookingRepository->getRemainingFreeHoursThisMonth($user);
+
         $userRole = $this->userRoleRepository->findRoleForUser($user);
         $maxAdvanceDays = $userRole && null !== $userRole->getMaxAdvanceBookingDays() ? $userRole->getMaxAdvanceBookingDays() : 30;
 
@@ -50,6 +54,7 @@ final class BookingController extends AbstractController
             'user' => $user,
             'facilities' => $facilities,
             'maxEndDate' => $maxEndDate,
+            'remainingHours' => $remainingHours,
         ]);
     }
 
