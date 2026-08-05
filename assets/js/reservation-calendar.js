@@ -18,6 +18,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const zoneSelectEl = document.getElementById('zone-select');
     const submitButton = document.getElementById('submit_booking');
     const guestNbInput = document.getElementById('guest-count-input');
+    const configEl = document.getElementById('calendar-config');
+
 
     if (!zoneSelectEl) return;
 
@@ -26,6 +28,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     let currentZonePricings = {};
     let currentSelection = null;
+
+    const maxAllowedDate = configEl ? configEl.dataset.maxDate : null;
 
     const zoneTomSelect = new TomSelect(zoneSelectEl, {
         valueField: 'id',
@@ -517,7 +521,8 @@ document.addEventListener('DOMContentLoaded', function () {
             hour12: false
         },
         validRange: {
-            start: getTodayIsoString()
+            start: getTodayIsoString(),
+            end: maxAllowedDate
         },
         events: async function (fetchInfo, successCallback, failureCallback) {
             if (!activeZoneId) {

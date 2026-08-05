@@ -114,14 +114,15 @@ class BookingService
             throw new \Exception('Zone introuvable.');
         }
 
-        $booking = new Booking();
-        $booking->setUserBooking($user);
-        $booking->setZone($zone);
-        $booking->setPrice((int) $data['price']);
-        $booking->setGuestCount((int) $data['guestNb']);
-        $booking->setIsFullDay($data['isFullDay']);
-        $booking->setBookingStatus(BookingStatus::PENDING);
-        $booking->setCreatedDate(new \DateTimeImmutable());
+        $userRole = $this->userRoleRepository->findRoleForUser($user);
+
+        $maxAdvanceDays = $userRole && null !== $userRole->getMaxAdvanceBookingDays()
+            ? $userRole->getMaxAdvanceBookingDays()
+            : 30;
+
+        $limitDate = new \DateTimeImmutable('today')
+            ->modify(sprintf('+%d days', $maxAdvanceDays))
+            ->setTime(23, 59, 59);
 
         $startDateStr = $data['startDate'];
 
@@ -132,6 +133,19 @@ class BookingService
             $start = new \DateTimeImmutable($startDateStr.' '.$data['startTime'].':00');
             $end = new \DateTimeImmutable($startDateStr.' '.$data['endTime'].':00');
         }
+
+        if ($start > $limitDate) {
+            throw new \Exception(sprintf('Votre statut vous permet de réserver au maximum %d jours à l\'avance (jusqu\'au %s).', $maxAdvanceDays, $limitDate->format('d/m/Y')));
+        }
+
+        $booking = new Booking();
+        $booking->setUserBooking($user);
+        $booking->setZone($zone);
+        $booking->setPrice((int) $data['price']);
+        $booking->setGuestCount((int) $data['guestNb']);
+        $booking->setIsFullDay($data['isFullDay']);
+        $booking->setBookingStatus(BookingStatus::PENDING);
+        $booking->setCreatedDate(new \DateTimeImmutable());
 
         $booking->setStartDate($start);
         $booking->setEndDate($end);
