@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function () {
         searchField: 'name',
         placeholder: 'Sélectionnez une zone...',
         allowEmptyOption: false,
-        onChange: async function(zoneId) {
+        onChange: async function (zoneId) {
             if (!zoneId) return;
 
             activeZoneId = zoneId;
@@ -512,7 +512,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editable: false,
         weekends: true,
         allDaySlot: true,
-        slotMinTime: '08:00:00',
+        slotMinTime: '09:00:00',
         slotMaxTime: '21:00:00',
         slotDuration: '01:00:00',
         snapDuration: '01:00:00',
@@ -523,7 +523,7 @@ document.addEventListener('DOMContentLoaded', function () {
         eventOverlap: false,
         businessHours: {
             daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
-            startTime: '08:00',
+            startTime: '09:00',
             endTime: '21:00'
         },
         views: {
@@ -781,7 +781,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     if (submitButton) {
-        submitButton.addEventListener('click', async function() {
+        submitButton.addEventListener('click', async function () {
             if (!currentSelection || !activeZoneId) {
                 alert('Veuillez sélectionner un créneau sur le calendrier.');
                 return;
