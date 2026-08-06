@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use App\Validator\NoBookingOverlap;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
@@ -53,6 +55,17 @@ class Booking
 
     #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
     private ?Transaction $transactions = null;
+
+    /**
+     * @var Collection<int, BookingEquipment>
+     */
+    #[ORM\OneToMany(targetEntity: BookingEquipment::class, mappedBy: 'booking')]
+    private Collection $bookingEquipment;
+
+    public function __construct()
+    {
+        $this->bookingEquipment = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -209,6 +222,36 @@ class Booking
         }
 
         $this->transactions = $transactions;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BookingEquipment>
+     */
+    public function getBookingEquipment(): Collection
+    {
+        return $this->bookingEquipment;
+    }
+
+    public function addBookingEquipment(BookingEquipment $bookingEquipment): static
+    {
+        if (!$this->bookingEquipment->contains($bookingEquipment)) {
+            $this->bookingEquipment->add($bookingEquipment);
+            $bookingEquipment->setBooking($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookingEquipment(BookingEquipment $bookingEquipment): static
+    {
+        if ($this->bookingEquipment->removeElement($bookingEquipment)) {
+            // set the owning side to null (unless already changed)
+            if ($bookingEquipment->getBooking() === $this) {
+                $bookingEquipment->setBooking(null);
+            }
+        }
 
         return $this;
     }

@@ -19,14 +19,23 @@ class Equipment
     private ?string $name = null;
 
     /**
-     * @var Collection<int, ZoneEquipment>
+     * @var Collection<int, BookingEquipment>
      */
-    #[ORM\OneToMany(targetEntity: ZoneEquipment::class, mappedBy: 'equipment')]
-    private Collection $zoneEquipment;
+    #[ORM\OneToMany(targetEntity: BookingEquipment::class, mappedBy: 'equipment')]
+    private Collection $bookingEquipment;
+
+    #[ORM\Column]
+    private ?int $unitPrice = null;
+
+    #[ORM\Column]
+    private ?int $maxQuantity = null;
+
+    #[ORM\ManyToOne(inversedBy: 'equipment')]
+    private ?Zone $zone = null;
 
     public function __construct()
     {
-        $this->zoneEquipment = new ArrayCollection();
+        $this->bookingEquipment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -47,31 +56,67 @@ class Equipment
     }
 
     /**
-     * @return Collection<int, ZoneEquipment>
+     * @return Collection<int, BookingEquipment>
      */
-    public function getZoneEquipment(): Collection
+    public function getBookingEquipment(): Collection
     {
-        return $this->zoneEquipment;
+        return $this->bookingEquipment;
     }
 
-    public function addZoneEquipment(ZoneEquipment $zoneEquipment): static
+    public function addBookingEquipment(BookingEquipment $bookingEquipment): static
     {
-        if (!$this->zoneEquipment->contains($zoneEquipment)) {
-            $this->zoneEquipment->add($zoneEquipment);
-            $zoneEquipment->setEquipment($this);
+        if (!$this->bookingEquipment->contains($bookingEquipment)) {
+            $this->bookingEquipment->add($bookingEquipment);
+            $bookingEquipment->setEquipment($this);
         }
 
         return $this;
     }
 
-    public function removeZoneEquipment(ZoneEquipment $zoneEquipment): static
+    public function removeBookingEquipment(BookingEquipment $bookingEquipment): static
     {
-        if ($this->zoneEquipment->removeElement($zoneEquipment)) {
+        if ($this->bookingEquipment->removeElement($bookingEquipment)) {
             // set the owning side to null (unless already changed)
-            if ($zoneEquipment->getEquipment() === $this) {
-                $zoneEquipment->setEquipment(null);
+            if ($bookingEquipment->getEquipment() === $this) {
+                $bookingEquipment->setEquipment(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUnitPrice(): ?int
+    {
+        return $this->unitPrice;
+    }
+
+    public function setUnitPrice(int $unitPrice): static
+    {
+        $this->unitPrice = $unitPrice;
+
+        return $this;
+    }
+
+    public function getMaxQuantity(): ?int
+    {
+        return $this->maxQuantity;
+    }
+
+    public function setMaxQuantity(int $maxQuantity): static
+    {
+        $this->maxQuantity = $maxQuantity;
+
+        return $this;
+    }
+
+    public function getZone(): ?Zone
+    {
+        return $this->zone;
+    }
+
+    public function setZone(?Zone $zone): static
+    {
+        $this->zone = $zone;
 
         return $this;
     }
