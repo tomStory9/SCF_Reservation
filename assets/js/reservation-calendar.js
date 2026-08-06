@@ -352,7 +352,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function selectionAllowed(info) {
-        const dateStr = normalizeDate(info.start);
+        const startDateStr = normalizeDate(info.start);
+
+        const endDateStr = normalizeDate(new Date(info.end.getTime() - 1));
+
+        if (startDateStr !== endDateStr) {
+            return false;
+        }
+
         const now = new Date();
 
         if (info.start < now) {
@@ -360,14 +367,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (info.allDay) {
-            return !hasAnyEventOnDate(dateStr);
+            return !hasAnyEventOnDate(startDateStr);
         }
 
         if (bookingMode === 'period') {
             return false;
         }
 
-        if (allDayBlockedDates.has(dateStr)) {
+        if (allDayBlockedDates.has(startDateStr)) {
             return false;
         }
 
