@@ -44,16 +44,16 @@ class Zone
     private ?Facility $facility = null;
 
     /**
-     * @var Collection<int, ZoneEquipment>
+     * @var Collection<int, Equipment>
      */
-    #[ORM\OneToMany(targetEntity: ZoneEquipment::class, mappedBy: 'zone')]
-    private Collection $zoneEquipment;
+    #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'zone')]
+    private Collection $equipment;
 
     public function __construct()
     {
         $this->pricings = new ArrayCollection();
         $this->bookings = new ArrayCollection();
-        $this->zoneEquipment = new ArrayCollection();
+        $this->equipment = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -187,29 +187,29 @@ class Zone
     }
 
     /**
-     * @return Collection<int, ZoneEquipment>
+     * @return Collection<int, Equipment>
      */
-    public function getZoneEquipment(): Collection
+    public function getEquipment(): Collection
     {
-        return $this->zoneEquipment;
+        return $this->equipment;
     }
 
-    public function addZoneEquipment(ZoneEquipment $zoneEquipment): static
+    public function addEquipment(Equipment $equipment): static
     {
-        if (!$this->zoneEquipment->contains($zoneEquipment)) {
-            $this->zoneEquipment->add($zoneEquipment);
-            $zoneEquipment->setZone($this);
+        if (!$this->equipment->contains($equipment)) {
+            $this->equipment->add($equipment);
+            $equipment->setZone($this);
         }
 
         return $this;
     }
 
-    public function removeZoneEquipment(ZoneEquipment $zoneEquipment): static
+    public function removeEquipment(Equipment $equipment): static
     {
-        if ($this->zoneEquipment->removeElement($zoneEquipment)) {
+        if ($this->equipment->removeElement($equipment)) {
             // set the owning side to null (unless already changed)
-            if ($zoneEquipment->getZone() === $this) {
-                $zoneEquipment->setZone(null);
+            if ($equipment->getZone() === $this) {
+                $equipment->setZone(null);
             }
         }
 
