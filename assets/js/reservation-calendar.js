@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
         searchField: 'name',
         placeholder: 'Sélectionnez une zone...',
         allowEmptyOption: false,
-        onChange: async function(zoneId) {
+        onChange: async function (zoneId) {
             if (!zoneId) return;
 
             activeZoneId = zoneId;
@@ -816,7 +816,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     if (submitButton) {
-        submitButton.addEventListener('click', async function() {
+        submitButton.addEventListener('click', async function () {
             if (!currentSelection || !activeZoneId) {
                 alert('Veuillez sélectionner un créneau sur le calendrier.');
                 return;
