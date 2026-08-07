@@ -28,6 +28,8 @@ final class PendingBookingCrudController extends AbstractCrudController
         private readonly EntityManagerInterface $entityManager,
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly BookingRepository $bookingRepository,
+        private readonly MailerService $mailerService,
+        private readonly StripePaiementService $stripePaymentService,
     ) {
     }
 
@@ -335,10 +337,11 @@ final class PendingBookingCrudController extends AbstractCrudController
                 $this->getIndexUrl(),
             );
         }
-
+        $booking->setStripeCheckoutUrl($this->stripePaymentService->createCheckoutSession($booking->getPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
         $booking->setBookingStatus(
             BookingStatus::APPROVED,
         );
+        $this->mailerService->sendPaymentConfirmationEmail($booking->getUserBooking(), $booking->getTransaction());
 
         $this->entityManager->flush();
 
@@ -392,7 +395,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         $booking->setBookingStatus(
             BookingStatus::DECLINED,
         );
-
+        $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking->getUserBooking());
         $this->entityManager->flush();
 
         $this->addFlash(

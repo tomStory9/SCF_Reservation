@@ -62,6 +62,9 @@ class Booking
     #[ORM\OneToMany(targetEntity: BookingEquipment::class, mappedBy: 'booking')]
     private Collection $bookingEquipment;
 
+    #[ORM\Column(length: 25000, nullable: true)]
+    private ?string $StripeCheckoutUrl = null;
+
     public function __construct()
     {
         $this->bookingEquipment = new ArrayCollection();
@@ -204,12 +207,12 @@ class Booking
         return $this;
     }
 
-    public function getTransactions(): ?Transaction
+    public function getTransaction(): ?Transaction
     {
         return $this->transaction;
     }
 
-    public function setTransactions(?Transaction $transaction): static
+    public function setTransaction(?Transaction $transaction): static
     {
         // unset the owning side of the relation if necessary
         if (null === $transaction && null !== $this->transaction) {
@@ -252,6 +255,18 @@ class Booking
                 $bookingEquipment->setBooking(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getStripeCheckoutUrl(): ?string
+    {
+        return $this->StripeCheckoutUrl;
+    }
+
+    public function setStripeCheckoutUrl(?string $StripeCheckoutUrl): static
+    {
+        $this->StripeCheckoutUrl = $StripeCheckoutUrl;
 
         return $this;
     }
