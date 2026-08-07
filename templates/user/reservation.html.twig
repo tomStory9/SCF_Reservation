@@ -1,95 +1,111 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ 'account.reservation.title'|trans }}
+    {{ 'account.reservation.title'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
-	{{ parent() }}
-	{{ encore_entry_link_tags('reservation') }}
+    {{ parent() }}
+    {{ encore_entry_link_tags('reservation') }}
 {% endblock %}
 
 {% block body %}
-	<div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
-		{% include 'user/_partials/_navbar.html.twig' %}
+    <div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
+        {% include 'user/_partials/_navbar.html.twig' %}
 
-		<div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
-			<div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
-				<section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-					<div class="mb-5">
-						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
-							Planning
-						</p>
-						<h2 class="text-xl font-semibold text-secondary">
-							Calendrier des réservations
-						</h2>
-					</div>
+        <div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
+            <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
 
-					<div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<p class="text-sm font-semibold text-secondary">Mode de réservation</p>
-							<div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
-								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
-									Par heure
-								</button>
+                {# === COLONNE GAUCHE : CALENDRIER UNIQUEMENT (sans étapes) === #}
+                <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7 flex flex-col">
+                    <div class="mb-5 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
+                                Planning
+                            </p>
+                            <h2 class="text-xl font-semibold text-secondary">
+                                Calendrier des réservations
+                            </h2>
+                        </div>
 
-								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
-									Par période
-								</button>
-							</div>
-						</div>
+                        <div class="hidden lg:block text-right">
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
+                                Mode actif
+                            </p>
+                            <p class="text-sm text-state">
+                                <span id="active-booking-mode-label" class="font-semibold text-primary">Par heure</span>
+                            </p>
+                        </div>
+                    </div>
 
-						<p class="text-sm text-state">
-							<span class="font-semibold text-secondary">Mode actif :</span>
-							<span id="active-booking-mode-label" class="font-semibold text-primary">Par heure</span>
-						</p>
-					</div>
+                    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-secondary">Mode de réservation</p>
+                            <div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
+                                <button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
+                                    Par heure
+                                </button>
 
-					<div class="flex justify-center">
-                        <div id="user-booking-data" data-free-hours="{{ remainingHours }}" class="hidden"></div>
-                        <div id="calendar-config" data-max-date="{{ maxEndDate }}" class="hidden"></div>
-						<div id="calendar-holder" class="reservation-calendar w-full max-w-[940px]"></div>
-					</div>
+                                <button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
+                                    Par période
+                                </button>
+                            </div>
+                        </div>
 
-					<div id="calendar-legend" class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-						<p class="text-sm font-semibold text-secondary">
-							Lecture du taux d’occupation
-						</p>
+                        <div class="lg:hidden text-sm text-state">
+                            <span class="font-semibold text-secondary">Mode actif :</span>
+                            <span id="active-booking-mode-label-mobile" class="font-semibold text-primary">Par heure</span>
+                        </div>
+                    </div>
 
-						<div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-slate-400"></span>
-								<span class="text-sm text-secondary">100% occupé : grisé</span>
-							</div>
+                    <div class="flex-1 flex flex-col">
+                        <div class="flex justify-center">
+                            <div id="user-booking-data" data-free-hours="{{ remainingHours }}" class="hidden"></div>
+                            <div id="calendar-config" data-max-date="{{ maxEndDate }}" class="hidden"></div>
+                            <div id="calendar-holder" class="reservation-calendar w-full max-w-[940px]"></div>
+                        </div>
 
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-red-500"></span>
-								<span class="text-sm text-secondary">75% occupé : rouge</span>
-							</div>
+                        <div id="calendar-legend" class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                            <p class="text-sm font-semibold text-secondary">
+                                Lecture du taux d’occupation
+                            </p>
 
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-orange-400"></span>
-								<span class="text-sm text-secondary">50% occupé : orange</span>
-							</div>
+                            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-slate-400"></span>
+                                    <span class="text-sm text-secondary">100% occupé : grisé</span>
+                                </div>
 
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-yellow-300"></span>
-								<span class="text-sm text-secondary">25% occupé : jaune</span>
-							</div>
-						</div>
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-red-500"></span>
+                                    <span class="text-sm text-secondary">75% occupé : rouge</span>
+                                </div>
 
-						<ul class="mt-4 space-y-2 text-sm text-state">
-							<li>- En vue mois, clique sur un jour pour ouvrir la vue semaine sur cette date.</li>
-							<li>- En vue semaine, la ligne all-day permet une réservation journée complète seulement si la journée est vide.</li>
-							<li>- En mode heure, tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement avec un autre événement.</li>
-							<li>- En mode période, la période choisie s’affiche comme un vrai bloc dans le calendrier.</li>
-						</ul>
-					</div>
-				</section>
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-orange-400"></span>
+                                    <span class="text-sm text-secondary">50% occupé : orange</span>
+                                </div>
 
-				<aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-					<div class="mb-5 border-b border-slate-200">
-						<nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="Lieux">
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-yellow-300"></span>
+                                    <span class="text-sm text-secondary">25% occupé : jaune</span>
+                                </div>
+                            </div>
+
+                            <ul class="mt-4 space-y-2 text-sm text-state">
+                                <li>- En vue mois, clique sur un jour pour ouvrir la vue semaine sur cette date.</li>
+                                <li>- En vue semaine, la ligne all-day permet une réservation journée complète seulement si la journée est vide.</li>
+                                <li>- En mode heure, tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement avec un autre événement.</li>
+                                <li>- En mode période, la période choisie s’affiche comme un vrai bloc dans le calendrier.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                {# === COLONNE DROITE : FORMULAIRE + ÉQUIPEMENTS COMPACTS === #}
+                <aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7 flex flex-col">
+                    <div class="mb-5 border-b border-slate-200">
+                        <nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="Lieux">
                             {% for facility in facilities %}
                                 {% set isActive = loop.first %}
 
@@ -100,22 +116,21 @@
                                     {{ facility.name }}
                                 </button>
                             {% endfor %}
-						</nav>
-					</div>
+                        </nav>
+                    </div>
 
-					<div class="rounded-b-2xl rounded-tr-2xl border border-t-0 border-slate-200 bg-white p-6">
-						<div class="mb-6">
-							<p class="text-base font-semibold text-secondary">
-								Informations du lieu
-							</p>
-							<p class="mt-2 text-sm text-state">
-								Choisis d’abord le lieu et le mode de réservation, puis termine la sélection dans le calendrier.
-							</p>
-						</div>
+                    <div class="rounded-b-2xl rounded-tr-2xl border border-t-0 border-slate-200 bg-white p-6 flex-1 flex flex-col">
+                        <div class="mb-6">
+                            <p class="text-base font-semibold text-secondary">
+                                Informations du lieu
+                            </p>
+                            <p class="mt-2 text-sm text-state">
+                                Choisis d’abord le lieu et le mode de réservation, puis termine la sélection dans le calendrier.
+                            </p>
+                        </div>
 
-						<div class="mb-6">
+                        <div class="mb-6">
                             <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-6">
-
                                 <div>
                                     <label for="zone-select" class="block mb-2 text-sm font-semibold text-secondary">
                                         Zone sélectionnée :
@@ -139,36 +154,35 @@
                                         class="block w-full h-[35px] rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                                     >
                                 </div>
-
                             </div>
 
-							<p class="mt-4 text-sm font-semibold text-secondary">Description</p>
-							<p id="location-description" class="mt-2 text-sm leading-6 text-state">
-								Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.
-							</p>
-						</div>
+                            <p class="mt-4 text-sm font-semibold text-secondary">Description</p>
+                            <p id="location-description" class="mt-2 text-sm leading-6 text-state">
+                                Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.
+                            </p>
+                        </div>
 
-						<div class="mb-6 border-b border-slate-200 pb-3">
-							<div class="flex flex-wrap items-center gap-6 text-sm">
-								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
-									Par heure
-								</button>
+                        <div class="mb-6 border-b border-slate-200 pb-3">
+                            <div class="flex flex-wrap items-center gap-6 text-sm">
+                                <button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
+                                    Par heure
+                                </button>
 
-								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
-									Par période
-								</button>
-							</div>
-						</div>
+                                <button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
+                                    Par période
+                                </button>
+                            </div>
+                        </div>
 
-						<div class="min-h-[360px] flex flex-col">
-							<p class="text-base font-semibold text-secondary">Début du formulaire</p>
-							<p class="mt-2 text-sm text-state">
-								La sélection finale se fait dans le calendrier. Ce panneau affiche le récapitulatif avant l’envoi.
-							</p>
+                        <div class="flex-1 flex flex-col">
+                            <p class="text-base font-semibold text-secondary">Début du formulaire</p>
+                            <p class="mt-2 text-sm text-state">
+                                La sélection finale se fait dans le calendrier. Ce panneau affiche le récapitulatif avant l’envoi.
+                            </p>
 
-							<div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
-								Aucune sélection pour le moment.
-							</div>
+                            <div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
+                                Aucune sélection pour le moment.
+                            </div>
 
                             <div id="price-container" class="hidden mt-4 pt-4">
                                 <p class="text-sm text-state">
@@ -177,7 +191,36 @@
                                 </p>
                             </div>
 
-                            <div id="button_submit_booking" class="mt-auto pt-6">
+                            {# === ÉQUIPEMENTS COMPACTS === #}
+                            <div id="equipment-section" class="mt-6">
+                                <div class="flex items-center justify-between">
+                                    <p class="text-sm font-semibold text-secondary">
+                                        Équipements optionnels
+                                    </p>
+                                    <p class="text-xs text-state">
+                                        (Matériel de cirque, jonglerie, protection…)
+                                    </p>
+                                </div>
+
+                                <div id="equipment-list" class="mt-3 divide-y divide-slate-200 border border-slate-200 rounded-xl overflow-hidden bg-slate-50">
+                                    <p class="px-3 py-2 text-xs text-state">
+                                        Sélectionne une zone pour voir les équipements disponibles.
+                                    </p>
+                                </div>
+
+                                <div id="equipment-total-container" class="hidden mt-3 flex items-center justify-between text-sm">
+                                    <span class="font-semibold text-secondary">Total équipements :</span>
+                                    <span id="equipment-total-display" class="text-base font-bold text-primary">0 ¥</span>
+                                </div>
+
+                                <div id="grand-total-container" class="hidden mt-2 flex items-center justify-between text-sm">
+                                    <span class="font-semibold text-secondary">Total général :</span>
+                                    <span id="grand-total-display" class="text-lg font-bold text-secondary">0 ¥</span>
+                                </div>
+                            </div>
+                            {# === FIN ÉQUIPEMENTS COMPACTS === #}
+
+                            <div id="button_submit_booking" class="mt-6 pt-2">
                                 <button
                                     id="submit_booking"
                                     class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg"
@@ -185,15 +228,187 @@
                                     Réserver le créneau
                                 </button>
                             </div>
-						</div>
-					</div>
-				</aside>
-			</div>
-		</div>
-	</div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
-	{{ parent() }}
-	{{ encore_entry_script_tags('reservation') }}
+    {{ parent() }}
+    {{ encore_entry_script_tags('reservation') }}
+
+    {# JS mock pour les équipements, avec style compact #}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const zoneSelectEl = document.getElementById('zone-select');
+            const equipmentListEl = document.getElementById('equipment-list');
+            const equipmentTotalContainerEl = document.getElementById('equipment-total-container');
+            const equipmentTotalDisplayEl = document.getElementById('equipment-total-display');
+            const grandTotalContainerEl = document.getElementById('grand-total-container');
+            const grandTotalDisplayEl = document.getElementById('grand-total-display');
+
+            if (!zoneSelectEl || !equipmentListEl) {
+                return;
+            }
+
+            const mockEquipments = [
+                { id: 1, name: 'Tapis de réception', unitPrice: 8000, maxQuantity: 6, zoneId: 1 },
+                { id: 2, name: 'Cubes mousse', unitPrice: 3500, maxQuantity: 12, zoneId: 2 },
+                { id: 3, name: 'Barre de danse', unitPrice: 6000, maxQuantity: 4, zoneId: 3 },
+                { id: 4, name: 'Cerceau aérien', unitPrice: 9500, maxQuantity: 3, zoneId: 4 },
+                { id: 5, name: 'Cerceau aérien', unitPrice: 9500, maxQuantity: 3, zoneId: 5 },
+                { id: 6, name: 'Cerceau aérien', unitPrice: 9500, maxQuantity: 3, zoneId: 6 },
+                { id: 7, name: 'Cerceau aérien', unitPrice: 9500, maxQuantity: 3, zoneId: 7 },
+                { id: 8, name: 'Filet de sécurité', unitPrice: 25000, maxQuantity: 2, zoneId: 8 },
+                { id: 9, name: 'Filet de sécurité', unitPrice: 25000, maxQuantity: 2, zoneId: 9 },
+                { id: 10, name: 'Portique trapèze', unitPrice: 45000, maxQuantity: 1, zoneId: 10 },
+                { id: 11, name: 'Barre russe', unitPrice: 22000, maxQuantity: 2, zoneId: 10 },
+                { id: 12, name: 'Set 3 balles', unitPrice: 800, maxQuantity: 30, zoneId: null },
+                { id: 13, name: 'Set 3 massues', unitPrice: 1500, maxQuantity: 20, zoneId: null },
+                { id: 14, name: 'Diabolo', unitPrice: 1200, maxQuantity: 25, zoneId: null },
+                { id: 15, name: 'Rola Rola', unitPrice: 4500, maxQuantity: 8, zoneId: null },
+                { id: 16, name: 'Pieds de jonglage', unitPrice: 2800, maxQuantity: 10, zoneId: null },
+            ];
+
+            let selectedEquipments = {};
+            let equipmentTotal = 0;
+            let grandTotal = 0;
+
+            function formatPrice(price) {
+                return `${price.toLocaleString('fr-FR')} ¥`;
+            }
+
+            function recalcTotals() {
+                equipmentTotal = 0;
+
+                Object.entries(selectedEquipments).forEach(([eqId, qty]) => {
+                    if (qty > 0) {
+                        const eq = mockEquipments.find(e => e.id === parseInt(eqId, 10));
+                        if (eq) {
+                            equipmentTotal += eq.unitPrice * qty;
+                        }
+                    }
+                });
+
+                if (equipmentTotal > 0) {
+                    equipmentTotalContainerEl.classList.remove('hidden');
+                    equipmentTotalDisplayEl.textContent = formatPrice(equipmentTotal);
+                } else {
+                    equipmentTotalContainerEl.classList.add('hidden');
+                    equipmentTotalDisplayEl.textContent = formatPrice(0);
+                }
+
+                grandTotal = equipmentTotal;
+
+                if (grandTotal > 0) {
+                    grandTotalContainerEl.classList.remove('hidden');
+                    grandTotalDisplayEl.textContent = formatPrice(grandTotal);
+                } else {
+                    grandTotalContainerEl.classList.add('hidden');
+                    grandTotalDisplayEl.textContent = formatPrice(0);
+                }
+            }
+
+            function renderEquipmentListForZone(zoneId) {
+                const zoneIdInt = zoneId ? parseInt(zoneId, 10) : null;
+
+                const equipmentsForZone = mockEquipments.filter(eq => {
+                    return eq.zoneId === null || eq.zoneId === zoneIdInt;
+                });
+
+                if (equipmentsForZone.length === 0) {
+                    equipmentListEl.innerHTML = `
+                        <p class="px-3 py-2 text-xs text-state">
+                            Aucun équipement disponible pour cette zone.
+                        </p>
+                    `;
+                    equipmentTotalContainerEl.classList.add('hidden');
+                    grandTotalContainerEl.classList.add('hidden');
+                    selectedEquipments = {};
+                    equipmentTotal = 0;
+                    grandTotal = 0;
+                    return;
+                }
+
+                let html = '';
+
+                equipmentsForZone.forEach(eq => {
+                    const currentQty = selectedEquipments[eq.id] || 0;
+
+                    html += `
+                        <div class="equipment-item flex items-center justify-between px-3 py-2 bg-white" data-equipment-id="${eq.id}">
+                            <div class="flex flex-col">
+                                <span class="text-xs font-semibold text-secondary">${eq.name}</span>
+                                <span class="text-[11px] text-state">
+                                    ${formatPrice(eq.unitPrice)} · Max ${eq.maxQuantity}
+                                </span>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <button 
+                                    type="button" 
+                                    class="equipment-decrease-btn h-6 w-6 rounded bg-slate-100 text-[11px] text-secondary font-bold transition hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    ${currentQty === 0 ? 'disabled' : ''}
+                                >
+                                    −
+                                </button>
+                                <span class="equipment-quantity-display min-w-[24px] text-center text-xs font-semibold text-secondary">
+                                    ${currentQty}
+                                </span>
+                                <button 
+                                    type="button" 
+                                    class="equipment-increase-btn h-6 w-6 rounded bg-slate-100 text-[11px] text-secondary font-bold transition hover:bg-slate-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                                    ${currentQty >= eq.maxQuantity ? 'disabled' : ''}
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                equipmentListEl.innerHTML = html;
+
+                equipmentsForZone.forEach(eq => {
+                    const itemEl = equipmentListEl.querySelector(`.equipment-item[data-equipment-id="${eq.id}"]`);
+                    if (!itemEl) return;
+
+                    const decBtn = itemEl.querySelector('.equipment-decrease-btn');
+                    const incBtn = itemEl.querySelector('.equipment-increase-btn');
+                    const qtyDisplay = itemEl.querySelector('.equipment-quantity-display');
+
+                    decBtn.addEventListener('click', () => {
+                        const currentQty = selectedEquipments[eq.id] || 0;
+                        const newQty = Math.max(0, currentQty - 1);
+                        selectedEquipments[eq.id] = newQty;
+                        qtyDisplay.textContent = newQty;
+                        decBtn.disabled = newQty === 0;
+                        incBtn.disabled = newQty >= eq.maxQuantity;
+                        recalcTotals();
+                    });
+
+                    incBtn.addEventListener('click', () => {
+                        const currentQty = selectedEquipments[eq.id] || 0;
+                        const newQty = Math.min(eq.maxQuantity, currentQty + 1);
+                        selectedEquipments[eq.id] = newQty;
+                        qtyDisplay.textContent = newQty;
+                        decBtn.disabled = newQty === 0;
+                        incBtn.disabled = newQty >= eq.maxQuantity;
+                        recalcTotals();
+                    });
+                });
+            }
+
+            zoneSelectEl.addEventListener('change', function () {
+                const zoneId = zoneSelectEl.value;
+                selectedEquipments = {};
+                equipmentTotal = 0;
+                grandTotal = 0;
+                recalcTotals();
+                renderEquipmentListForZone(zoneId);
+            });
+        });
+    </script>
 {% endblock %}
