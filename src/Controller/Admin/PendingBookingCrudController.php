@@ -397,7 +397,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         $booking->setBookingStatus(
             BookingStatus::DECLINED,
         );
-        $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking->getUserBooking());
+        $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking);
         $this->entityManager->flush();
 
         $this->addFlash(

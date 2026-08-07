@@ -5,7 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="x-apple-disable-message-reformatting">
+
     <title>予約確認</title>
+
     <style>
         html,
         body {
@@ -22,7 +24,8 @@
         td,
         p,
         a {
-            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+                "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, Arial, sans-serif;
         }
 
         table {
@@ -134,6 +137,7 @@
         }
     </style>
 </head>
+
 <body>
     <table role="presentation" width="100%" class="wrapper">
         <tr>
@@ -141,14 +145,16 @@
                 <table role="presentation" class="container">
                     <tr>
                         <td class="header">
-                            <h1 style="margin: 0; font-size: 24px; line-height: 1.4;">ご予約ありがとうございます</h1>
+                            <h1 style="margin: 0; font-size: 24px; line-height: 1.4;">
+                                ご予約ありがとうございます
+                            </h1>
                         </td>
                     </tr>
 
                     <tr>
                         <td class="content">
                             <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
-                                {{ user.email|default('お客様') }} 様
+                                {{ user.name }} {{ user.lastname }} 様
                             </p>
 
                             <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
@@ -160,6 +166,14 @@
                             </p>
 
                             <div class="payment-box">
+                                <p style="margin: 0 0 8px; color: #1e3a8a; font-size: 14px; line-height: 1.6;">
+                                    お支払い金額
+                                </p>
+
+                                <p style="margin: 0 0 18px; color: #111827; font-size: 24px; font-weight: bold; line-height: 1.4;">
+                                    {{ booking.price }}
+                                </p>
+
                                 <p style="margin: 0 0 18px; color: #1e3a8a; font-size: 16px; font-weight: bold; line-height: 1.6;">
                                     お支払いはこちら
                                 </p>
