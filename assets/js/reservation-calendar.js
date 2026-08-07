@@ -525,7 +525,6 @@ document.addEventListener('DOMContentLoaded', function () {
             priceContainer.classList.add('hidden');
         } else {
             const formattedPrice = prices.price.toLocaleString('fr-FR');
-
             priceDisplay.textContent = `${formattedPrice} ¥`;
             priceContainer.classList.remove('hidden');
         }
