@@ -70,6 +70,31 @@ class BookingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return Booking[]
+     */
+    public function findUserBookingsForPeriod(
+        User $user,
+        \DateTimeImmutable $monthStart,
+        \DateTimeImmutable $nextMonth,
+    ): array {
+        return $this->createQueryBuilder('booking')
+            ->andWhere('booking.userBooking = :user')
+            ->andWhere('booking.startDate >= :monthStart')
+            ->andWhere('booking.startDate < :nextMonth')
+            ->andWhere('booking.bookingStatus IN (:statuses)')
+            ->setParameter('user', $user)
+            ->setParameter('monthStart', $monthStart)
+            ->setParameter('nextMonth', $nextMonth)
+            ->setParameter('statuses', [
+                BookingStatus::PENDING,
+                BookingStatus::APPROVED,
+            ])
+            ->orderBy('booking.startDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
     public function hasOverlap($zone, \DateTimeInterface $start, \DateTimeInterface $end, ?int $excludeBookingId = null): bool
     {
         $qb = $this->createQueryBuilder('b')
