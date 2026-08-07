@@ -42,7 +42,6 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
         $dimanche = $this->getReference(WeekDayFixtures::DIMANCHE, WeekDay::class);
 
         // plage horaire
-        $h8 = $this->getReference(TimeSlotFixtures::H8, TimeSlot::class);
         $h9 = $this->getReference(TimeSlotFixtures::H9, TimeSlot::class);
         $h10 = $this->getReference(TimeSlotFixtures::H10, TimeSlot::class);
         $h11 = $this->getReference(TimeSlotFixtures::H11, TimeSlot::class);
@@ -71,7 +70,6 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         $timeSlots = [
-            $h8,
             $h9,
             $h10,
             $h11,
