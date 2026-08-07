@@ -1473,16 +1473,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     controller_paths?: list<scalar|Param|null>,
  *     controllers_json?: scalar|Param|null, // Default: "%kernel.project_dir%/assets/controllers.json"
  * }
- * @psalm-type TurboConfig = array{
- *     broadcast?: bool|array{
- *         enabled?: bool|Param, // Default: true
- *         entity_template_prefixes?: list<scalar|Param|null>,
- *         doctrine_orm?: bool|array{ // Enable the Doctrine ORM integration
- *             enabled?: bool|Param, // Default: true
- *         },
- *     },
- *     default_transport?: scalar|Param|null, // Default: "default"
- * }
  * @psalm-type WebpackEncoreConfig = array{
  *     output_path?: scalar|Param|null, // The path where Encore is building the assets - i.e. Encore.setOutputPath()
  *     crossorigin?: false|"anonymous"|"use-credentials"|Param, // crossorigin value when Encore.enableIntegrityHashes() is used, can be false (default), anonymous or use-credentials // Default: false
@@ -1524,7 +1514,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *     monolog?: MonologConfig,
  *     knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *     stimulus?: StimulusConfig,
- *     turbo?: TurboConfig,
  *     webpack_encore?: WebpackEncoreConfig,
  *     twig_component?: TwigComponentConfig,
  *     symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
@@ -1545,7 +1534,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         maker?: MakerConfig,
  *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
  *         webpack_encore?: WebpackEncoreConfig,
  *         twig_component?: TwigComponentConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
@@ -1564,7 +1552,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
  *         webpack_encore?: WebpackEncoreConfig,
  *         twig_component?: TwigComponentConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
@@ -1584,7 +1571,6 @@ use Symfony\Component\Config\Loader\ParamConfigurator as Param;
  *         monolog?: MonologConfig,
  *         knpu_oauth2_client?: KnpuOauth2ClientConfig,
  *         stimulus?: StimulusConfig,
- *         turbo?: TurboConfig,
  *         webpack_encore?: WebpackEncoreConfig,
  *         twig_component?: TwigComponentConfig,
  *         symfonycasts_verify_email?: SymfonycastsVerifyEmailConfig,
