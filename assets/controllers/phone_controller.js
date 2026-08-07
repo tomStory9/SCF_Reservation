@@ -8,8 +8,6 @@ export default class extends Controller {
 
     connect() {
 
-        console.log('phone connect');
-
         const input = this.element.querySelector('input');
 
         if (!input) {
@@ -18,7 +16,7 @@ export default class extends Controller {
 
 
         this.iti = intlTelInput(input, {
-            initialCountry: "jp",
+            initialCountry: "ja_JP",
             separateDialCode: true,
 
             loadUtils: () => import('intl-tel-input/utils'),
@@ -39,9 +37,6 @@ export default class extends Controller {
 
 
     disconnect() {
-
-        console.log('phone disconnect');
-
 
         if (this.iti) {
             this.iti.destroy();
