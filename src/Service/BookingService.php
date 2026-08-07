@@ -106,7 +106,7 @@ class BookingService
      * @throws \DateMalformedStringException
      * @throws \Exception
      */
-    public function createBooking(array $data, User $user): array
+    public function createBooking(array $data, User $user): void
     {
         $zone = $this->zoneRepository->find($data['zoneId']);
 
@@ -189,7 +189,5 @@ class BookingService
 
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
-
-        return ['success' => true];
     }
 }

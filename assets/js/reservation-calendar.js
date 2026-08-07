@@ -6,6 +6,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import TomSelect from "tom-select";
+import Swal from 'sweetalert2';
 
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar-holder');
@@ -351,7 +352,14 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function selectionAllowed(info) {
-        const dateStr = normalizeDate(info.start);
+        const startDateStr = normalizeDate(info.start);
+
+        const endDateStr = normalizeDate(new Date(info.end.getTime() - 1));
+
+        if (startDateStr !== endDateStr) {
+            return false;
+        }
+
         const now = new Date();
 
         if (info.start < now) {
@@ -359,14 +367,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (info.allDay) {
-            return !hasAnyEventOnDate(dateStr);
+            return !hasAnyEventOnDate(startDateStr);
         }
 
         if (bookingMode === 'period') {
             return false;
         }
 
-        if (allDayBlockedDates.has(dateStr)) {
+        if (allDayBlockedDates.has(startDateStr)) {
             return false;
         }
 
@@ -377,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const startHour = info.start.getHours() + (info.start.getMinutes() / 60);
         const endHour = info.end.getHours() + (info.end.getMinutes() / 60);
 
-        if (!(startHour >= 8 && endHour <= 20)) {
+        if (!(startHour >= 8 && endHour <= 21)) {
             return false;
         }
 
@@ -421,14 +429,26 @@ document.addEventListener('DOMContentLoaded', function () {
         const userDataEl = document.getElementById('user-booking-data');
         const freeHours = userDataEl ? parseFloat(userDataEl.dataset.freeHours) : 0;
 
-        const current = new Date(startIso);
+        let current;
+        if (startIso.length === 10) {
+            const parts = startIso.split('-');
+            current = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
+        } else {
+            current = new Date(startIso);
+        }
+
         const dayNumber = current.getDay() || 7;
         const dayPricings = currentZonePricings[dayNumber];
 
         if (!dayPricings) return null;
 
         if (mode === 'period' && periodKey) {
-            const basePrice = dayPricings.period[periodKey];
+            let basePrice = dayPricings.period[periodKey];
+
+            if (typeof basePrice === 'object' && basePrice !== null) {
+                basePrice = basePrice.price;
+            }
+
             if (basePrice === undefined) return null;
 
             let finalPrice = basePrice;
@@ -448,9 +468,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (mode === 'hour' && endIso) {
             let basePrice = 0;
             let hasValidPricing = false;
-            const end = new Date(endIso);
+            let validHoursCount = 0;
 
-            const durationHours = (end.getTime() - new Date(startIso).getTime()) / (60 * 60 * 1000);
+            let end;
+            if (endIso.length === 10) {
+                const parts = endIso.split('-');
+                end = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
+            } else {
+                end = new Date(endIso);
+            }
 
             while (current < end) {
                 const loopDay = current.getDay() || 7;
@@ -461,18 +487,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 const hourlyPrice = currentZonePricings[loopDay]?.hourly?.[timeKey];
 
                 if (hourlyPrice !== undefined && hourlyPrice !== null) {
-                    basePrice += hourlyPrice.price;
-                    hasValidPricing = true;
+                    const priceToAdd = typeof hourlyPrice === 'object' ? hourlyPrice.price : hourlyPrice;
+
+                    if (!isNaN(priceToAdd)) {
+                        basePrice += priceToAdd;
+                        validHoursCount++;
+                        hasValidPricing = true;
+                    }
                 }
                 current.setHours(current.getHours() + 1);
             }
 
             let finalPrice = basePrice;
 
-            if (freeHours >= durationHours) {
+            if (freeHours >= validHoursCount) {
                 finalPrice = 0;
-            } else if (freeHours > 0) {
-                finalPrice = basePrice * ((durationHours - freeHours) / durationHours);
+            } else if (freeHours > 0 && validHoursCount > 0) {
+                finalPrice = basePrice * ((validHoursCount - freeHours) / validHoursCount);
             }
 
             return hasValidPricing ? {
@@ -494,6 +525,7 @@ document.addEventListener('DOMContentLoaded', function () {
             priceContainer.classList.add('hidden');
         } else {
             const formattedPrice = prices.price.toLocaleString('fr-FR');
+
             priceDisplay.textContent = `${formattedPrice} ¥`;
             priceContainer.classList.remove('hidden');
         }
@@ -512,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function () {
         editable: false,
         weekends: true,
         allDaySlot: true,
-        slotMinTime: '08:00:00',
+        slotMinTime: '09:00:00',
         slotMaxTime: '21:00:00',
         slotDuration: '01:00:00',
         snapDuration: '01:00:00',
@@ -523,7 +555,7 @@ document.addEventListener('DOMContentLoaded', function () {
         eventOverlap: false,
         businessHours: {
             daysOfWeek: [0, 1, 2, 3, 4, 5, 6],
-            startTime: '08:00',
+            startTime: '09:00',
             endTime: '21:00'
         },
         views: {
@@ -630,7 +662,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     periodKey: period.key,
                     isFullDay: false,
                     guestNb: guestNbInput.value,
-                    price: prices ? prices.full : 0
+                    price: prices ? prices.price : 0,
+                    basePrice: prices ? prices.basePrice : 0
                 };
 
                 selectedPeriodPreviewEvent = {
@@ -678,7 +711,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     periodKey: null,
                     isFullDay: true,
                     guestNb: guestNbInput.value,
-                    price: prices ? prices.full : 0
+                    price: prices ? prices.price : 0,
+                    basePrice: prices ? prices.basePrice : 0
                 };
 
                 clearPeriodPreviewEvent();
@@ -717,7 +751,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 periodKey: null,
                 isFullDay: false,
                 guestNb: guestNbInput.value,
-                price: prices ? prices.full : 0
+                price: prices ? prices.price : 0,
+                basePrice: prices ? prices.basePrice : 0
             };
 
             clearPeriodPreviewEvent();
@@ -808,14 +843,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 const result = await response.json();
 
                 if (response.ok && result.success) {
-                    alert('Réservation confirmée !');
-                    win
+                    window.location.href = result.redirectUrl;
                 } else {
-                    alert('Erreur : ' + (result.error || 'Impossible d\'enregistrer la réservation.'));
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: result.error || 'Impossible d\'enregistrer la réservation.',
+                        confirmButtonColor: '#d33'
+                    });
                 }
             } catch (error) {
                 console.error(error);
-                alert('Une erreur réseau est survenue.');
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur réseau',
+                    text: 'Une erreur est survenue lors de la communication avec le serveur.',
+                    confirmButtonColor: '#d33'
+                });
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Réserver le créneau';
