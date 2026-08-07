@@ -53,8 +53,8 @@ class Booking
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $CheckedOutAt = null;
 
-    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
-    private ?Transaction $transactions = null;
+    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'], )]
+    private ?Transaction $transaction = null;
 
     /**
      * @var Collection<int, BookingEquipment>
@@ -206,22 +206,22 @@ class Booking
 
     public function getTransactions(): ?Transaction
     {
-        return $this->transactions;
+        return $this->transaction;
     }
 
-    public function setTransactions(?Transaction $transactions): static
+    public function setTransactions(?Transaction $transaction): static
     {
         // unset the owning side of the relation if necessary
-        if (null === $transactions && null !== $this->transactions) {
-            $this->transactions->setBooking(null);
+        if (null === $transaction && null !== $this->transaction) {
+            $this->transaction->setBooking(null);
         }
 
         // set the owning side of the relation if necessary
-        if (null !== $transactions && $transactions->getBooking() !== $this) {
-            $transactions->setBooking($this);
+        if (null !== $transaction && $transaction->getBooking() !== $this) {
+            $transaction->setBooking($this);
         }
 
-        $this->transactions = $transactions;
+        $this->transaction = $transaction;
 
         return $this;
     }
