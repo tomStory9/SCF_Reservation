@@ -385,7 +385,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const startHour = info.start.getHours() + (info.start.getMinutes() / 60);
         const endHour = info.end.getHours() + (info.end.getMinutes() / 60);
 
-        if (!(startHour >= 8 && endHour <= 20)) {
+        if (!(startHour >= 8 && endHour <= 21)) {
             return false;
         }
 
@@ -502,6 +502,10 @@ document.addEventListener('DOMContentLoaded', function () {
             priceContainer.classList.add('hidden');
         } else {
             const formattedPrice = prices.price.toLocaleString('fr-FR');
+
+            console.log(prices);
+            console.log(formattedPrice);
+
             priceDisplay.textContent = `${formattedPrice} ¥`;
             priceContainer.classList.remove('hidden');
         }
@@ -638,7 +642,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     periodKey: period.key,
                     isFullDay: false,
                     guestNb: guestNbInput.value,
-                    price: prices ? prices.full : 0
+                    price: prices ? prices.price : 0,
+                    basePrice: prices ? prices.basePrice : 0
                 };
 
                 selectedPeriodPreviewEvent = {
@@ -686,7 +691,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     periodKey: null,
                     isFullDay: true,
                     guestNb: guestNbInput.value,
-                    price: prices ? prices.full : 0
+                    price: prices ? prices.price : 0,
+                    basePrice: prices ? prices.basePrice : 0
                 };
 
                 clearPeriodPreviewEvent();
@@ -725,7 +731,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 periodKey: null,
                 isFullDay: false,
                 guestNb: guestNbInput.value,
-                price: prices ? prices.full : 0
+                price: prices ? prices.price : 0,
+                basePrice: prices ? prices.basePrice : 0
             };
 
             clearPeriodPreviewEvent();
