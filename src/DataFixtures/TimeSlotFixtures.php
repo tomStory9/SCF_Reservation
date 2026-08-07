@@ -9,7 +9,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class TimeSlotFixtures extends Fixture
 {
-    public const string H8 = '8heure';
     public const string H9 = '9heure';
     public const string H10 = '10heure';
     public const string H11 = '11heure';
@@ -29,13 +28,6 @@ class TimeSlotFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        $h8 = new TimeSlot();
-        $h8->setStartTime(new \DateTimeImmutable('08:00:00'));
-        $h8->setEndTime(new \DateTimeImmutable('09:00:00'));
-        $h8->setPeriod(TimeSlotPeriod::HOURLY);
-        $manager->persist($h8);
-        $this->addReference(self::H8, $h8);
-
         $h9 = new TimeSlot();
         $h9->setStartTime(new \DateTimeImmutable('09:00:00'));
         $h9->setEndTime(new \DateTimeImmutable('10:00:00'));

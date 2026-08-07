@@ -429,14 +429,26 @@ document.addEventListener('DOMContentLoaded', function () {
         const userDataEl = document.getElementById('user-booking-data');
         const freeHours = userDataEl ? parseFloat(userDataEl.dataset.freeHours) : 0;
 
-        const current = new Date(startIso);
+        let current;
+        if (startIso.length === 10) {
+            const parts = startIso.split('-');
+            current = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
+        } else {
+            current = new Date(startIso);
+        }
+
         const dayNumber = current.getDay() || 7;
         const dayPricings = currentZonePricings[dayNumber];
 
         if (!dayPricings) return null;
 
         if (mode === 'period' && periodKey) {
-            const basePrice = dayPricings.period[periodKey];
+            let basePrice = dayPricings.period[periodKey];
+
+            if (typeof basePrice === 'object' && basePrice !== null) {
+                basePrice = basePrice.price;
+            }
+
             if (basePrice === undefined) return null;
 
             let finalPrice = basePrice;
@@ -456,9 +468,15 @@ document.addEventListener('DOMContentLoaded', function () {
         if (mode === 'hour' && endIso) {
             let basePrice = 0;
             let hasValidPricing = false;
-            const end = new Date(endIso);
+            let validHoursCount = 0;
 
-            const durationHours = (end.getTime() - new Date(startIso).getTime()) / (60 * 60 * 1000);
+            let end;
+            if (endIso.length === 10) {
+                const parts = endIso.split('-');
+                end = new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
+            } else {
+                end = new Date(endIso);
+            }
 
             while (current < end) {
                 const loopDay = current.getDay() || 7;
@@ -469,18 +487,23 @@ document.addEventListener('DOMContentLoaded', function () {
                 const hourlyPrice = currentZonePricings[loopDay]?.hourly?.[timeKey];
 
                 if (hourlyPrice !== undefined && hourlyPrice !== null) {
-                    basePrice += hourlyPrice.price;
-                    hasValidPricing = true;
+                    const priceToAdd = typeof hourlyPrice === 'object' ? hourlyPrice.price : hourlyPrice;
+
+                    if (!isNaN(priceToAdd)) {
+                        basePrice += priceToAdd;
+                        validHoursCount++;
+                        hasValidPricing = true;
+                    }
                 }
                 current.setHours(current.getHours() + 1);
             }
 
             let finalPrice = basePrice;
 
-            if (freeHours >= durationHours) {
+            if (freeHours >= validHoursCount) {
                 finalPrice = 0;
-            } else if (freeHours > 0) {
-                finalPrice = basePrice * ((durationHours - freeHours) / durationHours);
+            } else if (freeHours > 0 && validHoursCount > 0) {
+                finalPrice = basePrice * ((validHoursCount - freeHours) / validHoursCount);
             }
 
             return hasValidPricing ? {
