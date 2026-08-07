@@ -526,9 +526,6 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             const formattedPrice = prices.price.toLocaleString('fr-FR');
 
-            console.log(prices);
-            console.log(formattedPrice);
-
             priceDisplay.textContent = `${formattedPrice} ¥`;
             priceContainer.classList.remove('hidden');
         }
