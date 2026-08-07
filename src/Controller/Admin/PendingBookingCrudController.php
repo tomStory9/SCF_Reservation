@@ -5,6 +5,8 @@ namespace App\Controller\Admin;
 use App\Entity\Booking;
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
+use App\Service\MailerService;
+use App\Service\StripePaiementService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
@@ -337,11 +339,11 @@ final class PendingBookingCrudController extends AbstractCrudController
                 $this->getIndexUrl(),
             );
         }
-        $booking->setStripeCheckoutUrl($this->stripePaymentService->createCheckoutSession($booking->getPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
+        $booking->setStripeCheckoutUrl($this->stripePaymentService->createPaymentLink($booking->getPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
         $booking->setBookingStatus(
             BookingStatus::APPROVED,
         );
-        $this->mailerService->sendPaymentConfirmationEmail($booking->getUserBooking(), $booking->getTransaction());
+        $this->mailerService->sendBookingConfirmationEmail($booking->getUserBooking(), $booking);
 
         $this->entityManager->flush();
 

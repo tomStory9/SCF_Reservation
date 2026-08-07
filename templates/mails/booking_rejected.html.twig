@@ -1,0 +1,164 @@
+{# templates/mails/booking_rejected.html.twig #}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformatting">
+
+    <title>予約に関するお知らせ</title>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            background-color: #f4f6f8;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body,
+        table,
+        td,
+        p,
+        a {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Helvetica Neue",
+                "Hiragino Kaku Gothic ProN",
+                "Hiragino Sans",
+                Meiryo,
+                Arial,
+                sans-serif;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f4f6f8;
+            padding: 24px 12px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 28px 24px;
+            background-color: #7f1d1d;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .content {
+            padding: 32px 24px;
+            color: #1f2937;
+        }
+
+        .notice-box {
+            margin: 24px 0;
+            padding: 20px;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            background-color: #fef2f2;
+            color: #991b1b;
+        }
+
+        .footer {
+            padding: 20px 24px 28px;
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 480px) {
+            .wrapper {
+                padding: 12px 8px;
+            }
+
+            .header {
+                padding: 24px 18px;
+            }
+
+            .content {
+                padding: 26px 18px;
+            }
+
+            .notice-box {
+                padding: 18px 16px;
+            }
+
+            .footer {
+                padding: 18px 24px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <table role="presentation" width="100%" class="wrapper">
+        <tr>
+            <td align="center">
+                <table role="presentation" class="container">
+                    <tr>
+                        <td class="header">
+                            <h1 style="margin: 0; font-size: 24px; line-height: 1.4;">
+                                予約に関するお知らせ
+                            </h1>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="content">
+                            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
+                                {{ user.email|default('お客様') }} 様
+                            </p>
+
+                            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
+                                このたびのご予約についてお知らせいたします。
+                            </p>
+
+                            <div class="notice-box">
+                                <p style="margin: 0; font-size: 16px; font-weight: bold; line-height: 1.8;">
+                                    申し訳ございませんが、今回のご予約を承認することができませんでした。
+                                </p>
+                            </div>
+
+                            <p style="margin: 0 0 16px; color: #4b5563; font-size: 14px; line-height: 1.8;">
+                                このメールにお支払い用のリンクは含まれておりません。
+                            </p>
+
+                            <p style="margin: 0; color: #4b5563; font-size: 14px; line-height: 1.8;">
+                                もし今回の処理に心当たりがない場合、またはエラーだと思われる場合は、
+                                サイト管理者までお問い合わせください。
+                                確認のうえ、対応させていただきます。
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="footer">
+                            このメールはご予約に関する重要なお知らせです。<br>
+                            ご不明な点がございましたら、サイト管理者までご連絡ください。
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

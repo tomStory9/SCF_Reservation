@@ -99,8 +99,8 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('Booking Cancellation')
-            ->htmlTemplate('mails/booking_cancellation.html.twig')
+            ->subject('Booking Rejection')
+            ->htmlTemplate('mails/booking_rejected.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,
