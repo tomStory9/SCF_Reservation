@@ -1,0 +1,209 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content %}
+    <div
+        class="modal d-block"
+        tabindex="-1"
+        role="dialog"
+        style="background: rgba(0, 0, 0, .55);"
+    >
+        <div
+            class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+            role="document"
+        >
+            <div class="modal-content shadow">
+
+                <div class="modal-header">
+                    <div>
+                        <h4 class="modal-title mb-1">
+                            Réservations du mois
+                        </h4>
+
+                        <div class="text-muted">
+                            {{ user.fullName }}
+                        </div>
+                    </div>
+
+                    <a
+                        href="{{ indexUrl }}"
+                        class="btn-close"
+                        aria-label="Fermer"
+                    ></a>
+                </div>
+
+                <div class="modal-body">
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <div class="card border-0 bg-light h-100">
+                                <div class="card-body">
+                                    <small class="text-muted">
+                                        Heures déjà réservées ce mois
+                                    </small>
+
+                                    <h3 class="mb-0">
+                                        {{ alreadyBookedHours }} h
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="card border-primary h-100">
+                                <div class="card-body">
+                                    <small class="text-primary">
+                                        Réservation actuelle
+                                    </small>
+
+                                    <h3 class="mb-0 text-primary">
+                                        {{ currentBookingHours }} h
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        Total après cette réservation :
+
+                        <strong>
+                            {{
+                                alreadyBookedHours
+                                + currentBookingHours
+                            }} h
+                        </strong>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="mb-0">
+                            Liste des réservations
+                        </h5>
+
+                        <span class="badge text-bg-secondary">
+                            {{ monthStart|date('m/Y') }}
+                        </span>
+                    </div>
+
+                    {% if bookings is empty %}
+                        <div class="alert alert-secondary">
+                            Aucune réservation pour ce mois.
+                        </div>
+                    {% else %}
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Zone</th>
+                                        <th>Statut</th>
+                                        <th>Durée</th>
+                                        <th>Visiteurs</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    {% for userBooking in bookings %}
+                                        {% set bookingId = userBooking.id %}
+                                        {% set bookingHours =
+                                            hoursByBooking[bookingId]|default(0)
+                                        %}
+
+                                        <tr
+                                            {% if userBooking.id == booking.id %}
+                                                class="table-primary"
+                                            {% endif %}
+                                        >
+                                            <td>
+                                                <strong>
+                                                    {{
+                                                        userBooking.startDate
+                                                        |date('d/m/Y')
+                                                    }}
+                                                </strong>
+
+                                                <br>
+
+                                                <small class="text-muted">
+                                                    {{
+                                                        userBooking.startDate
+                                                        |date('H:i')
+                                                    }}
+                                                    -
+                                                    {{
+                                                        userBooking.endDate
+                                                        |date('H:i')
+                                                    }}
+                                                </small>
+                                            </td>
+
+                                            <td>
+                                                {% if userBooking.zone %}
+                                                    {{ userBooking.zone.name }}
+                                                {% else %}
+                                                    <span class="text-muted">
+                                                        Zone inconnue
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+
+                                            <td>
+                                                {% if userBooking.bookingStatus.value == 'pending' %}
+                                                    <span class="badge text-bg-warning">
+                                                        En attente
+                                                    </span>
+                                                {% elseif userBooking.bookingStatus.value == 'approved' %}
+                                                    <span class="badge text-bg-success">
+                                                        Approuvée
+                                                    </span>
+                                                {% elseif userBooking.bookingStatus.value == 'declined' %}
+                                                    <span class="badge text-bg-danger">
+                                                        Refusée
+                                                    </span>
+                                                {% else %}
+                                                    <span class="badge text-bg-secondary">
+                                                        {{
+                                                            userBooking
+                                                            .bookingStatus
+                                                            .value
+                                                        }}
+                                                    </span>
+                                                {% endif %}
+                                            </td>
+
+                                            <td>
+                                                <strong>
+                                                    {{ bookingHours }} h
+                                                </strong>
+
+                                                {% if userBooking.id == booking.id %}
+                                                    <br>
+
+                                                    <small class="text-primary">
+                                                        Réservation actuelle
+                                                    </small>
+                                                {% endif %}
+                                            </td>
+
+                                            <td>
+                                                {{ userBooking.guestCount }}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="modal-footer">
+                    <a
+                        href="{{ indexUrl }}"
+                        class="btn btn-secondary"
+                    >
+                        Retour aux réservations
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock %}
