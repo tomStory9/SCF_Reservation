@@ -29,6 +29,17 @@ class EquipmentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function calculateTotalEquipmentPrice($booking): int
+    {
+        $totalPrice = 0;
+
+        foreach ($booking->getBookingEquipment() as $bookingEquipment) {
+            $totalPrice += $bookingEquipment->getTotalPrice();
+        }
+
+        return $totalPrice;
+    }
+
     //    /**
     //     * @return Equipment[] Returns an array of Equipment objects
     //     */

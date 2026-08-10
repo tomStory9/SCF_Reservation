@@ -126,11 +126,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             'active-booking-mode-label-mobile'
         );
 
-    /*
-     * Important :
-     * calendar doit être déclaré avant TomSelect,
-     * car setValue() peut déclencher immédiatement onChange().
-     */
     let calendar = null;
 
     const zoneTomSelect = new TomSelect(
@@ -268,12 +263,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             zoneTomSelect.addOptions(zones);
 
-            /*
-             * Déclenche onChange(), donc :
-             * - chargement des tarifs ;
-             * - chargement des équipements ;
-             * - rechargement des réservations.
-             */
+
             zoneTomSelect.setValue(zones[0].id);
         } catch (error) {
             console.error(
@@ -492,7 +482,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 zoneId: state.activeZoneId,
                 equipments: selectedEquipments
             };
-
+            console.log(payload);
             try {
                 submitButton.disabled = true;
                 submitButton.textContent =

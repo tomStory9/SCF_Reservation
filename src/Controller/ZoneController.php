@@ -25,6 +25,10 @@ final class ZoneController extends AbstractController
     {
         $equipments = $this->equipmentRepository->findByZoneOrNull($zone);
 
+        foreach ($equipments as $equipment) {
+            // todo recuperer la quantité max disponible , par rapport au reservation deja existante si l'equipement a une zone Null
+        }
+
         return new Response($ser->serialize(
             $equipments,
             'json',
