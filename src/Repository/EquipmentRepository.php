@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Equipment;
+use App\Entity\Zone;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +15,18 @@ class EquipmentRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Equipment::class);
+    }
+
+    public function findByZoneOrNull(Zone $zone): array
+    {
+        return $this->createQueryBuilder('equipment')
+            ->andWhere(
+                'equipment.zone = :zone OR equipment.zone IS NULL'
+            )
+            ->setParameter('zone', $zone)
+            ->orderBy('equipment.name', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**
