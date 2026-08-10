@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Settings;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -9,8 +10,9 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        // $product = new Product();
-        // $manager->persist($product);
+        $setting = new Settings();
+        $setting->setIsRoomBookingEnabled(true);
+        $manager->persist($setting);
 
         $manager->flush();
     }
