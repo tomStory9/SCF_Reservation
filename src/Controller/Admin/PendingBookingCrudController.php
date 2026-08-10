@@ -339,7 +339,7 @@ final class PendingBookingCrudController extends AbstractCrudController
                 $this->getIndexUrl(),
             );
         }
-        $booking->setStripeCheckoutUrl($this->stripePaymentService->createPaymentLink($booking->getPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
+        $booking->setStripeCheckoutUrl($this->stripePaymentService->createPaymentLink($booking->getTotalPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
         $booking->setBookingStatus(
             BookingStatus::APPROVED,
         );
