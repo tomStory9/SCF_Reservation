@@ -189,11 +189,11 @@ readonly class BookingService
         if (count($errors) > 0) {
             throw new \Exception($errors[0]->getMessage());
         }
-        foreach ($data['equipment'] as $equipment) {
+        foreach ($data['equipments'] as $equipment) {
             $bookingEquipment = new BookingEquipment();
-            $bookingEquipment->setEquipment($this->equipmentRepository->find($equipment['id']));
+            $bookingEquipment->setEquipment($this->equipmentRepository->find($equipment['equipmentId']));
             $bookingEquipment->setQuantity($equipment['quantity']);
-            $bookingEquipment->setTotalPrice($this->equipmentRepository->find($equipment['id'])->getUnitPrice() * $equipment['quantity']);
+            $bookingEquipment->setTotalPrice($this->equipmentRepository->find($equipment['equipmentId'])->getUnitPrice() * $equipment['quantity']);
             $bookingEquipment->setBooking($booking);
             $this->entityManager->persist($bookingEquipment);
         }
