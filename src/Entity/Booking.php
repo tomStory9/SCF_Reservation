@@ -65,6 +65,12 @@ class Booking
     #[ORM\Column(length: 25000, nullable: true)]
     private ?string $StripeCheckoutUrl = null;
 
+    #[ORM\Column]
+    private ?int $equipmentPrice = null;
+
+    #[ORM\Column]
+    private ?int $TotalPrice = null;
+
     public function __construct()
     {
         $this->bookingEquipment = new ArrayCollection();
@@ -267,6 +273,30 @@ class Booking
     public function setStripeCheckoutUrl(?string $StripeCheckoutUrl): static
     {
         $this->StripeCheckoutUrl = $StripeCheckoutUrl;
+
+        return $this;
+    }
+
+    public function getEquipmentPrice(): ?int
+    {
+        return $this->equipmentPrice;
+    }
+
+    public function setEquipmentPrice(int $equipmentPrice): static
+    {
+        $this->equipmentPrice = $equipmentPrice;
+
+        return $this;
+    }
+
+    public function getTotalPrice(): ?int
+    {
+        return $this->TotalPrice;
+    }
+
+    public function setTotalPrice(int $TotalPrice): static
+    {
+        $this->TotalPrice = $TotalPrice;
 
         return $this;
     }
