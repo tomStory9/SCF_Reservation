@@ -1,0 +1,69 @@
+account:
+    dashboard:
+        # Titres et sous-titres
+        title: 'Tableau de bord'
+        booking_list: 'Liste des réservations'
+        booking_list_subtitle: 'Consultez et gérez toutes vos réservations'
+        # Navigation
+        skip_to_content: 'Aller au contenu principal'
+        book_now: 'Ré§§server maintenant'
+        new_booking: 'Nouvelle réservation'
+        
+        # États vides
+        no_booking_title: 'Aucune réservation'
+        no_booking_text: "Vous n'avez pas encore de réservations. Réservez votre première session dès maintenant !"
+        
+        # Informations de réservation
+        booking: 'Réservation'
+        location_unavailable: 'Zone indisponible'
+        zone_unavailable: 'Zone indisponible'
+        guests: 'personne(s)'
+        stay_period: 'Période de séjour'
+        from: 'Du'
+        to: 'au'
+        full_day: 'JournÉ§e complÉ©te'
+        partial_day: 'Demi-journÉ§e'
+        
+        # Statuts de réservation
+        pending_title: 'Réservation en attente de validation'
+        pending_text: 'Vous recevrez les instructions de paiement aprÉ©s approbation.'
+        
+        approved_title: 'Votre réservation est approuvée'
+        approved_text: 'Vous pouvez maintenant procéder au paiement.'
+        
+        payment_confirmed_title: 'Paiement confirmé'
+        payment_confirmed_text: 'Cette réservation a É$tÉ§ payÉ§e avec succÉ©s.'
+        
+        cancelled_title: 'Réservation annulÉ§e'
+        
+        # Prix
+        total_price: 'Prix total'
+        including_equipment: 'Dont É$quipements :'
+        reservation_price: 'Prix de la réservation'
+        total: 'Total'
+        price_summary: 'Résumé du prix'
+        
+        # Actions
+        view_details: 'Voir les détails'
+        pay_now: 'Payer maintenant'
+        proceed_payment: 'Procéder au paiement'
+        payment_completed: 'Paiement effectué'
+        close: 'Fermer'
+        
+        # Modal - Informations
+        reservation: 'Réservation'
+        reservation_info: 'Informations de réservation'
+        status: 'Statut'
+        guest_count: 'Nombre de personnes'
+        start_date: 'Date de début'
+        end_date: 'Date de fin'
+        reservation_type: 'Type de réservation'
+        created_date: 'Date de création'
+        
+
+        reserved_equipment: 'Équipements réservés'
+        no_equipment: 'Aucun Équipement réservé.'
+        equipment: 'Équipement'
+        equipment_count: '{% plural %count%} Équipement|{% plural %count%} Équipements'
+        quantity: 'Quantité'
+        unit_price: 'Prix unitaire'

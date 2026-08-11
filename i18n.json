@@ -3,7 +3,7 @@
   "locale": {
     "source": "fr",
     "targets": [
-      "ja_JP",
+      "ja",
       "en"
     ]
   },
@@ -14,7 +14,8 @@
         "translations/[locale]/login.[locale].yml",
         "translations/[locale]/forms.[locale].yml",
         "translations/[locale]/validators.[locale].yaml",
-        "translations/[locale]/checkInAndOut.[locale].yaml"
+        "translations/[locale]/checkInAndOut.[locale].yaml",
+        "translations/[locale]/profile.[locale].yaml"
       ]
     }
   },
