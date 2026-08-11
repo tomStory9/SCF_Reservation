@@ -102,6 +102,9 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
                 $pricingBedRoom->setZone($bedRoom);
                 $pricingBedRoom->setWeekDay($weekDay);
                 $pricingBedRoom->setFullPrice('4000');
+                $pricingBedRoom->setReducedPriceA('4000');
+                $pricingBedRoom->setReducedPriceB('4000');
+                $manager->persist($pricingBedRoom);
             }
 
             foreach ($wideTimeSlots as $wideTimeSlot) {

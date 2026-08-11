@@ -40,4 +40,17 @@ class PricingRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function getPricingByBedRoom(Zone $zone): array
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id')
+            ->addSelect('p.fullPrice')
+            ->addSelect('w.dayNumber')
+            ->join('p.weekDay', 'w')
+            ->andWhere('p.zone = :zone')
+            ->setParameter('zone', $zone)
+            ->getQuery()
+            ->getResult();
+    }
 }

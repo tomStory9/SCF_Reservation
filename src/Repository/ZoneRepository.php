@@ -28,4 +28,13 @@ class ZoneRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function getBedRoomYamaichi(): array
+    {
+        return $this->createQueryBuilder('z')
+            ->andWhere('z.typeZone = :zoneType')
+            ->setParameter('zoneType', ZoneType::BEDROOM)
+            ->getQuery()
+            ->getResult();
+    }
 }

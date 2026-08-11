@@ -1,20 +1,80 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello RoomBookingController!{% endblock %}
+{% block title %}
+    {{ 'account.roomReservation.title'|trans }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('room_reservation') }}
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
+        {% include 'user/_partials/_navbar.html.twig' %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
+            <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/diodoru/SCF/SCF_Reservation/src/Controller/RoomBookingController.php</code></li>
-        <li>Your template at <code>/home/diodoru/SCF/SCF_Reservation/templates/room_booking/index.html.twig</code></li>
-    </ul>
-</div>
+                <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+                    <div class="mb-5">
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">Planning</p>
+                        <h2 class="text-xl font-semibold text-secondary">Calendrier de réservation des chambres</h2>
+                    </div>
+
+                    <div class="flex justify-center">
+                        <div id="calendar-holder" class="reservation-calendar w-full max-w-[940px]"></div>
+                    </div>
+                </section>
+
+                <aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+
+                    <div class="border-b border-slate-200">
+                        <nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="Chambres">
+                            {% for room in rooms %}
+                                {% set isActive = loop.first %}
+                                <button type="button"
+                                        class="room-tab rounded-t-xl border px-5 py-3 text-sm font-semibold transition {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}"
+                                        data-room-id="{{ room.id }}"
+                                        data-room-name="{{ room.name }}"
+                                        data-room-pricing="{{ room.pricing|json_encode|e('html_attr') }}"
+                                        aria-selected="{{ isActive ? 'true' : 'false' }}">
+                                    {{ room.name }}
+                                </button>
+                            {% endfor %}
+                        </nav>
+                    </div>
+
+                    <div class="rounded-b-2xl border border-t-0 border-slate-200 bg-white p-6">
+                        <div class="min-h-[360px] flex flex-col">
+                            <p class="text-base font-semibold text-secondary">Votre séjour</p>
+                            <p class="mt-2 text-sm text-state">Sélectionnez vos dates d'arrivée et de départ sur le calendrier.</p>
+
+                            <div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
+                                Aucune date sélectionnée.
+                            </div>
+
+                            <div id="price-container" class="hidden mt-4 pt-4 border-t border-slate-200">
+                                <p class="text-sm text-state flex justify-between items-center">
+                                    <span class="font-semibold text-secondary">Total du séjour :</span>
+                                    <span id="price-display" class="text-2xl font-bold text-primary">0 ¥</span>
+                                </p>
+                            </div>
+
+                            <div class="mt-auto pt-6">
+                                <button id="submit_booking" class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg disabled:opacity-50">
+                                    Confirmer la réservation
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('room_reservation') }}
 {% endblock %}
