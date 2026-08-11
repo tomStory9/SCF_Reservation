@@ -89,7 +89,7 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                 $booking->setZone($zone);
                 $booking->setGuestCount($guestCount);
                 $booking->setIsFullDay(false);
-                $booking->setBookingStatus(BookingStatus::PENDING);
+                $booking->setBookingStatus(BookingStatus::APPROVED);
                 $booking->setCreatedDate(new \DateTimeImmutable());
                 $booking->setEndDate($dateEnd);
                 $booking->setStartDate($dateStart);
