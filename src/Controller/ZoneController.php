@@ -3,14 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Zone;
+use App\Enum\BookingStatus;
 use App\Repository\EquipmentRepository;
 use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\Component\Serializer\SerializerInterface;
 
 final class ZoneController extends AbstractController
 {
@@ -21,26 +22,54 @@ final class ZoneController extends AbstractController
     }
 
     #[Route('/zone/{id}/equipments', name: 'app_zone_equipments', methods: ['GET'])]
-    public function index(Zone $zone, SerializerInterface $ser): Response
-    {
-        $equipments = $this->equipmentRepository->findByZoneOrNull($zone);
+    public function index(
+        Zone $zone,
+        Request $request,
+    ): JsonResponse {
+        $startDateParameter = $request->query->get('startDate');
+        $endDateParameter = $request->query->get('endDate');
 
-        foreach ($equipments as $equipment) {
-            // todo recuperer la quantité max disponible , par rapport au reservation deja existante si l'equipement a une zone Null
+        if (!$startDateParameter || !$endDateParameter) {
+            return new JsonResponse([
+                'error' => 'Les paramètres startDate et endDate sont obligatoires.',
+            ], Response::HTTP_BAD_REQUEST);
         }
 
-        return new Response($ser->serialize(
-            $equipments,
-            'json',
-            [
-                'attributes' => [
-                    'id',
-                    'name',
-                    'unitPrice',
-                    'maxQuantity',
-                ],
-            ]
-        ));
+        try {
+            $startDate = new \DateTimeImmutable($startDateParameter);
+            $endDate = new \DateTimeImmutable($endDateParameter);
+        } catch (\Exception) {
+            return new JsonResponse([
+                'error' => 'Le format des dates est invalide.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        if ($endDate <= $startDate) {
+            return new JsonResponse([
+                'error' => 'La date de fin doit être après la date de début.',
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        /*
+         * À adapter selon ton enum.
+         *
+         * Les réservations PENDING et CONFIRMED bloquent généralement
+         * le stock. Une réservation CANCELLED ne doit pas être comptée.
+         */
+        $blockingStatuses = [
+            BookingStatus::APPROVED->value,
+            BookingStatus::PAID->value,
+        ];
+
+        $equipments = $this->equipmentRepository
+            ->findAvailableForZoneAndPeriod(
+                zone: $zone,
+                startDate: $startDate,
+                endDate: $endDate,
+                blockingStatuses: $blockingStatuses,
+            );
+
+        return new JsonResponse($equipments);
     }
 
     #[IsGranted('ROLE_USER')]

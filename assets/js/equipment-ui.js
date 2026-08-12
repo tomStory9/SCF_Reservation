@@ -1,14 +1,21 @@
-export function createEquipmentUI(state, elements) {
+export function createEquipmentUI(
+    state,
+    elements
+) {
     function formatPrice(price) {
         return `${Number(price).toLocaleString('fr-FR')} ¥`;
     }
 
     function calculateTotal() {
-        return Object.entries(state.selectedEquipments)
-            .reduce((total, [equipmentId, quantity]) => {
+        return Object.entries(
+            state.selectedEquipments
+        ).reduce(
+            (total, [equipmentId, quantity]) => {
                 const equipment =
                     state.availableEquipments.find(
-                        item => item.id === Number(equipmentId)
+                        item =>
+                            item.id ===
+                            Number(equipmentId)
                     );
 
                 if (!equipment) {
@@ -18,29 +25,85 @@ export function createEquipmentUI(state, elements) {
                 return total +
                     Number(equipment.unitPrice) *
                     Number(quantity);
-            }, 0);
+            },
+            0
+        );
     }
 
     function updateTotal() {
-        state.equipmentTotal = calculateTotal();
+        state.equipmentTotal =
+            calculateTotal();
 
-        if (state.equipmentTotal > 0) {
-            elements.totalContainer.classList.remove('hidden');
+        if (
+            state.equipmentTotal > 0
+        ) {
+            elements.totalContainer.classList.remove(
+                'hidden'
+            );
+
             elements.totalDisplay.textContent =
-                formatPrice(state.equipmentTotal);
+                formatPrice(
+                    state.equipmentTotal
+                );
         } else {
-            elements.totalContainer.classList.add('hidden');
+            elements.totalContainer.classList.add(
+                'hidden'
+            );
+
             elements.totalDisplay.textContent =
                 formatPrice(0);
         }
     }
 
-    function render(equipments) {
-        state.availableEquipments = equipments;
-        state.selectedEquipments = {};
-        state.equipmentTotal = 0;
+    function reset() {
+        state.availableEquipments =
+            [];
 
-        if (!equipments.length) {
+        state.selectedEquipments =
+            {};
+
+        state.equipmentTotal =
+            0;
+
+        elements.list.innerHTML =
+            '';
+
+        elements.totalContainer.classList.add(
+            'hidden'
+        );
+
+        elements.totalDisplay.textContent =
+            formatPrice(0);
+
+        if (
+            elements.grandTotalContainer
+        ) {
+            elements.grandTotalContainer.classList.add(
+                'hidden'
+            );
+        }
+
+        if (
+            elements.grandTotalDisplay
+        ) {
+            elements.grandTotalDisplay.textContent =
+                formatPrice(0);
+        }
+    }
+
+    function render(equipments) {
+        state.availableEquipments =
+            equipments;
+
+        state.selectedEquipments =
+            {};
+
+        state.equipmentTotal =
+            0;
+
+        if (
+            !equipments.length
+        ) {
             elements.list.innerHTML = `
                 <p class="px-3 py-2 text-xs text-state">
                     Aucun équipement disponible pour cette zone.
@@ -48,108 +111,203 @@ export function createEquipmentUI(state, elements) {
             `;
 
             updateTotal();
+
             return;
         }
 
-        elements.list.innerHTML = equipments.map(equipment => `
-            <div
-                class="equipment-item flex items-center justify-between bg-white px-3 py-2"
-                data-equipment-id="${equipment.id}"
-            >
-                <div class="flex flex-col">
-                    <span class="text-xs font-semibold text-secondary">
-                        ${equipment.name}
-                    </span>
+        elements.list.innerHTML =
+            equipments
+                .map(equipment => {
+                    const availableQuantity =
+                        Number(
+                            equipment.availableQuantity ??
+                            0
+                        );
 
-                    <span class="text-[11px] text-state">
-                        ${formatPrice(equipment.unitPrice)}
-                        · Max ${equipment.maxQuantity}
-                    </span>
-                </div>
+                    const isUnavailable =
+                        availableQuantity <= 0;
 
-                <div class="flex items-center gap-1">
-                    <button
-                        type="button"
-                        class="equipment-decrease-btn h-6 w-6 rounded bg-slate-100 text-xs font-bold"
-                        disabled
-                    >
-                        −
-                    </button>
+                    return `
+                        <div
+                            class="equipment-item flex items-center justify-between bg-white px-3 py-2 ${isUnavailable
+                            ? 'opacity-50'
+                            : ''
+                        }"
+                            data-equipment-id="${equipment.id}"
+                        >
+                            <div class="flex flex-col">
+                                <span class="text-xs font-semibold text-secondary">
+                                    ${equipment.name}
+                                </span>
 
-                    <span class="equipment-quantity-display min-w-[24px] text-center text-xs font-semibold">
+                                <span class="text-[11px] text-state">
+                                    ${formatPrice(
+                            equipment.unitPrice
+                        )}
+                                    · Disponible :
+                                    ${availableQuantity}
+                                </span>
+                            </div>
+
+                            <div class="flex items-center gap-1">
+                                <button
+                                    type="button"
+                                    class="equipment-decrease-btn h-6 w-6 rounded bg-slate-100 text-xs font-bold"
+                                    disabled
+                                >
+                                    −
+                                </button>
+
+                                <span
+                                    class="equipment-quantity-display min-w-[24px] text-center text-xs font-semibold"
+                                >
+                                    0
+                                </span>
+
+                                <button
+                                    type="button"
+                                    class="equipment-increase-btn h-6 w-6 rounded bg-slate-100 text-xs font-bold"
+                                    ${isUnavailable
+                            ? 'disabled'
+                            : ''
+                        }
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                })
+                .join('');
+
+        equipments.forEach(
+            equipment => {
+                const item =
+                    elements.list.querySelector(
+                        `[data-equipment-id="${equipment.id}"]`
+                    );
+
+                if (!item) {
+                    return;
+                }
+
+                const decreaseButton =
+                    item.querySelector(
+                        '.equipment-decrease-btn'
+                    );
+
+                const increaseButton =
+                    item.querySelector(
+                        '.equipment-increase-btn'
+                    );
+
+                const quantityDisplay =
+                    item.querySelector(
+                        '.equipment-quantity-display'
+                    );
+
+                const availableQuantity =
+                    Number(
+                        equipment.availableQuantity ??
                         0
-                    </span>
+                    );
 
-                    <button
-                        type="button"
-                        class="equipment-increase-btn h-6 w-6 rounded bg-slate-100 text-xs font-bold"
-                    >
-                        +
-                    </button>
-                </div>
-            </div>
-        `).join('');
+                function updateButtons(
+                    quantity
+                ) {
+                    decreaseButton.disabled =
+                        quantity <= 0;
 
-        equipments.forEach(equipment => {
-            const item =
-                elements.list.querySelector(
-                    `[data-equipment-id="${equipment.id}"]`
+                    increaseButton.disabled =
+                        availableQuantity <= 0 ||
+                        quantity >=
+                        availableQuantity;
+                }
+
+                decreaseButton.addEventListener(
+                    'click',
+                    () => {
+                        const current =
+                            state.selectedEquipments[
+                            equipment.id
+                            ] || 0;
+
+                        const quantity =
+                            Math.max(
+                                0,
+                                current - 1
+                            );
+
+                        if (
+                            quantity === 0
+                        ) {
+                            delete state
+                                .selectedEquipments[
+                                equipment.id
+                            ];
+                        } else {
+                            state.selectedEquipments[
+                                equipment.id
+                            ] = quantity;
+                        }
+
+                        quantityDisplay.textContent =
+                            quantity;
+
+                        updateButtons(
+                            quantity
+                        );
+
+                        updateTotal();
+                    }
                 );
 
-            if (!item) {
-                return;
+                increaseButton.addEventListener(
+                    'click',
+                    () => {
+                        const current =
+                            state.selectedEquipments[
+                            equipment.id
+                            ] || 0;
+
+                        const quantity =
+                            Math.min(
+                                availableQuantity,
+                                current + 1
+                            );
+
+                        if (
+                            quantity <= 0
+                        ) {
+                            return;
+                        }
+
+                        state.selectedEquipments[
+                            equipment.id
+                        ] = quantity;
+
+                        quantityDisplay.textContent =
+                            quantity;
+
+                        updateButtons(
+                            quantity
+                        );
+
+                        updateTotal();
+                    }
+                );
+
+                updateButtons(0);
             }
-
-            const decreaseButton =
-                item.querySelector('.equipment-decrease-btn');
-
-            const increaseButton =
-                item.querySelector('.equipment-increase-btn');
-
-            const quantityDisplay =
-                item.querySelector('.equipment-quantity-display');
-
-            decreaseButton.addEventListener('click', () => {
-                const current =
-                    state.selectedEquipments[equipment.id] || 0;
-
-                const quantity = Math.max(0, current - 1);
-
-                state.selectedEquipments[equipment.id] = quantity;
-                quantityDisplay.textContent = quantity;
-
-                decreaseButton.disabled = quantity === 0;
-                increaseButton.disabled =
-                    quantity >= equipment.maxQuantity;
-
-                updateTotal();
-            });
-
-            increaseButton.addEventListener('click', () => {
-                const current =
-                    state.selectedEquipments[equipment.id] || 0;
-
-                const quantity = Math.min(
-                    equipment.maxQuantity,
-                    current + 1
-                );
-
-                state.selectedEquipments[equipment.id] = quantity;
-                quantityDisplay.textContent = quantity;
-
-                decreaseButton.disabled = quantity === 0;
-                increaseButton.disabled =
-                    quantity >= equipment.maxQuantity;
-
-                updateTotal();
-            });
-        });
+        );
 
         updateTotal();
     }
 
     return {
         render,
-        getTotal: () => state.equipmentTotal
+        reset,
+        getTotal: () =>
+            state.equipmentTotal
     };
 }

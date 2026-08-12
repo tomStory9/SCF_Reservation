@@ -10,9 +10,7 @@ import {
 
 import { createBookingState } from './state.js';
 import { createBookingApi } from './api.js';
-
 import { createPricingService } from './pricing.js';
-
 import { createBookingUI } from './booking-ui.js';
 
 import {
@@ -33,223 +31,400 @@ import {
 } from './equipment-ui.js';
 
 
-document.addEventListener('DOMContentLoaded', async () => {
-    const calendarElement =
-        document.getElementById('calendar-holder');
+document.addEventListener(
+    'DOMContentLoaded',
+    async () => {
+        const calendarElement =
+            document.getElementById(
+                'calendar-holder'
+            );
 
-    const zoneSelectElement =
-        document.getElementById('zone-select');
+        const zoneSelectElement =
+            document.getElementById(
+                'zone-select'
+            );
 
-    if (!calendarElement || !zoneSelectElement) {
-        console.warn(
-            '[reservation] Éléments nécessaires introuvables'
-        );
+        if (
+            !calendarElement ||
+            !zoneSelectElement
+        ) {
+            console.warn(
+                '[reservation] Éléments nécessaires introuvables'
+            );
 
-        return;
-    }
+            return;
+        }
 
-    const config = loadCalendarConfig();
-    const userData = loadUserBookingData();
+        const config =
+            loadCalendarConfig();
 
-    const state = createBookingState();
-    const api = createBookingApi(config);
-    const ui = createBookingUI(config);
+        const userData =
+            loadUserBookingData();
 
-    const eventService =
-        createCalendarEventService(state, config);
+        const state =
+            createBookingState();
 
-    const equipmentState =
-        createEquipmentState();
+        const api =
+            createBookingApi(config);
 
-    const equipmentApi =
-        createEquipmentApi(config);
+        const ui =
+            createBookingUI(config);
 
-    const equipmentListElement =
-        document.getElementById('equipment-list');
+        const eventService =
+            createCalendarEventService(
+                state,
+                config
+            );
 
-    const equipmentTotalContainer =
-        document.getElementById(
-            'equipment-total-container'
-        );
+        const equipmentState =
+            createEquipmentState();
 
-    const equipmentTotalDisplay =
-        document.getElementById(
-            'equipment-total-display'
-        );
+        const equipmentApi =
+            createEquipmentApi(config);
 
-    const grandTotalContainer =
-        document.getElementById(
-            'grand-total-container'
-        );
+        const equipmentListElement =
+            document.getElementById(
+                'equipment-list'
+            );
 
-    const grandTotalDisplay =
-        document.getElementById(
-            'grand-total-display'
-        );
+        const equipmentTotalContainer =
+            document.getElementById(
+                'equipment-total-container'
+            );
 
-    const equipmentUI =
-        equipmentListElement &&
-            equipmentTotalContainer &&
-            equipmentTotalDisplay
-            ? createEquipmentUI(
-                equipmentState,
-                {
-                    list: equipmentListElement,
-                    totalContainer: equipmentTotalContainer,
-                    totalDisplay: equipmentTotalDisplay,
-                    grandTotalContainer,
-                    grandTotalDisplay
-                }
-            )
-            : null;
+        const equipmentTotalDisplay =
+            document.getElementById(
+                'equipment-total-display'
+            );
 
-    const pricingService =
-        createPricingService(
-            () => state.currentZonePricings,
-            () => userData.freeHours
-        );
+        const grandTotalContainer =
+            document.getElementById(
+                'grand-total-container'
+            );
 
-    const locationTabs =
-        document.querySelectorAll('.location-tab');
+        const grandTotalDisplay =
+            document.getElementById(
+                'grand-total-display'
+            );
 
-    const bookingModeLinks =
-        document.querySelectorAll('.booking-mode-link');
-
-    const submitButton =
-        document.getElementById('submit_booking');
-
-    const guestCountInput =
-        document.getElementById('guest-count-input');
-
-    const mobileBookingModeLabel =
-        document.getElementById(
-            'active-booking-mode-label-mobile'
-        );
-
-    let calendar = null;
-
-    const zoneTomSelect = new TomSelect(
-        zoneSelectElement,
-        {
-            valueField: 'id',
-            labelField: 'name',
-            searchField: 'name',
-            placeholder: config.texts.zonePlaceholder,
-            allowEmptyOption: false,
-
-            onChange: async zoneId => {
-                if (!zoneId) {
-                    state.activeZoneId = null;
-                    state.currentZonePricings = {};
-                    state.currentSelection = null;
-
-                    ui.updatePrice(null);
-
-                    if (equipmentUI) {
-                        equipmentUI.render([]);
+        const equipmentUI =
+            equipmentListElement &&
+                equipmentTotalContainer &&
+                equipmentTotalDisplay
+                ? createEquipmentUI(
+                    equipmentState,
+                    {
+                        list: equipmentListElement,
+                        totalContainer:
+                            equipmentTotalContainer,
+                        totalDisplay:
+                            equipmentTotalDisplay,
+                        grandTotalContainer,
+                        grandTotalDisplay
                     }
+                )
+                : null;
 
-                    calendar?.refetchEvents();
+        const pricingService =
+            createPricingService(
+                () => state.currentZonePricings,
+                () => userData.freeHours
+            );
+
+        const locationTabs =
+            document.querySelectorAll(
+                '.location-tab'
+            );
+
+        const bookingModeLinks =
+            document.querySelectorAll(
+                '.booking-mode-link'
+            );
+
+        const submitButton =
+            document.getElementById(
+                'submit_booking'
+            );
+
+        const guestCountInput =
+            document.getElementById(
+                'guest-count-input'
+            );
+
+        const mobileBookingModeLabel =
+            document.getElementById(
+                'active-booking-mode-label-mobile'
+            );
+
+        let calendar = null;
+
+        async function loadEquipmentsForZone(
+            zoneId
+        ) {
+            console.log(
+                '[reservation] Chargement équipements',
+                {
+                    zoneId,
+                    selection:
+                        state.currentSelection
+                }
+            );
+
+            if (
+                !equipmentUI ||
+                !equipmentListElement
+            ) {
+                console.warn(
+                    '[reservation] Interface équipements introuvable'
+                );
+
+                return;
+            }
+
+            const selection =
+                state.currentSelection;
+
+            if (
+                !zoneId ||
+                !selection
+            ) {
+                equipmentUI.render([]);
+
+                return;
+            }
+
+            const selectedStartDate =
+                selection.startDate ??
+                selection.start;
+
+            const selectedEndDate =
+                selection.endDate ??
+                selection.end ??
+                selectedStartDate;
+
+            const startTime =
+                selection.startTime;
+
+            const endTime =
+                selection.endTime;
+
+            if (
+                !selectedStartDate ||
+                !selectedEndDate ||
+                !startTime ||
+                !endTime
+            ) {
+                console.warn(
+                    '[reservation] Période incomplète',
+                    {
+                        selectedStartDate,
+                        selectedEndDate,
+                        startTime,
+                        endTime,
+                        selection
+                    }
+                );
+
+                equipmentUI.render([]);
+
+                return;
+            }
+
+            const startDate =
+                String(
+                    selectedStartDate
+                ).includes('T')
+                    ? selectedStartDate
+                    : `${selectedStartDate}T${startTime}:00`;
+
+            const endDate =
+                String(
+                    selectedEndDate
+                ).includes('T')
+                    ? selectedEndDate
+                    : `${selectedEndDate}T${endTime}:00`;
+
+            try {
+                equipmentListElement.innerHTML = `
+                    <p class="px-3 py-2 text-xs text-state">
+                        Chargement des équipements...
+                    </p>
+                `;
+
+                console.log(
+                    '[reservation] Requête équipements',
+                    {
+                        zoneId,
+                        startDate,
+                        endDate
+                    }
+                );
+
+                const equipments =
+                    await equipmentApi.getForZone(
+                        zoneId,
+                        startDate,
+                        endDate
+                    );
+
+                console.log(
+                    '[reservation] Équipements reçus',
+                    equipments
+                );
+
+                equipmentUI.render(
+                    Array.isArray(equipments)
+                        ? equipments
+                        : []
+                );
+            } catch (error) {
+                console.error(
+                    '[reservation] Erreur équipements :',
+                    error
+                );
+
+                equipmentListElement.innerHTML = `
+                    <p class="px-3 py-2 text-xs text-red-600">
+                        Impossible de charger les équipements.
+                    </p>
+                `;
+            }
+        }
+
+        const zoneTomSelect =
+            new TomSelect(
+                zoneSelectElement,
+                {
+                    valueField: 'id',
+                    labelField: 'name',
+                    searchField: 'name',
+                    placeholder:
+                        config.texts.zonePlaceholder,
+                    allowEmptyOption: false,
+
+                    onChange: async zoneId => {
+                        state.activeZoneId =
+                            zoneId || null;
+
+                        state.currentSelection =
+                            null;
+
+                        state.currentZonePricings =
+                            {};
+
+                        ui.updatePrice(null);
+
+                        if (
+                            equipmentUI
+                        ) {
+                            equipmentUI.reset();
+                        }
+
+                        if (!zoneId) {
+                            calendar?.refetchEvents();
+
+                            return;
+                        }
+
+                        try {
+                            state.currentZonePricings =
+                                await api.getPricings(
+                                    zoneId
+                                );
+                        } catch (error) {
+                            console.error(
+                                '[reservation] Erreur tarifs :',
+                                error
+                            );
+
+                            state.currentZonePricings =
+                                {};
+                        }
+
+                        calendar?.refetchEvents();
+                    }
+                }
+            );
+
+        function getSelectedZoneName() {
+            if (
+                !state.activeZoneId
+            ) {
+                return config.texts.undefined;
+            }
+
+            const option =
+                zoneTomSelect.options[
+                state.activeZoneId
+                ] ||
+                zoneTomSelect.options[
+                String(
+                    state.activeZoneId
+                )
+                ];
+
+            return (
+                option?.name ??
+                config.texts.undefined
+            );
+        }
+
+        async function loadZonesForFacility(
+            facilityId
+        ) {
+            zoneTomSelect.clear();
+            zoneTomSelect.clearOptions();
+
+            state.activeZoneId =
+                null;
+
+            state.currentSelection =
+                null;
+
+            state.currentZonePricings =
+                {};
+
+            ui.updatePrice(null);
+
+            if (
+                equipmentUI
+            ) {
+                equipmentUI.reset();
+            }
+
+            try {
+                const zones =
+                    await api.getZones(
+                        facilityId
+                    );
+
+                if (
+                    !zones.length
+                ) {
+                    zoneTomSelect.settings.placeholder =
+                        config.texts.noZoneAvailable;
+
+                    zoneTomSelect.input.placeholder =
+                        config.texts.noZoneAvailable;
+
+                    zoneTomSelect.updatePlaceholder();
 
                     return;
                 }
 
-                state.activeZoneId = zoneId;
-                state.currentSelection = null;
-                state.currentZonePricings = {};
+                zoneTomSelect.addOptions(
+                    zones
+                );
 
-                ui.updatePrice(null);
+                zoneTomSelect.setValue(
+                    zones[0].id
+                );
+            } catch (error) {
+                console.error(
+                    '[reservation] Erreur zones :',
+                    error
+                );
 
-                try {
-                    state.currentZonePricings =
-                        await api.getPricings(zoneId);
-                } catch (error) {
-                    console.error(
-                        '[reservation] Erreur tarifs :',
-                        error
-                    );
-
-                    state.currentZonePricings = {};
-                }
-
-                if (equipmentUI) {
-                    await loadEquipmentsForZone(zoneId);
-                }
-
-                calendar?.refetchEvents();
-            }
-        }
-    );
-
-    function getSelectedZoneName() {
-        if (!state.activeZoneId) {
-            return config.texts.undefined;
-        }
-
-        const option =
-            zoneTomSelect.options[state.activeZoneId] ||
-            zoneTomSelect.options[String(state.activeZoneId)];
-
-        return option?.name ?? config.texts.undefined;
-    }
-
-    async function loadEquipmentsForZone(zoneId) {
-        if (!equipmentUI || !equipmentListElement) {
-            return;
-        }
-
-        try {
-            equipmentListElement.innerHTML = `
-                <p class="px-3 py-2 text-xs text-state">
-                    Chargement des équipements...
-                </p>
-            `;
-
-            const equipments =
-                await equipmentApi.getForZone(zoneId);
-
-            equipmentUI.render(equipments);
-        } catch (error) {
-            console.error(
-                '[reservation] Erreur équipements :',
-                error
-            );
-
-            equipmentListElement.innerHTML = `
-                <p class="px-3 py-2 text-xs text-red-600">
-                    Impossible de charger les équipements.
-                </p>
-            `;
-
-            if (equipmentTotalContainer) {
-                equipmentTotalContainer.classList.add('hidden');
-            }
-
-            if (grandTotalContainer) {
-                grandTotalContainer.classList.add('hidden');
-            }
-        }
-    }
-
-    async function loadZonesForFacility(facilityId) {
-        zoneTomSelect.clear();
-        zoneTomSelect.clearOptions();
-
-        state.activeZoneId = null;
-        state.currentSelection = null;
-        state.currentZonePricings = {};
-
-        ui.updatePrice(null);
-
-        if (equipmentUI) {
-            equipmentUI.render([]);
-        }
-
-        try {
-            const zones =
-                await api.getZones(facilityId);
-
-            if (!zones.length) {
                 zoneTomSelect.settings.placeholder =
                     config.texts.noZoneAvailable;
 
@@ -257,277 +432,313 @@ document.addEventListener('DOMContentLoaded', async () => {
                     config.texts.noZoneAvailable;
 
                 zoneTomSelect.updatePlaceholder();
-
-                return;
             }
-
-            zoneTomSelect.addOptions(zones);
-
-
-            zoneTomSelect.setValue(zones[0].id);
-        } catch (error) {
-            console.error(
-                '[reservation] Erreur zones :',
-                error
-            );
-
-            zoneTomSelect.settings.placeholder =
-                config.texts.noZoneAvailable;
-
-            zoneTomSelect.input.placeholder =
-                config.texts.noZoneAvailable;
-
-            zoneTomSelect.updatePlaceholder();
         }
-    }
 
-    function updateBookingModeLinks() {
-        bookingModeLinks.forEach(button => {
-            const isActive =
-                button.dataset.mode === state.bookingMode;
+        function updateBookingModeLinks() {
+            bookingModeLinks.forEach(
+                button => {
+                    const isActive =
+                        button.dataset.mode ===
+                        state.bookingMode;
 
-            button.classList.toggle(
-                'is-active',
-                isActive
+                    button.classList.toggle(
+                        'is-active',
+                        isActive
+                    );
+
+                    button.classList.toggle(
+                        'text-secondary',
+                        isActive
+                    );
+
+                    button.classList.toggle(
+                        'text-state',
+                        !isActive
+                    );
+
+                    button.setAttribute(
+                        'aria-pressed',
+                        isActive
+                            ? 'true'
+                            : 'false'
+                    );
+                }
             );
 
-            button.classList.toggle(
-                'text-secondary',
-                isActive
+            ui.updateBookingModeLabel(
+                state.bookingMode
             );
 
-            button.classList.toggle(
-                'text-state',
-                !isActive
-            );
-
-            button.setAttribute(
-                'aria-pressed',
-                isActive ? 'true' : 'false'
-            );
-        });
-
-        ui.updateBookingModeLabel(
-            state.bookingMode
-        );
-
-        if (mobileBookingModeLabel) {
-            mobileBookingModeLabel.textContent =
-                state.bookingMode === 'period'
-                    ? config.texts.bookingByPeriod
-                    : config.texts.bookingByHour;
+            if (
+                mobileBookingModeLabel
+            ) {
+                mobileBookingModeLabel.textContent =
+                    state.bookingMode === 'period'
+                        ? config.texts.bookingByPeriod
+                        : config.texts.bookingByHour;
+            }
         }
-    }
 
-    function activateLocationTab(tab) {
-        locationTabs.forEach(item => {
-            item.classList.remove(
+        function activateLocationTab(
+            tab
+        ) {
+            locationTabs.forEach(
+                item => {
+                    item.classList.remove(
+                        'is-active',
+                        'border-slate-200',
+                        'bg-white',
+                        'text-primary'
+                    );
+
+                    item.classList.add(
+                        'border-transparent',
+                        'text-slate-500'
+                    );
+
+                    item.setAttribute(
+                        'aria-selected',
+                        'false'
+                    );
+                }
+            );
+
+            tab.classList.add(
                 'is-active',
                 'border-slate-200',
                 'bg-white',
                 'text-primary'
             );
 
-            item.classList.add(
+            tab.classList.remove(
                 'border-transparent',
                 'text-slate-500'
             );
 
-            item.setAttribute(
+            tab.setAttribute(
                 'aria-selected',
-                'false'
+                'true'
             );
-        });
 
-        tab.classList.add(
-            'is-active',
-            'border-slate-200',
-            'bg-white',
-            'text-primary'
-        );
+            ui.updateLocationLabel(
+                tab.textContent.trim()
+            );
+        }
 
-        tab.classList.remove(
-            'border-transparent',
-            'text-slate-500'
-        );
+        function resetCurrentSelection() {
+            state.currentSelection =
+                null;
 
-        tab.setAttribute(
-            'aria-selected',
-            'true'
-        );
-
-        ui.updateLocationLabel(
-            tab.textContent.trim()
-        );
-    }
-
-    function resetCurrentSelection() {
-        state.currentSelection = null;
-        state.selectedPeriodPreviewEvent = null;
-
-        ui.updatePreview(
-            config.texts.noSelection
-        );
-
-        ui.updatePrice(null);
-
-        calendar?.unselect();
-        calendar?.refetchEvents();
-    }
-
-    /*
-     * Création du calendrier
-     */
-    calendar = createCalendar({
-        calendarEl: calendarElement,
-        config,
-        state,
-        api,
-        eventService,
-        pricingService,
-        ui,
-        getSelectedZoneName,
-        getGuestCount: () =>
-            guestCountInput?.value ?? 0
-    });
-
-    calendar.render();
-
-    /*
-     * Initialisation du mode de réservation
-     */
-    state.bookingMode = 'hour';
-    updateBookingModeLinks();
-
-    /*
-     * Changement de mode :
-     * par heure / par période
-     */
-    bookingModeLinks.forEach(button => {
-        button.addEventListener('click', () => {
-            const selectedMode =
-                button.dataset.mode;
-
-            if (
-                selectedMode !== 'hour' &&
-                selectedMode !== 'period'
-            ) {
-                return;
-            }
-
-            state.bookingMode = selectedMode;
-
-            resetCurrentSelection();
-            updateBookingModeLinks();
+            state.selectedPeriodPreviewEvent =
+                null;
 
             ui.updatePreview(
-                state.bookingMode === 'period'
-                    ? config.texts.periodModeHelp
-                    : config.texts.hourModeHelp
+                config.texts.noSelection
             );
-        });
-    });
 
-    /*
-     * Changement de lieu
-     */
-    locationTabs.forEach(tab => {
-        tab.addEventListener('click', async () => {
-            activateLocationTab(tab);
-            resetCurrentSelection();
+            ui.updatePrice(null);
 
-            await loadZonesForFacility(
-                tab.dataset.location
-            );
-        });
-    });
-
-    /*
-     * Chargement initial du premier lieu
-     */
-    const initialActiveTab =
-        document.querySelector(
-            '.location-tab.is-active'
-        );
-
-    if (initialActiveTab) {
-        activateLocationTab(initialActiveTab);
-
-        await loadZonesForFacility(
-            initialActiveTab.dataset.location
-        );
-    }
-
-    /*
-     * Soumission de la réservation
-     */
-    submitButton?.addEventListener(
-        'click',
-        async () => {
             if (
-                !state.currentSelection ||
-                !state.activeZoneId
+                equipmentUI
             ) {
-                alert(config.texts.selectSlot);
-                return;
+                equipmentUI.reset();
             }
 
-            const selectedEquipments =
-                getSelectedEquipmentPayload(
-                    equipmentState
+            calendar?.unselect();
+            calendar?.refetchEvents();
+        }
+
+        calendar = createCalendar({
+            calendarEl: calendarElement,
+            config,
+            state,
+            api,
+            eventService,
+            pricingService,
+            ui,
+            getSelectedZoneName,
+            getGuestCount: () =>
+                guestCountInput?.value ?? 0,
+
+            onSelectionChange: async selection => {
+                console.log(
+                    '[reservation] Sélection reçue',
+                    selection
                 );
 
-            const payload = {
-                ...state.currentSelection,
-                zoneId: state.activeZoneId,
-                equipments: selectedEquipments
-            };
-            console.log(payload);
-            try {
-                submitButton.disabled = true;
-                submitButton.textContent =
-                    config.texts.loading;
+                state.currentSelection =
+                    selection;
 
-                const {
-                    response,
-                    result
-                } = await api.createBooking(payload);
+                await loadEquipmentsForZone(
+                    state.activeZoneId
+                );
+            }
+        });
 
+        calendar.render();
+
+        state.bookingMode =
+            'hour';
+
+        updateBookingModeLinks();
+
+        bookingModeLinks.forEach(
+            button => {
+                button.addEventListener(
+                    'click',
+                    () => {
+                        const selectedMode =
+                            button.dataset.mode;
+
+                        if (
+                            selectedMode !== 'hour' &&
+                            selectedMode !== 'period'
+                        ) {
+                            return;
+                        }
+
+                        state.bookingMode =
+                            selectedMode;
+
+                        resetCurrentSelection();
+
+                        updateBookingModeLinks();
+
+                        ui.updatePreview(
+                            state.bookingMode === 'period'
+                                ? config.texts.periodModeHelp
+                                : config.texts.hourModeHelp
+                        );
+                    }
+                );
+            }
+        );
+
+        locationTabs.forEach(
+            tab => {
+                tab.addEventListener(
+                    'click',
+                    async () => {
+                        activateLocationTab(
+                            tab
+                        );
+
+                        resetCurrentSelection();
+
+                        await loadZonesForFacility(
+                            tab.dataset.location
+                        );
+                    }
+                );
+            }
+        );
+
+        const initialActiveTab =
+            document.querySelector(
+                '.location-tab.is-active'
+            );
+
+        if (
+            initialActiveTab
+        ) {
+            activateLocationTab(
+                initialActiveTab
+            );
+
+            await loadZonesForFacility(
+                initialActiveTab.dataset.location
+            );
+        }
+
+        submitButton?.addEventListener(
+            'click',
+            async () => {
                 if (
-                    response.ok &&
-                    result.success
+                    !state.currentSelection ||
+                    !state.activeZoneId
                 ) {
-                    window.location.href =
-                        result.redirectUrl;
+                    alert(
+                        config.texts.selectSlot
+                    );
 
                     return;
                 }
 
-                Swal.fire({
-                    icon: 'error',
-                    title: config.texts.bookingErrorTitle,
-                    text:
-                        result.error ||
-                        config.texts.bookingError,
-                    confirmButtonColor: '#d33'
-                });
-            } catch (error) {
-                console.error(
-                    '[reservation] Erreur réservation :',
-                    error
+                const selectedEquipments =
+                    getSelectedEquipmentPayload(
+                        equipmentState
+                    );
+
+                const payload = {
+                    ...state.currentSelection,
+                    zoneId: state.activeZoneId,
+                    equipments:
+                        selectedEquipments
+                };
+
+                console.log(
+                    '[reservation] Payload :',
+                    payload
                 );
 
-                Swal.fire({
-                    icon: 'error',
-                    title: config.texts.networkErrorTitle,
-                    text: config.texts.networkError,
-                    confirmButtonColor: '#d33'
-                });
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent =
-                    config.texts.submitBooking;
+                try {
+                    submitButton.disabled =
+                        true;
+
+                    submitButton.textContent =
+                        config.texts.loading;
+
+                    const {
+                        response,
+                        result
+                    } = await api.createBooking(
+                        payload
+                    );
+
+                    if (
+                        response.ok &&
+                        result.success
+                    ) {
+                        window.location.href =
+                            result.redirectUrl;
+
+                        return;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title:
+                            config.texts.bookingErrorTitle,
+                        text:
+                            result.error ||
+                            config.texts.bookingError,
+                        confirmButtonColor:
+                            '#d33'
+                    });
+                } catch (error) {
+                    console.error(
+                        '[reservation] Erreur réservation :',
+                        error
+                    );
+
+                    Swal.fire({
+                        icon: 'error',
+                        title:
+                            config.texts.networkErrorTitle,
+                        text:
+                            config.texts.networkError,
+                        confirmButtonColor:
+                            '#d33'
+                    });
+                } finally {
+                    submitButton.disabled =
+                        false;
+
+                    submitButton.textContent =
+                        config.texts.submitBooking;
+                }
             }
-        }
-    );
-});
+        );
+    }
+);

@@ -1,20 +1,22 @@
 export function createEquipmentApi(config) {
     return {
-        async getForZone(zoneId) {
-            const endpoint =
-                config.endpoints.equipments
-                    .replace('{zoneId}', encodeURIComponent(zoneId));
+        async getForZone(zoneId, startDate, endDate) {
+            if (!zoneId || !startDate || !endDate) {
+                return [];
+            }
 
-            const response = await fetch(endpoint, {
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
+            const params = new URLSearchParams({
+                startDate: String(startDate),
+                endDate: String(endDate)
             });
+
+            const response = await fetch(
+                `/zone/${encodeURIComponent(zoneId)}/equipments?${params}`
+            );
 
             if (!response.ok) {
                 throw new Error(
-                    'Impossible de charger les équipements.'
+                    'Impossible de charger les équipements'
                 );
             }
 
