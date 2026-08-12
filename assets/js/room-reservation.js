@@ -227,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 submitButton.disabled = true;
                 submitButton.textContent = 'Enregistrement...';
 
-                const response = await fetch('/booking/create', {
+                const response = await fetch('/room/booking/create', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

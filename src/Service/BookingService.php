@@ -13,15 +13,15 @@ use App\Repository\ZoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class BookingService
+readonly class BookingService
 {
     public function __construct(
-        private readonly BookingRepository $bookingRepository,
-        private readonly PricingRepository $pricingRepository,
-        private readonly ZoneRepository $zoneRepository,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly ValidatorInterface $validator,
-        private readonly UserRoleRepository $userRoleRepository,
+        private BookingRepository $bookingRepository,
+        private PricingRepository $pricingRepository,
+        private ZoneRepository $zoneRepository,
+        private EntityManagerInterface $entityManager,
+        private ValidatorInterface $validator,
+        private UserRoleRepository $userRoleRepository,
     ) {
     }
 
@@ -34,7 +34,7 @@ class BookingService
 
             if ($isFullDay) {
                 $format = 'Y-m-d';
-                $title = 'Journée complète';
+                $title = 'All day';
             } else {
                 $format = 'Y-m-d\TH:i:s';
 
