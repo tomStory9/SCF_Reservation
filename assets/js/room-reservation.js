@@ -93,15 +93,34 @@ document.addEventListener('DOMContentLoaded', function () {
                 const response = await fetch(`/zone/${activeRoomId}/bookings`);
                 const events = await response.json();
 
-                const formattedEvents = events.map(event => ({
-                    ...event,
-                    display: 'background',
-                    color: '#ff9f89'
-                }));
+                const formattedEvents = events.map(event => {
+                    const startStr = event.start.substring(0, 10);
+                    const endStr = event.end.substring(0, 10);
+
+                    const [endYear, endMonth, endDay] = endStr.split('-');
+                    const endDateObj = new Date(endYear, endMonth - 1, endDay);
+
+                    endDateObj.setDate(endDateObj.getDate() + 1);
+
+                    const nextYear = endDateObj.getFullYear();
+                    const nextMonth = String(endDateObj.getMonth() + 1).padStart(2, '0');
+                    const nextDay = String(endDateObj.getDate()).padStart(2, '0');
+                    const exclusiveEndStr = `${nextYear}-${nextMonth}-${nextDay}`;
+
+                    return {
+                        id: event.id,
+                        start: startStr,
+                        end: exclusiveEndStr,
+                        allDay: true,
+                        display: 'background',
+                        color: '#ff9f89'
+                    };
+                });
 
                 currentRoomBookings = formattedEvents;
                 successCallback(formattedEvents);
             } catch (error) {
+                console.error(error);
                 failureCallback(error);
             }
         },
@@ -109,48 +128,70 @@ document.addEventListener('DOMContentLoaded', function () {
         selectAllow: function (selectInfo) {
             const selectStart = selectInfo.start.getTime();
             const selectEnd = selectInfo.end.getTime();
+            const days = Math.round((selectEnd - selectStart) / (1000 * 3600 * 24));
+
+            let checkEnd = selectEnd;
+            if (days === 1) {
+                checkEnd = selectStart + (2 * 24 * 3600 * 1000);
+            }
 
             return !currentRoomBookings.some(event => {
-                const eventStart = new Date(event.start).getTime();
-                const eventEnd = new Date(event.end).getTime();
-                return selectStart < eventEnd && selectEnd > eventStart;
+                const [sYear, sMonth, sDay] = event.start.split('-');
+                const eventStart = new Date(sYear, sMonth - 1, sDay).getTime();
+
+                const [eYear, eMonth, eDay] = event.end.split('-');
+                const eventEnd = new Date(eYear, eMonth - 1, eDay).getTime();
+
+                return selectStart < eventEnd && checkEnd > eventStart;
             });
         },
 
         select: function (info) {
+            const selectDays = Math.round((info.end.getTime() - info.start.getTime()) / (1000 * 3600 * 24));
+
+            if (selectDays === 1) {
+                const newEnd = new Date(info.start.getTime() + (2 * 24 * 3600 * 1000));
+                calendar.select(info.start, newEnd);
+                return;
+            }
+
+            const departureDate = new Date(info.end.getTime() - (1000 * 3600 * 24));
+
+            const nights = Math.round((departureDate.getTime() - info.start.getTime()) / (1000 * 3600 * 24));
+
             let totalPrice = 0;
-            let nights = 0;
-
             let currentCursor = new Date(info.start);
-            const endDate = new Date(info.end);
 
-            while (currentCursor < endDate) {
+            while (currentCursor < departureDate) {
                 const jsDay = currentCursor.getDay();
-
                 const phpDayNumber = jsDay === 0 ? 7 : jsDay;
 
-                const nightPrice = activeRoomPricing[phpDayNumber] || 0;
-                totalPrice += nightPrice;
-                nights++;
-
+                totalPrice += activeRoomPricing[phpDayNumber] || 0;
                 currentCursor.setDate(currentCursor.getDate() + 1);
             }
 
-            const startStrFr = info.start.toLocaleDateString('fr-FR');
-            const endDisplayDate = new Date(info.end.getTime() - (1000 * 3600 * 24));
-            const endStrFr = endDisplayDate.toLocaleDateString('fr-FR');
+            const backendEndDate = new Date(departureDate.getTime() - (1000 * 3600 * 24));
+            const year = backendEndDate.getFullYear();
+            const month = String(backendEndDate.getMonth() + 1).padStart(2, '0');
+            const day = String(backendEndDate.getDate()).padStart(2, '0');
+            const backendEndDateStr = `${year}-${month}-${day}T23:59:59`;
 
+            // 5. Affichage propre
+            const startStrFr = info.start.toLocaleDateString('fr-FR');
+            const endStrFr = departureDate.toLocaleDateString('fr-FR');
+
+            // 6. Sauvegarde
             currentSelection = {
                 startDate: info.startStr,
-                endDate: info.endStr,
+                endDate: backendEndDateStr,
                 nights: nights,
                 price: totalPrice
             };
 
             updatePreview(
                 `<span class="font-semibold text-secondary">Chambre :</span> <span class="text-primary">${activeRoomName}</span><br>` +
-                `<span class="font-semibold text-secondary">Arrivée :</span> ${startStrFr} (dès 14h)<br>` +
-                `<span class="font-semibold text-secondary">Départ :</span> ${endStrFr} (avant 11h)<br>` +
+                `<span class="font-semibold text-secondary">Arrivée :</span> ${startStrFr}<br>` +
+                `<span class="font-semibold text-secondary">Départ :</span> ${endStrFr}<br>` +
                 `<span class="font-semibold text-secondary">Durée :</span> ${nights} nuit(s)`
             );
 
