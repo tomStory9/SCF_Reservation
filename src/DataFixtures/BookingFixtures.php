@@ -115,9 +115,10 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                     ->modify("+$randomStartDays days")
                     ->setTime(0, 0, 0);
 
+                $daysToAdd = $nights - 1;
                 $roomDateEnd = $roomDateStart
-                    ->modify("+$nights days")
-                    ->setTime(0, 0, 0);
+                    ->modify("+$daysToAdd days")
+                    ->setTime(23, 59, 59);
 
                 $roomPricings = $this->pricingRepository->findBy(['zone' => $roomZone]);
                 $baseRoomPrice = count($roomPricings) > 0 ? $roomPricings[0]->getFullPrice() : 5000;
