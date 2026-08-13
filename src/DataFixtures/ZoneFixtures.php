@@ -13,7 +13,9 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
 {
     public const string KUMA_CUBE = 'cube';
     public const string KUMA_LAB = 'lab';
-    public const string KUMA_YADO = 'yado';
+    public const string KUMA_YADO_1 = 'yado1';
+    public const string KUMA_YADO_2 = 'yado2';
+    public const string KUMA_YADO_3 = 'yado3';
     public const string KODA1A = 'koda1a';
     public const string KODA1B = 'koda1b';
     public const string KODA1C = 'koda1c';
@@ -42,12 +44,26 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $manager->persist($cube);
         $this->addReference(self::KUMA_CUBE, $cube);
 
-        $yado = new Zone();
-        $yado->setName('KUMA YADO');
-        $yado->setTypeZone(ZoneType::BEDROOM);
-        $yado->setFacility($yamaichi);
-        $manager->persist($yado);
-        $this->addReference(self::KUMA_YADO, $yado);
+        $yado1 = new Zone();
+        $yado1->setName('KUMA YADO 1');
+        $yado1->setTypeZone(ZoneType::BEDROOM);
+        $yado1->setFacility($yamaichi);
+        $manager->persist($yado1);
+        $this->addReference(self::KUMA_YADO_1, $yado1);
+
+        $yado2 = new Zone();
+        $yado2->setName('KUMA YADO 2');
+        $yado2->setTypeZone(ZoneType::BEDROOM);
+        $yado2->setFacility($yamaichi);
+        $manager->persist($yado2);
+        $this->addReference(self::KUMA_YADO_2, $yado2);
+
+        $yado3 = new Zone();
+        $yado3->setName('KUMA YADO 3');
+        $yado3->setTypeZone(ZoneType::BEDROOM);
+        $yado3->setFacility($yamaichi);
+        $manager->persist($yado3);
+        $this->addReference(self::KUMA_YADO_3, $yado3);
 
         $koda = $this->getReference(FacilityFixtures::KODA, Facility::class);
 

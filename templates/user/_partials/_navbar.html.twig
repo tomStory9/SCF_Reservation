@@ -26,6 +26,12 @@
 						{{ 'account.dashboard.new_booking'|trans }}
 					</a>
 
+                    {% if is_granted('FEATURE_ROOM_BOOKING') %}
+                    <a href="{{ path('app_room_booking') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') == 'app_home' ? 'text-primary' : 'text-secondary' }}">
+                        {{ 'account.dashboard.new_room_booking'|trans }}
+                    </a>
+                    {% endif %}
+
 					<a href="{{ path('app_home') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') starts with 'app_home' ? 'text-primary' : 'text-secondary' }}">
 						{{ 'account.dashboard.my_account'|trans }}
 					</a>

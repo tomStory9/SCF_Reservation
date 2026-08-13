@@ -22,6 +22,7 @@ Encore
      */
     .addEntry('app', './assets/app.js')
     .addEntry('reservation', './assets/js/reservation-calendar.js')
+    .addEntry('room_reservation', './assets/js/room-reservation.js')
 
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

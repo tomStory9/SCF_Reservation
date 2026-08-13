@@ -76,9 +76,11 @@ class BookingRepository extends ServiceEntityRepository
             ->where('b.zone = :zone')
             ->andWhere('b.startDate < :end')
             ->andWhere('b.endDate > :start')
+            ->andWhere('b.bookingStatus = :status')
             ->setParameter('zone', $zone)
             ->setParameter('start', $start)
-            ->setParameter('end', $end);
+            ->setParameter('end', $end)
+            ->setParameter('status', BookingStatus::APPROVED);
 
         if (null !== $excludeBookingId) {
             $qb->andWhere('b.id != :excludeId')

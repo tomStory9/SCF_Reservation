@@ -30,6 +30,12 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
             $kodaCD = $this->getReference(ZoneFixtures::KODA_CD, Zone::class),
         ];
 
+        $bedRooms = [
+            $bedRoom1 = $this->getReference(ZoneFixtures::KUMA_YADO_1, Zone::class),
+            $bedRoom2 = $this->getReference(ZoneFixtures::KUMA_YADO_2, Zone::class),
+            $bedRoom3 = $this->getReference(ZoneFixtures::KUMA_YADO_3, Zone::class),
+        ];
+
         $kodaFull = $this->getReference(ZoneFixtures::KODA_FULL, Zone::class);
 
         // jour de la semaine
@@ -91,6 +97,16 @@ class PricingFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         foreach ($weekDays as $weekDay) {
+            foreach ($bedRooms as $bedRoom) {
+                $pricingBedRoom = new Pricing();
+                $pricingBedRoom->setZone($bedRoom);
+                $pricingBedRoom->setWeekDay($weekDay);
+                $pricingBedRoom->setFullPrice('4000');
+                $pricingBedRoom->setReducedPriceA('4000');
+                $pricingBedRoom->setReducedPriceB('4000');
+                $manager->persist($pricingBedRoom);
+            }
+
             foreach ($wideTimeSlots as $wideTimeSlot) {
                 $pricingDayWideSlotCube = new Pricing();
                 $pricingDayWideSlotCube->setWeekDay($weekDay);

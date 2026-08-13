@@ -41,6 +41,12 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
             ZoneFixtures::KODA1D,
         ];
 
+        $bedRooms = [
+            ZoneFixtures::KUMA_YADO_1,
+            ZoneFixtures::KUMA_YADO_2,
+            ZoneFixtures::KUMA_YADO_3,
+        ];
+
         $timeSlotPeriod = [
             TimeSlotFixtures::MATIN,
             TimeSlotFixtures::APRES_MIDI,
@@ -89,13 +95,47 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                 $booking->setZone($zone);
                 $booking->setGuestCount($guestCount);
                 $booking->setIsFullDay(false);
-                $booking->setBookingStatus(BookingStatus::PENDING);
+                $booking->setBookingStatus(BookingStatus::APPROVED);
                 $booking->setCreatedDate(new \DateTimeImmutable());
                 $booking->setEndDate($dateEnd);
                 $booking->setStartDate($dateStart);
                 $booking->setPrice($pricing->getFullPrice());
 
                 $manager->persist($booking);
+            }
+
+            for ($j = 0; $j < 3; ++$j) {
+                $roomZone = $this->getReference($bedRooms[$j], Zone::class);
+
+                $nights = rand(1, 3);
+
+                $randomStartDays = mt_rand(0, 57);
+
+                $roomDateStart = new \DateTimeImmutable('today')
+                    ->modify("+$randomStartDays days")
+                    ->setTime(0, 0, 0);
+
+                $daysToAdd = $nights - 1;
+                $roomDateEnd = $roomDateStart
+                    ->modify("+$daysToAdd days")
+                    ->setTime(23, 59, 59);
+
+                $roomPricings = $this->pricingRepository->findBy(['zone' => $roomZone]);
+                $baseRoomPrice = count($roomPricings) > 0 ? $roomPricings[0]->getFullPrice() : 5000;
+                $totalRoomPrice = $baseRoomPrice * $nights;
+
+                $roomBooking = new Booking();
+                $roomBooking->setUserBooking($user);
+                $roomBooking->setZone($roomZone);
+                $roomBooking->setGuestCount(1);
+                $roomBooking->setIsFullDay(true);
+                $roomBooking->setBookingStatus(BookingStatus::APPROVED);
+                $roomBooking->setCreatedDate(new \DateTimeImmutable());
+                $roomBooking->setStartDate($roomDateStart);
+                $roomBooking->setEndDate($roomDateEnd);
+                $roomBooking->setPrice($totalRoomPrice);
+
+                $manager->persist($roomBooking);
             }
         }
 
