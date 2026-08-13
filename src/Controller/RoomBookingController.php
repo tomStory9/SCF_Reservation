@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\SettingsRepository;
 use App\Service\RoomBookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,7 +15,6 @@ final class RoomBookingController extends AbstractController
 {
     public function __construct(
         private readonly RoomBookingService $roomBookingService,
-        private readonly SettingsRepository $settingsRepository,
     ) {
     }
 
@@ -35,6 +33,9 @@ final class RoomBookingController extends AbstractController
         ]);
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     #[IsGranted('ROLE_USER')]
     #[Route('/room/booking/create', name: 'app_room_booking_create', methods: ['GET', 'POST'])]
     public function createRoomBooking(Request $request): JsonResponse

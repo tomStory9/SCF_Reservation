@@ -60,7 +60,7 @@ readonly class RoomBookingService
             ->modify(sprintf('+%d days', $maxAdvanceDays))
             ->setTime(23, 59, 59);
 
-        $start = new \DateTimeImmutable($data['startDate'].' 00:00:00');
+        $start = new \DateTimeImmutable($data['startDate'])->setTime(0, 0, 0);
         $end = new \DateTimeImmutable($data['endDate']);
 
         if ($start > $limitDate) {
@@ -94,6 +94,8 @@ readonly class RoomBookingService
         $booking->setUserBooking($user);
         $booking->setZone($zone);
         $booking->setPrice($expectedPrice);
+        $booking->setTotalPrice($expectedPrice);
+        $booking->setEquipmentPrice(0);
         $booking->setGuestCount(1);
         $booking->setIsFullDay(true);
         $booking->setBookingStatus(BookingStatus::PENDING);

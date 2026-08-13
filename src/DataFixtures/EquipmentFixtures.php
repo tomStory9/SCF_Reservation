@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Equipment;
+use App\Entity\Zone;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -15,7 +16,6 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
         $zoneRefs = [
             ZoneFixtures::KUMA_CUBE,
             ZoneFixtures::KUMA_LAB,
-            ZoneFixtures::KUMA_YADO,
             ZoneFixtures::KODA1A,
             ZoneFixtures::KODA1B,
             ZoneFixtures::KODA1C,
@@ -40,12 +40,6 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
                 ['name' => 'Trapèze fixe', 'price' => 18000, 'maxQty' => 2],
                 ['name' => 'Corde lisse', 'price' => 8500, 'maxQty' => 3],
                 ['name' => 'Anneaux de gymnastique', 'price' => 4500, 'maxQty' => 6],
-            ],
-
-            // KUMA YADO - Zone hébergement
-            ZoneFixtures::KUMA_YADO => [
-                ['name' => 'Barre de danse portable', 'price' => 6000, 'maxQty' => 4],
-                ['name' => 'Tapis d\'échauffement', 'price' => 2500, 'maxQty' => 8],
             ],
 
             // KODA zones A-D - Zones modulaires
@@ -88,7 +82,7 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
         ];
 
         foreach ($zoneRefs as $zoneRef) {
-            $zone = $this->getReference($zoneRef, \App\Entity\Zone::class);
+            $zone = $this->getReference($zoneRef, Zone::class);
 
             if (isset($equipmentByZone[$zoneRef])) {
                 foreach ($equipmentByZone[$zoneRef] as $equipmentData) {
