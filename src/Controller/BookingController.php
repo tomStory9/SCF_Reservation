@@ -6,7 +6,6 @@ use App\Entity\User;
 use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
 use App\Repository\UserRoleRepository;
-use App\Repository\ZoneRepository;
 use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,7 +18,6 @@ final class BookingController extends AbstractController
 {
     public function __construct(
         private readonly FacilityRepository $facilityRepository,
-        private readonly ZoneRepository $zoneRepository,
         private readonly BookingService $bookingService,
         private readonly UserRoleRepository $userRoleRepository,
         private readonly BookingRepository $bookingRepository,
