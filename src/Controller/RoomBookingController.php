@@ -24,9 +24,7 @@ final class RoomBookingController extends AbstractController
     #[Route('/room/booking', name: 'app_room_booking')]
     public function roomBooking(): Response
     {
-        $setting = $this->settingsRepository->getSettings();
-
-        if (!$setting->isRoomBookingEnabled()) {
+        if (!$this->isGranted('FEATURE_ROOM_BOOKING')) {
             return $this->redirectToRoute('app_home_user');
         }
 
