@@ -6,5 +6,6 @@ enum BookingStatus: string
 {
     case PENDING = 'pending';
     case APPROVED = 'approved';
-    case REJECTED = 'rejected';
+    case DECLINED = 'declined';
+    case PAID = 'paid';
 }

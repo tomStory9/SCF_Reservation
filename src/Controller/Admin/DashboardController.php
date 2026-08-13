@@ -34,5 +34,6 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(PricingCrudController::class, 'Pricing', 'fa fa-money');
         yield MenuItem::linkTo(TimeSlotCrudController::class, 'Créneaux de reservation', 'fa fa-clock-o');
         yield MenuItem::linkTo(PendingUserCrudController::class, 'Utilisateurs en attente', 'fa fa-user-clock');
+        yield MenuItem::linkTo(PendingBookingCrudController::class, 'Réservations en attente', 'fa fa-book');
     }
 }

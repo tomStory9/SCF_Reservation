@@ -77,4 +77,35 @@ class MailerService
 
         $this->mailerInterface->send($email);
     }
+
+    public function sendBookingConfirmationEmail(User $user, Booking $booking): void
+    {
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($user->getEmail())
+            ->subject('Booking Confirmation')
+            ->htmlTemplate('mails/booking_confirmation.html.twig')
+            ->context([
+                'user' => $user,
+                'booking' => $booking,
+                'stripe_checkout_url' => $booking->getStripeCheckoutUrl(),
+            ]);
+
+        $this->mailerInterface->send($email);
+    }
+
+    public function sendBookingDeniedEmail(User $user, Booking $booking): void
+    {
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($user->getEmail())
+            ->subject('Booking Rejection')
+            ->htmlTemplate('mails/booking_rejected.html.twig')
+            ->context([
+                'user' => $user,
+                'booking' => $booking,
+            ]);
+
+        $this->mailerInterface->send($email);
+    }
 }

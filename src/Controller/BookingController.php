@@ -2,9 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Facility;
 use App\Entity\User;
-use App\Entity\Zone;
 use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
 use App\Repository\UserRoleRepository;
@@ -56,47 +54,6 @@ final class BookingController extends AbstractController
             'maxEndDate' => $maxEndDate,
             'remainingHours' => $remainingHours,
         ]);
-    }
-
-    #[Route('/facility/{id}/zones', name: 'app_booking_training_zone', methods: ['GET'])]
-    public function getTrainingZoneByFacility(Facility $facility): JsonResponse
-    {
-        $zones = $this->zoneRepository->getTrainingZonesByFacility($facility);
-
-        $zonesJson = [];
-        foreach ($zones as $zone) {
-            $zonesJson[] = [
-                'id' => $zone->getId(),
-                'name' => $zone->getName(),
-                'code' => $zone->getCode(),
-                'maxCapacity' => $zone->getMaxCapacity(),
-            ];
-        }
-
-        return new JsonResponse($zonesJson);
-    }
-
-    #[Route('zone/{id}/bookings', name: 'app_booking_by_zone', methods: ['GET'])]
-    public function getExistingBookingsByZone(Zone $zone): JsonResponse
-    {
-        $events = $this->bookingService->getBookingsByZoneForCalendar($zone);
-
-        return new JsonResponse($events);
-    }
-
-    #[IsGranted('ROLE_USER')]
-    #[Route('/zone/{id}/pricings', name: 'app_booking_pricings_by_zone', methods: ['GET'])]
-    public function getPricingsByZone(Zone $zone): JsonResponse
-    {
-        $user = $this->getUser();
-
-        if (!$user instanceof User) {
-            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
-        }
-
-        $pricingsData = $this->bookingService->getPrincingsByZone($zone, $user);
-
-        return new JsonResponse($pricingsData);
     }
 
     /**

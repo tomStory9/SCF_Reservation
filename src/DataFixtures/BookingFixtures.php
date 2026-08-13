@@ -100,6 +100,8 @@ class BookingFixtures extends Fixture implements DependentFixtureInterface
                 $booking->setEndDate($dateEnd);
                 $booking->setStartDate($dateStart);
                 $booking->setPrice($pricing->getFullPrice());
+                $booking->setTotalPrice($pricing->getFullPrice());
+                $booking->setEquipmentPrice(0);
 
                 $manager->persist($booking);
             }

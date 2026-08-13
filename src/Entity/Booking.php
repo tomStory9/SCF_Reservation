@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use App\Validator\NoBookingOverlap;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: BookingRepository::class)]
@@ -51,8 +53,28 @@ class Booking
     #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $CheckedOutAt = null;
 
-    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'])]
-    private ?Transaction $transactions = null;
+    #[ORM\OneToOne(mappedBy: 'booking', cascade: ['persist', 'remove'], )]
+    private ?Transaction $transaction = null;
+
+    /**
+     * @var Collection<int, BookingEquipment>
+     */
+    #[ORM\OneToMany(targetEntity: BookingEquipment::class, mappedBy: 'booking')]
+    private Collection $bookingEquipment;
+
+    #[ORM\Column(length: 25000, nullable: true)]
+    private ?string $StripeCheckoutUrl = null;
+
+    #[ORM\Column]
+    private ?int $equipmentPrice = null;
+
+    #[ORM\Column]
+    private ?int $TotalPrice = null;
+
+    public function __construct()
+    {
+        $this->bookingEquipment = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -191,24 +213,90 @@ class Booking
         return $this;
     }
 
-    public function getTransactions(): ?Transaction
+    public function getTransaction(): ?Transaction
     {
-        return $this->transactions;
+        return $this->transaction;
     }
 
-    public function setTransactions(?Transaction $transactions): static
+    public function setTransaction(?Transaction $transaction): static
     {
         // unset the owning side of the relation if necessary
-        if (null === $transactions && null !== $this->transactions) {
-            $this->transactions->setBooking(null);
+        if (null === $transaction && null !== $this->transaction) {
+            $this->transaction->setBooking(null);
         }
 
         // set the owning side of the relation if necessary
-        if (null !== $transactions && $transactions->getBooking() !== $this) {
-            $transactions->setBooking($this);
+        if (null !== $transaction && $transaction->getBooking() !== $this) {
+            $transaction->setBooking($this);
         }
 
-        $this->transactions = $transactions;
+        $this->transaction = $transaction;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, BookingEquipment>
+     */
+    public function getBookingEquipment(): Collection
+    {
+        return $this->bookingEquipment;
+    }
+
+    public function addBookingEquipment(BookingEquipment $bookingEquipment): static
+    {
+        if (!$this->bookingEquipment->contains($bookingEquipment)) {
+            $this->bookingEquipment->add($bookingEquipment);
+            $bookingEquipment->setBooking($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBookingEquipment(BookingEquipment $bookingEquipment): static
+    {
+        if ($this->bookingEquipment->removeElement($bookingEquipment)) {
+            // set the owning side to null (unless already changed)
+            if ($bookingEquipment->getBooking() === $this) {
+                $bookingEquipment->setBooking(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getStripeCheckoutUrl(): ?string
+    {
+        return $this->StripeCheckoutUrl;
+    }
+
+    public function setStripeCheckoutUrl(?string $StripeCheckoutUrl): static
+    {
+        $this->StripeCheckoutUrl = $StripeCheckoutUrl;
+
+        return $this;
+    }
+
+    public function getEquipmentPrice(): ?int
+    {
+        return $this->equipmentPrice;
+    }
+
+    public function setEquipmentPrice(int $equipmentPrice): static
+    {
+        $this->equipmentPrice = $equipmentPrice;
+
+        return $this;
+    }
+
+    public function getTotalPrice(): ?int
+    {
+        return $this->TotalPrice;
+    }
+
+    public function setTotalPrice(int $TotalPrice): static
+    {
+        $this->TotalPrice = $TotalPrice;
 
         return $this;
     }

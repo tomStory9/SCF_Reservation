@@ -206,3 +206,50 @@ checksums:
     status/no_booking/message: b716d67a26b7002817500983d5cc43d5
     status/unknown/label: 137b0496fc94e841018034d1bd637efd
     status/unknown/message: c23b6eaf7452668af199229f15f1ec35
+  dda8211c02efcf7ce2cfd0d1650c950c:
+    account/dashboard/title: 3e6b9b4312e65214e016eaa5b3c7fc0b
+    account/dashboard/booking_list: 699c209221cbe5cfcd277fbe5b6b1628
+    account/dashboard/booking_list_subtitle: a49c0a33b21e2a9b47b26ebe27b96c3c
+    account/dashboard/skip_to_content: eb16ae6461baa46f5ea8c2336f8dd8d6
+    account/dashboard/book_now: 828e90648c46db082c109c3f96f7f6f6
+    account/dashboard/new_booking: 6d6f7baba45429789780ebbb8e8f141a
+    account/dashboard/no_booking_title: 3b93cf409679034ba4385bbb1f9966bc
+    account/dashboard/no_booking_text: 710804de13475dffa13273109c09e06c
+    account/dashboard/booking: 7ad4a84d323e45d591e5a5cc3a1bfbea
+    account/dashboard/location_unavailable: 6ed430854f6289cdd629c025c8159c82
+    account/dashboard/guests: 9bf94bfce31c803272ffde499fafc205
+    account/dashboard/stay_period: cb7ab1905dd2391ba2dec1b1ad64151d
+    account/dashboard/from: ab3d800caf906c589a569920ff41496b
+    account/dashboard/to: bf64ab0e801f06322aa356699cb2cd89
+    account/dashboard/full_day: 1cebdf22bd1e03ca748875dc3eec2a20
+    account/dashboard/partial_day: ae98ec930390bfa5d8be2d46c1a01589
+    account/dashboard/equipment_count: 07c89aea15fcd5214fcae09ebc222cbd
+    account/dashboard/booking_pending_title: f362fa1c71d3bb2d1cd277c43d704bcf
+    account/dashboard/booking_pending_text: 18a8791c7e00751c50d64a025baa7b8a
+    account/dashboard/booking_approved_title: 4a8880913a8c7f1a02ae282c8d295b0b
+    account/dashboard/booking_approved_text: 50640725f518a7904386cf76c14656ee
+    account/dashboard/booking_cancelled_title: 1400801dd473ca3392c773ec619c65f5
+    account/dashboard/payment_confirmed_title: 4f699b50cd94b22415f0e2a7182b2530
+    account/dashboard/payment_confirmed_text: c9fbf9c737c259f9a639c080770b722d
+    account/dashboard/total_price: 9f1fb1874dc22fddf03122752fe8341b
+    account/dashboard/including_equipment: 8acfbdbfb9a9d837da232ea2702a6d66
+    account/dashboard/booking_price: 687ced2ff7634b921c67ea32ec0ebd82
+    account/dashboard/price_summary: 5a3ca1765f27ddfb189db00813d67add
+    account/dashboard/total: f60dc0a14e9b1bace656c644de25de5b
+    account/dashboard/view_details: e5bf6609157307f12dc29b8e58e8be30
+    account/dashboard/pay_now: 99aa250c2193d059c59d7e964aa14ac1
+    account/dashboard/proceed_to_payment: 5b44ca3d360d89377f8ed2c046f236b4
+    account/dashboard/payment_completed: 4005b67d5e62b0a3449707b4215fedab
+    account/dashboard/close: e2331ecf9ad1fa6cbd8d3fb0b16c3a27
+    account/dashboard/booking_information: 4b9f06c0a94805318788e83b5d5864e2
+    account/dashboard/status: a5589b2aaa813484df6442da30d7da1b
+    account/dashboard/number_of_people: 1eaa9799a0befe562064ad441e08ea27
+    account/dashboard/start_date: f10d7ce09d91d1fe25f1dda8ad4477d6
+    account/dashboard/end_date: 1785f2dc9d4f52fb29b60124fd1bee4b
+    account/dashboard/booking_type: 73370ff7ddfb69eab7f1f8720a532d8d
+    account/dashboard/created_date: 2e53a800282b3b97c722f68231ab3bc0
+    account/dashboard/reserved_equipment: 8a1d64c275d0bcf5bbb9ebba0d4206a7
+    account/dashboard/no_reserved_equipment: 5d2774c4c0dfa1feea466776e2e0d002
+    account/dashboard/equipment: e4258a0eda0735d38f60ed3d4f725e74
+    account/dashboard/quantity: 0b7863abdb351dcaef21b3fedb5c6048
+    account/dashboard/unit_price: bd1ccef9c1789db432e54f740d8f423b

@@ -3,10 +3,12 @@
 namespace App\Service;
 
 use App\Entity\Booking;
+use App\Entity\BookingEquipment;
 use App\Entity\User;
 use App\Entity\Zone;
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
+use App\Repository\EquipmentRepository;
 use App\Repository\PricingRepository;
 use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
@@ -22,6 +24,7 @@ readonly class BookingService
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator,
         private UserRoleRepository $userRoleRepository,
+        private EquipmentRepository $equipmentRepository,
     ) {
     }
 
@@ -186,6 +189,18 @@ readonly class BookingService
         if (count($errors) > 0) {
             throw new \Exception($errors[0]->getMessage());
         }
+
+        foreach ($data['equipments'] as $equipment) {
+            $bookingEquipment = new BookingEquipment();
+            $bookingEquipment->setEquipment($this->equipmentRepository->find($equipment['equipmentId']));
+            $bookingEquipment->setQuantity($equipment['quantity']);
+            $bookingEquipment->setTotalPrice($this->equipmentRepository->find($equipment['equipmentId'])->getUnitPrice() * $equipment['quantity']);
+            $bookingEquipment->setBooking($booking);
+            $this->entityManager->persist($bookingEquipment);
+            $booking->addBookingEquipment($bookingEquipment);
+        }
+        $booking->setEquipmentPrice($this->equipmentRepository->calculateTotalEquipmentPrice($booking));
+        $booking->setTotalPrice($booking->getPrice() + $booking->getEquipmentPrice());
 
         $this->entityManager->persist($booking);
         $this->entityManager->flush();

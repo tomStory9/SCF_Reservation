@@ -1,0 +1,68 @@
+account:
+    dashboard:
+        # Titres et sous-titres
+        title: 'Tableau de bord'
+        booking_list: 'Liste des réservations'
+        booking_list_subtitle: 'Consultez et gérez toutes vos réservations'
+
+        # Navigation
+        skip_to_content: 'Aller au contenu principal'
+        book_now: 'Réserver maintenant'
+        new_booking: 'Nouvelle réservation'
+
+        # États vides
+        no_booking_title: 'Aucune réservation'
+        no_booking_text: "Vous n'avez pas encore de réservations. Réservez votre première session dès maintenant !"
+
+        # Informations de réservation
+        booking: 'Réservation'
+        location_unavailable: 'Zone indisponible'
+        guests: 'voyageurs'
+        stay_period: 'Période de séjour'
+        from: 'Du'
+        to: 'au'
+        full_day: 'Journée complète'
+        partial_day: 'Demi-journée'
+        equipment_count: 'équipement(s)'
+
+        # Statuts de réservation (messages inline)
+        booking_pending_title: 'Réservation en attente de validation'
+        booking_pending_text: 'Vous recevrez les instructions de paiement après approbation.'
+
+        booking_approved_title: 'Votre réservation est approuvée'
+        booking_approved_text: 'Vous pouvez maintenant procéder au paiement.'
+
+        booking_cancelled_title: 'Réservation annulée'
+
+        payment_confirmed_title: 'Paiement confirmé'
+        payment_confirmed_text: 'Cette réservation a été payée avec succès.'
+
+        # Prix
+        total_price: 'Prix total'
+        including_equipment: 'Dont équipements :'
+        booking_price: 'Prix de la réservation'
+        price_summary: 'Résumé du prix'
+        total: 'Total'
+
+        # Actions
+        view_details: 'Voir les détails'
+        pay_now: 'Payer maintenant'
+        proceed_to_payment: 'Procéder au paiement'
+        payment_completed: 'Paiement effectué'
+        close: 'Fermer'
+
+        # Modal - Informations de réservation
+        booking_information: 'Informations de réservation'
+        status: 'Statut'
+        number_of_people: 'Nombre de personnes'
+        start_date: 'Date de début'
+        end_date: 'Date de fin'
+        booking_type: 'Type de réservation'
+        created_date: 'Date de création'
+
+        # Équipements
+        reserved_equipment: 'Équipements réservés'
+        no_reserved_equipment: 'Aucun équipement réservé.'
+        equipment: 'Équipement'
+        quantity: 'Quantité'
+        unit_price: 'Prix unitaire'

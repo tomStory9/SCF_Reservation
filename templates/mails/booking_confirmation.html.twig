@@ -1,0 +1,211 @@
+{# templates/mails/booking_confirmation.html.twig #}
+<!doctype html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="x-apple-disable-message-reformatting">
+
+    <title>予約確認</title>
+
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            background-color: #f4f6f8;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        body,
+        table,
+        td,
+        p,
+        a {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue",
+                "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, Arial, sans-serif;
+        }
+
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        img {
+            border: 0;
+            display: block;
+            max-width: 100%;
+        }
+
+        a {
+            color: #2563eb;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f4f6f8;
+            padding: 24px 12px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .header {
+            padding: 28px 24px;
+            background-color: #111827;
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .content {
+            padding: 32px 24px;
+            color: #1f2937;
+        }
+
+        .payment-box {
+            margin: 24px 0;
+            padding: 24px 20px;
+            border: 1px solid #dbeafe;
+            border-radius: 10px;
+            background-color: #eff6ff;
+            text-align: center;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 15px 24px;
+            border-radius: 8px;
+            background-color: #2563eb;
+            color: #ffffff !important;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.4;
+            text-decoration: none;
+        }
+
+        .fallback {
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.7;
+            word-break: break-all;
+        }
+
+        .footer {
+            padding: 20px 24px 28px;
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.7;
+            text-align: center;
+        }
+
+        @media screen and (max-width: 480px) {
+            .wrapper {
+                padding: 12px 8px;
+            }
+
+            .header {
+                padding: 24px 18px;
+            }
+
+            .content {
+                padding: 26px 18px;
+            }
+
+            .payment-box {
+                padding: 20px 14px;
+            }
+
+            .button {
+                display: block;
+                width: auto;
+                padding: 15px 18px;
+            }
+
+            .footer {
+                padding: 18px 18px 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <table role="presentation" width="100%" class="wrapper">
+        <tr>
+            <td align="center">
+                <table role="presentation" class="container">
+                    <tr>
+                        <td class="header">
+                            <h1 style="margin: 0; font-size: 24px; line-height: 1.4;">
+                                ご予約ありがとうございます
+                            </h1>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="content">
+                            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
+                                {{ user.name }} {{ user.lastname }} 様
+                            </p>
+
+                            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
+                                このたびはご予約いただき、誠にありがとうございます。
+                            </p>
+
+                            <p style="margin: 0; font-size: 16px; line-height: 1.8;">
+                                ご予約を確定するには、以下のボタンを押してお支払い手続きを完了してください。
+                            </p>
+
+                            <div class="payment-box">
+                                <p style="margin: 0 0 8px; color: #1e3a8a; font-size: 14px; line-height: 1.6;">
+                                    お支払い金額
+                                </p>
+
+                                <p style="margin: 0 0 18px; color: #111827; font-size: 24px; font-weight: bold; line-height: 1.4;">
+                                    {{ booking.Totalprice }}
+                                </p>
+
+                                <p style="margin: 0 0 18px; color: #1e3a8a; font-size: 16px; font-weight: bold; line-height: 1.6;">
+                                    お支払いはこちら
+                                </p>
+
+                                <a href="{{ stripe_checkout_url|e('html_attr') }}" class="button">
+                                    お支払い手続きへ進む
+                                </a>
+
+                                <p class="fallback">
+                                    ボタンが表示されない場合は、以下のリンクをタップしてください。<br>
+                                    <a href="{{ stripe_checkout_url|e('html_attr') }}">
+                                        {{ stripe_checkout_url|e }}
+                                    </a>
+                                </p>
+                            </div>
+
+                            <p style="margin: 0; color: #4b5563; font-size: 14px; line-height: 1.8;">
+                                お支払いが完了すると、予約が確定します。<br>
+                                ご不明な点がございましたら、このメールに返信してお問い合わせください。
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="footer">
+                            このメールはご予約のお手続きに関する重要なお知らせです。<br>
+                            心当たりがない場合は、リンクを開かずに破棄してください。
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
