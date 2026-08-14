@@ -95,11 +95,19 @@ class BookingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function hasOverlap($zone, \DateTimeInterface $start, \DateTimeInterface $end, ?int $excludeBookingId = null): bool
+    public function hasOverlap($zone, \DateTimeInterface $start, \DateTimeInterface $end, ?int $excludeBookingId = null, array $conflictingCodes = []): bool
     {
         $qb = $this->createQueryBuilder('b')
-            ->where('b.zone = :zone')
-            ->andWhere('b.startDate < :end')
+            ->join('b.zone', 'z');
+
+        if (!empty($conflictingCodes)) {
+            $qb->where('z = :zone OR z.code IN (:conflictingCodes)')
+                ->setParameter('conflictingCodes', $conflictingCodes);
+        } else {
+            $qb->where('z = :zone');
+        }
+
+        $qb->andWhere('b.startDate < :end')
             ->andWhere('b.endDate > :start')
             ->andWhere('b.bookingStatus = :status')
             ->setParameter('zone', $zone)
@@ -156,5 +164,24 @@ class BookingRepository extends ServiceEntityRepository
         }
 
         return max(0.0, $allocatedHours - $usedHours);
+    }
+
+    public function getBookingsForZoneAndConflicts(Zone $zone, array $conflictingCodes = []): array
+    {
+        $qb = $this->createQueryBuilder('b')
+            ->join('b.zone', 'z')
+            ->andWhere('b.bookingStatus = :status')
+            ->setParameter('status', BookingStatus::APPROVED);
+
+        if (!empty($conflictingCodes)) {
+            $qb->andWhere('z = :zone OR z.code IN (:conflictingCodes)')
+                ->setParameter('zone', $zone)
+                ->setParameter('conflictingCodes', $conflictingCodes);
+        } else {
+            $qb->andWhere('z = :zone')
+                ->setParameter('zone', $zone);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

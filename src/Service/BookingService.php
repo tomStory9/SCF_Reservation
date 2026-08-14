@@ -25,36 +25,51 @@ readonly class BookingService
         private ValidatorInterface $validator,
         private UserRoleRepository $userRoleRepository,
         private EquipmentRepository $equipmentRepository,
+        private KodaOverlapService $kodaOverlapService,
     ) {
     }
 
     public function getBookingsByZoneForCalendar(Zone $zone): array
     {
-        $bookings = $this->bookingRepository->getBookingsByZone($zone);
+        $conflictingCodes = $this->kodaOverlapService->getConflictingZoneCodes($zone);
+
+        $bookings = $this->bookingRepository->getBookingsForZoneAndConflicts($zone, $conflictingCodes);
+
         $events = [];
         foreach ($bookings as $booking) {
             $isFullDay = $booking->isFullDay();
 
+            $isConflict = $booking->getZone() !== $zone;
+
             if ($isFullDay) {
                 $format = 'Y-m-d';
-                $title = 'All day';
+                $title = $isConflict ? 'Indisponible (Autre configuration)' : 'All day';
             } else {
                 $format = 'Y-m-d\TH:i:s';
-
-                $title = sprintf(
+                $timeStr = sprintf(
                     '%s - %s',
                     $booking->getStartDate()->format('gA'),
                     $booking->getEndDate()->format('gA')
                 );
+                $title = $isConflict ? 'Indisponible - '.$timeStr : $timeStr;
             }
 
-            $events[] = [
+            $event = [
                 'id' => (string) $booking->getId(),
                 'title' => $title,
                 'start' => $booking->getStartDate()->format($format),
                 'end' => $booking->getEndDate()->format($format),
                 'allDay' => $isFullDay,
             ];
+
+            if ($isConflict) {
+                $event['color'] = '#cbd5e1';
+                $event['textColor'] = '#475569';
+
+                $event['interactive'] = false;
+            }
+
+            $events[] = $event;
         }
 
         return $events;
