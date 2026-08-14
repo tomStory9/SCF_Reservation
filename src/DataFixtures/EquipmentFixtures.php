@@ -15,7 +15,6 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
         $zoneRefs = [
             ZoneFixtures::KUMA_CUBE,
             ZoneFixtures::KUMA_LAB,
-            ZoneFixtures::KUMA_YADO,
             ZoneFixtures::KODA1A,
             ZoneFixtures::KODA1B,
             ZoneFixtures::KODA1C,
@@ -40,12 +39,6 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
                 ['name' => 'Trapèze fixe', 'price' => 18000, 'maxQty' => 2],
                 ['name' => 'Corde lisse', 'price' => 8500, 'maxQty' => 3],
                 ['name' => 'Anneaux de gymnastique', 'price' => 4500, 'maxQty' => 6],
-            ],
-
-            // KUMA YADO - Zone hébergement
-            ZoneFixtures::KUMA_YADO => [
-                ['name' => 'Barre de danse portable', 'price' => 6000, 'maxQty' => 4],
-                ['name' => 'Tapis d\'échauffement', 'price' => 2500, 'maxQty' => 8],
             ],
 
             // KODA zones A-D - Zones modulaires
@@ -78,7 +71,6 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
                 ['name' => 'Planche d\'équilibre', 'price' => 3200, 'maxQty' => 6],
             ],
 
-            // KODA FULL - Espace complet
             ZoneFixtures::KODA_FULL => [
                 ['name' => 'Portique trapèze complet', 'price' => 45000, 'maxQty' => 1],
                 ['name' => 'Barre russe', 'price' => 22000, 'maxQty' => 2],
