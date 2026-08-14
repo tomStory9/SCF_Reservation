@@ -1,199 +1,468 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-	{{ 'account.reservation.title'|trans }}
+    {{ 'account.reservation.title'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
-	{{ parent() }}
-	{{ encore_entry_link_tags('reservation') }}
+    {{ parent() }}
+    {{ encore_entry_link_tags('reservation') }}
 {% endblock %}
 
 {% block body %}
-	<div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
-		{% include 'user/_partials/_navbar.html.twig' %}
 
-		<div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
-			<div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
-				<section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-					<div class="mb-5">
-						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
-							Planning
-						</p>
-						<h2 class="text-xl font-semibold text-secondary">
-							Calendrier des réservations
-						</h2>
-					</div>
 
-					<div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-						<div>
-							<p class="text-sm font-semibold text-secondary">Mode de réservation</p>
-							<div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
-								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
-									Par heure
-								</button>
+    <script id="calendar-config" type="application/json">
+        {{
+            {
+                maxDate: maxEndDate|date('Y-m-d'),
 
-								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
-									Par période
-								</button>
-							</div>
-						</div>
+                endpoints: {
+                    zones: '/facility/{facilityId}/zones',
+                    pricings: '/zone/{zoneId}/pricings',
+                    bookings: '/zone/{zoneId}/bookings',
+                    equipments: '/zone/{zoneId}/equipments',
+                    createBooking: '/booking/create'
+                },
 
-						<p class="text-sm text-state">
-							<span class="font-semibold text-secondary">Mode actif :</span>
-							<span id="active-booking-mode-label" class="font-semibold text-primary">Par heure</span>
-						</p>
-					</div>
+                texts: {
+                    zonePlaceholder: 'Sélectionnez une zone...',
+                    noZoneAvailable: 'Aucune zone disponible',
+                    undefined: 'Non défini',
 
-					<div class="flex justify-center">
-                        <div id="user-booking-data" data-free-hours="{{ remainingHours }}" class="hidden"></div>
-                        <div id="calendar-config" data-max-date="{{ maxEndDate }}" class="hidden"></div>
-						<div id="calendar-holder" class="reservation-calendar w-full max-w-[940px]"></div>
-					</div>
+                    bookingByHour: 'Par heure',
+                    bookingByPeriod: 'Par période',
 
-					<div id="calendar-legend" class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4">
-						<p class="text-sm font-semibold text-secondary">
-							Lecture du taux d’occupation
-						</p>
+                    today: 'Aujourd’hui',
+                    month: 'Mois',
+                    week: 'Semaine',
 
-						<div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-slate-400"></span>
-								<span class="text-sm text-secondary">100% occupé : grisé</span>
-							</div>
+                    selectedDay: 'Jour sélectionné :',
+                    selectedPeriod: 'Réservation par période :',
+                    hourlySlot: 'Créneau horaire :',
+                    fullDaySelection: 'Sélection journée complète :',
 
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-red-500"></span>
-								<span class="text-sm text-secondary">75% occupé : rouge</span>
-							</div>
+                    date: 'Date :',
+                    hours: 'Horaires :',
+                    duration: 'Durée :',
+                    location: 'Lieu :',
 
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-orange-400"></span>
-								<span class="text-sm text-secondary">50% occupé : orange</span>
-							</div>
+                    morning: 'Matin',
+                    afternoon: 'Après-midi',
+                    evening: 'Soir',
 
-							<div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-								<span class="h-4 w-4 rounded-full bg-yellow-300"></span>
-								<span class="text-sm text-secondary">25% occupé : jaune</span>
-							</div>
-						</div>
+                    periodModeHelp: 'Mode de réservation actif : par période. Clique directement dans une zone Matin, Après-midi ou Soir dans la vue semaine.',
+                    hourModeHelp: 'Mode de réservation actif : par heure. Tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement.',
+                    noSelection: 'Aucune sélection pour le moment.',
 
-						<ul class="mt-4 space-y-2 text-sm text-state">
-							<li>- En vue mois, clique sur un jour pour ouvrir la vue semaine sur cette date.</li>
-							<li>- En vue semaine, la ligne all-day permet une réservation journée complète seulement si la journée est vide.</li>
-							<li>- En mode heure, tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement avec un autre événement.</li>
-							<li>- En mode période, la période choisie s’affiche comme un vrai bloc dans le calendrier.</li>
-						</ul>
-					</div>
-				</section>
+                    selectSlot: 'Veuillez sélectionner un créneau sur le calendrier.',
+                    fullDayConflict: 'Impossible de créer une réservation journée complète : un événement existe déjà sur cette journée.',
+                    periodConflict: 'Impossible de réserver une période : un événement existe déjà sur cette journée.',
+                    blockedDay: 'Impossible de réserver des heures sur cette journée : elle est bloquée.',
+                    overlappingEvent: 'Impossible de créer ce créneau : il chevauche déjà un événement existant.',
 
-				<aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-					<div class="border-b border-slate-200">
-						<nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="Lieux">
+                    loading: 'Enregistrement...',
+                    submitBooking: 'Réserver le créneau',
+
+                    bookingErrorTitle: 'Erreur',
+                    bookingError: 'Impossible d’enregistrer la réservation.',
+
+                    networkErrorTitle: 'Erreur réseau',
+                    networkError: 'Une erreur est survenue lors de la communication avec le serveur.',
+
+                    pricingLoadingError: 'Erreur lors du chargement des tarifs',
+                    zonesLoadingError: 'Erreur lors de la récupération des zones',
+                    bookingsLoadingError: 'Erreur lors du chargement des réservations',
+                    equipmentsLoadingError: 'Erreur lors du chargement des équipements',
+
+                    loadingEquipments: 'Chargement des équipements...',
+                    noEquipmentsAvailable: 'Aucun équipement disponible pour cette zone.',
+                    unavailableEquipment: 'Indisponible',
+                    availableEquipment: 'Disponible',
+                    maximum: 'Maximum',
+                    equipmentTotal: 'Total équipements :',
+                    grandTotal: 'Total général :',
+
+                    usedHours: 'h utilisées sur 12h',
+                    selectedPeriodEvent: 'Période sélectionnée · {period}'
+                }
+            }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
+        }}
+    </script>
+
+    <script id="user-booking-data" type="application/json">
+        {{
+            {
+                freeHours: remainingHours|default(0)
+            }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
+        }}
+    </script>
+
+    <div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
+        {% include 'user/_partials/_navbar.html.twig' %}
+
+        <div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
+            <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
+
+
+                <section class="flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+
+                    <div class="mb-5 flex items-center justify-between">
+                        <div>
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
+                                Planning
+                            </p>
+
+                            <h2 class="text-xl font-semibold text-secondary">
+                                Calendrier des réservations
+                            </h2>
+                        </div>
+
+                        <div class="hidden text-right lg:block">
+                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
+                                Mode actif
+                            </p>
+
+                            <p class="text-sm text-state">
+                                <span
+                                    id="active-booking-mode-label"
+                                    class="font-semibold text-primary"
+                                >
+                                    Par heure
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                        <div>
+                            <p class="text-sm font-semibold text-secondary">
+                                Mode de réservation
+                            </p>
+
+                            <div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
+                                <button
+                                    type="button"
+                                    class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary"
+                                    data-mode="hour"
+                                    aria-pressed="true"
+                                >
+                                    Par heure
+                                </button>
+
+                                <button
+                                    type="button"
+                                    class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary"
+                                    data-mode="period"
+                                    aria-pressed="false"
+                                >
+                                    Par période
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="text-sm text-state lg:hidden">
+                            <span class="font-semibold text-secondary">
+                                Mode actif :
+                            </span>
+
+                            <span
+                                id="active-booking-mode-label-mobile"
+                                class="font-semibold text-primary"
+                            >
+                                Par heure
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-1 flex-col">
+                        <div class="flex justify-center">
+                            <div
+                                id="calendar-holder"
+                                class="reservation-calendar w-full max-w-[940px]"
+                            ></div>
+                        </div>
+
+                        <div
+                            id="calendar-legend"
+                            class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4"
+                        >
+                            <p class="text-sm font-semibold text-secondary">
+                                Lecture du taux d’occupation
+                            </p>
+
+                            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-slate-400"></span>
+                                    <span class="text-sm text-secondary">
+                                        100% occupé : grisé
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-red-500"></span>
+                                    <span class="text-sm text-secondary">
+                                        75% occupé : rouge
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-orange-400"></span>
+                                    <span class="text-sm text-secondary">
+                                        50% occupé : orange
+                                    </span>
+                                </div>
+
+                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
+                                    <span class="h-4 w-4 rounded-full bg-yellow-300"></span>
+                                    <span class="text-sm text-secondary">
+                                        25% occupé : jaune
+                                    </span>
+                                </div>
+                            </div>
+
+                            <ul class="mt-4 space-y-2 text-sm text-state">
+                                <li>
+                                    - En vue mois, clique sur un jour pour ouvrir la vue semaine sur cette date.
+                                </li>
+
+                                <li>
+                                    - En vue semaine, la ligne all-day permet une réservation journée complète seulement si la journée est vide.
+                                </li>
+
+                                <li>
+                                    - En mode heure, tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure.
+                                </li>
+
+                                <li>
+                                    - En mode période, la période choisie s’affiche comme un bloc dans le calendrier.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <aside class="flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+
+                    <div class="mb-5 border-b border-slate-200">
+                        <nav
+                            class="-mb-px flex w-full flex-wrap justify-evenly gap-2 sm:gap-3"
+                            aria-label="Lieux"
+                        >
                             {% for facility in facilities %}
                                 {% set isActive = loop.first %}
 
-                                <button type="button"
-                                        class="location-tab rounded-t-xl border px-5 py-3 text-sm font-semibold transition {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}"
-                                        data-location="{{ facility.id }}"
-                                        aria-selected="{{ isActive ? 'true' : 'false' }}">
+                                <button
+                                    type="button"
+                                    class="location-tab rounded-t-xl border px-5 py-3 text-sm font-semibold transition {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}"
+                                    data-location="{{ facility.id }}"
+                                    aria-selected="{{ isActive ? 'true' : 'false' }}"
+                                >
                                     {{ facility.name }}
                                 </button>
                             {% endfor %}
-						</nav>
-					</div>
+                        </nav>
+                    </div>
 
-					<div class="rounded-b-2xl border border-t-0 border-slate-200 bg-white p-6">
-						<div class="mb-6">
-							<p class="text-base font-semibold text-secondary">
-								Informations du lieu
-							</p>
-							<p class="mt-2 text-sm text-state">
-								Choisis d’abord le lieu et le mode de réservation, puis termine la sélection dans le calendrier.
-							</p>
-						</div>
+                    <div class="flex flex-1 flex-col rounded-b-2xl rounded-tr-2xl border border-t-0 border-slate-200 bg-white p-6">
 
-						<div class="mb-6">
-                            <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 mb-6">
+                        <div class="mb-6">
+                            <p class="text-base font-semibold text-secondary">
+                                Informations du lieu
+                            </p>
+
+                            <p class="mt-2 text-sm text-state">
+                                Choisis d’abord le lieu et le mode de réservation, puis termine la sélection dans le calendrier.
+                            </p>
+                        </div>
+
+                        <div class="mb-6">
+                            <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
 
                                 <div>
-                                    <label for="zone-select" class="block mb-2 text-sm font-semibold text-secondary">
+                                    <label
+                                        for="zone-select"
+                                        class="mb-2 block text-sm font-semibold text-secondary"
+                                    >
                                         Zone sélectionnée :
                                     </label>
-                                    <select id="zone-select" name="zone" class="w-full">
-                                        <option value="">Chargement des zones...</option>
+
+                                    <select
+                                        id="zone-select"
+                                        name="zone"
+                                        class="w-full"
+                                    >
+                                        <option value="">
+                                            Chargement des zones...
+                                        </option>
                                     </select>
                                 </div>
 
                                 <div>
-                                    <label for="guest-count-input" class="block mb-2 text-sm font-semibold text-secondary">
+                                    <label
+                                        for="guest-count-input"
+                                        class="mb-2 block text-sm font-semibold text-secondary"
+                                    >
                                         Nombre de personnes :
                                     </label>
+
                                     <input
                                         type="number"
                                         id="guest-count-input"
                                         name="guest_count"
                                         min="1"
                                         value="1"
-                                        style="border: 1px solid #d1d5db"
-                                        class="block w-full h-[35px] rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                                        class="block h-[35px] w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                                     >
                                 </div>
-
                             </div>
 
-							<p class="mt-4 text-sm font-semibold text-secondary">Description</p>
-							<p id="location-description" class="mt-2 text-sm leading-6 text-state">
-								Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.
-							</p>
-						</div>
+                            <p class="mt-4 text-sm font-semibold text-secondary">
+                                Description
+                            </p>
 
-						<div class="mb-6 border-b border-slate-200 pb-3">
-							<div class="flex flex-wrap items-center gap-6 text-sm">
-								<button type="button" class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary" data-mode="hour" aria-pressed="true">
-									Par heure
-								</button>
+                            <p
+                                id="location-description"
+                                class="mt-2 text-sm leading-6 text-state"
+                            >
+                                Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.
+                            </p>
+                        </div>
 
-								<button type="button" class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary" data-mode="period" aria-pressed="false">
-									Par période
-								</button>
-							</div>
-						</div>
+                        <div class="mb-6 border-b border-slate-200 pb-3">
+                            <div class="flex flex-wrap items-center gap-6 text-sm">
 
-						<div class="min-h-[360px] flex flex-col">
-							<p class="text-base font-semibold text-secondary">Début du formulaire</p>
-							<p class="mt-2 text-sm text-state">
-								La sélection finale se fait dans le calendrier. Ce panneau affiche le récapitulatif avant l’envoi.
-							</p>
+                                <button
+                                    type="button"
+                                    class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary"
+                                    data-mode="hour"
+                                    aria-pressed="true"
+                                >
+                                    Par heure
+                                </button>
 
-							<div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
-								Aucune sélection pour le moment.
-							</div>
+                                <button
+                                    type="button"
+                                    class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary"
+                                    data-mode="period"
+                                    aria-pressed="false"
+                                >
+                                    Par période
+                                </button>
+                            </div>
+                        </div>
 
-                            <div id="price-container" class="hidden mt-4 pt-4">
+                        <div class="flex flex-1 flex-col">
+                            <p class="text-base font-semibold text-secondary">
+                                Récapitulatif
+                            </p>
+
+                            <p class="mt-2 text-sm text-state">
+                                La sélection finale se fait dans le calendrier. Ce panneau affiche le récapitulatif avant l’envoi.
+                            </p>
+
+                            <div
+                                id="selection-preview"
+                                class="mt-5 text-sm leading-6 text-state"
+                            >
+                                Aucune sélection pour le moment.
+                            </div>
+
+                            <div
+                                id="price-container"
+                                class="mt-4 hidden border-t border-slate-200 pt-4"
+                            >
                                 <p class="text-sm text-state">
-                                    <span class="font-semibold text-secondary">Tarif heures réservées :</span>
-                                    <span id="price-display" class="text-base font-bold text-primary">0 ¥</span>
+                                    <span class="font-semibold text-secondary">
+                                        Tarif :
+                                    </span>
+
+                                    <span
+                                        id="price-display"
+                                        class="text-base font-bold text-primary"
+                                    >
+                                        0 ¥
+                                    </span>
                                 </p>
                             </div>
 
-                            <div id="button_submit_booking" class="mt-auto pt-6">
+                            <div
+                                id="equipment-section"
+                                class="mt-6"
+                            >
+                                <div class="flex items-center justify-between gap-3">
+                                    <p class="text-sm font-semibold text-secondary">
+                                        Équipements optionnels
+                                    </p>
+
+                                    <p class="text-right text-xs text-state">
+                                        Disponibilité calculée selon le créneau choisi.
+                                    </p>
+                                </div>
+
+                                <div
+                                    id="equipment-list"
+                                    class="mt-3 overflow-hidden divide-y divide-slate-200 rounded-xl border border-slate-200 bg-slate-50"
+                                >
+                                    <p class="px-3 py-2 text-xs text-state">
+                                        Sélectionne une zone et un créneau pour voir les équipements disponibles.
+                                    </p>
+                                </div>
+
+                                <div
+                                    id="equipment-total-container"
+                                    class="mt-3 hidden items-center justify-between text-sm"
+                                >
+                                    <span class="font-semibold text-secondary">
+                                        Total équipements :
+                                    </span>
+
+                                    <span
+                                        id="equipment-total-display"
+                                        class="text-base font-bold text-primary"
+                                    >
+                                        0 ¥
+                                    </span>
+                                </div>
+
+                                <div
+                                    id="grand-total-container"
+                                    class="mt-2 hidden items-center justify-between text-sm"
+                                >
+                                    <span class="font-semibold text-secondary">
+                                        Total général :
+                                    </span>
+
+                                    <span
+                                        id="grand-total-display"
+                                        class="text-lg font-bold text-secondary"
+                                    >
+                                        0 ¥
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div
+                                id="button_submit_booking"
+                                class="mt-6 pt-2"
+                            >
                                 <button
                                     id="submit_booking"
+                                    type="button"
                                     class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg"
                                 >
                                     Réserver le créneau
                                 </button>
                             </div>
-						</div>
-					</div>
-				</aside>
-			</div>
-		</div>
-	</div>
+                        </div>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
-	{{ parent() }}
-	{{ encore_entry_script_tags('reservation') }}
+    {{ parent() }}
+    {{ encore_entry_script_tags('reservation') }}
 {% endblock %}

@@ -72,7 +72,6 @@ class EquipmentFixtures extends Fixture implements DependentFixtureInterface
                 ['name' => 'Planche d\'équilibre', 'price' => 3200, 'maxQty' => 6],
             ],
 
-            // KODA FULL - Espace complet
             ZoneFixtures::KODA_FULL => [
                 ['name' => 'Portique trapèze complet', 'price' => 45000, 'maxQty' => 1],
                 ['name' => 'Barre russe', 'price' => 22000, 'maxQty' => 2],
