@@ -36,8 +36,8 @@ class BookingCrudController extends AbstractCrudController
                 'class' => BookingStatus::class,
             ])
             ->formatValue(fn ($value, $entity) => $value?->value);
-        yield DateTimeField::new('CheckedInAt', 'admin.field.created_date');
-        yield DateTimeField::new('CheckedOutAt', 'admin.field.created_date');
+        yield DateTimeField::new('CheckedInAt', 'admin.field.checked_in_at');
+        yield DateTimeField::new('CheckedOutAt', 'admin.field.checked_out_at');
         yield DateTimeField::new('createdDate', 'admin.field.created_date');
     }
 }
