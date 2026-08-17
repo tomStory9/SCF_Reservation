@@ -25,6 +25,8 @@ readonly class BookingService
         private ValidatorInterface $validator,
         private UserRoleRepository $userRoleRepository,
         private EquipmentRepository $equipmentRepository,
+        private StripePaiementService $stripePaymentService,
+        private MailerService $mailerService
     ) {
     }
 
@@ -202,6 +204,31 @@ readonly class BookingService
         $booking->setEquipmentPrice($this->equipmentRepository->calculateTotalEquipmentPrice($booking));
         $booking->setTotalPrice($booking->getPrice() + $booking->getEquipmentPrice());
 
+        $this->entityManager->persist($booking);
+        $this->entityManager->flush();
+    }
+
+    public function approveBooking(Booking $booking): void
+    {
+        if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
+            throw new \Exception('La réservation n\'est pas en attente de validation.');
+        }
+
+        $booking->setBookingStatus(BookingStatus::APPROVED);
+        $booking->setStripeCheckoutUrl($this->stripePaymentService->createPaymentLink($booking->getTotalPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
+        $this->mailerService->sendBookingConfirmationEmail($booking->getUserBooking(), $booking);
+        $this->entityManager->persist($booking);
+        $this->entityManager->flush();
+    }
+
+    public function declineBooking(Booking $booking): void
+    {
+        if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
+            throw new \Exception('La réservation n\'est pas en attente de validation.');
+        }
+
+        $booking->setBookingStatus(BookingStatus::DECLINED);
+        $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking);
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
     }

@@ -157,4 +157,18 @@ class BookingRepository extends ServiceEntityRepository
 
         return max(0.0, $allocatedHours - $usedHours);
     }
+
+    public function findBookingsByMonth(int $year, int $month): array
+    {
+        $startOfMonth = new \DateTimeImmutable("$year-$month-01 00:00:00");
+        $endOfMonth = $startOfMonth->modify('first day of next month');
+
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.startDate >= :startOfMonth')
+            ->andWhere('b.startDate < :endOfMonth')
+            ->setParameter('startOfMonth', $startOfMonth)
+            ->setParameter('endOfMonth', $endOfMonth)
+            ->getQuery()
+            ->getResult();
+    }
 }

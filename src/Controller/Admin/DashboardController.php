@@ -35,5 +35,10 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(TimeSlotCrudController::class, 'Créneaux de reservation', 'fa fa-clock-o');
         yield MenuItem::linkTo(PendingUserCrudController::class, 'Utilisateurs en attente', 'fa fa-user-clock');
         yield MenuItem::linkTo(PendingBookingCrudController::class, 'Réservations en attente', 'fa fa-book');
+        yield MenuItem::linkToRoute(
+            'Calendrier des réservations',
+            'fa fa-calendar',
+            'admin_booking_calendar'
+        );
     }
 }
