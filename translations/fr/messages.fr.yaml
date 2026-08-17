@@ -134,6 +134,7 @@ admin:
     period: "Période"
     name: "Nom"
     type: "Type"
+    user_status: "Statut de l'utilisateur"
     max_capacity: "Capacité maximale"
   filter:
     time_slot: "Créneau horaire"
