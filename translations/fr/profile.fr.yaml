@@ -75,6 +75,19 @@ account:
         unit_price: 'Prix unitaire'
         date_time: '%date% à %time%'
 
+    profile:
+        section: 'Profil'
+        lastname: 'Nom'
+        firstname: 'Prénom'
+        email: 'Adresse e-mail'
+        phone: 'Téléphone'
+        company: 'Compagnie de cirque'
+        verified: 'Vérifié'
+        pending: 'En attente'
+        not_provided: 'Non renseignée'
+
+
+
 booking:
     status:
         pending: 'En attente'
