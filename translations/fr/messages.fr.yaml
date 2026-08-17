@@ -137,7 +137,6 @@ admin:
     name: "Nom"
     type: "Type"
     user_status: "Statut de l'utilisateur"
-    max_capacity: "Capacité maximale"
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"
