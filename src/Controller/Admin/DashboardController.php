@@ -185,6 +185,11 @@ class DashboardController extends AbstractDashboardController
             ->generateUrl();
 
         yield MenuItem::linkToUrl('admin.menu.parametre', 'fas fa-cogs', $url);
+        yield MenuItem::linkToRoute(
+            'Calendrier des réservations',
+            'fa fa-calendar',
+            'admin_booking_calendar'
+        );
     }
 
     /**

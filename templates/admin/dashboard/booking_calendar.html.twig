@@ -1,0 +1,208 @@
+{% extends '@!EasyAdmin/layout.html.twig' %}
+
+
+{% block title %}
+    Calendrier des réservations
+{% endblock %}
+
+
+{% block head_stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('admin_booking_calendar_css') }}
+{% endblock %}
+
+
+{% block main %}
+    <main class="booking-calendar-page">
+        <div class="booking-calendar-shell">
+            <header class="booking-calendar-header">
+                <div>
+                    <h1>Calendrier des réservations</h1>
+
+                    <p>
+                        Le titre indique la zone. La couleur indique le statut de la réservation.
+                    </p>
+                </div>
+
+                <div class="booking-calendar-filter">
+                    <label for="zone-filter">
+                        Filtrer par zone
+                    </label>
+
+                    <select id="zone-filter">
+                        <option value="">
+                            Toutes les zones
+                        </option>
+
+                        {% for zone in zones %}
+                            <option value="{{ zone.id }}">
+                                {{ zone.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </header>
+
+            <div class="booking-calendar-layout">
+                <aside class="booking-calendar-sidebar">
+                    <section class="booking-side-card">
+                        <h2>Statuts</h2>
+
+                        <div class="booking-legend-item">
+                            <span class="booking-status-dot booking-status-confirmed"></span>
+                            <span>Approuvée</span>
+                        </div>
+
+                        <div class="booking-legend-item">
+                            <span class="booking-status-dot booking-status-pending"></span>
+                            <span>En attente</span>
+                        </div>
+
+                        <div class="booking-legend-item">
+                            <span class="booking-status-dot booking-status-refused"></span>
+                            <span>Refusée</span>
+                        </div>
+                    </section>
+
+                    <section class="booking-side-card">
+                        <h2>Utilisation</h2>
+
+                        <ul>
+                            <li>La zone apparaît entre crochets dans le titre.</li>
+                            <li>Utilise la vue semaine pour repérer les réservations simultanées.</li>
+                            <li>Les demandes en attente sont affichées avec une opacité de 50 %.</li>
+                            <li>Clique sur une réservation pour afficher son détail.</li>
+                        </ul>
+                    </section>
+                </aside>
+
+                <section class="booking-calendar-wrapper">
+                    <div id="booking-calendar"></div>
+                </section>
+            </div>
+        </div>
+    </main>
+
+    <dialog id="booking-modal" class="booking-modal">
+        <div class="booking-modal-header">
+            <div>
+                <p class="booking-modal-eyebrow">
+                    Détail de la demande
+                </p>
+
+                <h2>Détails de la réservation</h2>
+            </div>
+
+            <button
+                type="button"
+                class="booking-modal-close"
+                data-booking-modal-close
+                aria-label="Fermer la fenêtre"
+            >
+                ×
+            </button>
+        </div>
+
+        <div class="booking-modal-body">
+            <dl class="booking-detail-grid">
+                <div>
+                    <dt>ID</dt>
+                    <dd id="modal-booking-id">-</dd>
+                </div>
+
+                <div>
+                    <dt>Statut</dt>
+                    <dd id="modal-booking-status">-</dd>
+                </div>
+
+                <div>
+                    <dt>Utilisateur</dt>
+                    <dd id="modal-booking-user">-</dd>
+                </div>
+
+                <div>
+                    <dt>Zone</dt>
+                    <dd id="modal-booking-zone">-</dd>
+                </div>
+
+                <div>
+                    <dt>Début</dt>
+                    <dd id="modal-booking-start">-</dd>
+                </div>
+
+                <div>
+                    <dt>Fin</dt>
+                    <dd id="modal-booking-end">-</dd>
+                </div>
+
+                <div>
+                    <dt>Nombre de guests</dt>
+                    <dd id="modal-booking-guest-count">-</dd>
+                </div>
+
+                <div>
+                    <dt>Prix total</dt>
+                    <dd id="modal-booking-total-price">-</dd>
+                </div>
+
+                <div>
+                    <dt>Prix équipements</dt>
+                    <dd id="modal-booking-equipment-price">-</dd>
+                </div>
+
+                <div>
+                    <dt>Journée complète</dt>
+                    <dd id="modal-booking-full-day">-</dd>
+                </div>
+
+                <div class="booking-detail-grid-full">
+                    <dt>Équipements</dt>
+                    <dd id="modal-booking-equipment">-</dd>
+                </div>
+
+            </dl>
+        </div>
+
+        <div class="booking-modal-footer">
+            <button
+                type="button"
+                class="booking-modal-button booking-modal-button-close"
+                data-booking-modal-close
+            >
+                Fermer
+            </button>
+
+            <button
+                type="button"
+                id="booking-decline-button"
+                class="booking-modal-button booking-modal-button-decline"
+            >
+                Refuser
+            </button>
+
+            <button
+                type="button"
+                id="booking-approve-button"
+                class="booking-modal-button booking-modal-button-approve"
+            >
+                Accepter
+            </button>
+        </div>
+    </dialog>
+{% endblock %}
+
+
+{% block body_javascript %}
+    {{ parent() }}
+
+    <script>
+        window.bookingCalendarBookings = {{ bookings|json_encode|raw }};
+        window.bookingCalendarConfig = {
+            currentYear: {{ currentYear }},
+            currentMonth: {{ currentMonth }},
+            calendarUrl: '{{ path('admin_booking_calendar') }}'
+        };
+    </script>
+
+    {{ encore_entry_script_tags('admin_booking_calendar') }}
+{% endblock %}

@@ -21,6 +21,8 @@ Encore
      * and one CSS file (e.g. app.css) if your JavaScript imports CSS.
      */
     .addEntry('app', './assets/app.js')
+    .addEntry('admin_booking_calendar_css', './assets/styles/admin-booking-calendar.css')
+    .addEntry('admin_booking_calendar', './assets/js/admin/booking-calendar.js')
     .addEntry('reservation', './assets/js/booking-calendar.js')
     .addEntry('room_reservation', './assets/js/room-reservation.js')
     .addEntry('admin_dashboard', './assets/js/admin-dashboard.js')
