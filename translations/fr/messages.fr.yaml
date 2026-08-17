@@ -124,6 +124,8 @@ admin:
     guest_count: "Nombre de visiteurs"
     status: "Statut"
     created_date: "Date de réservation"
+    checked_in_at: "Date de checkin"
+    checked_out_at: "Date de checkout"
     week_day: "Jour de la semaine"
     time_slot: "Créneau horaire"
     full_price: "Tarif plein"
