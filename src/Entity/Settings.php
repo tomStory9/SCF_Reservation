@@ -16,6 +16,9 @@ class Settings
     #[ORM\Column]
     private ?bool $isRoomBookingEnabled = null;
 
+    #[ORM\Column]
+    private ?bool $isUserValidationRequired = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -29,6 +32,18 @@ class Settings
     public function setIsRoomBookingEnabled(bool $isRoomBookingEnabled): static
     {
         $this->isRoomBookingEnabled = $isRoomBookingEnabled;
+
+        return $this;
+    }
+
+    public function isUserValidationRequired(): ?bool
+    {
+        return $this->isUserValidationRequired;
+    }
+
+    public function setIsUserValidationRequired(bool $isUserValidationRequired): static
+    {
+        $this->isUserValidationRequired = $isUserValidationRequired;
 
         return $this;
     }

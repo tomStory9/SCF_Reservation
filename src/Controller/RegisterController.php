@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Enum\UserStatus;
 use App\Form\RegistrationFormType;
 use App\Form\UserFormType;
+use App\Repository\SettingsRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -23,7 +24,8 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 final class RegisterController extends AbstractController
 {
     public function __construct(
-        private EmailVerifier $emailVerifier
+        private readonly EmailVerifier $emailVerifier,
+        private readonly SettingsRepository $settingsRepository,
     ) {
     }
 
@@ -71,7 +73,14 @@ final class RegisterController extends AbstractController
             $user->setCompany(null);
             $user->setPhone('');
             $user->setIsVerified(false);
-            $user->setUserStatus(UserStatus::PENDING);
+
+            $settings = $this->settingsRepository->getSettings();
+
+            if ($settings->isUserValidationRequired()) {
+                $user->setUserStatus(UserStatus::PENDING);
+            } else {
+                $user->setUserStatus(UserStatus::APPROVED);
+            }
 
             $entityManager->persist($user);
             $entityManager->flush();
