@@ -12,6 +12,7 @@ class AppFixtures extends Fixture
     {
         $setting = new Settings();
         $setting->setIsRoomBookingEnabled(true);
+        $setting->setIsUserValidationRequired(true);
         $manager->persist($setting);
 
         $manager->flush();

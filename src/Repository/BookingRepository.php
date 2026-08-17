@@ -184,4 +184,130 @@ class BookingRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+
+    /**
+     * @param BookingStatus[] $statuses
+     */
+    public function countOverlappingPeriod(
+        \DateTimeImmutable $start,
+        \DateTimeImmutable $end,
+        array $statuses,
+    ): int {
+        return (int) $this->createQueryBuilder('booking')
+            ->select('COUNT(booking.id)')
+            ->andWhere('booking.startDate < :end')
+            ->andWhere('booking.endDate > :start')
+            ->andWhere('booking.bookingStatus IN (:statuses)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('statuses', $statuses)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @param BookingStatus[] $statuses
+     */
+    public function sumValueStartingInPeriod(
+        \DateTimeImmutable $start,
+        \DateTimeImmutable $end,
+        array $statuses,
+    ): int {
+        return (int) $this->createQueryBuilder('booking')
+            ->select('COALESCE(SUM(booking.price), 0)')
+            ->andWhere('booking.startDate >= :start')
+            ->andWhere('booking.startDate < :end')
+            ->andWhere('booking.bookingStatus IN (:statuses)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('statuses', $statuses)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    public function countByStatus(): array
+    {
+        $rows = $this->createQueryBuilder('booking')
+            ->select('booking.bookingStatus AS status')
+            ->addSelect('COUNT(booking.id) AS total')
+            ->groupBy('booking.bookingStatus')
+            ->getQuery()
+            ->getArrayResult();
+
+        $counts = [];
+        foreach ($rows as $row) {
+            $status = $row['status'] instanceof BookingStatus
+                ? $row['status']->value
+                : (string) $row['status'];
+            $counts[$status] = (int) $row['total'];
+        }
+
+        return $counts;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findRecentPendingRows(int $limit = 6): array
+    {
+        return $this->createQueryBuilder('booking')
+            ->select('booking.id AS id')
+            ->addSelect('booking.startDate AS startDate')
+            ->addSelect('booking.createdDate AS createdDate')
+            ->addSelect('booking.price AS amount')
+            ->addSelect('booking.bookingStatus AS status')
+            ->addSelect('user.name AS userFirstName')
+            ->addSelect('user.lastname AS userLastName')
+            ->addSelect('zone.name AS zoneName')
+            ->addSelect('facility.name AS facilityName')
+            ->join('booking.userBooking', 'user')
+            ->join('booking.zone', 'zone')
+            ->leftJoin('zone.facility', 'facility')
+            ->andWhere('booking.bookingStatus = :status')
+            ->setParameter('status', BookingStatus::PENDING)
+            ->orderBy('booking.createdDate', 'DESC')
+            ->addOrderBy('booking.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param BookingStatus[] $statuses
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function findCalendarRows(
+        \DateTimeImmutable $start,
+        \DateTimeImmutable $end,
+        array $statuses,
+    ): array {
+        return $this->createQueryBuilder('booking')
+            ->select('booking.id AS id')
+            ->addSelect('booking.startDate AS startDate')
+            ->addSelect('booking.endDate AS endDate')
+            ->addSelect('booking.isFullDay AS isFullDay')
+            ->addSelect('booking.price AS amount')
+            ->addSelect('booking.guestCount AS guests')
+            ->addSelect('booking.bookingStatus AS status')
+            ->addSelect('user.name AS userFirstName')
+            ->addSelect('user.lastname AS userLastName')
+            ->addSelect('zone.name AS zoneName')
+            ->addSelect('facility.name AS facilityName')
+            ->join('booking.userBooking', 'user')
+            ->join('booking.zone', 'zone')
+            ->leftJoin('zone.facility', 'facility')
+            ->andWhere('booking.startDate < :end')
+            ->andWhere('booking.endDate > :start')
+            ->andWhere('booking.bookingStatus IN (:statuses)')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->setParameter('statuses', $statuses)
+            ->orderBy('booking.startDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

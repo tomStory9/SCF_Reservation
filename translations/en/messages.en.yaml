@@ -27,6 +27,50 @@ stripe:
   booking_description: "Training space booking"
 
 admin:
+  dashboard:
+    title: "Overview"
+    key_metrics: "Key metrics"
+    unknown_zone: "Unknown zone"
+    unknown_user: "Unknown user"
+    actions:
+      users: "Manage users"
+      pending_bookings: "Review requests"
+      view_all_bookings: "View all bookings"
+      view_all: "View all"
+    stats:
+      pending_bookings: "Pending requests"
+      pending_bookings_help: "Bookings waiting for review"
+      today_bookings: "Bookings today"
+      today_bookings_help: "Spaces occupied or scheduled"
+      month_value: "Confirmed value this month"
+      month_value_help: "Approved or paid bookings"
+      pending_users: "Pending accounts"
+      pending_users_help: "Registrations awaiting approval"
+    calendar:
+      kicker: "Schedule"
+      title: "Booking calendar"
+      subtitle: "Week, day or month view of active bookings."
+      legend: "Status legend"
+      empty: "No bookings to display for this period."
+    activity:
+      kicker: "Summary"
+      title: "Overall activity"
+      next_seven_days: "Next 7 days"
+      total_users: "Users"
+      status_breakdown: "Booking status breakdown"
+    pending:
+      kicker: "To review"
+      title: "Latest requests"
+      subtitle: "The most recent bookings awaiting review."
+      empty_title: "Everything is up to date"
+      empty_text: "There are no booking requests awaiting approval."
+    users:
+      kicker: "Users"
+      title: "Latest accounts"
+      subtitle: "The newest accounts, ordered by ID."
+      empty_title: "No accounts"
+      empty_text: "New accounts will appear here."
+      verified: "Verified email address"
   menu:
     dashboard: "Dashboard"
     users: "Users"
