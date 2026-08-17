@@ -23,6 +23,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PendingBookingCrudController extends AbstractCrudController
 {
@@ -32,6 +33,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         private readonly BookingRepository $bookingRepository,
         private readonly MailerService $mailerService,
         private readonly StripePaiementService $stripePaymentService,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -51,8 +53,8 @@ final class PendingBookingCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Réservation')
-            ->setEntityLabelInPlural('Réservations')
+            ->setEntityLabelInSingular('admin.entity.booking')
+            ->setEntityLabelInPlural('admin.entity.bookings')
             ->setDefaultSort([
                 'createdDate' => 'DESC',
             ])
@@ -63,7 +65,7 @@ final class PendingBookingCrudController extends AbstractCrudController
     {
         $monthlyBookings = Action::new(
             'monthlyBookings',
-            'Voir le mois',
+            'admin.action.view_month',
         )
             ->setIcon('fa fa-calendar-days')
             ->linkToCrudAction('monthlyBookings')
@@ -75,7 +77,7 @@ final class PendingBookingCrudController extends AbstractCrudController
 
         $approve = Action::new(
             'approve',
-            'Approuver',
+            'admin.action.approve',
         )
             ->setIcon('fa fa-check')
             ->linkToCrudAction('approveBooking')
@@ -87,7 +89,7 @@ final class PendingBookingCrudController extends AbstractCrudController
 
         $decline = Action::new(
             'decline',
-            'Refuser',
+            'admin.action.decline',
         )
             ->setIcon('fa fa-xmark')
             ->linkToCrudAction('declineBooking')
@@ -110,7 +112,7 @@ final class PendingBookingCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('zone', 'Zone')
+        yield AssociationField::new('zone', 'admin.field.zone')
             ->formatValue(
                 fn ($value) => $value?->getName(),
             )
@@ -121,7 +123,7 @@ final class PendingBookingCrudController extends AbstractCrudController
 
         yield AssociationField::new(
             'userBooking',
-            'Utilisateur',
+            'admin.field.user',
         )
             ->formatValue(
                 fn ($value) => $value?->getFullName(),
@@ -133,39 +135,41 @@ final class PendingBookingCrudController extends AbstractCrudController
 
         yield DateTimeField::new(
             'startDate',
-            'Date de début',
+            'admin.field.start_date',
         );
 
         yield DateTimeField::new(
             'endDate',
-            'Date de fin',
+            'admin.field.end_date',
         );
 
         yield IntegerField::new(
             'price',
-            'Prix',
+            'admin.field.price',
         );
 
         yield IntegerField::new(
             'guestCount',
-            'Nombre de visiteurs',
+            'admin.field.guest_count',
         );
 
         yield ChoiceField::new(
             'bookingStatus',
-            'Statut',
+            'admin.field.status',
         )
             ->setFormType(EnumType::class)
             ->setFormTypeOptions([
                 'class' => BookingStatus::class,
             ])
             ->formatValue(
-                fn ($value) => $value?->value,
+                fn ($value) => null === $value
+                    ? null
+                    : $this->translator->trans('admin.enum.booking_status.'.$value->value),
             );
 
         yield DateTimeField::new(
             'createdDate',
-            'Date de réservation',
+            'admin.field.created_date',
         );
     }
 
@@ -203,7 +207,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         if (!$booking instanceof Booking) {
             $this->addFlash(
                 'error',
-                'Réservation introuvable.',
+                'admin.flash.booking_not_found',
             );
 
             return $this->redirect(
@@ -217,7 +221,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         if (null === $user || null === $bookingStartDate) {
             $this->addFlash(
                 'error',
-                'Utilisateur ou date de réservation introuvable.',
+                'admin.flash.booking_user_or_date_not_found',
             );
 
             return $this->redirect(
@@ -318,7 +322,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         if (!$booking instanceof Booking) {
             $this->addFlash(
                 'error',
-                'Réservation introuvable.',
+                'admin.flash.booking_not_found',
             );
 
             return $this->redirect(
@@ -332,7 +336,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         ) {
             $this->addFlash(
                 'warning',
-                'Cette réservation n’est plus en attente.',
+                'admin.flash.booking_no_longer_pending',
             );
 
             return $this->redirect(
@@ -349,7 +353,7 @@ final class PendingBookingCrudController extends AbstractCrudController
 
         $this->addFlash(
             'success',
-            'La réservation a été approuvée.',
+            'admin.flash.booking_approved',
         );
 
         return $this->redirect(
@@ -372,7 +376,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         if (!$booking instanceof Booking) {
             $this->addFlash(
                 'error',
-                'Réservation introuvable.',
+                'admin.flash.booking_not_found',
             );
 
             return $this->redirect(
@@ -386,7 +390,7 @@ final class PendingBookingCrudController extends AbstractCrudController
         ) {
             $this->addFlash(
                 'warning',
-                'Cette réservation n’est plus en attente.',
+                'admin.flash.booking_no_longer_pending',
             );
 
             return $this->redirect(
@@ -402,7 +406,7 @@ final class PendingBookingCrudController extends AbstractCrudController
 
         $this->addFlash(
             'success',
-            'La réservation a été refusée.',
+            'admin.flash.booking_declined',
         );
 
         return $this->redirect(

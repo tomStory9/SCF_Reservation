@@ -3,13 +3,14 @@
 namespace App\Service;
 
 use Stripe\StripeClient;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class StripePaiementService
 {
     private StripeClient $stripeClient;
     private string $defaultUri;
 
-    public function __construct()
+    public function __construct(private readonly TranslatorInterface $translator)
     {
         $this->stripeClient = new StripeClient($_ENV['STRIPE_SECRET_KEY']);
         $this->defaultUri = $_ENV['DEFAULT_URI'];
@@ -20,9 +21,12 @@ class StripePaiementService
         int $userId,
         int $reservationId,
         string $currency = 'jpy',
-        string $name = 'Reservation',
-        string $description = 'Booking entrainement'
+        ?string $name = null,
+        ?string $description = null,
     ): string {
+        $name ??= $this->translator->trans('stripe.booking_name');
+        $description ??= $this->translator->trans('stripe.booking_description');
+
         $session = $this->stripeClient->checkout->sessions->create([
             'mode' => 'payment',
             'line_items' => [[

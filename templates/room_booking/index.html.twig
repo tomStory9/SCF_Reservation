@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
+{% trans_default_domain 'roomReservation' %}
 
 {% block title %}
-    {{ 'account.roomReservation.title'|trans }}
+    {{ 'page.title'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -10,6 +11,28 @@
 {% endblock %}
 
 {% block body %}
+    <script id="room-booking-config" type="application/json">
+        {{ {
+            locale: app.request.locale,
+            texts: {
+                noSelection: 'js.no_selection'|trans,
+                room: 'js.room'|trans,
+                arrival: 'js.arrival'|trans,
+                departure: 'js.departure'|trans,
+                duration: 'js.duration'|trans,
+                nights: 'js.nights'|trans,
+                warningTitle: 'js.warning_title'|trans,
+                selectDates: 'js.select_dates'|trans,
+                loading: 'js.loading'|trans,
+                errorTitle: 'js.error_title'|trans,
+                bookingError: 'js.booking_error'|trans,
+                networkErrorTitle: 'js.network_error_title'|trans,
+                networkError: 'js.network_error'|trans,
+                submit: 'js.submit'|trans
+            }
+        }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}
+    </script>
+
     <div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
         {% include 'user/_partials/_navbar.html.twig' %}
 
@@ -18,8 +41,8 @@
 
                 <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
                     <div class="mb-5">
-                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">Planning</p>
-                        <h2 class="text-xl font-semibold text-secondary">Calendrier de réservation des chambres</h2>
+                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">{{ 'ui.planning'|trans }}</p>
+                        <h2 class="text-xl font-semibold text-secondary">{{ 'ui.calendar_title'|trans }}</h2>
                     </div>
 
                     <div class="flex justify-center">
@@ -30,7 +53,7 @@
                 <aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
 
                     <div class="border-b border-slate-200">
-                        <nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="Chambres">
+                        <nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="{{ 'ui.rooms'|trans }}">
                             {% for room in rooms %}
                                 {% set isActive = loop.first %}
                                 <button type="button"
@@ -47,23 +70,23 @@
 
                     <div class="rounded-b-2xl border border-t-0 border-slate-200 bg-white p-6">
                         <div class="min-h-[360px] flex flex-col">
-                            <p class="text-base font-semibold text-secondary">Votre séjour</p>
-                            <p class="mt-2 text-sm text-state">Sélectionnez vos dates d'arrivée et de départ sur le calendrier.</p>
+                            <p class="text-base font-semibold text-secondary">{{ 'ui.stay_title'|trans }}</p>
+                            <p class="mt-2 text-sm text-state">{{ 'ui.stay_help'|trans }}</p>
 
                             <div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
-                                Aucune date sélectionnée.
+                                {{ 'ui.no_selection'|trans }}
                             </div>
 
                             <div id="price-container" class="hidden mt-4 pt-4 border-t border-slate-200">
                                 <p class="text-sm text-state flex justify-between items-center">
-                                    <span class="font-semibold text-secondary">Total du séjour :</span>
+                                    <span class="font-semibold text-secondary">{{ 'ui.total'|trans }}</span>
                                     <span id="price-display" class="text-2xl font-bold text-primary">0 ¥</span>
                                 </p>
                             </div>
 
                             <div class="mt-auto pt-6">
                                 <button id="submit_booking" class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg disabled:opacity-50">
-                                    Confirmer la réservation
+                                    {{ 'ui.submit'|trans }}
                                 </button>
                             </div>
                         </div>

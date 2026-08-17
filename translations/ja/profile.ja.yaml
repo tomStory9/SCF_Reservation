@@ -6,6 +6,12 @@ account:
     skip_to_content: 'メインコンテンツへスキップ'
     book_now: '今すぐ予約'
     new_booking: '新規予約'
+    new_room_booking: '客室を予約'
+    space: 'メンバーエリア'
+    my_account: 'マイアカウント'
+    my_info: '登録情報'
+    change_password: 'パスワードを変更'
+    logout: 'ログアウト'
     no_booking_title: '予約なし'
     no_booking_text: "まだ予約がありません。今すぐ最初のセッションを予約しましょう！"
     booking: '予約'
@@ -46,3 +52,11 @@ account:
     equipment: '設備'
     quantity: '数量'
     unit_price: '単価'
+    date_time: '%date% %time%'
+
+booking:
+  status:
+    pending: '承認待ち'
+    approved: '承認済み'
+    declined: '却下'
+    paid: '支払い済み'

@@ -1,11 +1,15 @@
 import '../styles/reservation-calendar.css';
 import { Calendar } from '@fullcalendar/core';
 import frLocale from '@fullcalendar/core/locales/fr';
+import enGbLocale from '@fullcalendar/core/locales/en-gb';
+import jaLocale from '@fullcalendar/core/locales/ja';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import Swal from 'sweetalert2';
 
 document.addEventListener('DOMContentLoaded', function () {
+    const configElement = document.getElementById('room-booking-config');
+    const config = configElement ? JSON.parse(configElement.textContent) : null;
     const calendarEl = document.getElementById('calendar-holder');
     const roomTabs = document.querySelectorAll('.room-tab');
     const selectionPreview = document.getElementById('selection-preview');
@@ -13,7 +17,14 @@ document.addEventListener('DOMContentLoaded', function () {
     const priceDisplay = document.getElementById('price-display');
     const submitButton = document.getElementById('submit_booking');
 
-    if (!calendarEl) return;
+    if (!calendarEl || !config) return;
+
+    const texts = config.texts;
+    const calendarLocales = {
+        fr: frLocale,
+        en: enGbLocale,
+        ja: jaLocale
+    };
 
     let calendar;
 
@@ -41,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         currentSelection = null;
-        updatePreview('Aucune date sélectionnée.');
+        updatePreview(texts.noSelection);
         priceContainer.classList.add('hidden');
 
         if (calendar) {
@@ -69,7 +80,7 @@ document.addEventListener('DOMContentLoaded', function () {
     calendar = new Calendar(calendarEl, {
         plugins: [dayGridPlugin, interactionPlugin],
         initialView: 'dayGridMonth',
-        locale: frLocale,
+        locale: calendarLocales[config.locale] ?? enGbLocale,
         firstDay: 1,
         height: 'auto',
         selectable: true,
@@ -177,8 +188,8 @@ document.addEventListener('DOMContentLoaded', function () {
             const backendEndDateStr = `${year}-${month}-${day}T23:59:59`;
 
             // 5. Affichage propre
-            const startStrFr = info.start.toLocaleDateString('fr-FR');
-            const endStrFr = departureDate.toLocaleDateString('fr-FR');
+            const localizedStartDate = info.start.toLocaleDateString(config.locale);
+            const localizedEndDate = departureDate.toLocaleDateString(config.locale);
 
             // 6. Sauvegarde
             currentSelection = {
@@ -189,13 +200,13 @@ document.addEventListener('DOMContentLoaded', function () {
             };
 
             updatePreview(
-                `<span class="font-semibold text-secondary">Chambre :</span> <span class="text-primary">${activeRoomName}</span><br>` +
-                `<span class="font-semibold text-secondary">Arrivée :</span> ${startStrFr}<br>` +
-                `<span class="font-semibold text-secondary">Départ :</span> ${endStrFr}<br>` +
-                `<span class="font-semibold text-secondary">Durée :</span> ${nights} nuit(s)`
+                `<span class="font-semibold text-secondary">${texts.room}</span> <span class="text-primary">${activeRoomName}</span><br>` +
+                `<span class="font-semibold text-secondary">${texts.arrival}</span> ${localizedStartDate}<br>` +
+                `<span class="font-semibold text-secondary">${texts.departure}</span> ${localizedEndDate}<br>` +
+                `<span class="font-semibold text-secondary">${texts.duration}</span> ${texts.nights.replace('%count%', nights)}`
             );
 
-            priceDisplay.textContent = `${totalPrice.toLocaleString('fr-FR')} ¥`;
+            priceDisplay.textContent = `${totalPrice.toLocaleString(config.locale)} ¥`;
             priceContainer.classList.remove('hidden');
         }
     });
@@ -211,8 +222,8 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!currentSelection || !activeRoomId) {
                 Swal.fire({
                     icon: 'warning',
-                    title: 'Attention',
-                    text: 'Veuillez sélectionner vos dates sur le calendrier.'
+                    title: texts.warningTitle,
+                    text: texts.selectDates
                 });
                 return;
             }
@@ -225,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             try {
                 submitButton.disabled = true;
-                submitButton.textContent = 'Enregistrement...';
+                submitButton.textContent = texts.loading;
 
                 const response = await fetch('/room/booking/create', {
                     method: 'POST',
@@ -241,13 +252,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok && result.success) {
                     window.location.href = result.redirectUrl;
                 } else {
-                    Swal.fire({ icon: 'error', title: 'Erreur', text: result.error });
+                    Swal.fire({ icon: 'error', title: texts.errorTitle, text: result.error ?? texts.bookingError });
                 }
             } catch (error) {
-                Swal.fire({ icon: 'error', title: 'Erreur réseau', text: 'Impossible de contacter le serveur.' });
+                Swal.fire({ icon: 'error', title: texts.networkErrorTitle, text: texts.networkError });
             } finally {
                 submitButton.disabled = false;
-                submitButton.textContent = 'Confirmer la réservation';
+                submitButton.textContent = texts.submit;
             }
         });
     }

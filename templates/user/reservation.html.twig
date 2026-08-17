@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
+{% trans_default_domain 'reservation' %}
 
 {% block title %}
-    {{ 'account.reservation.title'|trans }}
+    {{ 'page.title'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
@@ -15,6 +16,7 @@
     <script id="calendar-config" type="application/json">
         {{
             {
+                locale: app.request.locale,
                 maxDate: maxEndDate|date('Y-m-d'),
 
                 endpoints: {
@@ -26,65 +28,65 @@
                 },
 
                 texts: {
-                    zonePlaceholder: 'Sélectionnez une zone...',
-                    noZoneAvailable: 'Aucune zone disponible',
-                    undefined: 'Non défini',
+                    zonePlaceholder: 'js.zone_placeholder'|trans,
+                    noZoneAvailable: 'js.no_zone_available'|trans,
+                    undefined: 'js.undefined'|trans,
 
-                    bookingByHour: 'Par heure',
-                    bookingByPeriod: 'Par période',
+                    bookingByHour: 'js.booking_by_hour'|trans,
+                    bookingByPeriod: 'js.booking_by_period'|trans,
 
-                    today: 'Aujourd’hui',
-                    month: 'Mois',
-                    week: 'Semaine',
+                    today: 'js.today'|trans,
+                    month: 'js.month'|trans,
+                    week: 'js.week'|trans,
 
-                    selectedDay: 'Jour sélectionné :',
-                    selectedPeriod: 'Réservation par période :',
-                    hourlySlot: 'Créneau horaire :',
-                    fullDaySelection: 'Sélection journée complète :',
+                    selectedDay: 'js.selected_day'|trans,
+                    selectedPeriod: 'js.selected_period'|trans,
+                    hourlySlot: 'js.hourly_slot'|trans,
+                    fullDaySelection: 'js.full_day_selection'|trans,
 
-                    date: 'Date :',
-                    hours: 'Horaires :',
-                    duration: 'Durée :',
-                    location: 'Lieu :',
+                    date: 'js.date'|trans,
+                    hours: 'js.hours'|trans,
+                    duration: 'js.duration'|trans,
+                    location: 'js.location'|trans,
 
-                    morning: 'Matin',
-                    afternoon: 'Après-midi',
-                    evening: 'Soir',
+                    morning: 'js.morning'|trans,
+                    afternoon: 'js.afternoon'|trans,
+                    evening: 'js.evening'|trans,
 
-                    periodModeHelp: 'Mode de réservation actif : par période. Clique directement dans une zone Matin, Après-midi ou Soir dans la vue semaine.',
-                    hourModeHelp: 'Mode de réservation actif : par heure. Tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure, sans chevauchement.',
-                    noSelection: 'Aucune sélection pour le moment.',
+                    periodModeHelp: 'js.period_mode_help'|trans,
+                    hourModeHelp: 'js.hour_mode_help'|trans,
+                    noSelection: 'js.no_selection'|trans,
 
-                    selectSlot: 'Veuillez sélectionner un créneau sur le calendrier.',
-                    fullDayConflict: 'Impossible de créer une réservation journée complète : un événement existe déjà sur cette journée.',
-                    periodConflict: 'Impossible de réserver une période : un événement existe déjà sur cette journée.',
-                    blockedDay: 'Impossible de réserver des heures sur cette journée : elle est bloquée.',
-                    overlappingEvent: 'Impossible de créer ce créneau : il chevauche déjà un événement existant.',
+                    selectSlot: 'js.select_slot'|trans,
+                    fullDayConflict: 'js.full_day_conflict'|trans,
+                    periodConflict: 'js.period_conflict'|trans,
+                    blockedDay: 'js.blocked_day'|trans,
+                    overlappingEvent: 'js.overlapping_event'|trans,
 
-                    loading: 'Enregistrement...',
-                    submitBooking: 'Réserver le créneau',
+                    loading: 'js.loading'|trans,
+                    submitBooking: 'js.submit_booking'|trans,
 
-                    bookingErrorTitle: 'Erreur',
-                    bookingError: 'Impossible d’enregistrer la réservation.',
+                    bookingErrorTitle: 'js.booking_error_title'|trans,
+                    bookingError: 'js.booking_error'|trans,
 
-                    networkErrorTitle: 'Erreur réseau',
-                    networkError: 'Une erreur est survenue lors de la communication avec le serveur.',
+                    networkErrorTitle: 'js.network_error_title'|trans,
+                    networkError: 'js.network_error'|trans,
 
-                    pricingLoadingError: 'Erreur lors du chargement des tarifs',
-                    zonesLoadingError: 'Erreur lors de la récupération des zones',
-                    bookingsLoadingError: 'Erreur lors du chargement des réservations',
-                    equipmentsLoadingError: 'Erreur lors du chargement des équipements',
+                    pricingLoadingError: 'js.pricing_loading_error'|trans,
+                    zonesLoadingError: 'js.zones_loading_error'|trans,
+                    bookingsLoadingError: 'js.bookings_loading_error'|trans,
+                    equipmentsLoadingError: 'js.equipments_loading_error'|trans,
 
-                    loadingEquipments: 'Chargement des équipements...',
-                    noEquipmentsAvailable: 'Aucun équipement disponible pour cette zone.',
-                    unavailableEquipment: 'Indisponible',
-                    availableEquipment: 'Disponible',
-                    maximum: 'Maximum',
-                    equipmentTotal: 'Total équipements :',
-                    grandTotal: 'Total général :',
+                    loadingEquipments: 'js.loading_equipments'|trans,
+                    noEquipmentsAvailable: 'js.no_equipments_available'|trans,
+                    unavailableEquipment: 'js.unavailable_equipment'|trans,
+                    availableEquipment: 'js.available_equipment'|trans,
+                    maximum: 'js.maximum'|trans,
+                    equipmentTotal: 'js.equipment_total'|trans,
+                    grandTotal: 'js.grand_total'|trans,
 
-                    usedHours: 'h utilisées sur 12h',
-                    selectedPeriodEvent: 'Période sélectionnée · {period}'
+                    usedHours: 'js.used_hours'|trans,
+                    selectedPeriodEvent: 'js.selected_period_event'|trans
                 }
             }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
         }}
@@ -110,17 +112,17 @@
                     <div class="mb-5 flex items-center justify-between">
                         <div>
                             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
-                                Planning
+                                {{ 'ui.planning'|trans }}
                             </p>
 
                             <h2 class="text-xl font-semibold text-secondary">
-                                Calendrier des réservations
+                                {{ 'ui.calendar_title'|trans }}
                             </h2>
                         </div>
 
                         <div class="hidden text-right lg:block">
                             <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
-                                Mode actif
+                                {{ 'ui.active_mode'|trans }}
                             </p>
 
                             <p class="text-sm text-state">
@@ -128,7 +130,7 @@
                                     id="active-booking-mode-label"
                                     class="font-semibold text-primary"
                                 >
-                                    Par heure
+                                    {{ 'ui.booking_by_hour'|trans }}
                                 </span>
                             </p>
                         </div>
@@ -137,7 +139,7 @@
                     <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                         <div>
                             <p class="text-sm font-semibold text-secondary">
-                                Mode de réservation
+                                {{ 'ui.booking_mode'|trans }}
                             </p>
 
                             <div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
@@ -147,7 +149,7 @@
                                     data-mode="hour"
                                     aria-pressed="true"
                                 >
-                                    Par heure
+                                    {{ 'ui.booking_by_hour'|trans }}
                                 </button>
 
                                 <button
@@ -156,21 +158,21 @@
                                     data-mode="period"
                                     aria-pressed="false"
                                 >
-                                    Par période
+                                    {{ 'ui.booking_by_period'|trans }}
                                 </button>
                             </div>
                         </div>
 
                         <div class="text-sm text-state lg:hidden">
                             <span class="font-semibold text-secondary">
-                                Mode actif :
+                                {{ 'ui.active_mode'|trans }} :
                             </span>
 
                             <span
                                 id="active-booking-mode-label-mobile"
                                 class="font-semibold text-primary"
                             >
-                                Par heure
+                                {{ 'ui.booking_by_hour'|trans }}
                             </span>
                         </div>
                     </div>
@@ -188,54 +190,54 @@
                             class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4"
                         >
                             <p class="text-sm font-semibold text-secondary">
-                                Lecture du taux d’occupation
+                                {{ 'ui.occupancy_title'|trans }}
                             </p>
 
                             <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                                 <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
                                     <span class="h-4 w-4 rounded-full bg-slate-400"></span>
                                     <span class="text-sm text-secondary">
-                                        100% occupé : grisé
+                                        {{ 'ui.occupancy_full'|trans }}
                                     </span>
                                 </div>
 
                                 <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
                                     <span class="h-4 w-4 rounded-full bg-red-500"></span>
                                     <span class="text-sm text-secondary">
-                                        75% occupé : rouge
+                                        {{ 'ui.occupancy_high'|trans }}
                                     </span>
                                 </div>
 
                                 <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
                                     <span class="h-4 w-4 rounded-full bg-orange-400"></span>
                                     <span class="text-sm text-secondary">
-                                        50% occupé : orange
+                                        {{ 'ui.occupancy_medium'|trans }}
                                     </span>
                                 </div>
 
                                 <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
                                     <span class="h-4 w-4 rounded-full bg-yellow-300"></span>
                                     <span class="text-sm text-secondary">
-                                        25% occupé : jaune
+                                        {{ 'ui.occupancy_low'|trans }}
                                     </span>
                                 </div>
                             </div>
 
                             <ul class="mt-4 space-y-2 text-sm text-state">
                                 <li>
-                                    - En vue mois, clique sur un jour pour ouvrir la vue semaine sur cette date.
+                                    - {{ 'ui.help_month'|trans }}
                                 </li>
 
                                 <li>
-                                    - En vue semaine, la ligne all-day permet une réservation journée complète seulement si la journée est vide.
+                                    - {{ 'ui.help_full_day'|trans }}
                                 </li>
 
                                 <li>
-                                    - En mode heure, tu peux sélectionner plusieurs heures d’affilée avec un minimum de 1 heure.
+                                    - {{ 'ui.help_hour'|trans }}
                                 </li>
 
                                 <li>
-                                    - En mode période, la période choisie s’affiche comme un bloc dans le calendrier.
+                                    - {{ 'ui.help_period'|trans }}
                                 </li>
                             </ul>
                         </div>
@@ -247,7 +249,7 @@
                     <div class="mb-5 border-b border-slate-200">
                         <nav
                             class="-mb-px flex w-full flex-wrap justify-evenly gap-2 sm:gap-3"
-                            aria-label="Lieux"
+                            aria-label="{{ 'ui.locations'|trans }}"
                         >
                             {% for facility in facilities %}
                                 {% set isActive = loop.first %}
@@ -268,11 +270,11 @@
 
                         <div class="mb-6">
                             <p class="text-base font-semibold text-secondary">
-                                Informations du lieu
+                                {{ 'ui.location_information'|trans }}
                             </p>
 
                             <p class="mt-2 text-sm text-state">
-                                Choisis d’abord le lieu et le mode de réservation, puis termine la sélection dans le calendrier.
+                                {{ 'ui.location_help'|trans }}
                             </p>
                         </div>
 
@@ -284,7 +286,7 @@
                                         for="zone-select"
                                         class="mb-2 block text-sm font-semibold text-secondary"
                                     >
-                                        Zone sélectionnée :
+                                        {{ 'ui.selected_zone'|trans }}
                                     </label>
 
                                     <select
@@ -293,7 +295,7 @@
                                         class="w-full"
                                     >
                                         <option value="">
-                                            Chargement des zones...
+                                            {{ 'ui.loading_zones'|trans }}
                                         </option>
                                     </select>
                                 </div>
@@ -303,7 +305,7 @@
                                         for="guest-count-input"
                                         class="mb-2 block text-sm font-semibold text-secondary"
                                     >
-                                        Nombre de personnes :
+                                        {{ 'ui.guest_count'|trans }}
                                     </label>
 
                                     <input
@@ -318,14 +320,14 @@
                             </div>
 
                             <p class="mt-4 text-sm font-semibold text-secondary">
-                                Description
+                                {{ 'ui.description'|trans }}
                             </p>
 
                             <p
                                 id="location-description"
                                 class="mt-2 text-sm leading-6 text-state"
                             >
-                                Grande salle polyvalente adaptée aux répétitions, ateliers et réservations à la journée.
+                                {{ 'ui.default_description'|trans }}
                             </p>
                         </div>
 
@@ -338,7 +340,7 @@
                                     data-mode="hour"
                                     aria-pressed="true"
                                 >
-                                    Par heure
+                                    {{ 'ui.booking_by_hour'|trans }}
                                 </button>
 
                                 <button
@@ -347,25 +349,25 @@
                                     data-mode="period"
                                     aria-pressed="false"
                                 >
-                                    Par période
+                                    {{ 'ui.booking_by_period'|trans }}
                                 </button>
                             </div>
                         </div>
 
                         <div class="flex flex-1 flex-col">
                             <p class="text-base font-semibold text-secondary">
-                                Récapitulatif
+                                {{ 'ui.summary'|trans }}
                             </p>
 
                             <p class="mt-2 text-sm text-state">
-                                La sélection finale se fait dans le calendrier. Ce panneau affiche le récapitulatif avant l’envoi.
+                                {{ 'ui.summary_help'|trans }}
                             </p>
 
                             <div
                                 id="selection-preview"
                                 class="mt-5 text-sm leading-6 text-state"
                             >
-                                Aucune sélection pour le moment.
+                                {{ 'ui.no_selection'|trans }}
                             </div>
 
                             <div
@@ -374,7 +376,7 @@
                             >
                                 <p class="text-sm text-state">
                                     <span class="font-semibold text-secondary">
-                                        Tarif :
+                                        {{ 'ui.price'|trans }}
                                     </span>
 
                                     <span
@@ -392,11 +394,11 @@
                             >
                                 <div class="flex items-center justify-between gap-3">
                                     <p class="text-sm font-semibold text-secondary">
-                                        Équipements optionnels
+                                        {{ 'ui.optional_equipment'|trans }}
                                     </p>
 
                                     <p class="text-right text-xs text-state">
-                                        Disponibilité calculée selon le créneau choisi.
+                                        {{ 'ui.equipment_availability'|trans }}
                                     </p>
                                 </div>
 
@@ -405,7 +407,7 @@
                                     class="mt-3 overflow-hidden divide-y divide-slate-200 rounded-xl border border-slate-200 bg-slate-50"
                                 >
                                     <p class="px-3 py-2 text-xs text-state">
-                                        Sélectionne une zone et un créneau pour voir les équipements disponibles.
+                                        {{ 'ui.select_for_equipment'|trans }}
                                     </p>
                                 </div>
 
@@ -414,7 +416,7 @@
                                     class="mt-3 hidden items-center justify-between text-sm"
                                 >
                                     <span class="font-semibold text-secondary">
-                                        Total équipements :
+                                        {{ 'ui.equipment_total'|trans }}
                                     </span>
 
                                     <span
@@ -430,7 +432,7 @@
                                     class="mt-2 hidden items-center justify-between text-sm"
                                 >
                                     <span class="font-semibold text-secondary">
-                                        Total général :
+                                        {{ 'ui.grand_total'|trans }}
                                     </span>
 
                                     <span
@@ -451,7 +453,7 @@
                                     type="button"
                                     class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg"
                                 >
-                                    Réserver le créneau
+                                    {{ 'ui.submit'|trans }}
                                 </button>
                             </div>
                         </div>

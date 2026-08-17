@@ -16,7 +16,7 @@
                 <div class="modal-header">
                     <div>
                         <h4 class="modal-title mb-1">
-                            Réservations du mois
+                            {{ 'admin.monthly.title'|trans }}
                         </h4>
 
                         <div class="text-muted">
@@ -27,7 +27,7 @@
                     <a
                         href="{{ indexUrl }}"
                         class="btn-close"
-                        aria-label="Fermer"
+                        aria-label="{{ 'admin.monthly.close'|trans }}"
                     ></a>
                 </div>
 
@@ -37,7 +37,7 @@
                             <div class="card border-0 bg-light h-100">
                                 <div class="card-body">
                                     <small class="text-muted">
-                                        Heures déjà réservées ce mois
+                                        {{ 'admin.monthly.already_booked_hours'|trans }}
                                     </small>
 
                                     <h3 class="mb-0">
@@ -51,7 +51,7 @@
                             <div class="card border-primary h-100">
                                 <div class="card-body">
                                     <small class="text-primary">
-                                        Réservation actuelle
+                                        {{ 'admin.monthly.current_booking'|trans }}
                                     </small>
 
                                     <h3 class="mb-0 text-primary">
@@ -63,7 +63,7 @@
                     </div>
 
                     <div class="alert alert-info">
-                        Total après cette réservation :
+                        {{ 'admin.monthly.total_after_booking'|trans }}
 
                         <strong>
                             {{
@@ -75,7 +75,7 @@
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h5 class="mb-0">
-                            Liste des réservations
+                            {{ 'admin.monthly.list'|trans }}
                         </h5>
 
                         <span class="badge text-bg-secondary">
@@ -85,18 +85,18 @@
 
                     {% if bookings is empty %}
                         <div class="alert alert-secondary">
-                            Aucune réservation pour ce mois.
+                            {{ 'admin.monthly.empty'|trans }}
                         </div>
                     {% else %}
                         <div class="table-responsive">
                             <table class="table table-hover align-middle">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Zone</th>
-                                        <th>Statut</th>
-                                        <th>Durée</th>
-                                        <th>Visiteurs</th>
+                                        <th>{{ 'admin.monthly.date'|trans }}</th>
+                                        <th>{{ 'admin.monthly.zone'|trans }}</th>
+                                        <th>{{ 'admin.monthly.status'|trans }}</th>
+                                        <th>{{ 'admin.monthly.duration'|trans }}</th>
+                                        <th>{{ 'admin.monthly.visitors'|trans }}</th>
                                     </tr>
                                 </thead>
 
@@ -140,7 +140,7 @@
                                                     {{ userBooking.zone.name }}
                                                 {% else %}
                                                     <span class="text-muted">
-                                                        Zone inconnue
+                                                        {{ 'admin.monthly.unknown_zone'|trans }}
                                                     </span>
                                                 {% endif %}
                                             </td>
@@ -148,23 +148,19 @@
                                             <td>
                                                 {% if userBooking.bookingStatus.value == 'pending' %}
                                                     <span class="badge text-bg-warning">
-                                                        En attente
+                                                        {{ 'admin.enum.booking_status.pending'|trans }}
                                                     </span>
                                                 {% elseif userBooking.bookingStatus.value == 'approved' %}
                                                     <span class="badge text-bg-success">
-                                                        Approuvée
+                                                        {{ 'admin.enum.booking_status.approved'|trans }}
                                                     </span>
                                                 {% elseif userBooking.bookingStatus.value == 'declined' %}
                                                     <span class="badge text-bg-danger">
-                                                        Refusée
+                                                        {{ 'admin.enum.booking_status.declined'|trans }}
                                                     </span>
                                                 {% else %}
                                                     <span class="badge text-bg-secondary">
-                                                        {{
-                                                            userBooking
-                                                            .bookingStatus
-                                                            .value
-                                                        }}
+                                                        {{ ('admin.enum.booking_status.' ~ userBooking.bookingStatus.value)|trans }}
                                                     </span>
                                                 {% endif %}
                                             </td>
@@ -178,7 +174,7 @@
                                                     <br>
 
                                                     <small class="text-primary">
-                                                        Réservation actuelle
+                                                        {{ 'admin.monthly.current_booking'|trans }}
                                                     </small>
                                                 {% endif %}
                                             </td>
@@ -199,7 +195,7 @@
                         href="{{ indexUrl }}"
                         class="btn btn-secondary"
                     >
-                        Retour aux réservations
+                        {{ 'admin.monthly.back'|trans }}
                     </a>
                 </div>
 

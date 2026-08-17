@@ -1,10 +1,10 @@
 {# templates/emails/payment_success.html.twig #}
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ 'payment.email.title'|trans }}</title>
+    <title>お支払い完了</title>
 </head>
 <body style="margin:0;padding:0;background:#f8fafc;font-family:Arial,sans-serif;color:#0f172a;">
     <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f8fafc;padding:40px 16px;">
@@ -18,24 +18,24 @@
                             </div>
 
                             <h1 style="margin:0;font-size:24px;line-height:1.2;color:#0f172a;">
-                                {{ 'payment.email.title'|trans }}
+                                お支払い完了
                             </h1>
 
                             <p style="margin:16px 0 0;font-size:16px;line-height:1.6;color:#475569;">
-                                {{ 'payment.email.message'|trans }}
+                                お支払いを確認しました。
                             </p>
 
                             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:24px;background:#f8fafc;border-radius:10px;">
                                 <tr>
                                     <td style="padding:16px;text-align:left;font-size:14px;line-height:1.6;color:#334155;">
-                                        <p style="margin:0;"><strong>{{ 'payment.email.user'|trans }}:</strong> {{ user.fullName }}</p>
-                                        <p style="margin:8px 0 0;"><strong>{{ 'payment.email.amount'|trans }}:</strong> {{ transaction.paidPrice }} {{ currency|default('JPY') }}</p>
+                                        <p style="margin:0;"><strong>ユーザー：</strong> {{ user.fullName }}</p>
+                                        <p style="margin:8px 0 0;"><strong>金額：</strong> {{ transaction.paidPrice }} {{ currency|default('JPY') }}</p>
                                     </td>
                                 </tr>
                             </table>
 
                             <p style="margin:24px 0 0;font-size:14px;line-height:1.6;color:#64748b;">
-                                {{ 'payment.email.close_page'|trans }}
+                                予約が確定しました。
                             </p>
                         </td>
                     </tr>

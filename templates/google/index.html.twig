@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello GoogleController!{% endblock %}
+{% block title %}{{ 'scaffold.title'|trans({'%controller%': 'GoogleController'}) }}{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,12 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>{{ 'scaffold.title'|trans({'%controller%': controller_name}) }} ✅</h1>
 
-    This friendly message is coming from:
+    {{ 'scaffold.intro'|trans }}
     <ul>
-        <li>Your controller at <code>C:/Users/Tom/SCF_Reservation/src/Controller/GoogleController.php</code></li>
-        <li>Your template at <code>C:/Users/Tom/SCF_Reservation/templates/google/index.html.twig</code></li>
+        <li>{{ 'scaffold.controller_path'|trans }} <code>C:/Users/Tom/SCF_Reservation/src/Controller/GoogleController.php</code></li>
+        <li>{{ 'scaffold.template_path'|trans }} <code>C:/Users/Tom/SCF_Reservation/templates/google/index.html.twig</code></li>
     </ul>
 </div>
 {% endblock %}

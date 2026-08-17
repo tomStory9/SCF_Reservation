@@ -154,7 +154,7 @@
                     <tr>
                         <td class="content">
                             <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
-                                {{ user.name }} {{ user.lastname }} 様
+                                {{ user.fullName }} 様
                             </p>
 
                             <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
@@ -162,7 +162,7 @@
                             </p>
 
                             <p style="margin: 0; font-size: 16px; line-height: 1.8;">
-                                ご予約を確定するには、以下のボタンを押してお支払い手続きを完了してください。
+                                ご予約を確定するには、以下のボタンからお支払い手続きを完了してください。
                             </p>
 
                             <div class="payment-box">
@@ -183,7 +183,7 @@
                                 </a>
 
                                 <p class="fallback">
-                                    ボタンが表示されない場合は、以下のリンクをタップしてください。<br>
+                                    ボタンが表示されない場合は、以下のリンクを開いてください。<br>
                                     <a href="{{ stripe_checkout_url|e('html_attr') }}">
                                         {{ stripe_checkout_url|e }}
                                     </a>
@@ -200,7 +200,7 @@
                     <tr>
                         <td class="footer">
                             このメールはご予約のお手続きに関する重要なお知らせです。<br>
-                            心当たりがない場合は、リンクを開かずに破棄してください。
+                            心当たりがない場合は、リンクを開かずに削除してください。
                         </td>
                     </tr>
                 </table>

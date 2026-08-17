@@ -20,6 +20,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PendingUserCrudController extends AbstractCrudController
 {
@@ -27,6 +28,7 @@ final class PendingUserCrudController extends AbstractCrudController
         private readonly EntityManagerInterface $entityManager,
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly MailerService $mailerService,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -46,22 +48,22 @@ final class PendingUserCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Compte en attente')
-            ->setEntityLabelInPlural('Comptes en attente')
+            ->setEntityLabelInSingular('admin.entity.pending_user')
+            ->setEntityLabelInPlural('admin.entity.pending_users')
             ->setDefaultSort(['id' => 'DESC'])
             ->showEntityActionsInlined();
     }
 
     public function configureActions(Actions $actions): Actions
     {
-        $approve = Action::new('approve', 'Approuver')
+        $approve = Action::new('approve', 'admin.action.approve')
             ->linkToCrudAction('approveUser')
             ->addCssClass('btn btn-success')
             ->displayIf(static function (User $user): bool {
                 return UserStatus::PENDING === $user->getUserStatus();
             });
 
-        $decline = Action::new('decline', 'Refuser')
+        $decline = Action::new('decline', 'admin.action.decline')
             ->linkToCrudAction('declineUser')
             ->addCssClass('btn btn-danger')
             ->displayIf(static function (User $user): bool {
@@ -76,17 +78,19 @@ final class PendingUserCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield IdField::new('id')->hideOnForm();
-        yield EmailField::new('email', 'Email');
-        yield TextField::new('name', 'Firstname');
-        yield TextField::new('lastname', 'Lastname');
-        yield TextField::new('company', 'Company');
-        yield ChoiceField::new('userStatus', 'Statut')
+        yield IdField::new('id', 'admin.field.id')->hideOnForm();
+        yield EmailField::new('email', 'admin.field.email');
+        yield TextField::new('name', 'admin.field.first_name');
+        yield TextField::new('lastname', 'admin.field.last_name');
+        yield TextField::new('company', 'admin.field.company');
+        yield ChoiceField::new('userStatus', 'admin.field.status')
             ->setFormType(EnumType::class)
             ->setFormTypeOptions([
                 'class' => UserStatus::class,
             ])
-            ->formatValue(fn ($value, $entity) => $value?->value);
+            ->formatValue(fn ($value) => null === $value
+                ? null
+                : $this->translator->trans('admin.enum.user_status.'.$value->value));
     }
 
     public function createIndexQueryBuilder(
@@ -107,13 +111,13 @@ final class PendingUserCrudController extends AbstractCrudController
         $user = $context->getEntity()?->getInstance();
 
         if (!$user instanceof User) {
-            $this->addFlash('error', 'Utilisateur introuvable.');
+            $this->addFlash('error', 'admin.flash.user_not_found');
 
             return $this->redirect($this->getIndexUrl());
         }
 
         if (UserStatus::PENDING !== $user->getUserStatus()) {
-            $this->addFlash('warning', 'Ce compte n’est plus en attente.');
+            $this->addFlash('warning', 'admin.flash.user_no_longer_pending');
 
             return $this->redirect($this->getIndexUrl());
         }
@@ -123,7 +127,7 @@ final class PendingUserCrudController extends AbstractCrudController
 
         $this->mailerService->sendApprovedEmail($user);
 
-        $this->addFlash('success', 'Le compte a été approuvé.');
+        $this->addFlash('success', 'admin.flash.user_approved');
 
         return $this->redirect($this->getIndexUrl());
     }
@@ -135,13 +139,13 @@ final class PendingUserCrudController extends AbstractCrudController
         $user = $context->getEntity()?->getInstance();
 
         if (!$user instanceof User) {
-            $this->addFlash('error', 'Utilisateur introuvable.');
+            $this->addFlash('error', 'admin.flash.user_not_found');
 
             return $this->redirect($this->getIndexUrl());
         }
 
         if (UserStatus::PENDING !== $user->getUserStatus()) {
-            $this->addFlash('warning', 'Ce compte n’est plus en attente.');
+            $this->addFlash('warning', 'admin.flash.user_no_longer_pending');
 
             return $this->redirect($this->getIndexUrl());
         }
@@ -150,7 +154,7 @@ final class PendingUserCrudController extends AbstractCrudController
         $this->entityManager->flush();
 
         $this->mailerService->sendDeniedEmail($user);
-        $this->addFlash('success', 'Le compte a été refusé.');
+        $this->addFlash('success', 'admin.flash.user_declined');
 
         return $this->redirect($this->getIndexUrl());
     }

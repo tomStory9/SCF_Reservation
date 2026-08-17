@@ -3,13 +3,13 @@
 {% block main %}
     {% set current_day = app.request.query.get('day', 1) %}
     {% set days = {
-        1: 'Monday',
-        2: 'Tuesday',
-        3: 'Wednesday',
-        4: 'Thursday',
-        5: 'Friday',
-        6: 'Saturday',
-        7: 'Sunday'
+        1: 'admin.enum.week_day.monday',
+        2: 'admin.enum.week_day.tuesday',
+        3: 'admin.enum.week_day.wednesday',
+        4: 'admin.enum.week_day.thursday',
+        5: 'admin.enum.week_day.friday',
+        6: 'admin.enum.week_day.saturday',
+        7: 'admin.enum.week_day.sunday'
     } %}
 
     <div class="nav-tabs-custom mb-4">
@@ -20,7 +20,7 @@
 
                 <li class="nav-item">
                     <a class="nav-link {% if is_active %}active font-weight-bold{% endif %}" href="{{ url }}">
-                        {{ label }}
+                        {{ label|trans }}
                     </a>
                 </li>
             {% endfor %}

@@ -408,7 +408,10 @@
 
                                                     <dd class="mt-1 text-sm font-semibold text-secondary">
                                                         {{ booking.startDate
-                                                            ? booking.startDate|date('d/m/Y à H:i')
+                                                            ? 'account.dashboard.date_time'|trans({
+                                                                '%date%': booking.startDate|date('Y-m-d'),
+                                                                '%time%': booking.startDate|date('H:i')
+                                                            })
                                                             : '-'
                                                         }}
                                                     </dd>
@@ -421,7 +424,10 @@
 
                                                     <dd class="mt-1 text-sm font-semibold text-secondary">
                                                         {{ booking.endDate
-                                                            ? booking.endDate|date('d/m/Y à H:i')
+                                                            ? 'account.dashboard.date_time'|trans({
+                                                                '%date%': booking.endDate|date('Y-m-d'),
+                                                                '%time%': booking.endDate|date('H:i')
+                                                            })
                                                             : '-'
                                                         }}
                                                     </dd>

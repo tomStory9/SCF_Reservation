@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello PaiementController!{% endblock %}
+{% block title %}{{ 'scaffold.title'|trans({'%controller%': 'PaiementController'}) }}{% endblock %}
 
 {% block body %}
 <style>
@@ -9,12 +9,12 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <h1>{{ 'scaffold.title'|trans({'%controller%': controller_name}) }} ✅</h1>
 
-    This friendly message is coming from:
+    {{ 'scaffold.intro'|trans }}
     <ul>
-        <li>Your controller at <code>/app/src/Controller/PaiementController.php</code></li>
-        <li>Your template at <code>/app/templates/paiement/index.html.twig</code></li>
+        <li>{{ 'scaffold.controller_path'|trans }} <code>/app/src/Controller/PaiementController.php</code></li>
+        <li>{{ 'scaffold.template_path'|trans }} <code>/app/templates/paiement/index.html.twig</code></li>
     </ul>
 </div>
 {% endblock %}

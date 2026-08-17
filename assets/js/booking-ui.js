@@ -38,7 +38,7 @@ export function createBookingUI(config) {
             }
 
             priceDisplay.textContent =
-                `${prices.price.toLocaleString('fr-FR')} ¥`;
+                `${prices.price.toLocaleString(config.locale)} ¥`;
 
             priceContainer.classList.remove('hidden');
         },

@@ -23,7 +23,7 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($booking->getUserBooking()->getEmail())
-            ->subject('Booking reminder')
+            ->subject('予約リマインダー')
             ->htmlTemplate('mails/booking_reminder.html.twig')
             ->context([
                 'booking' => $booking,
@@ -40,12 +40,9 @@ class MailerService
         $email = new TemplatedEmail()
            ->from($this->mailerAddress)
            ->to($user->getEmail())
-           ->subject('アカウント作成が承認されました')
+           ->subject('アカウントが承認されました')
            ->htmlTemplate('security/mails/account_creation_accepted.html.twig')
-           ->context(
-               [
-                   'user' => $user]
-           );
+           ->context(['user' => $user]);
         $this->mailerInterface->send($email);
     }
 
@@ -54,12 +51,9 @@ class MailerService
         $email = new TemplatedEmail()
            ->from($this->mailerAddress)
            ->to($user->getEmail())
-           ->subject('アカウント作成が拒否されました')
+           ->subject('アカウント申請が承認されませんでした')
            ->htmlTemplate('security/mails/account_creation_denied.html.twig')
-           ->context(
-               [
-                   'user' => $user]
-           );
+           ->context(['user' => $user]);
         $this->mailerInterface->send($email);
     }
 
@@ -68,7 +62,7 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('Payment Confirmation')
+            ->subject('お支払い確認')
             ->htmlTemplate('mails/payment_confirmation.html.twig')
             ->context([
                 'user' => $user,
@@ -83,7 +77,7 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('Booking Confirmation')
+            ->subject('予約確認')
             ->htmlTemplate('mails/booking_confirmation.html.twig')
             ->context([
                 'user' => $user,
@@ -99,7 +93,7 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('Booking Rejection')
+            ->subject('予約に関するお知らせ')
             ->htmlTemplate('mails/booking_rejected.html.twig')
             ->context([
                 'user' => $user,

@@ -14,6 +14,7 @@ use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 readonly class BookingService
 {
@@ -26,6 +27,7 @@ readonly class BookingService
         private UserRoleRepository $userRoleRepository,
         private EquipmentRepository $equipmentRepository,
         private KodaOverlapService $kodaOverlapService,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -43,7 +45,9 @@ readonly class BookingService
 
             if ($isFullDay) {
                 $format = 'Y-m-d';
-                $title = $isConflict ? 'Indisponible (Autre configuration)' : 'All day';
+                $title = $isConflict
+                    ? $this->translator->trans('calendar.event.unavailable_other_configuration')
+                    : $this->translator->trans('calendar.event.full_day');
             } else {
                 $format = 'Y-m-d\TH:i:s';
                 $timeStr = sprintf(
@@ -51,7 +55,9 @@ readonly class BookingService
                     $booking->getStartDate()->format('gA'),
                     $booking->getEndDate()->format('gA')
                 );
-                $title = $isConflict ? 'Indisponible - '.$timeStr : $timeStr;
+                $title = $isConflict
+                    ? $this->translator->trans('calendar.event.unavailable').' - '.$timeStr
+                    : $timeStr;
             }
 
             $event = [
@@ -129,7 +135,7 @@ readonly class BookingService
         $zone = $this->zoneRepository->find($data['zoneId']);
 
         if (!$zone) {
-            throw new \Exception('Zone introuvable.');
+            throw new \Exception($this->translator->trans('error.zone_not_found', domain: 'reservation'));
         }
 
         $userRole = $this->userRoleRepository->findRoleForUser($user);
@@ -153,7 +159,7 @@ readonly class BookingService
         }
 
         if ($start > $limitDate) {
-            throw new \Exception(sprintf('Votre statut vous permet de réserver au maximum %d jours à l\'avance (jusqu\'au %s).', $maxAdvanceDays, $limitDate->format('d/m/Y')));
+            throw new \Exception($this->translator->trans('error.advance_limit', ['%max_days%' => $maxAdvanceDays, '%limit_date%' => $limitDate->format('d/m/Y')], 'reservation'));
         }
 
         $durationSeconds = $end->getTimestamp() - $start->getTimestamp();
@@ -182,7 +188,7 @@ readonly class BookingService
         $receivedPrice = (int) $data['price'];
 
         if ($receivedPrice !== $expectedPrice) {
-            throw new \Exception(sprintf('Le tarif calculé (%d ¥) ne correspond pas au tarif affiché (%d ¥). Vos heures gratuites ont peut-être été mises à jour. Veuillez rafraîchir la page.', $expectedPrice, $receivedPrice));
+            throw new \Exception($this->translator->trans('error.price_changed', ['%expected_price%' => $expectedPrice, '%received_price%' => $receivedPrice], 'reservation'));
         }
 
         $booking = new Booking();

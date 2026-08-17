@@ -34,5 +34,5 @@ information:
     not_blank: "Le numéro de téléphone est obligatoire."
 
   company:
-    label: "Compagnie associé"
-    placeholder: "Votre compagnie associée"
+    label: "Entreprise ou compagnie associée"
+    placeholder: "Votre entreprise ou compagnie associée"

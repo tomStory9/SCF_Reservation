@@ -10,6 +10,7 @@ use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 readonly class RoomBookingService
 {
@@ -19,6 +20,7 @@ readonly class RoomBookingService
         private UserRoleRepository $userRoleRepository,
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator,
+        private TranslatorInterface $translator,
     ) {
     }
 
@@ -47,7 +49,7 @@ readonly class RoomBookingService
         $zone = $this->zoneRepository->find($data['roomId']);
 
         if (!$zone) {
-            throw new \Exception('Chambre introuvable.');
+            throw new \Exception($this->translator->trans('error.room_not_found', domain: 'roomReservation'));
         }
 
         $userRole = $this->userRoleRepository->findRoleForUser($user);
@@ -64,7 +66,7 @@ readonly class RoomBookingService
         $end = new \DateTimeImmutable($data['endDate']);
 
         if ($start > $limitDate) {
-            throw new \Exception(sprintf('Votre statut vous permet de réserver au maximum %d jours à l\'avance (jusqu\'au %s).', $maxAdvanceDays, $limitDate->format('d/m/Y')));
+            throw new \Exception($this->translator->trans('error.advance_limit', ['%max_days%' => $maxAdvanceDays, '%limit_date%' => $limitDate->format('d/m/Y')], 'roomReservation'));
         }
 
         $nights = (int) $data['nights'];
@@ -87,7 +89,7 @@ readonly class RoomBookingService
         $receivedPrice = (int) $data['price'];
 
         if ($receivedPrice !== $expectedPrice) {
-            throw new \Exception(sprintf('Le tarif calculé (%d ¥) ne correspond pas au tarif affiché (%d ¥). Veuillez rafraîchir la page et recommencer.', $expectedPrice, $receivedPrice));
+            throw new \Exception($this->translator->trans('error.price_changed', ['%expected_price%' => $expectedPrice, '%received_price%' => $receivedPrice], 'roomReservation'));
         }
 
         $booking = new Booking();

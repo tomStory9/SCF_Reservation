@@ -26,9 +26,18 @@ class LocaleSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $requestedLocale = $request->query->get('_locale');
+
+        if (\is_string($requestedLocale) && \in_array($requestedLocale, $this->supportedLocales, true)) {
+            $request->getSession()->set('_locale', $requestedLocale);
+            $request->setLocale($requestedLocale);
+
+            return;
+        }
+
         $locale = $request->getSession()->get('_locale') ?? $request->cookies->get('_locale');
 
-        if ($locale) {
+        if (\is_string($locale) && \in_array($locale, $this->supportedLocales, true)) {
             $request->setLocale($locale);
         } else {
             $browserLocale = $request->getPreferredLanguage($this->supportedLocales);
