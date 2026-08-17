@@ -88,6 +88,12 @@
 								{{ 'account.dashboard.change_password'|trans }}
 							</a>
 
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <a href="{{ path('admin') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-secondary transition hover:bg-[#f8efe4]">
+                                    {{ 'account.dashboard.admin'|trans }}
+                                </a>
+                            {% endif %}
+
 							<div class="my-1 border-t border-slate-100"></div>
 
 							<a href="{{ path('app_logout') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-danger transition hover:bg-red-50">

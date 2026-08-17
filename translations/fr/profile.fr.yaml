@@ -8,12 +8,13 @@ account:
         # Navigation
         skip_to_content: 'Aller au contenu principal'
         book_now: 'Réserver maintenant'
-        new_booking: 'Nouvelle réservation'
+        new_booking: "Reserver un terrain d'entrainement"
         new_room_booking: 'Réserver une chambre'
         space: 'Espace membre'
-        my_account: 'Mon compte'
+        my_account: 'Mes Reservations'
         my_info: 'Mes informations'
         change_password: 'Changer le mot de passe'
+        admin: "Accèder au panel Admin"
         logout: 'Se déconnecter'
 
         # États vides
