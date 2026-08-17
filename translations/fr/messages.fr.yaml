@@ -114,6 +114,8 @@ admin:
     role_name: "Nom du rôle"
     label: "Libellé"
     allocated_hours: "Heures gratuites mensuelles"
+    max_advance_booking: "Nombre de jour pour la réservation à l'avance"
+    tarif: "Tarif"
     zone: "Zone"
     user: "Utilisateur"
     start_date: "Date de début"

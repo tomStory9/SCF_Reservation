@@ -20,6 +20,8 @@ class UserRoleCrudController extends AbstractCrudController
         yield TextField::new('roleName', 'admin.field.role_name');
         yield TextField::new('label', 'admin.field.label');
         yield IntegerField::new('allocatedHoursPerMonth', 'admin.field.allocated_hours');
+        yield IntegerField::new('maxAdvanceBookingDays', 'admin.field.max_advance_booking');
+        yield TextField::new('tarif', 'admin.field.tarif');
     }
 
     public function configureCrud(Crud $crud): Crud
