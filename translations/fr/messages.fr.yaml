@@ -82,6 +82,8 @@ admin:
     pending_users: "Utilisateurs en attente"
     pending_bookings: "Réservations en attente"
     equipments: "Equipements"
+    configuration: "Configuration"
+    parametre: "Paramètres du site"
   entity:
     user: "Utilisateur"
     users: "Utilisateurs"
@@ -141,6 +143,10 @@ admin:
     equipment_name: "Nom de l'équipement"
     unit_price: "Prix unitaire"
     max_quantity: "Quantité maximal"
+    gestion_chambre: "Gestion des Chambres"
+    securite_inscription: "Sécurité et Inscriptions"
+    reserver_chambre: "Réservation des chambres"
+    validation_manuelle: "Validation manuelle requise"
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"
@@ -203,6 +209,9 @@ admin:
     visitors: "Visiteurs"
     unknown_zone: "Zone inconnue"
     back: "Retour aux réservations"
+  help:
+    help_room_enable: "Si désactivé, le bouton disparaît de la navbar et les réservations sont bloquées pour les utilisateurs."
+    help_verification_user: "Si activé, les administrateurs devront approuver chaque nouveau compte. Si désactivé, les comptes sont approuvés automatiquement."
 
 scaffold:
   title: "Bonjour %controller% !"
