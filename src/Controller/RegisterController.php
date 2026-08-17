@@ -82,7 +82,7 @@ final class RegisterController extends AbstractController
                 new TemplatedEmail()
                     ->from(new Address($mailerAddress, 'Setoushi Circus Factory'))
                     ->to($user->getEmail())
-                    ->subject($translator->trans('registration_email.subject', domain: 'register'))
+                    ->subject('メールアドレスの確認をお願いします')
                     ->htmlTemplate('security/register/mails/confirmation_email.html.twig')
             );
 
@@ -140,7 +140,7 @@ final class RegisterController extends AbstractController
             return $this->redirectToRoute('app_register');
         }
 
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', $translator->trans('flash.email_verified'));
 
         return $this->redirectToRoute('app_register');
     }

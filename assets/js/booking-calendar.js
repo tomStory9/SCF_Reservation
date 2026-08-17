@@ -121,7 +121,8 @@ document.addEventListener(
                             equipmentTotalDisplay,
                         grandTotalContainer,
                         grandTotalDisplay
-                    }
+                    },
+                    config
                 )
                 : null;
 
@@ -247,7 +248,7 @@ document.addEventListener(
             try {
                 equipmentListElement.innerHTML = `
                     <p class="px-3 py-2 text-xs text-state">
-                        Chargement des équipements...
+                        ${config.texts.loadingEquipments}
                     </p>
                 `;
 
@@ -285,7 +286,7 @@ document.addEventListener(
 
                 equipmentListElement.innerHTML = `
                     <p class="px-3 py-2 text-xs text-red-600">
-                        Impossible de charger les équipements.
+                        ${config.texts.equipmentsLoadingError}
                     </p>
                 `;
             }

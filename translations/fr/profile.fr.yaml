@@ -9,6 +9,12 @@ account:
         skip_to_content: 'Aller au contenu principal'
         book_now: 'Réserver maintenant'
         new_booking: 'Nouvelle réservation'
+        new_room_booking: 'Réserver une chambre'
+        space: 'Espace membre'
+        my_account: 'Mon compte'
+        my_info: 'Mes informations'
+        change_password: 'Changer le mot de passe'
+        logout: 'Se déconnecter'
 
         # États vides
         no_booking_title: 'Aucune réservation'
@@ -66,3 +72,11 @@ account:
         equipment: 'Équipement'
         quantity: 'Quantité'
         unit_price: 'Prix unitaire'
+        date_time: '%date% à %time%'
+
+booking:
+    status:
+        pending: 'En attente'
+        approved: 'Approuvée'
+        declined: 'Refusée'
+        paid: 'Payée'

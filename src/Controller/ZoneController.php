@@ -12,12 +12,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class ZoneController extends AbstractController
 {
     public function __construct(
         private readonly BookingService $bookingService,
         private readonly EquipmentRepository $equipmentRepository,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -31,7 +33,7 @@ final class ZoneController extends AbstractController
 
         if (!$startDateParameter || !$endDateParameter) {
             return new JsonResponse([
-                'error' => 'Les paramètres startDate et endDate sont obligatoires.',
+                'error' => $this->translator->trans('api.error.missing_dates'),
             ], Response::HTTP_BAD_REQUEST);
         }
 
@@ -40,13 +42,13 @@ final class ZoneController extends AbstractController
             $endDate = new \DateTimeImmutable($endDateParameter);
         } catch (\Exception) {
             return new JsonResponse([
-                'error' => 'Le format des dates est invalide.',
+                'error' => $this->translator->trans('api.error.invalid_date_format'),
             ], Response::HTTP_BAD_REQUEST);
         }
 
         if ($endDate <= $startDate) {
             return new JsonResponse([
-                'error' => 'La date de fin doit être après la date de début.',
+                'error' => $this->translator->trans('api.error.invalid_date_order'),
             ], Response::HTTP_BAD_REQUEST);
         }
 

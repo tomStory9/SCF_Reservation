@@ -1,9 +1,10 @@
 export function createEquipmentUI(
     state,
-    elements
+    elements,
+    config
 ) {
     function formatPrice(price) {
-        return `${Number(price).toLocaleString('fr-FR')} ¥`;
+        return `${Number(price).toLocaleString(config.locale)} ¥`;
     }
 
     function calculateTotal() {
@@ -106,7 +107,7 @@ export function createEquipmentUI(
         ) {
             elements.list.innerHTML = `
                 <p class="px-3 py-2 text-xs text-state">
-                    Aucun équipement disponible pour cette zone.
+                    ${config.texts.noEquipmentsAvailable}
                 </p>
             `;
 
@@ -144,7 +145,7 @@ export function createEquipmentUI(
                                     ${formatPrice(
                             equipment.unitPrice
                         )}
-                                    · Disponible :
+                                    · ${config.texts.availableEquipment} :
                                     ${availableQuantity}
                                 </span>
                             </div>

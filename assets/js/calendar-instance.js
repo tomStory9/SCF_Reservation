@@ -1,5 +1,7 @@
 import { Calendar } from '@fullcalendar/core';
 import frLocale from '@fullcalendar/core/locales/fr';
+import enGbLocale from '@fullcalendar/core/locales/en-gb';
+import jaLocale from '@fullcalendar/core/locales/ja';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -24,6 +26,11 @@ export function createCalendar({
     onSelectionChange
 }) {
     const texts = config.texts;
+    const calendarLocales = {
+        fr: frLocale,
+        en: enGbLocale,
+        ja: jaLocale
+    };
 
     let calendar = null;
 
@@ -227,7 +234,7 @@ export function createCalendar({
             ],
 
             initialView: 'dayGridMonth',
-            locale: frLocale,
+            locale: calendarLocales[config.locale] ?? enGbLocale,
             firstDay: 1,
             height: 'auto',
             contentHeight: 'auto',

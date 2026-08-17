@@ -13,3 +13,13 @@ flash:
   info_email: A confirmation email has been sent to you. Please follow the instructions to verify your account before signing in.
   error_email: This email is already in use. Please choose a different one, or sign in if you already have an account.
   error_not_verified: Your account has not been verified yet. Please check your email to activate your account.
+information:
+  email:
+    not_blank: "Email address is required."
+    invalid: "Please enter a valid email address."
+  name:
+    not_blank: "First name is required."
+  lastname:
+    not_blank: "Last name is required."
+  phone:
+    not_blank: "Phone number is required."

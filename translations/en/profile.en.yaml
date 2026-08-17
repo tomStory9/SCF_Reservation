@@ -6,6 +6,12 @@ account:
     skip_to_content: 'Skip to main content'
     book_now: 'Book now'
     new_booking: 'New Booking'
+    new_room_booking: 'Book a room'
+    space: 'Member area'
+    my_account: 'My account'
+    my_info: 'My information'
+    change_password: 'Change password'
+    logout: 'Sign out'
     no_booking_title: 'No Bookings'
     no_booking_text: "You don't have any bookings yet. Book your first session now!"
     booking: 'Booking'
@@ -46,3 +52,11 @@ account:
     equipment: 'Equipment'
     quantity: 'Quantity'
     unit_price: 'Unit price'
+    date_time: '%date% at %time%'
+
+booking:
+  status:
+    pending: 'Pending'
+    approved: 'Approved'
+    declined: 'Declined'
+    paid: 'Paid'

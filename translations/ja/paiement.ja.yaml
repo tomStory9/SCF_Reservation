@@ -1,0 +1,9 @@
+paiement:
+  success:
+    title: "お支払い完了"
+    message: "お支払い手続きが正常に完了しました。"
+    close_page: "このページを閉じてください。"
+  cancel:
+    title: "お支払いキャンセル"
+    message: "お支払い手続きはキャンセルされました。"
+    close_page: "このページを閉じてください。"

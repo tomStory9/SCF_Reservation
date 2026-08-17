@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html lang="{{ app.request.locale|default('ja_JP') }}">
-	{% trans_default_domain 'register' %}
+<html lang="ja">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>{{ 'registration_email.subject'|trans }}</title>
+		<title>メールアドレスの確認をお願いします</title>
 
 		<style>
 			body {
@@ -161,14 +160,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'app.logo_1'|trans }}">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'app.logo_2'|trans }}">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
 
 								</div>
 
 								<h1>
-									{{ 'registration_email.title'|trans }}
+									メールアドレスを確認してください
 								</h1>
 
 							</td>
@@ -180,17 +179,17 @@
 							<td class="content">
 
 								<p>
-									{{ 'registration_email.hello'|trans }}
+									こんにちは。当サイトにご登録いただきありがとうございます。
 								</p>
 
 								<p>
-									{{ 'registration_email.description'|trans }}
+									下のボタンをクリックして、メールアドレスを確認し、アカウントを有効化してください。
 								</p>
 
 								<div class="button-wrapper">
 
 									<a href="{{ signedUrl }}" class="button">
-										{{ 'registration_email.button'|trans }}
+										メールアドレスを確認する
 									</a>
 
 								</div>
@@ -198,14 +197,14 @@
 								<div class="divider"></div>
 								<div class="info">
 									<strong>
-										{{ 'registration_email.expiration_title'|trans }}
+										この確認メールに有効期限はありません
 									</strong>
 
 								</div>
 
 								<p style="margin-top:32px">
 
-									{{ 'registration_email.ignore'|trans }}
+									アカウントを作成した覚えがない場合は、このメールを無視してください。
 
 								</p>
 
@@ -217,7 +216,7 @@
 
 							<td class="footer">
 
-								<strong>{{ 'app.name'|trans }}</strong>
+								<strong>Setoushi Circus Factory - 予約システム</strong>
 
 								<br><br>
 
@@ -226,7 +225,7 @@
 
 								<br><br>
 
-								{{ 'registration_email.footer'|trans }}
+								このメールは自動送信されています。返信はご遠慮ください。
 
 							</td>
 

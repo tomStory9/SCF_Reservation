@@ -13,6 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class BookingController extends AbstractController
 {
@@ -21,6 +22,7 @@ final class BookingController extends AbstractController
         private readonly BookingService $bookingService,
         private readonly UserRoleRepository $userRoleRepository,
         private readonly BookingRepository $bookingRepository,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -34,7 +36,7 @@ final class BookingController extends AbstractController
         $user = $this->getUser();
 
         if (!$user instanceof User) {
-            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['success' => false, 'error' => $this->translator->trans('api.error.user_not_authenticated')], Response::HTTP_BAD_REQUEST);
         }
 
         $remainingHours = $this->bookingRepository->getRemainingFreeHoursThisMonth($user);
@@ -64,20 +66,27 @@ final class BookingController extends AbstractController
         $user = $this->getUser();
 
         if (!$user instanceof User) {
-            return new JsonResponse(['success' => false, 'error' => 'Utilisateur non connecté'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['success' => false, 'error' => $this->translator->trans('api.error.user_not_authenticated')], Response::HTTP_BAD_REQUEST);
         }
 
         $data = json_decode($request->getContent(), true);
 
         if (!$data) {
-            return new JsonResponse(['success' => false, 'error' => 'Données invalides.'], Response::HTTP_BAD_REQUEST);
+            return new JsonResponse(['success' => false, 'error' => $this->translator->trans('api.error.invalid_data')], Response::HTTP_BAD_REQUEST);
         }
 
-        $this->bookingService->createBooking($data, $user);
+        try {
+            $this->bookingService->createBooking($data, $user);
+        } catch (\Exception $exception) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => $exception->getMessage(),
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         $this->addFlash(
             'success',
-            'Votre réservation a bien été enregistrée et est en attente de validation.'
+            $this->translator->trans('flash.booking_created')
         );
 
         return new JsonResponse([

@@ -76,15 +76,6 @@ checksums:
     register/already_account: 62359b1e465c640b9d0b2b5ba5b170ab
     register/login: 62d931ee6acd6124a9fb289f4162bb94
     register/submit: 209e8023e7cb5ffd2fe2507d627a5123
-    registration_email/subject: 22126a21640e12f53296bb5ac123a80f
-    registration_email/title: 65ce491c5da6a094461a37f5f5a15bd9
-    registration_email/hello: f78946e861724e0f5930d96c53eb3cac
-    registration_email/description: 0bba94d49c99cc25f7439128294a18c8
-    registration_email/button: be4844b4e1a2070fbad3ce553dc09ea5
-    registration_email/expiration_title: 37bfee87af3bfc2ee6d69e183d1400fc
-    registration_email/expiration: cc49a9c07783fe19a52d199342f2ed8c
-    registration_email/ignore: b7cda19fe595220dc698640584d11f9e
-    registration_email/footer: 6beb3210dd9446a9205352fbd0d9b807
     app/name: 2186c5ffec367c02c653df80963c60fd
     app/logo_1: cb98351050fe4195e8e0a8aa8b1a893a
     app/logo_2: 05f77eb2146be356b9be9336321acad8
@@ -111,15 +102,6 @@ checksums:
     register/already_account: 62359b1e465c640b9d0b2b5ba5b170ab
     register/login: 62d931ee6acd6124a9fb289f4162bb94
     register/submit: 209e8023e7cb5ffd2fe2507d627a5123
-    registration_email/subject: 22126a21640e12f53296bb5ac123a80f
-    registration_email/title: 65ce491c5da6a094461a37f5f5a15bd9
-    registration_email/hello: f78946e861724e0f5930d96c53eb3cac
-    registration_email/description: 0bba94d49c99cc25f7439128294a18c8
-    registration_email/button: be4844b4e1a2070fbad3ce553dc09ea5
-    registration_email/expiration_title: c89712eeb0362906527bb4116610bfd3
-    registration_email/expiration: cc49a9c07783fe19a52d199342f2ed8c
-    registration_email/ignore: b7cda19fe595220dc698640584d11f9e
-    registration_email/footer: 6beb3210dd9446a9205352fbd0d9b807
     app/name: 2186c5ffec367c02c653df80963c60fd
     app/logo_1: cb98351050fe4195e8e0a8aa8b1a893a
     app/logo_2: 05f77eb2146be356b9be9336321acad8

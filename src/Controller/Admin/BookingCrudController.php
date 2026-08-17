@@ -19,12 +19,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class BookingCrudController extends AbstractCrudController
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly AdminUrlGenerator $adminUrlGenerator,
+        private readonly TranslatorInterface $translator,
     ) {
     }
 
@@ -44,8 +46,8 @@ final class BookingCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setEntityLabelInSingular('Réservation')
-            ->setEntityLabelInPlural('Réservations')
+            ->setEntityLabelInSingular('admin.entity.booking')
+            ->setEntityLabelInPlural('admin.entity.bookings')
             ->setDefaultSort([
                 'createdDate' => 'DESC',
             ])
@@ -54,14 +56,14 @@ final class BookingCrudController extends AbstractCrudController
 
     public function configureActions(Actions $actions): Actions
     {
-        $approve = Action::new('approve', 'Approuver')
+        $approve = Action::new('approve', 'admin.action.approve')
             ->linkToCrudAction('approveBooking')
             ->addCssClass('btn btn-success')
             ->displayIf(static function (Booking $booking): bool {
                 return BookingStatus::PENDING === $booking->getBookingStatus();
             });
 
-        $decline = Action::new('decline', 'Refuser')
+        $decline = Action::new('decline', 'admin.action.decline')
             ->linkToCrudAction('declineBooking')
             ->addCssClass('btn btn-danger')
             ->displayIf(static function (Booking $booking): bool {
@@ -80,13 +82,13 @@ final class BookingCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield AssociationField::new('zone', 'Zone')
+        yield AssociationField::new('zone', 'admin.field.zone')
             ->formatValue(
                 fn ($value, $entity) => $value?->getName()
             )
             ->setFormTypeOption('choice_label', 'name');
 
-        yield AssociationField::new('userBooking', 'Utilisateur')
+        yield AssociationField::new('userBooking', 'admin.field.user')
             ->formatValue(
                 fn ($value, $entity) => $value?->getFullName()
             )
@@ -95,21 +97,23 @@ final class BookingCrudController extends AbstractCrudController
                 fn ($user) => $user->getFullName()
             );
 
-        yield DateTimeField::new('startDate', 'Date de début');
-        yield DateTimeField::new('endDate', 'Date de fin');
-        yield IntegerField::new('price', 'Prix');
-        yield IntegerField::new('guestCount', 'Nombre de visiteurs');
+        yield DateTimeField::new('startDate', 'admin.field.start_date');
+        yield DateTimeField::new('endDate', 'admin.field.end_date');
+        yield IntegerField::new('price', 'admin.field.price');
+        yield IntegerField::new('guestCount', 'admin.field.guest_count');
 
-        yield ChoiceField::new('bookingStatus', 'Statut')
+        yield ChoiceField::new('bookingStatus', 'admin.field.status')
             ->setFormType(EnumType::class)
             ->setFormTypeOptions([
                 'class' => BookingStatus::class,
             ])
             ->formatValue(
-                fn ($value, $entity) => $value?->value
+                fn ($value) => null === $value
+                    ? null
+                    : $this->translator->trans('admin.enum.booking_status.'.$value->value)
             );
 
-        yield DateTimeField::new('createdDate', 'Date de réservation');
+        yield DateTimeField::new('createdDate', 'admin.field.created_date');
     }
 
     public function createIndexQueryBuilder(
@@ -140,7 +144,7 @@ final class BookingCrudController extends AbstractCrudController
         if (!$booking instanceof Booking) {
             $this->addFlash(
                 'error',
-                'Réservation introuvable.',
+                'admin.flash.booking_not_found',
             );
 
             return $this->redirect($this->getIndexUrl());
@@ -149,7 +153,7 @@ final class BookingCrudController extends AbstractCrudController
         if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
             $this->addFlash(
                 'warning',
-                'Cette réservation n’est plus en attente.',
+                'admin.flash.booking_no_longer_pending',
             );
 
             return $this->redirect($this->getIndexUrl());
@@ -161,7 +165,7 @@ final class BookingCrudController extends AbstractCrudController
 
         $this->addFlash(
             'success',
-            'La réservation a été approuvée.',
+            'admin.flash.booking_approved',
         );
 
         return $this->redirect($this->getIndexUrl());
@@ -179,7 +183,7 @@ final class BookingCrudController extends AbstractCrudController
         if (!$booking instanceof Booking) {
             $this->addFlash(
                 'error',
-                'Réservation introuvable.',
+                'admin.flash.booking_not_found',
             );
 
             return $this->redirect($this->getIndexUrl());
@@ -188,7 +192,7 @@ final class BookingCrudController extends AbstractCrudController
         if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
             $this->addFlash(
                 'warning',
-                'Cette réservation n’est plus en attente.',
+                'admin.flash.booking_no_longer_pending',
             );
 
             return $this->redirect($this->getIndexUrl());
@@ -200,7 +204,7 @@ final class BookingCrudController extends AbstractCrudController
 
         $this->addFlash(
             'success',
-            'La réservation a été refusée.',
+            'admin.flash.booking_declined',
         );
 
         return $this->redirect($this->getIndexUrl());

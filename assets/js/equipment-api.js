@@ -16,7 +16,7 @@ export function createEquipmentApi(config) {
 
             if (!response.ok) {
                 throw new Error(
-                    'Impossible de charger les équipements'
+                    config.texts.equipmentsLoadingError
                 );
             }
 

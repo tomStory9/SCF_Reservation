@@ -40,7 +40,7 @@ class EmailReminderCommand extends Command
             ['+3 months', '3か月後'],
             ['+1 month', '1か月後'],
             ['+1 week', '1週間後'],
-            ['+1 day', '1日後'],
+            ['+1 day', '明日'],
         ];
 
         $globalFound = 0;

@@ -1,3 +1,4 @@
+{% trans_default_domain 'profile' %}
 <nav class="sticky top-0 z-50 border-b border-slate-200 bg-white">
 	<div class="mx-auto w-full px-4 py-4 sm:px-6 lg:px-10 xl:px-12">
 		<div
@@ -49,7 +50,7 @@
 						EN
 					</a>
 
-					<a href="{{ path('app_switch_locale', {'locale': 'ja'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'ja_JP' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
+					<a href="{{ path('app_switch_locale', {'locale': 'ja'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'ja' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
 						JA
 					</a>
 				</div>
@@ -104,8 +105,8 @@
 									EN
 								</a>
 
-								<a href="{{ path('app_switch_locale', {'locale': 'ja_JP'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'ja_JP' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
-									ja_JP
+								<a href="{{ path('app_switch_locale', {'locale': 'ja'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'ja' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
+									JA
 								</a>
 							</div>
 						</div>
