@@ -271,7 +271,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     approveButton?.addEventListener('click', async () => {
         const response = await fetch(`/booking/${selectedEvent?.id}/approve`, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
             },
@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     declineButton?.addEventListener('click', async () => {
         const response = await fetch(`/booking/${selectedEvent?.id}/decline`, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest',
             },
