@@ -27,6 +27,50 @@ stripe:
   booking_description: "Réservation d’un espace d’entraînement"
 
 admin:
+  dashboard:
+    title: "Vue d’ensemble"
+    key_metrics: "Indicateurs principaux"
+    unknown_zone: "Zone inconnue"
+    unknown_user: "Utilisateur inconnu"
+    actions:
+      users: "Gérer les utilisateurs"
+      pending_bookings: "Traiter les demandes"
+      view_all_bookings: "Voir toutes les réservations"
+      view_all: "Tout voir"
+    stats:
+      pending_bookings: "Demandes en attente"
+      pending_bookings_help: "Réservations à examiner"
+      today_bookings: "Réservations aujourd’hui"
+      today_bookings_help: "Espaces occupés ou prévus"
+      month_value: "Valeur confirmée du mois"
+      month_value_help: "Réservations approuvées ou payées"
+      pending_users: "Comptes en attente"
+      pending_users_help: "Inscriptions à valider"
+    calendar:
+      kicker: "Planning"
+      title: "Calendrier des réservations"
+      subtitle: "Vue semaine, journée ou mois des réservations actives."
+      legend: "Légende des statuts"
+      empty: "Aucune réservation à afficher sur la période."
+    activity:
+      kicker: "Synthèse"
+      title: "Activité globale"
+      next_seven_days: "7 prochains jours"
+      total_users: "Utilisateurs"
+      status_breakdown: "Répartition des réservations"
+    pending:
+      kicker: "À traiter"
+      title: "Dernières demandes"
+      subtitle: "Les réservations en attente les plus récentes."
+      empty_title: "Tout est à jour"
+      empty_text: "Aucune demande de réservation n’attend de validation."
+    users:
+      kicker: "Utilisateurs"
+      title: "Derniers comptes ajoutés"
+      subtitle: "Les comptes les plus récents, classés par identifiant."
+      empty_title: "Aucun compte"
+      empty_text: "Les nouveaux comptes apparaîtront ici."
+      verified: "Adresse email vérifiée"
   menu:
     dashboard: "Tableau de bord"
     users: "Utilisateurs"

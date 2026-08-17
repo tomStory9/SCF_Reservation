@@ -1,5 +1,214 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
 
-{% block main %}
+{% block content_title %}{{ 'admin.dashboard.title'|trans }}{% endblock %}
 
-{% endblock main %}
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ urls.users }}">
+        <i class="fa fa-users" aria-hidden="true"></i>
+        {{ 'admin.dashboard.actions.users'|trans }}
+    </a>
+    <a class="btn btn-primary" href="{{ urls.pendingBookings }}">
+        <i class="fa fa-inbox" aria-hidden="true"></i>
+        {{ 'admin.dashboard.actions.pending_bookings'|trans }}
+    </a>
+{% endblock %}
+
+{% block main %}
+    <div class="scf-dashboard">
+        <section class="scf-dashboard__stats" aria-label="{{ 'admin.dashboard.key_metrics'|trans }}">
+            <a class="scf-stat scf-stat--warning" href="{{ urls.pendingBookings }}">
+                <span class="scf-stat__icon"><i class="fa fa-hourglass-half" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">{{ 'admin.dashboard.stats.pending_bookings'|trans }}</span>
+                    <strong>{{ stats.pendingBookings|number_format }}</strong>
+                    <small>{{ 'admin.dashboard.stats.pending_bookings_help'|trans }}</small>
+                </span>
+                <i class="fa fa-arrow-right scf-stat__arrow" aria-hidden="true"></i>
+            </a>
+
+            <a class="scf-stat scf-stat--primary" href="#scf-booking-calendar">
+                <span class="scf-stat__icon"><i class="fa fa-calendar-check" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">{{ 'admin.dashboard.stats.today_bookings'|trans }}</span>
+                    <strong>{{ stats.todayBookings|number_format }}</strong>
+                    <small>{{ 'admin.dashboard.stats.today_bookings_help'|trans }}</small>
+                </span>
+                <i class="fa fa-arrow-down scf-stat__arrow" aria-hidden="true"></i>
+            </a>
+
+            <div class="scf-stat scf-stat--success">
+                <span class="scf-stat__icon"><i class="fa fa-yen-sign" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">{{ 'admin.dashboard.stats.month_value'|trans }}</span>
+                    <strong>¥{{ stats.monthValue|number_format(0, '.', ',') }}</strong>
+                    <small>{{ 'admin.dashboard.stats.month_value_help'|trans }}</small>
+                </span>
+            </div>
+
+            <a class="scf-stat scf-stat--danger" href="{{ urls.pendingUsers }}">
+                <span class="scf-stat__icon"><i class="fa fa-user-clock" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">{{ 'admin.dashboard.stats.pending_users'|trans }}</span>
+                    <strong>{{ stats.pendingUsers|number_format }}</strong>
+                    <small>{{ 'admin.dashboard.stats.pending_users_help'|trans }}</small>
+                </span>
+                <i class="fa fa-arrow-right scf-stat__arrow" aria-hidden="true"></i>
+            </a>
+        </section>
+
+        <section class="scf-dashboard__main-grid">
+            <article class="scf-panel scf-panel--calendar">
+                <header class="scf-panel__header">
+                    <div>
+                        <span class="scf-panel__kicker">{{ 'admin.dashboard.calendar.kicker'|trans }}</span>
+                        <h3>{{ 'admin.dashboard.calendar.title'|trans }}</h3>
+                        <p>{{ 'admin.dashboard.calendar.subtitle'|trans }}</p>
+                    </div>
+                    <div class="scf-calendar-legend" aria-label="{{ 'admin.dashboard.calendar.legend'|trans }}">
+                        <span><i class="scf-dot scf-dot--pending"></i>{{ 'admin.enum.booking_status.pending'|trans }}</span>
+                        <span><i class="scf-dot scf-dot--approved"></i>{{ 'admin.enum.booking_status.approved'|trans }}</span>
+                        <span><i class="scf-dot scf-dot--paid"></i>{{ 'admin.enum.booking_status.paid'|trans }}</span>
+                    </div>
+                </header>
+
+                <div
+                    id="scf-booking-calendar"
+                    class="scf-calendar"
+                    data-locale="{{ app.request.locale }}"
+                    data-events="{{ calendarEvents|json_encode|e('html_attr') }}"
+                ></div>
+            </article>
+
+            <aside class="scf-panel scf-panel--summary">
+                <header class="scf-panel__header">
+                    <div>
+                        <span class="scf-panel__kicker">{{ 'admin.dashboard.activity.kicker'|trans }}</span>
+                        <h3>{{ 'admin.dashboard.activity.title'|trans }}</h3>
+                    </div>
+                </header>
+
+                <div class="scf-quick-metrics">
+                    <div>
+                        <span><i class="fa fa-forward" aria-hidden="true"></i>{{ 'admin.dashboard.activity.next_seven_days'|trans }}</span>
+                        <strong>{{ stats.nextSevenDaysBookings }}</strong>
+                    </div>
+                    <div>
+                        <span><i class="fa fa-user-group" aria-hidden="true"></i>{{ 'admin.dashboard.activity.total_users'|trans }}</span>
+                        <strong>{{ stats.totalUsers }}</strong>
+                    </div>
+                </div>
+
+                <div class="scf-status-breakdown">
+                    <h4>{{ 'admin.dashboard.activity.status_breakdown'|trans }}</h4>
+                    {% for status, count in statusCounts %}
+                        {% set percentage = statusTotal > 0 ? ((count / statusTotal) * 100)|round : 0 %}
+                        <div class="scf-status-row">
+                            <div class="scf-status-row__label">
+                                <span><i class="scf-dot scf-dot--{{ status }}"></i>{{ ('admin.enum.booking_status.' ~ status)|trans }}</span>
+                                <strong>{{ count }}</strong>
+                            </div>
+                            <div class="scf-progress" role="progressbar" aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+                                <span class="scf-progress__bar scf-progress__bar--{{ status }}" style="width: {{ percentage }}%"></span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <a class="scf-panel__link" href="{{ urls.bookings }}">
+                    {{ 'admin.dashboard.actions.view_all_bookings'|trans }}
+                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                </a>
+            </aside>
+        </section>
+
+        <section class="scf-dashboard__lists-grid">
+            <article class="scf-panel">
+                <header class="scf-panel__header scf-panel__header--row">
+                    <div>
+                        <span class="scf-panel__kicker">{{ 'admin.dashboard.pending.kicker'|trans }}</span>
+                        <h3>{{ 'admin.dashboard.pending.title'|trans }}</h3>
+                        <p>{{ 'admin.dashboard.pending.subtitle'|trans }}</p>
+                    </div>
+                    <a class="btn btn-secondary btn-sm" href="{{ urls.pendingBookings }}">{{ 'admin.dashboard.actions.view_all'|trans }}</a>
+                </header>
+
+                {% if pendingBookings is empty %}
+                    <div class="scf-empty-state">
+                        <i class="fa fa-circle-check" aria-hidden="true"></i>
+                        <strong>{{ 'admin.dashboard.pending.empty_title'|trans }}</strong>
+                        <span>{{ 'admin.dashboard.pending.empty_text'|trans }}</span>
+                    </div>
+                {% else %}
+                    <div class="scf-list">
+                        {% for booking in pendingBookings %}
+                            <a class="scf-list-item" href="{{ bookingDetailUrls[booking.id] }}">
+                                <span class="scf-list-item__icon scf-list-item__icon--warning">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </span>
+                                <span class="scf-list-item__body">
+                                    <span class="scf-list-item__title">
+                                        {{ booking.zoneName|default('admin.dashboard.unknown_zone'|trans) }}
+                                        <small>#{{ booking.id }}</small>
+                                    </span>
+                                    <span class="scf-list-item__meta">
+                                        {{ (booking.userFirstName ~ ' ' ~ booking.userLastName)|trim|default('admin.dashboard.unknown_user'|trans) }}
+                                        <i aria-hidden="true">·</i>
+                                        {{ booking.startDate|date(app.request.locale == 'en' ? 'm/d/Y H:i' : 'Y/m/d H:i') }}
+                                    </span>
+                                </span>
+                                <span class="scf-list-item__aside">
+                                    <strong>¥{{ booking.amount|number_format(0, '.', ',') }}</strong>
+                                    <span class="scf-badge scf-badge--pending">{{ 'admin.enum.booking_status.pending'|trans }}</span>
+                                </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </article>
+
+            <article class="scf-panel">
+                <header class="scf-panel__header scf-panel__header--row">
+                    <div>
+                        <span class="scf-panel__kicker">{{ 'admin.dashboard.users.kicker'|trans }}</span>
+                        <h3>{{ 'admin.dashboard.users.title'|trans }}</h3>
+                        <p>{{ 'admin.dashboard.users.subtitle'|trans }}</p>
+                    </div>
+                    <a class="btn btn-secondary btn-sm" href="{{ urls.users }}">{{ 'admin.dashboard.actions.view_all'|trans }}</a>
+                </header>
+
+                {% if recentUsers is empty %}
+                    <div class="scf-empty-state">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <strong>{{ 'admin.dashboard.users.empty_title'|trans }}</strong>
+                        <span>{{ 'admin.dashboard.users.empty_text'|trans }}</span>
+                    </div>
+                {% else %}
+                    <div class="scf-list">
+                        {% for user in recentUsers %}
+                            {% set userStatus = user.userStatus ? user.userStatus.value : 'pending' %}
+                            <a class="scf-list-item" href="{{ userDetailUrls[user.id] }}">
+                                <span class="scf-avatar">{{ user.name|first|upper }}{{ user.lastname|first|upper }}</span>
+                                <span class="scf-list-item__body">
+                                    <span class="scf-list-item__title">
+                                        {{ user.fullName }}
+                                        <small>#{{ user.id }}</small>
+                                    </span>
+                                    <span class="scf-list-item__meta">
+                                        {{ user.email }}
+                                        {% if user.company %}<i aria-hidden="true">·</i>{{ user.company }}{% endif %}
+                                    </span>
+                                </span>
+                                <span class="scf-list-item__aside">
+                                    {% if user.verified %}
+                                        <span class="scf-verified" title="{{ 'admin.dashboard.users.verified'|trans }}"><i class="fa fa-circle-check" aria-hidden="true"></i></span>
+                                    {% endif %}
+                                    <span class="scf-badge scf-badge--{{ userStatus }}">{{ ('admin.enum.user_status.' ~ userStatus)|trans }}</span>
+                                </span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </article>
+        </section>
+    </div>
+{% endblock %}

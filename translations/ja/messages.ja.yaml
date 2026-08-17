@@ -27,6 +27,50 @@ stripe:
   booking_description: "練習スペースの予約"
 
 admin:
+  dashboard:
+    title: "概要"
+    key_metrics: "主要指標"
+    unknown_zone: "不明なゾーン"
+    unknown_user: "不明なユーザー"
+    actions:
+      users: "ユーザー管理"
+      pending_bookings: "申請を確認"
+      view_all_bookings: "すべての予約を見る"
+      view_all: "すべて見る"
+    stats:
+      pending_bookings: "承認待ち予約"
+      pending_bookings_help: "確認が必要な予約"
+      today_bookings: "本日の予約"
+      today_bookings_help: "本日利用中または予定の施設"
+      month_value: "今月の確定予約金額"
+      month_value_help: "承認済みまたは支払い済みの予約"
+      pending_users: "承認待ちアカウント"
+      pending_users_help: "承認が必要な新規登録"
+    calendar:
+      kicker: "スケジュール"
+      title: "予約カレンダー"
+      subtitle: "有効な予約を週・日・月表示で確認できます。"
+      legend: "ステータス凡例"
+      empty: "この期間に表示できる予約はありません。"
+    activity:
+      kicker: "サマリー"
+      title: "全体の利用状況"
+      next_seven_days: "今後7日間"
+      total_users: "ユーザー"
+      status_breakdown: "予約ステータスの内訳"
+    pending:
+      kicker: "要確認"
+      title: "最新の予約申請"
+      subtitle: "最近受け付けた承認待ちの予約です。"
+      empty_title: "すべて確認済みです"
+      empty_text: "承認待ちの予約申請はありません。"
+    users:
+      kicker: "ユーザー"
+      title: "最近追加されたアカウント"
+      subtitle: "ID順で表示した最新のアカウントです。"
+      empty_title: "アカウントがありません"
+      empty_text: "新しいアカウントがここに表示されます。"
+      verified: "確認済みメールアドレス"
   menu:
     dashboard: "ダッシュボード"
     users: "ユーザー"
