@@ -81,6 +81,7 @@ admin:
     time_slots: "Créneaux de réservation"
     pending_users: "Utilisateurs en attente"
     pending_bookings: "Réservations en attente"
+    equipments: "Equipements"
   entity:
     user: "Utilisateur"
     users: "Utilisateurs"
@@ -137,6 +138,9 @@ admin:
     name: "Nom"
     type: "Type"
     user_status: "Statut de l'utilisateur"
+    equipment_name: "Nom de l'équipement"
+    unit_price: "Prix unitaire"
+    max_quantity: "Quantité maximal"
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"

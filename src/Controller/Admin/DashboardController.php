@@ -157,6 +157,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(UserRoleCrudController::class, 'admin.menu.user_roles', 'fa fa-users');
         yield MenuItem::linkTo(BookingCrudController::class, 'admin.menu.bookings', 'fa fa-book');
         yield MenuItem::linkTo(ZoneCrudController::class, 'admin.menu.zones', 'fa fa-map-marker');
+        yield MenuItem::linkTo(EquipmentCrudController::class, 'admin.menu.equipments', 'fa fa-wrench');
         yield MenuItem::linkTo(PricingCrudController::class, 'admin.menu.pricing', 'fa fa-money');
         yield MenuItem::linkTo(TimeSlotCrudController::class, 'admin.menu.time_slots', 'fa fa-clock-o');
         yield MenuItem::linkTo(PendingUserCrudController::class, 'admin.menu.pending_users', 'fa fa-user-clock');
