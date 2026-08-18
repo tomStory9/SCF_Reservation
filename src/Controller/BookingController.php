@@ -118,7 +118,7 @@ final class BookingController extends AbstractController
         $this->bookingService->declineBooking($booking, $user);
 
         $this->addFlash(
-            'success',
+            'warning',
             'La réservation a bien été decliné.'
         );
 
