@@ -5,12 +5,13 @@ account:
     booking_list_subtitle: 'View and manage all your bookings'
     skip_to_content: 'Skip to main content'
     book_now: 'Book now'
-    new_booking: 'New Booking'
+    new_booking: 'Book a training space'
     new_room_booking: 'Book a room'
     space: 'Member area'
-    my_account: 'My account'
+    my_account: 'My bookings'
     my_info: 'My information'
     change_password: 'Change password'
+    admin: 'Open admin panel'
     logout: 'Sign out'
     no_booking_title: 'No Bookings'
     no_booking_text: "You don't have any bookings yet. Book your first session now!"
@@ -53,6 +54,17 @@ account:
     quantity: 'Quantity'
     unit_price: 'Unit price'
     date_time: '%date% at %time%'
+
+  profile:
+    section: 'Profile'
+    lastname: 'Last name'
+    firstname: 'First name'
+    email: 'Email address'
+    phone: 'Phone number'
+    company: 'Circus company'
+    verified: 'Verified'
+    pending: 'Pending'
+    not_provided: 'Not provided'
 
 booking:
   status:

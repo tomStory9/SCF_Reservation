@@ -8,12 +8,13 @@ account:
         # Navigation
         skip_to_content: 'Aller au contenu principal'
         book_now: 'Réserver maintenant'
-        new_booking: 'Nouvelle réservation'
+        new_booking: "Réserver un espace d’entraînement"
         new_room_booking: 'Réserver une chambre'
         space: 'Espace membre'
-        my_account: 'Mon compte'
+        my_account: 'Mes réservations'
         my_info: 'Mes informations'
         change_password: 'Changer le mot de passe'
+        admin: "Accéder à l’administration"
         logout: 'Se déconnecter'
 
         # États vides
@@ -73,6 +74,19 @@ account:
         quantity: 'Quantité'
         unit_price: 'Prix unitaire'
         date_time: '%date% à %time%'
+
+    profile:
+        section: 'Profil'
+        lastname: 'Nom'
+        firstname: 'Prénom'
+        email: 'Adresse e-mail'
+        phone: 'Téléphone'
+        company: 'Compagnie de cirque'
+        verified: 'Vérifié'
+        pending: 'En attente'
+        not_provided: 'Non renseignée'
+
+
 
 booking:
     status:

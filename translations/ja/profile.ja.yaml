@@ -5,12 +5,13 @@ account:
     booking_list_subtitle: 'すべての予約を確認・管理する'
     skip_to_content: 'メインコンテンツへスキップ'
     book_now: '今すぐ予約'
-    new_booking: '新規予約'
+    new_booking: '練習スペースを予約'
     new_room_booking: '客室を予約'
     space: 'メンバーエリア'
-    my_account: 'マイアカウント'
+    my_account: '予約一覧'
     my_info: '登録情報'
     change_password: 'パスワードを変更'
+    admin: '管理画面を開く'
     logout: 'ログアウト'
     no_booking_title: '予約なし'
     no_booking_text: "まだ予約がありません。今すぐ最初のセッションを予約しましょう！"
@@ -53,6 +54,17 @@ account:
     quantity: '数量'
     unit_price: '単価'
     date_time: '%date% %time%'
+
+  profile:
+    section: 'プロフィール'
+    lastname: '姓'
+    firstname: '名'
+    email: 'メールアドレス'
+    phone: '電話番号'
+    company: 'サーカス団体'
+    verified: '確認済み'
+    pending: '確認待ち'
+    not_provided: '未登録'
 
 booking:
   status:

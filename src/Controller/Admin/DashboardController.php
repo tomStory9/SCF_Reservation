@@ -5,6 +5,7 @@ namespace App\Controller\Admin;
 use App\Enum\BookingStatus;
 use App\Enum\UserStatus;
 use App\Repository\BookingRepository;
+use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -13,10 +14,14 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[AdminDashboard(routePath: '/admin', routeName: 'admin')]
+#[IsGranted('ROLE_ADMIN')]
 class DashboardController extends AbstractDashboardController
 {
     private const DASHBOARD_TIMEZONE = 'Asia/Tokyo';
@@ -26,6 +31,7 @@ class DashboardController extends AbstractDashboardController
         private readonly UserRepository $userRepository,
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly TranslatorInterface $translator,
+        private readonly SettingsRepository $settingsRepository,
     ) {
     }
 
@@ -150,6 +156,10 @@ class DashboardController extends AbstractDashboardController
             ]);
     }
 
+    /**
+     * @throws NotFoundExceptionInterface
+     * @throws ContainerExceptionInterface
+     */
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('admin.menu.dashboard', 'fa fa-home');
@@ -157,10 +167,24 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkTo(UserRoleCrudController::class, 'admin.menu.user_roles', 'fa fa-users');
         yield MenuItem::linkTo(BookingCrudController::class, 'admin.menu.bookings', 'fa fa-book');
         yield MenuItem::linkTo(ZoneCrudController::class, 'admin.menu.zones', 'fa fa-map-marker');
+        yield MenuItem::linkTo(EquipmentCrudController::class, 'admin.menu.equipments', 'fa fa-wrench');
         yield MenuItem::linkTo(PricingCrudController::class, 'admin.menu.pricing', 'fa fa-money');
         yield MenuItem::linkTo(TimeSlotCrudController::class, 'admin.menu.time_slots', 'fa fa-clock-o');
         yield MenuItem::linkTo(PendingUserCrudController::class, 'admin.menu.pending_users', 'fa fa-user-clock');
         yield MenuItem::linkTo(PendingBookingCrudController::class, 'admin.menu.pending_bookings', 'fa fa-book');
+
+        yield MenuItem::section('admin.menu.configuration');
+
+        $settingsId = $this->settingsRepository->getSettings()->getId();
+
+        $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
+        $url = $adminUrlGenerator
+            ->setController(SettingsCrudController::class)
+            ->setAction(Action::EDIT)
+            ->setEntityId($settingsId)
+            ->generateUrl();
+
+        yield MenuItem::linkToUrl('admin.menu.parametre', 'fas fa-cogs', $url);
     }
 
     /**

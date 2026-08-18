@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\User;
+use App\Enum\UserStatus;
 use App\Repository\UserRoleRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -10,9 +11,12 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
+#[IsGranted('ROLE_ADMIN')]
 class UserCrudController extends AbstractCrudController
 {
     public function __construct(
@@ -60,6 +64,14 @@ class UserCrudController extends AbstractCrudController
         yield TextField::new('company', 'admin.field.company');
         yield IntegerField::new('googleId', 'admin.field.google_id');
         yield IntegerField::new('lineId', 'admin.field.line_id');
+        yield ChoiceField::new('userStatus', 'admin.field.user_status')
+            ->setFormType(EnumType::class)
+            ->setFormTypeOptions([
+                'class' => UserStatus::class,
+            ])
+            ->formatValue(fn ($value) => null === $value
+                ? null
+                : $this->translator->trans('admin.enum.user_status.'.$value->value));
         yield BooleanField::new('isVerified', 'admin.field.verified_user');
     }
 

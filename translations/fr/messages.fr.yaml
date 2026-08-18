@@ -81,6 +81,9 @@ admin:
     time_slots: "Créneaux de réservation"
     pending_users: "Utilisateurs en attente"
     pending_bookings: "Réservations en attente"
+    equipments: "Équipements"
+    configuration: "Configuration"
+    parametre: "Paramètres du site"
   entity:
     user: "Utilisateur"
     users: "Utilisateurs"
@@ -96,6 +99,9 @@ admin:
     time_slots: "Créneaux"
     pending_user: "Compte en attente"
     pending_users: "Comptes en attente"
+    equipment: "Équipement"
+    equipments: "Équipements"
+    settings: "Paramètres du site"
   action:
     approve: "Approuver"
     decline: "Refuser"
@@ -114,6 +120,8 @@ admin:
     role_name: "Nom du rôle"
     label: "Libellé"
     allocated_hours: "Heures gratuites mensuelles"
+    max_advance_booking: "Délai maximal de réservation à l’avance"
+    tarif: "Tarif"
     zone: "Zone"
     user: "Utilisateur"
     start_date: "Date de début"
@@ -122,6 +130,8 @@ admin:
     guest_count: "Nombre de visiteurs"
     status: "Statut"
     created_date: "Date de réservation"
+    checked_in_at: "Date de check-in"
+    checked_out_at: "Date de check-out"
     week_day: "Jour de la semaine"
     time_slot: "Créneau horaire"
     full_price: "Tarif plein"
@@ -133,6 +143,14 @@ admin:
     name: "Nom"
     type: "Type"
     max_capacity: "Capacité maximale"
+    user_status: "Statut de l’utilisateur"
+    equipment_name: "Nom de l’équipement"
+    unit_price: "Prix unitaire"
+    max_quantity: "Quantité maximale"
+    gestion_chambre: "Gestion des chambres"
+    securite_inscription: "Sécurité et inscriptions"
+    reserver_chambre: "Réservation des chambres"
+    validation_manuelle: "Validation manuelle requise"
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"
@@ -195,6 +213,11 @@ admin:
     visitors: "Visiteurs"
     unknown_zone: "Zone inconnue"
     back: "Retour aux réservations"
+  help:
+    help_room_enable: "Si désactivé, le bouton disparaît de la navbar et les réservations sont bloquées pour les utilisateurs."
+    help_verification_user: "Si activé, les administrateurs devront approuver chaque nouveau compte. Si désactivé, les comptes sont approuvés automatiquement."
+  settings:
+    title: "Configuration du site"
 
 scaffold:
   title: "Bonjour %controller% !"

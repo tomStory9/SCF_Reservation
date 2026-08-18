@@ -7,7 +7,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_ADMIN')]
 class UserRoleCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
@@ -20,6 +22,8 @@ class UserRoleCrudController extends AbstractCrudController
         yield TextField::new('roleName', 'admin.field.role_name');
         yield TextField::new('label', 'admin.field.label');
         yield IntegerField::new('allocatedHoursPerMonth', 'admin.field.allocated_hours');
+        yield IntegerField::new('maxAdvanceBookingDays', 'admin.field.max_advance_booking');
+        yield TextField::new('tarif', 'admin.field.tarif');
     }
 
     public function configureCrud(Crud $crud): Crud
