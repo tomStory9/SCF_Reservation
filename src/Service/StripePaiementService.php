@@ -44,7 +44,7 @@ class StripePaiementService
                 'booking_id' => $reservationId,
                 'user_id' => $userId,
             ],
-            'success_url' => 'http://localhost/paiement/success?session_id={CHECKOUT_SESSION_ID}',
+            'success_url' => $this->defaultUri.'/paiement/success?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $this->defaultUri.'/paiement/cancel',
         ]);
 
