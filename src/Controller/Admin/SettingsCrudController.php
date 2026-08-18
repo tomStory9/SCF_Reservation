@@ -22,7 +22,9 @@ final class SettingsCrudController extends AbstractCrudController
     public function configureCrud(Crud $crud): Crud
     {
         return $crud
-            ->setPageTitle(Crud::PAGE_EDIT, 'Configuration du site');
+            ->setEntityLabelInSingular('admin.entity.settings')
+            ->setEntityLabelInPlural('admin.entity.settings')
+            ->setPageTitle(Crud::PAGE_EDIT, 'admin.settings.title');
     }
 
     public function configureActions(Actions $actions): Actions
@@ -37,7 +39,7 @@ final class SettingsCrudController extends AbstractCrudController
             ->setIcon('fas fa-bed');
 
         yield BooleanField::new('isRoomBookingEnabled', 'admin.field.reserver_chambre')
-        ->setHelp('admin.help.help_room_enable')
+            ->setHelp('admin.help.help_room_enable')
             ->renderAsSwitch();
 
         yield FormField::addFieldset('admin.field.securite_inscription')

@@ -81,6 +81,9 @@ admin:
     time_slots: "Booking time slots"
     pending_users: "Pending users"
     pending_bookings: "Pending bookings"
+    equipments: "Equipment"
+    configuration: "Configuration"
+    parametre: "Site settings"
   entity:
     user: "User"
     users: "Users"
@@ -96,6 +99,9 @@ admin:
     time_slots: "Time slots"
     pending_user: "Pending account"
     pending_users: "Pending accounts"
+    equipment: "Equipment"
+    equipments: "Equipment"
+    settings: "Site settings"
   action:
     approve: "Approve"
     decline: "Decline"
@@ -114,6 +120,8 @@ admin:
     role_name: "Role name"
     label: "Label"
     allocated_hours: "Monthly free hours"
+    max_advance_booking: "Maximum advance booking period"
+    tarif: "Rate"
     zone: "Zone"
     user: "User"
     start_date: "Start date"
@@ -122,6 +130,8 @@ admin:
     guest_count: "Number of visitors"
     status: "Status"
     created_date: "Booking date"
+    checked_in_at: "Checked in at"
+    checked_out_at: "Checked out at"
     week_day: "Weekday"
     time_slot: "Time slot"
     full_price: "Full price"
@@ -133,6 +143,14 @@ admin:
     name: "Name"
     type: "Type"
     max_capacity: "Maximum capacity"
+    user_status: "User status"
+    equipment_name: "Equipment name"
+    unit_price: "Unit price"
+    max_quantity: "Maximum quantity"
+    gestion_chambre: "Room management"
+    securite_inscription: "Security and registrations"
+    reserver_chambre: "Room bookings"
+    validation_manuelle: "Manual approval required"
   filter:
     time_slot: "Time slot"
     zone: "Zone"
@@ -195,6 +213,11 @@ admin:
     visitors: "Visitors"
     unknown_zone: "Unknown zone"
     back: "Back to bookings"
+  help:
+    help_room_enable: "When disabled, the button is removed from the navigation bar and users cannot book rooms."
+    help_verification_user: "When enabled, administrators must approve every new account. When disabled, accounts are approved automatically."
+  settings:
+    title: "Site settings"
 
 scaffold:
   title: "Hello %controller%!"

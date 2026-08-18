@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Equipment;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -25,5 +26,12 @@ class EquipmentCrudController extends AbstractCrudController
         yield AssociationField::new('zone', 'admin.field.zone')
             ->formatValue(fn ($value, $entity) => $value?->getName())
             ->setFormTypeOption('choice_label', 'name');
+    }
+
+    public function configureCrud(Crud $crud): Crud
+    {
+        return $crud
+            ->setEntityLabelInSingular('admin.entity.equipment')
+            ->setEntityLabelInPlural('admin.entity.equipments');
     }
 }

@@ -81,6 +81,9 @@ admin:
     time_slots: "予約時間枠"
     pending_users: "承認待ちユーザー"
     pending_bookings: "承認待ち予約"
+    equipments: "設備"
+    configuration: "設定"
+    parametre: "サイト設定"
   entity:
     user: "ユーザー"
     users: "ユーザー"
@@ -96,6 +99,9 @@ admin:
     time_slots: "時間枠"
     pending_user: "承認待ちアカウント"
     pending_users: "承認待ちアカウント"
+    equipment: "設備"
+    equipments: "設備"
+    settings: "サイト設定"
   action:
     approve: "承認"
     decline: "却下"
@@ -114,6 +120,8 @@ admin:
     role_name: "ロール名"
     label: "表示名"
     allocated_hours: "月間無料時間"
+    max_advance_booking: "予約可能な最大先行日数"
+    tarif: "料金区分"
     zone: "ゾーン"
     user: "ユーザー"
     start_date: "開始日時"
@@ -122,6 +130,8 @@ admin:
     guest_count: "利用人数"
     status: "ステータス"
     created_date: "予約受付日時"
+    checked_in_at: "チェックイン日時"
+    checked_out_at: "チェックアウト日時"
     week_day: "曜日"
     time_slot: "時間枠"
     full_price: "通常料金"
@@ -133,6 +143,14 @@ admin:
     name: "名前"
     type: "種類"
     max_capacity: "最大定員"
+    user_status: "ユーザーステータス"
+    equipment_name: "設備名"
+    unit_price: "単価"
+    max_quantity: "最大数量"
+    gestion_chambre: "客室管理"
+    securite_inscription: "セキュリティと登録"
+    reserver_chambre: "客室予約"
+    validation_manuelle: "手動承認を必須にする"
   filter:
     time_slot: "時間枠"
     zone: "ゾーン"
@@ -195,6 +213,11 @@ admin:
     visitors: "利用人数"
     unknown_zone: "不明なゾーン"
     back: "予約一覧に戻る"
+  help:
+    help_room_enable: "無効にすると、ナビゲーションバーからボタンが非表示になり、ユーザーは客室を予約できなくなります。"
+    help_verification_user: "有効にすると、管理者による新規アカウントの承認が必要です。無効にすると、アカウントは自動的に承認されます。"
+  settings:
+    title: "サイト設定"
 
 scaffold:
   title: "こんにちは、%controller%！"
