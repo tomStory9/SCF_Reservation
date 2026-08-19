@@ -5,11 +5,7 @@ function replaceParameter(url, parameter, value) {
 export function createBookingApi(config) {
     return {
         async getZones(facilityId) {
-            const url = replaceParameter(
-                config.endpoints.zones,
-                'facilityId',
-                facilityId
-            );
+            const url = replaceParameter(config.endpoints.zones, 'facilityId', facilityId);
 
             const response = await fetch(url);
 
@@ -21,11 +17,7 @@ export function createBookingApi(config) {
         },
 
         async getPricings(zoneId) {
-            const url = replaceParameter(
-                config.endpoints.pricings,
-                'zoneId',
-                zoneId
-            );
+            const url = replaceParameter(config.endpoints.pricings, 'zoneId', zoneId);
 
             const response = await fetch(url);
 
@@ -37,11 +29,7 @@ export function createBookingApi(config) {
         },
 
         async getBookings(zoneId) {
-            const url = replaceParameter(
-                config.endpoints.bookings,
-                'zoneId',
-                zoneId
-            );
+            const url = replaceParameter(config.endpoints.bookings, 'zoneId', zoneId);
 
             const response = await fetch(url);
 

@@ -1,20 +1,15 @@
 export function createBookingUI(config) {
     const text = config.texts;
 
-    const selectionPreview =
-        document.getElementById('selection-preview');
+    const selectionPreview = document.getElementById('selection-preview');
 
-    const activeBookingModeLabel =
-        document.getElementById('active-booking-mode-label');
+    const activeBookingModeLabel = document.getElementById('active-booking-mode-label');
 
-    const locationLabel =
-        document.getElementById('selected-location-label');
+    const locationLabel = document.getElementById('selected-location-label');
 
-    const priceContainer =
-        document.getElementById('price-container');
+    const priceContainer = document.getElementById('price-container');
 
-    const priceDisplay =
-        document.getElementById('price-display');
+    const priceDisplay = document.getElementById('price-display');
 
     return {
         updatePreview(content) {
@@ -28,17 +23,12 @@ export function createBookingUI(config) {
                 return;
             }
 
-            if (
-                !prices ||
-                prices.price === null ||
-                prices.price === undefined
-            ) {
+            if (!prices || prices.price === null || prices.price === undefined) {
                 priceContainer.classList.add('hidden');
                 return;
             }
 
-            priceDisplay.textContent =
-                `${prices.price.toLocaleString(config.locale)} ¥`;
+            priceDisplay.textContent = `${prices.price.toLocaleString(config.locale)} ¥`;
 
             priceContainer.classList.remove('hidden');
         },
@@ -55,9 +45,7 @@ export function createBookingUI(config) {
             }
 
             activeBookingModeLabel.textContent =
-                mode === 'period'
-                    ? text.bookingByPeriod
-                    : text.bookingByHour;
+                mode === 'period' ? text.bookingByPeriod : text.bookingByHour;
         },
 
         setZonePlaceholder(tomSelect, placeholder) {

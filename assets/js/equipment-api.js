@@ -15,9 +15,7 @@ export function createEquipmentApi(config) {
             );
 
             if (!response.ok) {
-                throw new Error(
-                    config.texts.equipmentsLoadingError
-                );
+                throw new Error(config.texts.equipmentsLoadingError);
             }
 
             return response.json();
