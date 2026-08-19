@@ -34,9 +34,6 @@ class Zone
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'zone')]
     private Collection $bookings;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $maxCapacity = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $code = null;
 
@@ -141,18 +138,6 @@ class Zone
                 $booking->setZone(null);
             }
         }
-
-        return $this;
-    }
-
-    public function getMaxCapacity(): ?int
-    {
-        return $this->maxCapacity;
-    }
-
-    public function setMaxCapacity(?int $maxCapacity): static
-    {
-        $this->maxCapacity = $maxCapacity;
 
         return $this;
     }

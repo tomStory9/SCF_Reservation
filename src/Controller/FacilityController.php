@@ -28,7 +28,6 @@ final class FacilityController extends AbstractController
                 'id' => $zone->getId(),
                 'name' => $zone->getName(),
                 'code' => $zone->getCode(),
-                'maxCapacity' => $zone->getMaxCapacity(),
             ];
         }
 

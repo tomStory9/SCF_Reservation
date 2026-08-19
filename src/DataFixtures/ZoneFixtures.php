@@ -72,7 +72,6 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $koda1A->setCode('ZONEA');
         $koda1A->setTypeZone(ZoneType::TRAINING);
         $koda1A->setFacility($koda);
-        $koda1A->setMaxCapacity(1);
         $manager->persist($koda1A);
         $this->addReference(self::KODA1A, $koda1A);
 
@@ -81,7 +80,6 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $koda1B->setCode('ZONEB');
         $koda1B->setTypeZone(ZoneType::TRAINING);
         $koda1B->setFacility($koda);
-        $koda1B->setMaxCapacity(1);
         $manager->persist($koda1B);
         $this->addReference(self::KODA1B, $koda1B);
 
@@ -90,7 +88,6 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $koda1C->setCode('ZONEC');
         $koda1C->setTypeZone(ZoneType::TRAINING);
         $koda1C->setFacility($koda);
-        $koda1C->setMaxCapacity(1);
         $manager->persist($koda1C);
         $this->addReference(self::KODA1C, $koda1C);
 
@@ -99,7 +96,6 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $koda1D->setCode('ZONED');
         $koda1D->setTypeZone(ZoneType::TRAINING);
         $koda1D->setFacility($koda);
-        $koda1D->setMaxCapacity(1);
         $manager->persist($koda1D);
         $this->addReference(self::KODA1D, $koda1D);
 
@@ -108,7 +104,6 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $kodaDemiAB->setCode('ZONE_AB');
         $kodaDemiAB->setTypeZone(ZoneType::TRAINING);
         $kodaDemiAB->setFacility($koda);
-        $kodaDemiAB->setMaxCapacity(2);
         $manager->persist($kodaDemiAB);
         $this->addReference(self::KODA_AB, $kodaDemiAB);
 
@@ -117,7 +112,6 @@ class ZoneFixtures extends Fixture implements DependentFixtureInterface
         $kodaDemiCD->setCode('ZONE_CD');
         $kodaDemiCD->setTypeZone(ZoneType::TRAINING);
         $kodaDemiCD->setFacility($koda);
-        $kodaDemiCD->setMaxCapacity(2);
         $manager->persist($kodaDemiCD);
         $this->addReference(self::KODA_CD, $kodaDemiCD);
 

@@ -72,10 +72,12 @@ admin:
       empty_text: "Les nouveaux comptes apparaîtront ici."
       verified: "Adresse email vérifiée"
   menu:
+    return_to_app: "Retour à l'application"
     dashboard: "Tableau de bord"
     users: "Utilisateurs"
     user_roles: "Rôles utilisateurs"
     bookings: "Réservations"
+    facilities: "Facilities"
     zones: "Lieux"
     pricing: "Tarifs"
     time_slots: "Créneaux de réservation"
@@ -123,6 +125,7 @@ admin:
     max_advance_booking: "Délai maximal de réservation à l’avance"
     tarif: "Tarif"
     zone: "Zone"
+    facility: "Zone mère"
     user: "Utilisateur"
     start_date: "Date de début"
     end_date: "Date de fin"
@@ -151,6 +154,8 @@ admin:
     securite_inscription: "Sécurité et inscriptions"
     reserver_chambre: "Réservation des chambres"
     validation_manuelle: "Validation manuelle requise"
+    address: "Adresse"
+    internationalAddres: "Adresse International"
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"
@@ -218,6 +223,43 @@ admin:
     help_verification_user: "Si activé, les administrateurs devront approuver chaque nouveau compte. Si désactivé, les comptes sont approuvés automatiquement."
   settings:
     title: "Configuration du site"
+  booking_detail:
+      title: 'Réservation #%id%'
+      back_to_list: 'Retour à la liste'
+      edit: 'Modifier'
+
+      client_info: 'Informations Client'
+      full_name: 'Nom complet'
+      email: 'Email'
+      phone: 'Téléphone'
+      company: 'Entreprise'
+
+      stay_details: 'Détails du Séjour'
+      zone: 'Zone'
+      period: 'Période'
+      date_full_day: 'Le %date% (Toute la journée)'
+      date_from: 'Du %date%'
+      date_to: 'Au %date%'
+      guests: 'Participants'
+      guest_count: '{0} 0 personne|{1} 1 personne|]1,Inf[ %count% personnes'
+      status: 'Statut'
+
+      equipments_reserved: 'Équipements Réservés'
+      equipment: 'Équipement'
+      quantity: 'Quantité'
+      unit_price: 'Prix Unitaire'
+      subtotal: 'Sous-total'
+      no_equipment: 'Aucun équipement supplémentaire n''a été sélectionné pour cette réservation.'
+
+      tracking: 'Suivi'
+      created_at: 'Créée le'
+      check_in: 'Check-in'
+      check_out: 'Check-out'
+
+      finances: 'Finances'
+      room_price: 'Prix de la salle'
+      equipment_price: 'Prix équipements'
+      total: 'Total'
 
 scaffold:
   title: "Bonjour %controller% !"
