@@ -14,6 +14,7 @@
     <script id="room-booking-config" type="application/json">
         {{ {
             locale: app.request.locale,
+            blockedPeriods: blockedPeriods|default([]),
             texts: {
                 noSelection: 'js.no_selection'|trans,
                 room: 'js.room'|trans,

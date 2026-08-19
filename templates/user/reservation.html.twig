@@ -18,6 +18,7 @@
             {
                 locale: app.request.locale,
                 maxDate: maxEndDate|date('Y-m-d'),
+                blockedPeriods: blockedPeriods|default([]),
 
                 endpoints: {
                     zones: '/facility/{facilityId}/zones',
