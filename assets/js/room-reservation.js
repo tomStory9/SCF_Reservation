@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const rawPricing = JSON.parse(tabElement.dataset.roomPricing);
         activeRoomPricing = {};
 
-        rawPricing.forEach(pricing => {
+        rawPricing.forEach((pricing) => {
             activeRoomPricing[pricing.dayNumber] = pricing.fullPrice;
         });
 
@@ -61,9 +61,9 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    roomTabs.forEach(tab => {
+    roomTabs.forEach((tab) => {
         tab.addEventListener('click', function () {
-            roomTabs.forEach(item => {
+            roomTabs.forEach((item) => {
                 item.classList.remove('is-active', 'border-b-0', 'bg-white', 'text-primary');
                 item.classList.add('border-transparent', 'text-slate-500');
                 item.setAttribute('aria-selected', 'false');
@@ -96,21 +96,48 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         events: async function (fetchInfo, successCallback, failureCallback) {
+
+            const blockedPeriods = config.blockedPeriods || [];
+            const blockedEvents = blockedPeriods.map((bp) => {
+                const startStr = bp.start.substring(0, 10);
+                const endStr = bp.end.substring(0, 10);
+
+                const [endYear, endMonth, endDay] = endStr.split('-');
+                const endDateObj = new Date(endYear, endMonth - 1, endDay);
+                endDateObj.setDate(endDateObj.getDate() + 1);
+
+                const nextYear = endDateObj.getFullYear();
+                const nextMonth = String(endDateObj.getMonth() + 1).padStart(2, '0');
+                const nextDay = String(endDateObj.getDate()).padStart(2, '0');
+                const exclusiveEndStr = `${nextYear}-${nextMonth}-${nextDay}`;
+
+                return {
+                    id: `blocked-${bp.id}`,
+                    start: startStr,
+                    end: exclusiveEndStr,
+                    title: 'Période bloquée',
+                    allDay: true,
+                    color: '#94a3b8',
+                    textColor: '#ffffff',
+                    classNames: ['pointer-events-none']
+                };
+            });
+
             if (!activeRoomId) {
-                successCallback([]);
+                successCallback(blockedEvents);
                 return;
             }
+
             try {
                 const response = await fetch(`/zone/${activeRoomId}/bookings`);
                 const events = await response.json();
 
-                const formattedEvents = events.map(event => {
+                const formattedEvents = events.map((event) => {
                     const startStr = event.start.substring(0, 10);
                     const endStr = event.end.substring(0, 10);
 
                     const [endYear, endMonth, endDay] = endStr.split('-');
                     const endDateObj = new Date(endYear, endMonth - 1, endDay);
-
                     endDateObj.setDate(endDateObj.getDate() + 1);
 
                     const nextYear = endDateObj.getFullYear();
@@ -122,14 +149,17 @@ document.addEventListener('DOMContentLoaded', function () {
                         id: event.id,
                         start: startStr,
                         end: exclusiveEndStr,
+                        title: 'Réservé',
                         allDay: true,
-                        display: 'background',
-                        color: '#ff9f89'
+                        color: '#ff9f89',
+                        textColor: '#ffffff',
+                        classNames: ['pointer-events-none']
                     };
                 });
 
                 currentRoomBookings = formattedEvents;
-                successCallback(formattedEvents);
+
+                successCallback([...formattedEvents, ...blockedEvents]);
             } catch (error) {
                 console.error(error);
                 failureCallback(error);
@@ -139,36 +169,47 @@ document.addEventListener('DOMContentLoaded', function () {
         selectAllow: function (selectInfo) {
             const selectStart = selectInfo.start.getTime();
             const selectEnd = selectInfo.end.getTime();
-            const days = Math.round((selectEnd - selectStart) / (1000 * 3600 * 24));
 
-            let checkEnd = selectEnd;
-            if (days === 1) {
-                checkEnd = selectStart + (2 * 24 * 3600 * 1000);
+            const blockedPeriods = config.blockedPeriods || [];
+            const isBlocked = blockedPeriods.some((bp) => {
+                const bpStart = new Date(bp.start).getTime();
+                const bpEnd = new Date(bp.end).getTime();
+                return selectStart < bpEnd && selectEnd > bpStart;
+            });
+
+            if (isBlocked) {
+                return false;
             }
 
-            return !currentRoomBookings.some(event => {
-                const [sYear, sMonth, sDay] = event.start.split('-');
-                const eventStart = new Date(sYear, sMonth - 1, sDay).getTime();
+            const days = Math.round((selectEnd - selectStart) / (1000 * 3600 * 24));
+            let checkEnd = selectEnd;
+            if (days === 1) {
+                checkEnd = selectStart + 2 * 24 * 3600 * 1000;
+            }
 
-                const [eYear, eMonth, eDay] = event.end.split('-');
-                const eventEnd = new Date(eYear, eMonth - 1, eDay).getTime();
+            return !currentRoomBookings.some((event) => {
+                const eventStart = new Date(event.start).getTime();
+                const eventEnd = new Date(event.end).getTime();
 
                 return selectStart < eventEnd && checkEnd > eventStart;
             });
         },
 
         select: function (info) {
-            const selectDays = Math.round((info.end.getTime() - info.start.getTime()) / (1000 * 3600 * 24));
+            const selectDays = Math.round(
+                (info.end.getTime() - info.start.getTime()) / (1000 * 3600 * 24)
+            );
 
             if (selectDays === 1) {
-                const newEnd = new Date(info.start.getTime() + (2 * 24 * 3600 * 1000));
+                const newEnd = new Date(info.start.getTime() + 2 * 24 * 3600 * 1000);
                 calendar.select(info.start, newEnd);
                 return;
             }
 
-            const departureDate = new Date(info.end.getTime() - (1000 * 3600 * 24));
-
-            const nights = Math.round((departureDate.getTime() - info.start.getTime()) / (1000 * 3600 * 24));
+            const departureDate = new Date(info.end.getTime() - 1000 * 3600 * 24);
+            const nights = Math.round(
+                (departureDate.getTime() - info.start.getTime()) / (1000 * 3600 * 24)
+            );
 
             let totalPrice = 0;
             let currentCursor = new Date(info.start);
@@ -181,17 +222,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentCursor.setDate(currentCursor.getDate() + 1);
             }
 
-            const backendEndDate = new Date(departureDate.getTime() - (1000 * 3600 * 24));
+            const backendEndDate = new Date(departureDate.getTime() - 1000 * 3600 * 24);
             const year = backendEndDate.getFullYear();
             const month = String(backendEndDate.getMonth() + 1).padStart(2, '0');
             const day = String(backendEndDate.getDate()).padStart(2, '0');
             const backendEndDateStr = `${year}-${month}-${day}T23:59:59`;
 
-            // 5. Affichage propre
             const localizedStartDate = info.start.toLocaleDateString(config.locale);
             const localizedEndDate = departureDate.toLocaleDateString(config.locale);
 
-            // 6. Sauvegarde
             currentSelection = {
                 startDate: info.startStr,
                 endDate: backendEndDateStr,
@@ -218,7 +257,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (submitButton) {
-        submitButton.addEventListener('click', async function() {
+        submitButton.addEventListener('click', async function () {
             if (!currentSelection || !activeRoomId) {
                 Swal.fire({
                     icon: 'warning',
@@ -252,10 +291,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (response.ok && result.success) {
                     window.location.href = result.redirectUrl;
                 } else {
-                    Swal.fire({ icon: 'error', title: texts.errorTitle, text: result.error ?? texts.bookingError });
+                    Swal.fire({
+                        icon: 'error',
+                        title: texts.errorTitle,
+                        text: result.error ?? texts.bookingError
+                    });
                 }
             } catch (error) {
-                Swal.fire({ icon: 'error', title: texts.networkErrorTitle, text: texts.networkError });
+                Swal.fire({
+                    icon: 'error',
+                    title: texts.networkErrorTitle,
+                    text: texts.networkError
+                });
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = texts.submit;
