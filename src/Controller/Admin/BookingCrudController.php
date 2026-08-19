@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Booking;
 use App\Enum\BookingStatus;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
@@ -24,6 +26,14 @@ class BookingCrudController extends AbstractCrudController
     public static function getEntityFqcn(): string
     {
         return Booking::class;
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->add(Crud::PAGE_INDEX, Action::DETAIL)
+
+            ->remove(Crud::PAGE_INDEX, Action::EDIT);
     }
 
     public function configureFields(string $pageName): iterable
@@ -55,6 +65,7 @@ class BookingCrudController extends AbstractCrudController
     {
         return $crud
             ->setEntityLabelInSingular('admin.entity.booking')
-            ->setEntityLabelInPlural('admin.entity.bookings');
+            ->setEntityLabelInPlural('admin.entity.bookings')
+            ->overrideTemplate('crud/detail', 'admin/booking/detail.html.twig');
     }
 }

@@ -1,0 +1,222 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title %}
+    {{ 'admin.booking_detail.title'|trans({'%id%': entity.instance.id}) }}
+{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ ea_url().setController('App\\Controller\\Admin\\BookingCrudController').setAction('index') }}">
+        {{ 'admin.booking_detail.back_to_list'|trans }}
+    </a>
+    <a class="btn btn-primary" href="{{ ea_url().setController('App\\Controller\\Admin\\BookingCrudController').setAction('edit').setEntityId(entity.instance.id) }}">
+        <i class="fas fa-edit"></i> {{ 'admin.booking_detail.edit'|trans }}
+    </a>
+{% endblock %}
+
+{% block main %}
+    {% set booking = entity.instance %}
+
+    <style>
+        .booking-detail-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            color: var(--text-color);
+        }
+        .booking-panel {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            background-color: transparent;
+        }
+        .booking-panel-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-top: 0;
+            margin-bottom: 1.25rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .booking-panel-title i {
+            color: var(--text-muted);
+        }
+        .booking-grid {
+            display: grid;
+            grid-template-columns: minmax(120px, 1fr) 2fr;
+            gap: 0.75rem 1rem;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        .booking-label {
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+        .booking-value {
+            color: var(--text-color);
+            font-weight: 600;
+        }
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+        .booking-table th {
+            text-align: left;
+            padding-bottom: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .booking-table td {
+            padding: 0.75rem 0;
+            color: var(--text-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+        .booking-table tr:last-child td {
+            border-bottom: none;
+        }
+    </style>
+
+    <div class="booking-detail-wrapper">
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+
+            <div class="booking-panel">
+                <h3 class="booking-panel-title"><i class="fas fa-user fa-fw"></i> {{ 'admin.booking_detail.client_info'|trans }}</h3>
+                <div class="booking-grid">
+                    <div class="booking-label">{{ 'admin.booking_detail.full_name'|trans }}</div>
+                    <div class="booking-value">
+                        <a href="{{ ea_url().setController('App\\Controller\\Admin\\UserCrudController').setAction('detail').setEntityId(booking.userBooking.id) }}" class="booking-link">
+                            {{ booking.userBooking.fullName }}
+                        </a>
+                    </div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.email'|trans }}</div>
+                    <div class="booking-value">
+                        <a href="mailto:{{ booking.userBooking.email }}" style="color: var(--link-color);">
+                            {{ booking.userBooking.email }}
+                        </a>
+                    </div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.phone'|trans }}</div>
+                    <div class="booking-value">{{ booking.userBooking.phone|default('-') }}</div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.company'|trans }}</div>
+                    <div class="booking-value">{{ booking.userBooking.company|default('-') }}</div>
+                </div>
+            </div>
+
+            <div class="booking-panel">
+                <h3 class="booking-panel-title"><i class="fas fa-calendar-alt fa-fw"></i> {{ 'admin.booking_detail.stay_details'|trans }}</h3>
+                <div class="booking-grid">
+                    <div class="booking-label">{{ 'admin.booking_detail.zone'|trans }}</div>
+                    <div class="booking-value">
+                        <a href="{{ ea_url().setController('App\\Controller\\Admin\\ZoneCrudController').setAction('detail').setEntityId(booking.zone.id) }}" class="booking-link">
+                            {{ booking.zone.name }}
+                        </a>
+                    </div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.period'|trans }}</div>
+                    <div class="booking-value" style="font-weight: normal;">
+                        {% if booking.isFullDay %}
+                            {{ 'admin.booking_detail.date_full_day'|trans({'%date%': '<strong>' ~ booking.startDate|date('d/m/Y') ~ '</strong>'})|raw }}
+                        {% else %}
+                            {{ 'admin.booking_detail.date_from'|trans({'%date%': '<strong>' ~ booking.startDate|date('d/m/Y H:i') ~ '</strong>'})|raw }}<br>
+                            {{ 'admin.booking_detail.date_to'|trans({'%date%': '<strong>' ~ booking.endDate|date('d/m/Y H:i') ~ '</strong>'})|raw }}
+                        {% endif %}
+                    </div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.guests'|trans }}</div>
+                    <div class="booking-value">{{ 'admin.booking_detail.guest_count'|trans({'%count%': booking.guestCount}) }}</div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.status'|trans }}</div>
+                    <div class="booking-value">
+                        {% set statusColors = {
+                            'pending': 'warning',
+                            'approved': 'success',
+                            'rejected': 'danger',
+                            'canceled': 'secondary'
+                        } %}
+                        {% set badgeColor = statusColors[booking.bookingStatus.value] ?? 'primary' %}
+                        <span class="badge badge-{{ badgeColor }}">
+                            {{ ('admin.enum.booking_status.' ~ booking.bookingStatus.value)|trans }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="booking-panel">
+            <h3 class="booking-panel-title"><i class="fas fa-boxes fa-fw"></i> {{ 'admin.booking_detail.equipments_reserved'|trans }}</h3>
+            {% if booking.bookingEquipment|length > 0 %}
+                <div style="overflow-x: auto;">
+                    <table class="booking-table">
+                        <thead>
+                        <tr>
+                            <th>{{ 'admin.booking_detail.equipment'|trans }}</th>
+                            <th style="text-align: center;">{{ 'admin.booking_detail.quantity'|trans }}</th>
+                            <th style="text-align: right;">{{ 'admin.booking_detail.unit_price'|trans }}</th>
+                            <th style="text-align: right;">{{ 'admin.booking_detail.subtotal'|trans }}</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for item in booking.bookingEquipment %}
+                            <tr>
+                                <td>
+                                    <a href="{{ ea_url().setController('App\\Controller\\Admin\\EquipmentCrudController').setAction('detail').setEntityId(item.equipment.id) }}" class="booking-link">
+                                        <strong>{{ item.equipment.name }}</strong>
+                                    </a>
+                                </td>
+                                <td style="text-align: center;">{{ item.quantity }}</td>
+                                <td style="text-align: right; color: var(--text-muted);">{{ item.equipment.unitPrice }} ¥</td>
+                                <td style="text-align: right;"><strong>{{ item.TotalPrice }} ¥</strong></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div style="color: var(--text-muted); font-style: italic; font-size: 0.9rem;">
+                    {{ 'admin.booking_detail.no_equipment'|trans }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+
+            <div class="booking-panel">
+                <h3 class="booking-panel-title"><i class="fas fa-clipboard-check fa-fw"></i> {{ 'admin.booking_detail.tracking'|trans }}</h3>
+                <div class="booking-grid">
+                    <div class="booking-label">{{ 'admin.booking_detail.created_at'|trans }}</div>
+                    <div class="booking-value" style="font-weight: normal;">{{ booking.createdDate|date('d/m/Y H:i') }}</div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.check_in'|trans }}</div>
+                    <div class="booking-value" style="font-weight: normal;">{{ booking.CheckedInAt ? booking.CheckedInAt|date('d/m/Y H:i') : '<span style="color: var(--text-muted);">-</span>'|raw }}</div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.check_out'|trans }}</div>
+                    <div class="booking-value" style="font-weight: normal;">{{ booking.CheckedOutAt ? booking.CheckedOutAt|date('d/m/Y H:i') : '<span style="color: var(--text-muted);">-</span>'|raw }}</div>
+                </div>
+            </div>
+
+            <div class="booking-panel">
+                <h3 class="booking-panel-title"><i class="fas fa-yen-sign fa-fw"></i> {{ 'admin.booking_detail.finances'|trans }}</h3>
+                <div class="booking-grid" style="grid-template-columns: 1fr auto;">
+                    <div class="booking-label">{{ 'admin.booking_detail.room_price'|trans }}</div>
+                    <div class="booking-value" style="text-align: right; font-weight: normal;">{{ booking.price }} ¥</div>
+
+                    <div class="booking-label">{{ 'admin.booking_detail.equipment_price'|trans }}</div>
+                    <div class="booking-value" style="text-align: right; font-weight: normal;">{{ booking.equipmentPrice }} ¥</div>
+
+                    <div class="booking-label" style="padding-top: 0.75rem; border-top: 1px solid var(--border-color); font-size: 1rem; color: var(--text-color);">
+                        {{ 'admin.booking_detail.total'|trans }}
+                    </div>
+                    <div class="booking-value" style="padding-top: 0.75rem; border-top: 1px solid var(--border-color); text-align: right; font-size: 1.1rem; color: var(--ea-primary);">
+                        {{ booking.TotalPrice }} ¥
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
