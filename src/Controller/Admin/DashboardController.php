@@ -185,11 +185,6 @@ class DashboardController extends AbstractDashboardController
             ->generateUrl();
 
         yield MenuItem::linkToUrl('admin.menu.parametre', 'fas fa-cogs', $url);
-        yield MenuItem::linkToRoute(
-            'Calendrier des réservations',
-            'fa fa-calendar',
-            'admin_booking_calendar'
-        );
     }
 
     /**
@@ -200,21 +195,52 @@ class DashboardController extends AbstractDashboardController
         $status = $booking['status'] instanceof BookingStatus
             ? $booking['status']
             : (BookingStatus::tryFrom((string) $booking['status']) ?? BookingStatus::PENDING);
-        $zoneName = $booking['zoneName'] ?? $this->translator->trans('admin.dashboard.unknown_zone');
+
+        $zoneName = $booking['zoneName']
+            ?? $this->translator->trans('admin.dashboard.unknown_zone');
+
         $userName = trim(sprintf(
             '%s %s',
             $booking['userFirstName'] ?? '',
             $booking['userLastName'] ?? '',
         ));
+
         $userName = '' !== $userName
             ? $userName
             : $this->translator->trans('admin.dashboard.unknown_user');
+
         $colors = [
             BookingStatus::PENDING->value => '#e9b94d',
             BookingStatus::APPROVED->value => '#033862',
             BookingStatus::PAID->value => '#059669',
             BookingStatus::DECLINED->value => '#6b7280',
         ];
+
+        $equipmentList = [];
+
+        foreach (($booking['equipment'] ?? []) as $equipment) {
+            $equipmentList[] = [
+                'id' => (int) ($equipment['equipmentId'] ?? 0),
+                'name' => (string) ($equipment['equipmentName'] ?? ''),
+                'unitPrice' => (int) ($equipment['equipmentUnitPrice'] ?? 0),
+                'quantity' => (int) ($equipment['quantity'] ?? 0),
+                'totalPrice' => (int) ($equipment['bookingEquipmentTotalPrice'] ?? 0),
+                'maxQuantity' => isset($equipment['equipmentMaxQuantity'])
+                    ? (int) $equipment['equipmentMaxQuantity']
+                    : null,
+                'zone' => $equipment['equipmentZoneName'] ?? null,
+            ];
+        }
+
+        $equipmentTotalPrice = (int) (
+            $booking['equipmentTotalPrice']
+            ?? array_sum(
+                array_map(
+                    static fn (array $equipment): int => (int) ($equipment['totalPrice'] ?? 0),
+                    $equipmentList,
+                ),
+            )
+        );
 
         return [
             'id' => (string) $booking['id'],
@@ -225,22 +251,33 @@ class DashboardController extends AbstractDashboardController
             )),
             'start' => $booking['startDate']->format('Y-m-d\TH:i:s'),
             'end' => $booking['endDate']->format('Y-m-d\TH:i:s'),
-            'allDay' => (bool) $booking['isFullDay'],
-            'backgroundColor' => $colors[$status->value],
-            'borderColor' => $colors[$status->value],
-            'textColor' => BookingStatus::PENDING === $status ? '#033862' : '#ffffff',
+            'allDay' => (bool) ($booking['isFullDay'] ?? false),
+            'backgroundColor' => $colors[$status->value] ?? '#6b7280',
+            'borderColor' => $colors[$status->value] ?? '#6b7280',
+            'textColor' => BookingStatus::PENDING === $status
+                ? '#033862'
+                : '#ffffff',
             'url' => $this->generateAdminUrl(
                 BookingCrudController::class,
                 Action::DETAIL,
                 (int) $booking['id'],
             ),
             'extendedProps' => [
-                'status' => $this->translator->trans('admin.enum.booking_status.'.$status->value),
+                'status' => $this->translator->trans(
+                    'admin.enum.booking_status.'.$status->value,
+                ),
                 'user' => $userName,
                 'zone' => $zoneName,
                 'facility' => $booking['facilityName'] ?? null,
-                'guests' => $booking['guests'],
-                'amount' => $booking['amount'],
+                'guests' => (int) ($booking['guests'] ?? 0),
+                'amount' => (int) ($booking['amount'] ?? 0),
+
+                'totalPrice' => (int) ($booking['totalPrice'] ?? $booking['amount'] ?? 0),
+
+                'isFullDay' => (bool) ($booking['isFullDay'] ?? false),
+
+                'equipment' => $equipmentList,
+                'equipmentTotalPrice' => $equipmentTotalPrice,
             ],
         ];
     }

@@ -8,7 +8,6 @@ use App\Repository\FacilityRepository;
 use App\Repository\UserRoleRepository;
 use App\Service\BookingService;
 use App\Service\MailerService;
-use App\Service\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -99,82 +98,52 @@ final class BookingController extends AbstractController
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/booking/{bookingId}/approve', name: 'app_booking_approve')]
-    public function approveBooking(Request $request, int $bookingId): JsonResponse
+    #[Route(
+        '/booking/{bookingId}/approve',
+        name: 'app_booking_approve',
+        methods: ['POST']
+    )]
+    public function approveBooking(int $bookingId): JsonResponse
     {
-        $user = $this->getUser();
-
         $booking = $this->bookingRepository->find($bookingId);
-        $this->bookingService->approveBooking($booking);
 
-        $this->addFlash(
-            'success',
-            'La réservation a bien été validée.'
-        );
+        if (!$booking) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Réservation introuvable.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->bookingService->approveBooking($booking);
 
         return new JsonResponse([
             'success' => true,
-            'redirectUrl' => $this->generateUrl('app_home_user'),
+            'message' => 'La réservation a bien été validée.',
         ]);
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route('/booking/{bookingId}/decline', name: 'app_booking_decline')]
-    public function declinebooking(Request $request, int $bookingId): JsonResponse
+    #[Route(
+        '/booking/{bookingId}/decline',
+        name: 'app_booking_decline',
+        methods: ['POST']
+    )]
+    public function declineBooking(int $bookingId): JsonResponse
     {
-        $user = $this->getUser();
-
         $booking = $this->bookingRepository->find($bookingId);
+
+        if (!$booking) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Réservation introuvable.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
         $this->bookingService->declineBooking($booking);
 
-        $this->addFlash(
-            'warning',
-            'La réservation a bien été decliné.'
-        );
-
         return new JsonResponse([
             'success' => true,
-            'redirectUrl' => $this->generateUrl('app_home_user'),
-        ]);
-    }
-
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/booking/{bookingId}/approve', name: 'app_booking_approve')]
-    public function approveBooking(Request $request, int $bookingId): JsonResponse
-    {
-        $user = $this->getUser();
-
-        $booking = $this->bookingRepository->find($bookingId);
-        $this->bookingService->approveBooking($booking);
-
-        $this->addFlash(
-            'success',
-            'La réservation a bien été validée.'
-        );
-
-        return new JsonResponse([
-            'success' => true,
-            'redirectUrl' => $this->generateUrl('app_home_user'),
-        ]);
-    }
-
-    #[IsGranted('ROLE_ADMIN')]
-    #[Route('/booking/{bookingId}/decline', name: 'app_booking_decline')]
-    public function declinebooking(Request $request, int $bookingId): JsonResponse
-    {
-        $user = $this->getUser();
-
-        $booking = $this->bookingRepository->find($bookingId);
-        $this->bookingService->declineBooking($booking, $user);
-
-        $this->addFlash(
-            'warning',
-            'La réservation a bien été decliné.'
-        );
-
-        return new JsonResponse([
-            'success' => true,
-            'redirectUrl' => $this->generateUrl('app_home_user'),
+            'message' => 'La réservation a bien été refusée.',
         ]);
     }
 }
