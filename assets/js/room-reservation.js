@@ -96,7 +96,6 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         events: async function (fetchInfo, successCallback, failureCallback) {
-
             const blockedPeriods = config.blockedPeriods || [];
             const blockedEvents = blockedPeriods.map((bp) => {
                 const startStr = bp.start.substring(0, 10);
@@ -115,11 +114,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     id: `blocked-${bp.id}`,
                     start: startStr,
                     end: exclusiveEndStr,
-                    title: 'Période bloquée',
+                    title: texts.blockedPeriod,
                     allDay: true,
                     color: '#94a3b8',
                     textColor: '#ffffff',
-                    classNames: ['pointer-events-none']
+                    classNames: ['pointer-events-none', 'fc-blocked-banner']
                 };
             });
 
@@ -149,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         id: event.id,
                         start: startStr,
                         end: exclusiveEndStr,
-                        title: 'Réservé',
+                        title: texts.reserve,
                         allDay: true,
                         color: '#ff9f89',
                         textColor: '#ffffff',
@@ -240,9 +239,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             updatePreview(
                 `<span class="font-semibold text-secondary">${texts.room}</span> <span class="text-primary">${activeRoomName}</span><br>` +
-                `<span class="font-semibold text-secondary">${texts.arrival}</span> ${localizedStartDate}<br>` +
-                `<span class="font-semibold text-secondary">${texts.departure}</span> ${localizedEndDate}<br>` +
-                `<span class="font-semibold text-secondary">${texts.duration}</span> ${texts.nights.replace('%count%', nights)}`
+                    `<span class="font-semibold text-secondary">${texts.arrival}</span> ${localizedStartDate}<br>` +
+                    `<span class="font-semibold text-secondary">${texts.departure}</span> ${localizedEndDate}<br>` +
+                    `<span class="font-semibold text-secondary">${texts.duration}</span> ${texts.nights.replace('%count%', nights)}`
             );
 
             priceDisplay.textContent = `${totalPrice.toLocaleString(config.locale)} ¥`;

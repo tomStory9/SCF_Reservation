@@ -32,7 +32,7 @@ export function createCalendar({
     const blockedDays = new Set();
     const blockedPeriodsArray = Array.isArray(config.blockedPeriods) ? config.blockedPeriods : [];
 
-    blockedPeriodsArray.forEach(bp => {
+    blockedPeriodsArray.forEach((bp) => {
         const startStr = bp.start.substring(0, 10);
         const endStr = bp.end.substring(0, 10);
 
@@ -60,22 +60,48 @@ export function createCalendar({
 
     function getPeriodFromDate(date) {
         const hour = date.getHours();
-        if (hour >= 9 && hour < 13) return { key: 'morning', label: texts.morning, start: '09:00', end: '13:00' };
-        if (hour >= 13 && hour < 17) return { key: 'afternoon', label: texts.afternoon, start: '13:00', end: '17:00' };
-        if (hour >= 17 && hour < 21) return { key: 'evening', label: texts.evening, start: '17:00', end: '21:00' };
+        if (hour >= 9 && hour < 13)
+            return { key: 'morning', label: texts.morning, start: '09:00', end: '13:00' };
+        if (hour >= 13 && hour < 17)
+            return { key: 'afternoon', label: texts.afternoon, start: '13:00', end: '17:00' };
+        if (hour >= 17 && hour < 21)
+            return { key: 'evening', label: texts.evening, start: '17:00', end: '21:00' };
         return null;
     }
 
     function getBackgroundPeriodEvents(fetchInfo) {
-        if (state.bookingMode !== 'period' || !calendar?.view || calendar.view.type !== 'timeGridWeek') return [];
+        if (
+            state.bookingMode !== 'period' ||
+            !calendar?.view ||
+            calendar.view.type !== 'timeGridWeek'
+        )
+            return [];
         const events = [];
         const cursor = new Date(fetchInfo.start);
         while (cursor < fetchInfo.end) {
             const date = normalizeDate(cursor);
             events.push(
-                { id: `bg-morning-${date}`, start: `${date}T09:00:00`, end: `${date}T13:00:00`, display: 'background', classNames: ['fc-bg-period-morning'] },
-                { id: `bg-afternoon-${date}`, start: `${date}T13:00:00`, end: `${date}T17:00:00`, display: 'background', classNames: ['fc-bg-period-afternoon'] },
-                { id: `bg-evening-${date}`, start: `${date}T17:00:00`, end: `${date}T21:00:00`, display: 'background', classNames: ['fc-bg-period-evening'] }
+                {
+                    id: `bg-morning-${date}`,
+                    start: `${date}T09:00:00`,
+                    end: `${date}T13:00:00`,
+                    display: 'background',
+                    classNames: ['fc-bg-period-morning']
+                },
+                {
+                    id: `bg-afternoon-${date}`,
+                    start: `${date}T13:00:00`,
+                    end: `${date}T17:00:00`,
+                    display: 'background',
+                    classNames: ['fc-bg-period-afternoon']
+                },
+                {
+                    id: `bg-evening-${date}`,
+                    start: `${date}T17:00:00`,
+                    end: `${date}T21:00:00`,
+                    display: 'background',
+                    classNames: ['fc-bg-period-evening']
+                }
             );
             cursor.setDate(cursor.getDate() + 1);
         }
@@ -135,7 +161,11 @@ export function createCalendar({
         eventOverlap: false,
         businessHours: { daysOfWeek: [0, 1, 2, 3, 4, 5, 6], startTime: '09:00', endTime: '21:00' },
         views: { dayGridMonth: { dayMaxEventRows: 3 } },
-        headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek'
+        },
         buttonText: { today: texts.today, month: texts.month, week: texts.week },
         displayEventTime: true,
         displayEventEnd: true,
@@ -143,7 +173,7 @@ export function createCalendar({
         validRange: { start: getTodayIsoString(), end: config.maxDate },
 
         events: async (fetchInfo, successCallback, failureCallback) => {
-            const blockedEvents = blockedPeriodsArray.map(bp => {
+            const blockedEvents = blockedPeriodsArray.map((bp) => {
                 const startStr = bp.start.substring(0, 10);
                 const endStr = bp.end.substring(0, 10);
 
@@ -222,7 +252,7 @@ export function createCalendar({
                 const data = parseCleanIso(info.dateStr);
                 ui.updatePreview(
                     `<span class="font-semibold text-secondary">${texts.selectedDay}</span> ` +
-                    `<span class="font-semibold text-primary">${data.dateFr}</span>`
+                        `<span class="font-semibold text-primary">${data.dateFr}</span>`
                 );
                 return;
             }
@@ -237,7 +267,12 @@ export function createCalendar({
                 return;
             }
 
-            const prices = pricingService.getPricesForSelection(info.dateStr, null, 'period', period.key);
+            const prices = pricingService.getPricesForSelection(
+                info.dateStr,
+                null,
+                'period',
+                period.key
+            );
             const data = parseCleanIso(info.dateStr);
 
             state.currentSelection = {
@@ -268,10 +303,10 @@ export function createCalendar({
 
             ui.updatePreview(
                 `<span class="font-semibold text-secondary">${texts.selectedPeriod}</span> ` +
-                `<span class="font-semibold text-primary">${period.label}</span>` +
-                `<br><span class="text-state">${texts.date} ${data.dateFr}</span>` +
-                `<br><span class="text-state">${texts.hours} ${period.start} → ${period.end}</span>` +
-                `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
+                    `<span class="font-semibold text-primary">${period.label}</span>` +
+                    `<br><span class="text-state">${texts.date} ${data.dateFr}</span>` +
+                    `<br><span class="text-state">${texts.hours} ${period.start} → ${period.end}</span>` +
+                    `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
             );
         },
 
@@ -293,15 +328,22 @@ export function createCalendar({
                     return;
                 }
                 state.currentSelection = {
-                    bookingMode: 'hour', startDate: startData.dateIso, endDate: startData.dateIso,
-                    startTime: '00:00', endTime: '23:59', periodKey: null, isFullDay: true,
-                    guestNb: getGuestCount(), price: 0, basePrice: 0
+                    bookingMode: 'hour',
+                    startDate: startData.dateIso,
+                    endDate: startData.dateIso,
+                    startTime: '00:00',
+                    endTime: '23:59',
+                    periodKey: null,
+                    isFullDay: true,
+                    guestNb: getGuestCount(),
+                    price: 0,
+                    basePrice: 0
                 };
                 await notifySelectionChange();
                 ui.updatePreview(
                     `<span class="font-semibold text-secondary">${texts.fullDaySelection}</span> ` +
-                    `<span class="font-semibold text-primary">${startData.dateFr}</span>` +
-                    `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
+                        `<span class="font-semibold text-primary">${startData.dateFr}</span>` +
+                        `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
                 );
                 return;
             }
@@ -321,9 +363,16 @@ export function createCalendar({
             const duration = (info.end.getTime() - info.start.getTime()) / (60 * 60 * 1000);
 
             state.currentSelection = {
-                bookingMode: 'hour', startDate: startData.dateIso, endDate: endData.dateIso,
-                startTime: startData.time, endTime: endData.time, periodKey: null,
-                isFullDay: false, guestNb: getGuestCount(), price: prices?.price ?? 0, basePrice: prices?.basePrice ?? 0
+                bookingMode: 'hour',
+                startDate: startData.dateIso,
+                endDate: endData.dateIso,
+                startTime: startData.time,
+                endTime: endData.time,
+                periodKey: null,
+                isFullDay: false,
+                guestNb: getGuestCount(),
+                price: prices?.price ?? 0,
+                basePrice: prices?.basePrice ?? 0
             };
 
             ui.updatePrice(prices);
@@ -332,10 +381,10 @@ export function createCalendar({
 
             ui.updatePreview(
                 `<span class="font-semibold text-secondary">${texts.hourlySlot}</span> ` +
-                `<span class="font-semibold text-primary">${startData.time} → ${endData.time}</span>` +
-                `<br><span class="text-state">${texts.date} ${startData.dateFr}</span>` +
-                `<br><span class="text-state">${texts.duration} ${duration} heure(s)</span>` +
-                `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
+                    `<span class="font-semibold text-primary">${startData.time} → ${endData.time}</span>` +
+                    `<br><span class="text-state">${texts.date} ${startData.dateFr}</span>` +
+                    `<br><span class="text-state">${texts.duration} ${duration} heure(s)</span>` +
+                    `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
             );
         }
     });
