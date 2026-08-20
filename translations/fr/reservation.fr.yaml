@@ -88,3 +88,4 @@ js:
   grand_total: "Total général :"
   used_hours: "h utilisées sur 12 h"
   selected_period_event: "Période sélectionnée · {period}"
+  blocked_period: "Période bloquée"
