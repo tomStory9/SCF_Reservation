@@ -25,6 +25,7 @@ class MailerService
             ->to($booking->getUserBooking()->getEmail())
             ->subject('予約リマインダー')
             ->htmlTemplate('mails/booking_reminder.html.twig')
+            ->locale($$booking->getUserBooking()->getLanguage())
             ->context([
                 'booking' => $booking,
                 'user' => $booking->getUserBooking(),
@@ -38,22 +39,24 @@ class MailerService
     public function sendApprovedEmail(User $user): void
     {
         $email = new TemplatedEmail()
-           ->from($this->mailerAddress)
-           ->to($user->getEmail())
-           ->subject('アカウントが承認されました')
-           ->htmlTemplate('security/mails/account_creation_accepted.html.twig')
-           ->context(['user' => $user]);
+            ->from($this->mailerAddress)
+            ->to($user->getEmail())
+            ->locale($user->getLanguage())
+            ->subject('アカウントが承認されました')
+            ->htmlTemplate('security/mails/account_creation_accepted.html.twig')
+            ->context(['user' => $user]);
         $this->mailerInterface->send($email);
     }
 
     public function sendDeniedEmail(User $user): void
     {
         $email = new TemplatedEmail()
-           ->from($this->mailerAddress)
-           ->to($user->getEmail())
-           ->subject('アカウント申請が承認されませんでした')
-           ->htmlTemplate('security/mails/account_creation_denied.html.twig')
-           ->context(['user' => $user]);
+            ->from($this->mailerAddress)
+            ->to($user->getEmail())
+            ->subject('アカウント申請が承認されませんでした')
+            ->locale($user->getLanguage())
+            ->htmlTemplate('security/mails/account_creation_denied.html.twig')
+            ->context(['user' => $user]);
         $this->mailerInterface->send($email);
     }
 
@@ -63,6 +66,7 @@ class MailerService
             ->from($this->mailerAddress)
             ->to($user->getEmail())
             ->subject('お支払い確認')
+            ->locale($user->getLanguage())
             ->htmlTemplate('mails/payment_confirmation.html.twig')
             ->context([
                 'user' => $user,
@@ -78,6 +82,7 @@ class MailerService
             ->from($this->mailerAddress)
             ->to($user->getEmail())
             ->subject('予約確認')
+            ->locale($user->getLanguage())
             ->htmlTemplate('mails/booking_confirmation.html.twig')
             ->context([
                 'user' => $user,
@@ -94,6 +99,7 @@ class MailerService
             ->from($this->mailerAddress)
             ->to($user->getEmail())
             ->subject('予約に関するお知らせ')
+            ->locale($user->getLanguage())
             ->htmlTemplate('mails/booking_rejected.html.twig')
             ->context([
                 'user' => $user,
