@@ -121,7 +121,6 @@ class UserFixtures extends Fixture
         $default_user->setLanguage('fr');
         $manager->persist($default_user);
         $this->addReference(self::DEFAULT_USER, $default_user);
-
         $manager->flush();
     }
 }
