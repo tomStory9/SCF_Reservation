@@ -8,9 +8,7 @@ export function loadCalendarConfig() {
     const config = JSON.parse(configElement.textContent);
 
     return {
-        maxDate: config.maxDate ?? null,
-        endpoints: config.endpoints ?? {},
-        texts: config.texts ?? {}
+        ...config
     };
 }
 
