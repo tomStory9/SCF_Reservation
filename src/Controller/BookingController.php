@@ -7,6 +7,7 @@ use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
 use App\Repository\UserRoleRepository;
 use App\Service\BookingService;
+use App\Service\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +24,7 @@ final class BookingController extends AbstractController
         private readonly UserRoleRepository $userRoleRepository,
         private readonly BookingRepository $bookingRepository,
         private readonly TranslatorInterface $translator,
+        private readonly MailerService $mailerService,
     ) {
     }
 
@@ -92,6 +94,56 @@ final class BookingController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'redirectUrl' => $this->generateUrl('app_home_user'),
+        ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route(
+        '/booking/{bookingId}/approve',
+        name: 'app_booking_approve',
+        methods: ['POST']
+    )]
+    public function approveBooking(int $bookingId): JsonResponse
+    {
+        $booking = $this->bookingRepository->find($bookingId);
+
+        if (!$booking) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Réservation introuvable.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->bookingService->approveBooking($booking);
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'La réservation a bien été validée.',
+        ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route(
+        '/booking/{bookingId}/decline',
+        name: 'app_booking_decline',
+        methods: ['POST']
+    )]
+    public function declineBooking(int $bookingId): JsonResponse
+    {
+        $booking = $this->bookingRepository->find($bookingId);
+
+        if (!$booking) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => 'Réservation introuvable.',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $this->bookingService->declineBooking($booking);
+
+        return new JsonResponse([
+            'success' => true,
+            'message' => 'La réservation a bien été refusée.',
         ]);
     }
 }

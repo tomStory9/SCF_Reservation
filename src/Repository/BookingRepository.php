@@ -166,6 +166,20 @@ class BookingRepository extends ServiceEntityRepository
         return max(0.0, $allocatedHours - $usedHours);
     }
 
+    public function findBookingsByMonth(int $year, int $month): array
+    {
+        $startOfMonth = new \DateTimeImmutable("$year-$month-01 00:00:00");
+        $endOfMonth = $startOfMonth->modify('first day of next month');
+
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.startDate >= :startOfMonth')
+            ->andWhere('b.startDate < :endOfMonth')
+            ->setParameter('startOfMonth', $startOfMonth)
+            ->setParameter('endOfMonth', $endOfMonth)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function getBookingsForZoneAndConflicts(Zone $zone, array $conflictingCodes = []): array
     {
         $qb = $this->createQueryBuilder('b')
@@ -285,21 +299,33 @@ class BookingRepository extends ServiceEntityRepository
         \DateTimeImmutable $end,
         array $statuses,
     ): array {
-        return $this->createQueryBuilder('booking')
+        $rows = $this->createQueryBuilder('booking')
             ->select('booking.id AS id')
             ->addSelect('booking.startDate AS startDate')
             ->addSelect('booking.endDate AS endDate')
             ->addSelect('booking.isFullDay AS isFullDay')
             ->addSelect('booking.price AS amount')
+            ->addSelect('booking.TotalPrice AS totalPrice')
             ->addSelect('booking.guestCount AS guests')
             ->addSelect('booking.bookingStatus AS status')
             ->addSelect('user.name AS userFirstName')
             ->addSelect('user.lastname AS userLastName')
             ->addSelect('zone.name AS zoneName')
             ->addSelect('facility.name AS facilityName')
+            ->addSelect('bookingEquipment.quantity AS quantity')
+            ->addSelect('bookingEquipment.TotalPrice AS bookingEquipmentTotalPrice')
+            ->addSelect('equipment.id AS equipmentId')
+            ->addSelect('equipment.name AS equipmentName')
+            ->addSelect('equipment.unitPrice AS equipmentUnitPrice')
+            ->addSelect('equipment.maxQuantity AS equipmentMaxQuantity')
+            ->addSelect('equipmentZone.id AS equipmentZoneId')
+            ->addSelect('equipmentZone.name AS equipmentZoneName')
             ->join('booking.userBooking', 'user')
             ->join('booking.zone', 'zone')
             ->leftJoin('zone.facility', 'facility')
+            ->leftJoin('booking.bookingEquipment', 'bookingEquipment')
+            ->leftJoin('bookingEquipment.equipment', 'equipment')
+            ->leftJoin('equipment.zone', 'equipmentZone')
             ->andWhere('booking.startDate < :end')
             ->andWhere('booking.endDate > :start')
             ->andWhere('booking.bookingStatus IN (:statuses)')
@@ -309,5 +335,44 @@ class BookingRepository extends ServiceEntityRepository
             ->orderBy('booking.startDate', 'ASC')
             ->getQuery()
             ->getResult();
+
+        // Regroupement par réservation
+        $grouped = [];
+        foreach ($rows as $row) {
+            $bookingId = $row['id'];
+
+            if (!isset($grouped[$bookingId])) {
+                $grouped[$bookingId] = [
+                    'id' => $row['id'],
+                    'startDate' => $row['startDate'],
+                    'endDate' => $row['endDate'],
+                    'isFullDay' => $row['isFullDay'],
+                    'amount' => $row['amount'],
+                    'totalPrice' => $row['totalPrice'],
+                    'guests' => $row['guests'],
+                    'status' => $row['status'],
+                    'userFirstName' => $row['userFirstName'],
+                    'userLastName' => $row['userLastName'],
+                    'zoneName' => $row['zoneName'],
+                    'facilityName' => $row['facilityName'],
+                    'equipment' => [],
+                    'equipmentTotalPrice' => 0,
+                ];
+            }
+
+            $grouped[$bookingId]['equipment'][] = [
+                'equipmentId' => $row['equipmentId'],
+                'equipmentName' => $row['equipmentName'],
+                'equipmentUnitPrice' => $row['equipmentUnitPrice'],
+                'equipmentMaxQuantity' => $row['equipmentMaxQuantity'],
+                'equipmentZoneId' => $row['equipmentZoneId'],
+                'equipmentZoneName' => $row['equipmentZoneName'],
+                'quantity' => $row['quantity'],
+                'bookingEquipmentTotalPrice' => $row['bookingEquipmentTotalPrice'],
+            ];
+            $grouped[$bookingId]['equipmentTotalPrice'] += (int) $row['bookingEquipmentTotalPrice'];
+        }
+
+        return array_values($grouped);
     }
 }
