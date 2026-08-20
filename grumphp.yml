@@ -11,3 +11,10 @@ grumphp:
     phpcsfixer:
       config: '.php-cs-fixer.dist.php'
       triggered_by: ['php']
+    eslint:
+            bin: node_modules/.bin/eslint
+            triggered_by: [js, jsx, ts, tsx, vue]
+            whitelist_patterns:
+                - /^assets\/js\/(.*)/
+            no_eslintrc: false
+            quiet: false
