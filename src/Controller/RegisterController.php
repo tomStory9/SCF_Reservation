@@ -73,6 +73,7 @@ final class RegisterController extends AbstractController
             $user->setCompany(null);
             $user->setPhone('');
             $user->setIsVerified(false);
+            $user->setLanguage($request->getLocale());
 
             $settings = $this->settingsRepository->getSettings();
 
