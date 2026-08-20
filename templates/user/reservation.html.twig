@@ -18,6 +18,7 @@
             {
                 locale: app.request.locale,
                 maxDate: maxEndDate|date('Y-m-d'),
+                blockedPeriods: blockedPeriods|default([]),
 
                 endpoints: {
                     zones: '/facility/{facilityId}/zones',
@@ -28,6 +29,7 @@
                 },
 
                 texts: {
+                    blockedPeriod: 'js.blocked_period'|trans,
                     zonePlaceholder: 'js.zone_placeholder'|trans,
                     noZoneAvailable: 'js.no_zone_available'|trans,
                     undefined: 'js.undefined'|trans,

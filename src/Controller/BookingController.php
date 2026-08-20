@@ -50,11 +50,14 @@ final class BookingController extends AbstractController
 
         $facilities = $this->facilityRepository->findAll();
 
+        $blockedPeriods = $this->bookingService->getUnavailiblePeriods();
+
         return $this->render('user/reservation.html.twig', [
             'user' => $user,
             'facilities' => $facilities,
             'maxEndDate' => $maxEndDate,
             'remainingHours' => $remainingHours,
+            'blockedPeriods' => $blockedPeriods,
         ]);
     }
 

@@ -14,6 +14,7 @@
     <script id="room-booking-config" type="application/json">
         {{ {
             locale: app.request.locale,
+            blockedPeriods: blockedPeriods|default([]),
             texts: {
                 noSelection: 'js.no_selection'|trans,
                 room: 'js.room'|trans,
@@ -28,7 +29,9 @@
                 bookingError: 'js.booking_error'|trans,
                 networkErrorTitle: 'js.network_error_title'|trans,
                 networkError: 'js.network_error'|trans,
-                submit: 'js.submit'|trans
+                submit: 'js.submit'|trans,
+                blockedPeriod: 'js.blocked_period'|trans,
+                reserve: 'js.reserve'|trans,
             }
         }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}
     </script>

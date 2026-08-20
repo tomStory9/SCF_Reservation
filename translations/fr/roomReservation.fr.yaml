@@ -28,3 +28,5 @@ js:
   network_error_title: "Erreur réseau"
   network_error: "Impossible de contacter le serveur."
   submit: "Confirmer la réservation"
+  blocked_period: "Période bloquée"
+  reserve: "Reservé"

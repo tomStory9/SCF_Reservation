@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Service\BookingService;
 use App\Service\RoomBookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,6 +18,7 @@ final class RoomBookingController extends AbstractController
     public function __construct(
         private readonly RoomBookingService $roomBookingService,
         private readonly TranslatorInterface $translator,
+        private readonly BookingService $bookingService
     ) {
     }
 
@@ -30,8 +32,11 @@ final class RoomBookingController extends AbstractController
 
         $rooms = $this->roomBookingService->getBedRoomYamaichiWithPricing();
 
+        $blockedPeriods = $this->bookingService->getUnavailiblePeriods();
+
         return $this->render('room_booking/index.html.twig', [
             'rooms' => $rooms,
+            'blockedPeriods' => $blockedPeriods,
         ]);
     }
 

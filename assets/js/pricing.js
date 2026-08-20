@@ -5,11 +5,7 @@ export function createPricingService(getPricings, getFreeHours) {
         getPricesForSelection(startIso, endIso, mode, periodKey = null) {
             const pricings = getPricings();
 
-            if (
-                !startIso ||
-                !pricings ||
-                Object.keys(pricings).length === 0
-            ) {
+            if (!startIso || !pricings || Object.keys(pricings).length === 0) {
                 return null;
             }
 
@@ -25,10 +21,7 @@ export function createPricingService(getPricings, getFreeHours) {
             if (mode === 'period' && periodKey) {
                 let basePrice = dayPricings.period?.[periodKey];
 
-                if (
-                    typeof basePrice === 'object' &&
-                    basePrice !== null
-                ) {
+                if (typeof basePrice === 'object' && basePrice !== null) {
                     basePrice = basePrice.price;
                 }
 
@@ -37,11 +30,7 @@ export function createPricingService(getPricings, getFreeHours) {
                 }
 
                 return {
-                    price: calculateDiscountedPrice(
-                        basePrice,
-                        freeHours,
-                        4
-                    ),
+                    price: calculateDiscountedPrice(basePrice, freeHours, 4),
                     basePrice
                 };
             }
@@ -65,14 +54,7 @@ function parseCalendarDate(value) {
     if (value.length === 10) {
         const [year, month, day] = value.split('-');
 
-        return new Date(
-            Number(year),
-            Number(month) - 1,
-            Number(day),
-            0,
-            0,
-            0
-        );
+        return new Date(Number(year), Number(month) - 1, Number(day), 0, 0, 0);
     }
 
     return new Date(value);
@@ -84,21 +66,13 @@ function calculateDiscountedPrice(basePrice, freeHours, totalHours) {
     }
 
     if (freeHours > 0) {
-        return Math.round(
-            basePrice * ((totalHours - freeHours) / totalHours)
-        );
+        return Math.round(basePrice * ((totalHours - freeHours) / totalHours));
     }
 
     return Math.round(basePrice);
 }
 
-function getHourlyPrice(
-    start,
-    end,
-    initialDayPricings,
-    allPricings,
-    freeHours
-) {
+function getHourlyPrice(start, end, initialDayPricings, allPricings, freeHours) {
     let current = new Date(start);
     let basePrice = 0;
     let validHoursCount = 0;
@@ -109,14 +83,10 @@ function getHourlyPrice(
         const minutes = String(current.getMinutes()).padStart(2, '0');
         const timeKey = `${hours}:${minutes}`;
 
-        const hourlyPrice =
-            allPricings[dayNumber]?.hourly?.[timeKey];
+        const hourlyPrice = allPricings[dayNumber]?.hourly?.[timeKey];
 
         if (hourlyPrice !== undefined && hourlyPrice !== null) {
-            const price =
-                typeof hourlyPrice === 'object'
-                    ? hourlyPrice.price
-                    : hourlyPrice;
+            const price = typeof hourlyPrice === 'object' ? hourlyPrice.price : hourlyPrice;
 
             if (!Number.isNaN(Number(price))) {
                 basePrice += Number(price);
@@ -132,11 +102,7 @@ function getHourlyPrice(
     }
 
     return {
-        price: calculateDiscountedPrice(
-            basePrice,
-            freeHours,
-            validHoursCount
-        ),
+        price: calculateDiscountedPrice(basePrice, freeHours, validHoursCount),
         basePrice
     };
 }

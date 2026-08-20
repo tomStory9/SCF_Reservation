@@ -1,110 +1,66 @@
-export function createEquipmentUI(
-    state,
-    elements,
-    config
-) {
+export function createEquipmentUI(state, elements, config) {
     function formatPrice(price) {
         return `${Number(price).toLocaleString(config.locale)} ¥`;
     }
 
     function calculateTotal() {
-        return Object.entries(
-            state.selectedEquipments
-        ).reduce(
-            (total, [equipmentId, quantity]) => {
-                const equipment =
-                    state.availableEquipments.find(
-                        item =>
-                            item.id ===
-                            Number(equipmentId)
-                    );
+        return Object.entries(state.selectedEquipments).reduce((total, [equipmentId, quantity]) => {
+            const equipment = state.availableEquipments.find(
+                (item) => item.id === Number(equipmentId)
+            );
 
-                if (!equipment) {
-                    return total;
-                }
+            if (!equipment) {
+                return total;
+            }
 
-                return total +
-                    Number(equipment.unitPrice) *
-                    Number(quantity);
-            },
-            0
-        );
+            return total + Number(equipment.unitPrice) * Number(quantity);
+        }, 0);
     }
 
     function updateTotal() {
-        state.equipmentTotal =
-            calculateTotal();
+        state.equipmentTotal = calculateTotal();
 
-        if (
-            state.equipmentTotal > 0
-        ) {
-            elements.totalContainer.classList.remove(
-                'hidden'
-            );
+        if (state.equipmentTotal > 0) {
+            elements.totalContainer.classList.remove('hidden');
 
-            elements.totalDisplay.textContent =
-                formatPrice(
-                    state.equipmentTotal
-                );
+            elements.totalDisplay.textContent = formatPrice(state.equipmentTotal);
         } else {
-            elements.totalContainer.classList.add(
-                'hidden'
-            );
+            elements.totalContainer.classList.add('hidden');
 
-            elements.totalDisplay.textContent =
-                formatPrice(0);
+            elements.totalDisplay.textContent = formatPrice(0);
         }
     }
 
     function reset() {
-        state.availableEquipments =
-            [];
+        state.availableEquipments = [];
 
-        state.selectedEquipments =
-            {};
+        state.selectedEquipments = {};
 
-        state.equipmentTotal =
-            0;
+        state.equipmentTotal = 0;
 
-        elements.list.innerHTML =
-            '';
+        elements.list.innerHTML = '';
 
-        elements.totalContainer.classList.add(
-            'hidden'
-        );
+        elements.totalContainer.classList.add('hidden');
 
-        elements.totalDisplay.textContent =
-            formatPrice(0);
+        elements.totalDisplay.textContent = formatPrice(0);
 
-        if (
-            elements.grandTotalContainer
-        ) {
-            elements.grandTotalContainer.classList.add(
-                'hidden'
-            );
+        if (elements.grandTotalContainer) {
+            elements.grandTotalContainer.classList.add('hidden');
         }
 
-        if (
-            elements.grandTotalDisplay
-        ) {
-            elements.grandTotalDisplay.textContent =
-                formatPrice(0);
+        if (elements.grandTotalDisplay) {
+            elements.grandTotalDisplay.textContent = formatPrice(0);
         }
     }
 
     function render(equipments) {
-        state.availableEquipments =
-            equipments;
+        state.availableEquipments = equipments;
 
-        state.selectedEquipments =
-            {};
+        state.selectedEquipments = {};
 
-        state.equipmentTotal =
-            0;
+        state.equipmentTotal = 0;
 
-        if (
-            !equipments.length
-        ) {
+        if (!equipments.length) {
             elements.list.innerHTML = `
                 <p class="px-3 py-2 text-xs text-state">
                     ${config.texts.noEquipmentsAvailable}
@@ -116,24 +72,17 @@ export function createEquipmentUI(
             return;
         }
 
-        elements.list.innerHTML =
-            equipments
-                .map(equipment => {
-                    const availableQuantity =
-                        Number(
-                            equipment.availableQuantity ??
-                            0
-                        );
+        elements.list.innerHTML = equipments
+            .map((equipment) => {
+                const availableQuantity = Number(equipment.availableQuantity ?? 0);
 
-                    const isUnavailable =
-                        availableQuantity <= 0;
+                const isUnavailable = availableQuantity <= 0;
 
-                    return `
+                return `
                         <div
-                            class="equipment-item flex items-center justify-between bg-white px-3 py-2 ${isUnavailable
-                            ? 'opacity-50'
-                            : ''
-                        }"
+                            class="equipment-item flex items-center justify-between bg-white px-3 py-2 ${
+                                isUnavailable ? 'opacity-50' : ''
+                            }"
                             data-equipment-id="${equipment.id}"
                         >
                             <div class="flex flex-col">
@@ -142,9 +91,7 @@ export function createEquipmentUI(
                                 </span>
 
                                 <span class="text-[11px] text-state">
-                                    ${formatPrice(
-                            equipment.unitPrice
-                        )}
+                                    ${formatPrice(equipment.unitPrice)}
                                     · ${config.texts.availableEquipment} :
                                     ${availableQuantity}
                                 </span>
@@ -168,139 +115,75 @@ export function createEquipmentUI(
                                 <button
                                     type="button"
                                     class="equipment-increase-btn h-6 w-6 rounded bg-slate-100 text-xs font-bold"
-                                    ${isUnavailable
-                            ? 'disabled'
-                            : ''
-                        }
+                                    ${isUnavailable ? 'disabled' : ''}
                                 >
                                     +
                                 </button>
                             </div>
                         </div>
                     `;
-                })
-                .join('');
+            })
+            .join('');
 
-        equipments.forEach(
-            equipment => {
-                const item =
-                    elements.list.querySelector(
-                        `[data-equipment-id="${equipment.id}"]`
-                    );
+        equipments.forEach((equipment) => {
+            const item = elements.list.querySelector(`[data-equipment-id="${equipment.id}"]`);
 
-                if (!item) {
+            if (!item) {
+                return;
+            }
+
+            const decreaseButton = item.querySelector('.equipment-decrease-btn');
+
+            const increaseButton = item.querySelector('.equipment-increase-btn');
+
+            const quantityDisplay = item.querySelector('.equipment-quantity-display');
+
+            const availableQuantity = Number(equipment.availableQuantity ?? 0);
+
+            function updateButtons(quantity) {
+                decreaseButton.disabled = quantity <= 0;
+
+                increaseButton.disabled = availableQuantity <= 0 || quantity >= availableQuantity;
+            }
+
+            decreaseButton.addEventListener('click', () => {
+                const current = state.selectedEquipments[equipment.id] || 0;
+
+                const quantity = Math.max(0, current - 1);
+
+                if (quantity === 0) {
+                    delete state.selectedEquipments[equipment.id];
+                } else {
+                    state.selectedEquipments[equipment.id] = quantity;
+                }
+
+                quantityDisplay.textContent = quantity;
+
+                updateButtons(quantity);
+
+                updateTotal();
+            });
+
+            increaseButton.addEventListener('click', () => {
+                const current = state.selectedEquipments[equipment.id] || 0;
+
+                const quantity = Math.min(availableQuantity, current + 1);
+
+                if (quantity <= 0) {
                     return;
                 }
 
-                const decreaseButton =
-                    item.querySelector(
-                        '.equipment-decrease-btn'
-                    );
+                state.selectedEquipments[equipment.id] = quantity;
 
-                const increaseButton =
-                    item.querySelector(
-                        '.equipment-increase-btn'
-                    );
+                quantityDisplay.textContent = quantity;
 
-                const quantityDisplay =
-                    item.querySelector(
-                        '.equipment-quantity-display'
-                    );
+                updateButtons(quantity);
 
-                const availableQuantity =
-                    Number(
-                        equipment.availableQuantity ??
-                        0
-                    );
+                updateTotal();
+            });
 
-                function updateButtons(
-                    quantity
-                ) {
-                    decreaseButton.disabled =
-                        quantity <= 0;
-
-                    increaseButton.disabled =
-                        availableQuantity <= 0 ||
-                        quantity >=
-                        availableQuantity;
-                }
-
-                decreaseButton.addEventListener(
-                    'click',
-                    () => {
-                        const current =
-                            state.selectedEquipments[
-                            equipment.id
-                            ] || 0;
-
-                        const quantity =
-                            Math.max(
-                                0,
-                                current - 1
-                            );
-
-                        if (
-                            quantity === 0
-                        ) {
-                            delete state
-                                .selectedEquipments[
-                                equipment.id
-                            ];
-                        } else {
-                            state.selectedEquipments[
-                                equipment.id
-                            ] = quantity;
-                        }
-
-                        quantityDisplay.textContent =
-                            quantity;
-
-                        updateButtons(
-                            quantity
-                        );
-
-                        updateTotal();
-                    }
-                );
-
-                increaseButton.addEventListener(
-                    'click',
-                    () => {
-                        const current =
-                            state.selectedEquipments[
-                            equipment.id
-                            ] || 0;
-
-                        const quantity =
-                            Math.min(
-                                availableQuantity,
-                                current + 1
-                            );
-
-                        if (
-                            quantity <= 0
-                        ) {
-                            return;
-                        }
-
-                        state.selectedEquipments[
-                            equipment.id
-                        ] = quantity;
-
-                        quantityDisplay.textContent =
-                            quantity;
-
-                        updateButtons(
-                            quantity
-                        );
-
-                        updateTotal();
-                    }
-                );
-
-                updateButtons(0);
-            }
-        );
+            updateButtons(0);
+        });
 
         updateTotal();
     }
@@ -308,7 +191,6 @@ export function createEquipmentUI(
     return {
         render,
         reset,
-        getTotal: () =>
-            state.equipmentTotal
+        getTotal: () => state.equipmentTotal
     };
 }

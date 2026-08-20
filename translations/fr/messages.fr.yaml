@@ -86,6 +86,7 @@ admin:
     equipments: "Équipements"
     configuration: "Configuration"
     parametre: "Paramètres du site"
+    blockout_periods: "Périodes bloquées"
   entity:
     user: "Utilisateur"
     users: "Utilisateurs"
@@ -104,6 +105,8 @@ admin:
     equipment: "Équipement"
     equipments: "Équipements"
     settings: "Paramètres du site"
+    blockout_period: "Période bloquée"
+    blockout_periods: "Périodes bloquées"
   action:
     approve: "Approuver"
     decline: "Refuser"
@@ -156,6 +159,7 @@ admin:
     validation_manuelle: "Validation manuelle requise"
     address: "Adresse"
     internationalAddres: "Adresse International"
+    active: "Période active"
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"

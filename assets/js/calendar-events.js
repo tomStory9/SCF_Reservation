@@ -5,22 +5,20 @@ export function createCalendarEventService(state, config) {
 
     return {
         recomputeDailyUsage(events) {
-            Object.keys(state.dailyUsage).forEach(key => {
+            Object.keys(state.dailyUsage).forEach((key) => {
                 delete state.dailyUsage[key];
             });
 
             state.allDayBlockedDates.clear();
 
-            events.forEach(event => {
+            events.forEach((event) => {
                 if (!event.start) {
                     return;
                 }
 
                 if (event.allDay) {
                     const start = new Date(event.start);
-                    const end = event.end
-                        ? new Date(event.end)
-                        : new Date(event.start);
+                    const end = event.end ? new Date(event.end) : new Date(event.start);
 
                     const cursor = new Date(start);
 
@@ -33,8 +31,7 @@ export function createCalendarEventService(state, config) {
                         };
 
                         state.allDayBlockedDates.add(date);
-                        state.dailyUsage[date].usedHours =
-                            dailyHoursLimit;
+                        state.dailyUsage[date].usedHours = dailyHoursLimit;
                         state.dailyUsage[date].percentage = 100;
 
                         cursor.setDate(cursor.getDate() + 1);
@@ -53,24 +50,19 @@ export function createCalendarEventService(state, config) {
                 if (event.end) {
                     const start = new Date(event.start);
                     const end = new Date(event.end);
-                    const duration =
-                        Math.max(0, end - start) / 36e5;
+                    const duration = Math.max(0, end - start) / 36e5;
 
                     state.dailyUsage[date].usedHours += duration;
                     state.dailyUsage[date].percentage = Math.min(
                         100,
-                        Math.round(
-                            state.dailyUsage[date].usedHours /
-                            dailyHoursLimit *
-                            100
-                        )
+                        Math.round((state.dailyUsage[date].usedHours / dailyHoursLimit) * 100)
                     );
                 }
             });
         },
 
         hasAnyEventOnDate(dateStr) {
-            return state.currentZoneBookings.some(event => {
+            return state.currentZoneBookings.some((event) => {
                 if (!event.start) {
                     return false;
                 }
@@ -80,9 +72,7 @@ export function createCalendarEventService(state, config) {
                 }
 
                 const start = new Date(event.start);
-                const end = event.end
-                    ? new Date(event.end)
-                    : new Date(event.start);
+                const end = event.end ? new Date(event.end) : new Date(event.start);
 
                 const cursor = new Date(start);
 
@@ -99,38 +89,24 @@ export function createCalendarEventService(state, config) {
         },
 
         selectionOverlapsExistingEvent(selectInfo) {
-            if (
-                state.bookingMode !== 'hour' ||
-                selectInfo.allDay
-            ) {
+            if (state.bookingMode !== 'hour' || selectInfo.allDay) {
                 return false;
             }
 
-            return state.currentZoneBookings.some(event => {
-                if (
-                    event.allDay ||
-                    !event.start ||
-                    !event.end
-                ) {
+            return state.currentZoneBookings.some((event) => {
+                if (event.allDay || !event.start || !event.end) {
                     return false;
                 }
 
-                const eventStart =
-                    new Date(event.start).getTime();
+                const eventStart = new Date(event.start).getTime();
 
-                const eventEnd =
-                    new Date(event.end).getTime();
+                const eventEnd = new Date(event.end).getTime();
 
-                const selectionStart =
-                    selectInfo.start.getTime();
+                const selectionStart = selectInfo.start.getTime();
 
-                const selectionEnd =
-                    selectInfo.end.getTime();
+                const selectionEnd = selectInfo.end.getTime();
 
-                return (
-                    selectionStart < eventEnd &&
-                    selectionEnd > eventStart
-                );
+                return selectionStart < eventEnd && selectionEnd > eventStart;
             });
         },
 

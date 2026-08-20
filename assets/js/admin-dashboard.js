@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const locales = {
         fr: frLocale,
         en: enGbLocale,
-        ja: jaLocale,
+        ja: jaLocale
     };
 
     const locale = calendarElement.dataset.locale || 'fr';
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         return new Intl.DateTimeFormat('fr-FR', {
             dateStyle: 'full',
-            timeStyle: 'short',
+            timeStyle: 'short'
         }).format(new Date(value));
     }
 
@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Intl.NumberFormat('ja-JP', {
             style: 'currency',
             currency: 'JPY',
-            maximumFractionDigits: 0,
+            maximumFractionDigits: 0
         }).format(number);
     }
 
@@ -101,12 +101,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const unitPrice = document.createElement('span');
             unitPrice.textContent = `Prix unitaire : ${formatPrice(
-                equipment.unitPrice ?? equipment.equipmentUnitPrice,
+                equipment.unitPrice ?? equipment.equipmentUnitPrice
             )}`;
 
             const totalPrice = document.createElement('span');
             totalPrice.textContent = `Prix total : ${formatPrice(
-                equipment.totalPrice ?? equipment.bookingEquipmentTotalPrice,
+                equipment.totalPrice ?? equipment.bookingEquipmentTotalPrice
             )}`;
 
             item.append(name, quantity, unitPrice, totalPrice);
@@ -137,11 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         renderEquipmentList(props.equipment);
 
-        const isPending = [
-            'En attente',
-            'Pending',
-            'pending',
-        ].includes(props.status);
+        const isPending = ['En attente', 'Pending', 'pending'].includes(props.status);
 
         if (approveButton) {
             approveButton.hidden = !isPending;
@@ -173,24 +169,19 @@ document.addEventListener('DOMContentLoaded', () => {
         eventTimeFormat: {
             hour: '2-digit',
             minute: '2-digit',
-            hour12: false,
+            hour12: false
         },
         headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'timeGridWeek,timeGridDay,dayGridMonth',
+            right: 'timeGridWeek,timeGridDay,dayGridMonth'
         },
         events: allEvents,
 
         eventDidMount(info) {
             const details = info.event.extendedProps || {};
 
-            info.el.title = [
-                details.status,
-                details.user,
-                details.zone,
-                details.facility,
-            ]
+            info.el.title = [details.status, details.user, details.zone, details.facility]
                 .filter(Boolean)
                 .join(' · ');
         },
@@ -198,7 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         eventClick(info) {
             info.jsEvent.preventDefault();
             openBookingModal(info.event);
-        },
+        }
     });
 
     calendar.render();
@@ -221,11 +212,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     });
 
-    document
-        .querySelectorAll('[data-booking-modal-close]')
-        .forEach((button) => {
-            button.addEventListener('click', closeBookingModal);
-        });
+    document.querySelectorAll('[data-booking-modal-close]').forEach((button) => {
+        button.addEventListener('click', closeBookingModal);
+    });
 
     modal?.addEventListener('click', (event) => {
         if (event.target === modal) {
@@ -243,8 +232,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`/booking/${bookingId}/approve`, {
             method: 'POST',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         });
 
         if (!response.ok) {
@@ -266,8 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`/booking/${bookingId}/decline`, {
             method: 'POST',
             headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-            },
+                'X-Requested-With': 'XMLHttpRequest'
+            }
         });
 
         if (!response.ok) {

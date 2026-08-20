@@ -7,6 +7,7 @@ use App\Entity\BookingEquipment;
 use App\Entity\User;
 use App\Entity\Zone;
 use App\Enum\BookingStatus;
+use App\Repository\BlockoutPeriodRepository;
 use App\Repository\BookingRepository;
 use App\Repository\EquipmentRepository;
 use App\Repository\PricingRepository;
@@ -28,6 +29,7 @@ readonly class BookingService
         private EquipmentRepository $equipmentRepository,
         private KodaOverlapService $kodaOverlapService,
         private TranslatorInterface $translator,
+        private BlockoutPeriodRepository $blockoutPeriodRepository,
         private StripePaiementService $stripePaymentService,
         private MailerService $mailerService
     ) {
@@ -252,5 +254,18 @@ readonly class BookingService
         $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking);
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
+    }
+
+    public function getUnavailiblePeriods(): array
+    {
+        $activePeriods = $this->blockoutPeriodRepository->findBy(['active' => true]);
+
+        return array_map(function ($unavailability) {
+            return [
+                'id' => $unavailability->getId(),
+                'start' => $unavailability->getStartDate()->format('Y-m-d\TH:i:s'),
+                'end' => $unavailability->getEndDate()->format('Y-m-d\TH:i:s'),
+            ];
+        }, $activePeriods);
     }
 }

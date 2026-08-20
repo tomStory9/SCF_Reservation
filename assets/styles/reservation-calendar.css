@@ -243,3 +243,11 @@ body {
         gap: 0.5rem;
     }
 }
+
+.fc-blocked-banner {
+    pointer-events: none !important;
+    text-align: center;
+    font-weight: 600;
+    font-style: italic;
+    margin-top: 2px;
+}
