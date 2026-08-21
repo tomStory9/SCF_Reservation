@@ -7,6 +7,7 @@ use App\Enum\UserStatus;
 use App\Form\RegistrationFormType;
 use App\Form\UserFormType;
 use App\Repository\SettingsRepository;
+use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -73,6 +74,7 @@ final class RegisterController extends AbstractController
             $user->setCompany(null);
             $user->setPhone('');
             $user->setIsVerified(false);
+            $user->setLanguage($request->getLocale());
 
             $settings = $this->settingsRepository->getSettings();
 
@@ -134,12 +136,24 @@ final class RegisterController extends AbstractController
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response
+    public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
     {
-        $this->denyAccessUnlessGranted('IS_AUTHENTICATED');
+        $id = $request->query->get('id'); // retrieve the user id from the URL
+
+        // Verify the user ID exists and is not null
+        if (null === $id) {
+            return $this->redirectToRoute('app_home');
+        }
+
+        $user = $userRepository->find($id);
+
+        // Ensure the user exists in persistence
+        if (null === $user) {
+            return $this->redirectToRoute('app_home');
+        }
 
         try {
-            $this->emailVerifier->handleEmailConfirmation($request, $this->getUser());
+            $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash(
                 'verify_email_error',

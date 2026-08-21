@@ -21,6 +21,10 @@ services:
     App\Middleware\LocaleSubscriber:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+    App\Middleware\LocaleUserPersister:
+        tags:
+            - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
+
     App\Middleware\PreventUserWithoutFilledInfoToConnect:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }

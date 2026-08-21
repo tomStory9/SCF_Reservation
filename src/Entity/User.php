@@ -73,6 +73,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', enumType: UserStatus::class)]
     private ?UserStatus $userStatus = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $Language = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -287,6 +290,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setUserStatus(UserStatus $userStatus): static
     {
         $this->userStatus = $userStatus;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->Language;
+    }
+
+    public function setLanguage(string $Language): static
+    {
+        $this->Language = $Language;
 
         return $this;
     }
