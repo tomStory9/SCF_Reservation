@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\ChangePasswordFormType;
 use App\Form\UserFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
@@ -14,6 +15,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -104,6 +106,32 @@ final class UserController extends AbstractController
         }
 
         return $this->render('user/edit_informations.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    #[IsGranted('ROLE_USER')]
+    #[Route('/profil/mot-de-passe', name: 'app_user_change_password')]
+    public function changePassword(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+        $form = $this->createForm(ChangePasswordFormType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $newPassword = $form->get('plainPassword')->getData();
+
+            $user->setPassword($passwordHasher->hashPassword($user, $newPassword));
+
+            $this->entityManager->flush();
+
+            $this->addFlash('success', $this->translator->trans('account.password.update_success', domain: 'profile'));
+
+            return $this->redirectToRoute('app_user_profile');
+        }
+
+        return $this->render('user/change_password.html.twig', [
             'form' => $form->createView(),
         ]);
     }
