@@ -63,6 +63,18 @@ class Settings
         return $this;
     }
 
+    public function getMinDayBooking(): ?int
+    {
+        return $this->minDayBooking;
+    }
+
+    public function setMinDayBooking(int $minDayBooking): static
+    {
+        $this->minDayRoomBooking = $minDayBooking;
+
+        return $this;
+    }
+
     public function getMinDayRoomBooking(): ?int
     {
         return $this->minDayRoomBooking;
