@@ -52,12 +52,6 @@ final class ZoneController extends AbstractController
             ], Response::HTTP_BAD_REQUEST);
         }
 
-        /*
-         * À adapter selon ton enum.
-         *
-         * Les réservations PENDING et CONFIRMED bloquent généralement
-         * le stock. Une réservation CANCELLED ne doit pas être comptée.
-         */
         $blockingStatuses = [
             BookingStatus::APPROVED->value,
             BookingStatus::PAID->value,

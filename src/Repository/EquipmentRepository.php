@@ -41,7 +41,7 @@ class EquipmentRepository extends ServiceEntityRepository
                 'equipment.name AS name',
                 'equipment.unitPrice AS unitPrice',
                 'equipment.maxQuantity AS maxQuantity',
-                'COALESCE(SUM(bookingEquipment.quantity), 0) AS reservedQuantity',
+                'COALESCE(SUM(CASE WHEN booking.id IS NOT NULL THEN bookingEquipment.quantity ELSE 0 END), 0) AS reservedQuantity',
             ])
             ->leftJoin(
                 'equipment.bookingEquipment',
@@ -52,11 +52,11 @@ class EquipmentRepository extends ServiceEntityRepository
                 'booking',
                 'WITH',
                 '
-                    booking.zone = :zone
-                    AND booking.startDate < :endDate
-                    AND booking.endDate > :startDate
-                    AND booking.bookingStatus IN (:blockingStatuses)
-                '
+                booking.zone = :zone
+                AND booking.startDate < :endDate
+                AND booking.endDate > :startDate
+                AND booking.bookingStatus IN (:blockingStatuses)
+            '
             )
             ->where('equipment.zone = :zone OR equipment.zone IS NULL')
             ->setParameter('zone', $zone)
