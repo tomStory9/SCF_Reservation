@@ -86,6 +86,11 @@ account:
         pending: 'En attente'
         not_provided: 'Non renseignée'
 
+        edit_button: 'Modifier mes informations'
+        edit_title: 'Modification du profil'
+        cancel_button: 'Annuler'
+        save_button: 'Enregistrer les modifications'
+
 
 
 booking:
