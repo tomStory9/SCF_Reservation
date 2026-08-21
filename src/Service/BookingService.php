@@ -226,9 +226,10 @@ readonly class BookingService
         }
         $booking->setEquipmentPrice($this->equipmentRepository->calculateTotalEquipmentPrice($booking));
         $booking->setTotalPrice($booking->getPrice() + $booking->getEquipmentPrice());
-        $this->mailerService->sendNewBookingAdmin($booking, $booking->getUserBooking());
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
+        $this->mailerService->sendNewBookingAdmin($booking, $booking->getUserBooking());
+        $this->mailerService->sendBookingPending($booking, $booking->getUserBooking());
     }
 
     public function approveBooking(Booking $booking): void
@@ -239,9 +240,8 @@ readonly class BookingService
 
         $booking->setBookingStatus(BookingStatus::APPROVED);
         $booking->setStripeCheckoutUrl($this->stripePaymentService->createPaymentLink($booking->getTotalPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
-        $this->mailerService->sendBookingConfirmationEmail($booking->getUserBooking(), $booking);
-        $this->entityManager->persist($booking);
         $this->entityManager->flush();
+        $this->mailerService->sendBookingConfirmationEmail($booking->getUserBooking(), $booking);
     }
 
     public function declineBooking(Booking $booking): void
@@ -251,9 +251,8 @@ readonly class BookingService
         }
 
         $booking->setBookingStatus(BookingStatus::DECLINED);
-        $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking);
-        $this->entityManager->persist($booking);
         $this->entityManager->flush();
+        $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking);
     }
 
     public function getUnavailiblePeriods(): array
