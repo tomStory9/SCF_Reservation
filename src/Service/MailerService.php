@@ -15,6 +15,8 @@ class MailerService
         private MailerInterface $mailerInterface,
         #[Autowire(env: 'MAILER_ADDRESS')]
         private string $mailerAddress,
+        #[Autowire(env: 'ADMIN_ADRESS')]
+        private string $adminAdress
     ) {
     }
 
@@ -76,6 +78,22 @@ class MailerService
         $this->mailerInterface->send($email);
     }
 
+    public function sendBookingPending(Booking $booking, User $user): void
+    {
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($this->adminAdress)
+            ->subject('Votre demande de reservation à bien été prise en compte')
+            ->locale($user->getLanguage())
+            ->htmlTemplate('mails/booking_pending.html.twig')
+            ->context([
+                'user' => $user,
+                'booking' => $booking,
+            ]);
+
+        $this->mailerInterface->send($email);
+    }
+
     public function sendBookingConfirmationEmail(User $user, Booking $booking): void
     {
         $email = new TemplatedEmail()
@@ -101,6 +119,37 @@ class MailerService
             ->subject('予約に関するお知らせ')
             ->locale($user->getLanguage())
             ->htmlTemplate('mails/booking_rejected.html.twig')
+            ->context([
+                'user' => $user,
+                'booking' => $booking,
+            ]);
+
+        $this->mailerInterface->send($email);
+    }
+
+    public function sendNewUserAdmin(User $user): void
+    {
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($this->adminAdress)
+            ->subject('Un nouvel utilisateur a été crée')
+            ->locale($user->getLanguage())
+            ->htmlTemplate('mails/new_user_created.html.twig')
+            ->context([
+                'user' => $user,
+            ]);
+
+        $this->mailerInterface->send($email);
+    }
+
+    public function sendNewBookingAdmin(Booking $booking, User $user): void
+    {
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($this->adminAdress)
+            ->subject('Une nouvelle demande de reservation à été crée')
+            ->locale($user->getLanguage())
+            ->htmlTemplate('mails/new_booking_created.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,

@@ -1,47 +1,238 @@
-{# templates/emails/payment_success.html.twig #}
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>お支払い完了</title>
-</head>
-<body style="margin:0;padding:0;background:#f8fafc;font-family:Arial,sans-serif;color:#0f172a;">
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#f8fafc;padding:40px 16px;">
-        <tr>
-            <td align="center">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#ffffff;border:1px solid #e2e8f0;border-radius:12px;">
-                    <tr>
-                        <td style="padding:32px 28px;text-align:center;">
-                            <div style="display:inline-block;width:56px;height:56px;line-height:56px;border-radius:9999px;background:#dcfce7;color:#16a34a;font-size:28px;margin-bottom:20px;">
-                                ✓
-                            </div>
 
-                            <h1 style="margin:0;font-size:24px;line-height:1.2;color:#0f172a;">
-                                お支払い完了
-                            </h1>
+	<head>
+		<meta charset="UTF-8">
+		<title>お支払い完了</title>
 
-                            <p style="margin:16px 0 0;font-size:16px;line-height:1.6;color:#475569;">
-                                お支払いを確認しました。
-                            </p>
+		<style>
+			body {
+				margin: 0;
+				padding: 40px 20px;
+				background: #f5f7fa;
+				font-family: Arial, Helvetica, sans-serif;
+				color: #4b5563;
+			}
 
-                            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:24px;background:#f8fafc;border-radius:10px;">
-                                <tr>
-                                    <td style="padding:16px;text-align:left;font-size:14px;line-height:1.6;color:#334155;">
-                                        <p style="margin:0;"><strong>ユーザー：</strong> {{ user.fullName }}</p>
-                                        <p style="margin:8px 0 0;"><strong>金額：</strong> {{ transaction.paidPrice }} {{ currency|default('JPY') }}</p>
-                                    </td>
-                                </tr>
-                            </table>
+			table {
+				border-collapse: collapse;
+				border-spacing: 0;
+			}
 
-                            <p style="margin:24px 0 0;font-size:14px;line-height:1.6;color:#64748b;">
-                                予約が確定しました。
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
+			.wrapper {
+				width: 100%;
+			}
+
+			.card {
+				width: 100%;
+				max-width: 620px;
+				margin: auto;
+				background: #ffffff;
+				border-radius: 20px;
+				overflow: hidden;
+				box-shadow: 0 15px 40px rgba(3, 56, 98, 0.08);
+			}
+
+			.header {
+				background: #033862;
+				padding: 45px 40px;
+				text-align: center;
+			}
+
+			.logo-box {
+				display: inline-block;
+				background: #ffffff;
+				border-radius: 14px;
+				padding: 18px 28px;
+				margin-bottom: 30px;
+			}
+
+			.logo-box img {
+				height: 50px;
+				vertical-align: middle;
+			}
+
+			.logo-box img:first-child {
+				margin-right: 18px;
+			}
+
+			h1 {
+				margin: 0;
+				color: #ffffff;
+				font-size: 30px;
+				font-weight: bold;
+			}
+
+			.content {
+				padding: 50px;
+				text-align: center;
+			}
+
+			.content p {
+				margin: 0 0 22px;
+				line-height: 1.8;
+				font-size: 16px;
+			}
+
+			.status-icon {
+				display: inline-block;
+				width: 56px;
+				height: 56px;
+				line-height: 56px;
+				border-radius: 9999px;
+				background: #dcfce7;
+				color: #16a34a;
+				font-size: 28px;
+				margin-bottom: 20px;
+			}
+
+			.details-box {
+				margin: 24px 0;
+				background: #fff8e5;
+				border: 1px solid #f3d37c;
+				border-radius: 12px;
+				padding: 20px 24px;
+				text-align: left;
+				font-size: 14px;
+				line-height: 1.8;
+				color: #4b5563;
+			}
+
+			.details-box p {
+				margin: 0;
+			}
+
+			.divider {
+				margin: 40px 0;
+				border-top: 1px solid #ececec;
+			}
+
+			.info {
+				background: #fff8e5;
+				border: 1px solid #f3d37c;
+				border-radius: 12px;
+				padding: 18px 20px;
+				font-size: 14px;
+				line-height: 1.6;
+			}
+
+			.footer {
+				background: #fafafa;
+				border-top: 1px solid #ececec;
+				padding: 30px;
+				text-align: center;
+				font-size: 13px;
+				color: #6b7280;
+				line-height: 1.7;
+			}
+
+			@media only screen and(max-width:600px) {
+
+				body {
+					padding: 20px 10px;
+				}
+
+				.content {
+					padding: 32px 24px;
+				}
+
+				.logo-box {
+					padding: 15px 20px;
+				}
+
+				.logo-box img {
+					height: 40px;
+				}
+
+				h1 {
+					font-size: 24px;
+				}
+
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<table class="wrapper" role="presentation">
+
+			<tr>
+
+				<td align="center">
+
+					<table class="card" role="presentation">
+
+						<tr>
+
+							<td class="header">
+
+								<div class="logo-box">
+
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+
+								</div>
+
+								<h1>
+									お支払い完了
+								</h1>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td class="content">
+
+								<div class="status-icon">&#10003;</div>
+
+								<p>
+									お支払いを確認しました。
+								</p>
+
+								<div class="details-box">
+									<p><strong>ユーザー：</strong> {{ user.fullName }}</p>
+									<p style="margin-top:8px;"><strong>金額：</strong> {{ transaction.paidPrice }} {{ currency|default('JPY') }}</p>
+								</div>
+
+								<p style="margin:0; font-size:14px; color:#6b7280;">
+									予約が確定しました。
+								</p>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td class="footer">
+
+								<strong>Setoushi Circus Factory - 予約システム</strong>
+
+								<br><br>
+
+								©
+								{{ "now"|date("Y") }}
+
+								<br><br>
+
+								このメールは自動送信されています。返信はご遠慮ください。
+
+							</td>
+
+						</tr>
+
+					</table>
+
+				</td>
+
+			</tr>
+
+		</table>
+
+	</body>
+
 </html>

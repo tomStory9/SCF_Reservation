@@ -1,10 +1,10 @@
-{# templates/mails/booking_confirmation.html.twig #}
+{# templates/mails/booking_pending.html.twig #}
 <!DOCTYPE html>
 <html lang="ja">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>予約確認</title>
+		<title>ご予約リクエストを受け付けました</title>
 
 		<style>
 			body {
@@ -123,62 +123,6 @@
 				font-weight: bold;
 			}
 
-			.payment-box {
-				margin: 24px 0;
-				padding: 24px 20px;
-				border: 1px solid #f3d37c;
-				border-radius: 12px;
-				background: #fff8e5;
-				text-align: center;
-			}
-
-			.payment-box .label {
-				margin: 0 0 8px;
-				color: #033862;
-				font-size: 14px;
-				line-height: 1.6;
-			}
-
-			.payment-box .amount {
-				margin: 0 0 18px;
-				color: #111827;
-				font-size: 26px;
-				font-weight: bold;
-				line-height: 1.4;
-			}
-
-			.payment-box .prompt {
-				margin: 0 0 18px;
-				color: #033862;
-				font-size: 16px;
-				font-weight: bold;
-				line-height: 1.6;
-			}
-
-			.button-wrapper {
-				text-align: center;
-				padding: 20px 0 10px;
-			}
-
-			.button {
-				display: inline-block;
-				padding: 16px 36px;
-				background: #e9b94d;
-				color: #033862 !important;
-				text-decoration: none;
-				font-size: 16px;
-				font-weight: bold;
-				border-radius: 12px;
-			}
-
-			.fallback {
-				margin-top: 20px;
-				color: #6b7280;
-				font-size: 12px;
-				line-height: 1.7;
-				word-break: break-all;
-			}
-
 			.divider {
 				margin: 40px 0;
 				border-top: 1px solid #ececec;
@@ -225,8 +169,8 @@
 					font-size: 24px;
 				}
 
-				.button {
-					display: block;
+				.details-box td.label {
+					width: 45%;
 				}
 
 			}
@@ -257,7 +201,7 @@
 								</div>
 
 								<h1>
-									ご予約ありがとうございます
+									ご予約リクエストを受け付けました
 								</h1>
 
 							</td>
@@ -273,11 +217,11 @@
 								</p>
 
 								<p>
-									このたびはご予約いただき、誠にありがとうございます。
+									このたびはご予約のお申し込みをいただき、誠にありがとうございます。
 								</p>
 
 								<p>
-									ご予約を確定するには、以下のボタンからお支払い手続きを完了してください。
+									現在、ご予約内容を確認しております。承認または却下の結果は、追ってメールにてお知らせいたしますので、今しばらくお待ちください。
 								</p>
 
 								<p class="section-title">
@@ -325,7 +269,6 @@
 											{% for be in booking.bookingEquipment %}
 												<tr>
 													<td class="value">{{ be.equipment.name }} × {{ be.quantity }}</td>
-													<td class="value" style="text-align:right; width:35%;">{{ be.totalPrice }} 円</td>
 												</tr>
 											{% endfor %}
 
@@ -335,61 +278,15 @@
 
 								{% endif %}
 
-								<p class="section-title">
-									料金内訳
-								</p>
-
-								<div class="details-box">
-
-									<table role="presentation">
-
-										<tr>
-											<td class="label">ゾーン料金</td>
-											<td class="value" style="text-align:right;">{{ booking.price }} 円</td>
-										</tr>
-
-										<tr>
-											<td class="label">備品料金</td>
-											<td class="value" style="text-align:right;">{{ booking.equipmentPrice }} 円</td>
-										</tr>
-
-									</table>
-
+								<div class="info">
+									<strong>
+										この段階ではまだお支払い手続きは発生しません
+									</strong>
+									<br>
+									ご予約が承認された場合、改めてお支払いのご案内をお送りいたします。
 								</div>
 
-								<div class="payment-box">
-
-									<p class="label">
-										お支払い金額
-									</p>
-
-									<p class="amount">
-										{{ booking.totalPrice }} 円
-									</p>
-
-									<p class="prompt">
-										お支払いはこちら
-									</p>
-
-									<div class="button-wrapper">
-
-										<a href="{{ stripe_checkout_url|e('html_attr') }}" class="button">
-											お支払い手続きへ進む
-										</a>
-
-									</div>
-
-									<p class="fallback">
-										ボタンが表示されない場合は、以下のリンクを開いてください。<br>
-										<a href="{{ stripe_checkout_url|e('html_attr') }}">
-											{{ stripe_checkout_url|e }}
-										</a>
-									</p>
-
-								</div>
-
-								<p style="margin:0; color:#4b5563; font-size:14px;">
-									お支払いが完了すると、予約が確定します。<br>
+								<p style="margin-top:32px">
 									ご不明な点がございましたら、このメールに返信してお問い合わせください。
 								</p>
 
@@ -411,7 +308,7 @@
 								<br><br>
 
 								このメールはご予約のお手続きに関する重要なお知らせです。<br>
-								心当たりがない場合は、リンクを開かずに削除してください。
+								心当たりがない場合は、このメールを無視してください。
 
 							</td>
 

@@ -3,6 +3,8 @@ framework:
     secret: '%env(APP_SECRET)%'
     csrf_protection: true
     default_locale: '%env(APP_DEFAULT_LOCALE)%'
+    assets:
+        json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
     # Note that the session will be started ONLY if you read or write from it.
     session:
         enabled: true

@@ -88,7 +88,6 @@ final class BookingController extends AbstractController
                 'error' => $exception->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }
-
         $this->addFlash(
             'success',
             $this->translator->trans('flash.booking_created')
