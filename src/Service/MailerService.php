@@ -15,8 +15,8 @@ class MailerService
         private MailerInterface $mailerInterface,
         #[Autowire(env: 'MAILER_ADDRESS')]
         private string $mailerAddress,
-        #[Autowire(env: 'ADMIN_ADRESS')]
-        private string $adminAdress
+        #[Autowire(env: 'ADMIN_ADDRESS')]
+        private string $adminAddress
     ) {
     }
 
@@ -82,7 +82,7 @@ class MailerService
     {
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
-            ->to($this->adminAdress)
+            ->to($this->adminAddress)
             ->subject('Votre demande de reservation à bien été prise en compte')
             ->locale($user->getLanguage())
             ->htmlTemplate('mails/booking_pending.html.twig')
@@ -131,7 +131,7 @@ class MailerService
     {
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
-            ->to($this->adminAdress)
+            ->to($this->adminAddress)
             ->subject('Un nouvel utilisateur a été crée')
             ->locale($user->getLanguage())
             ->htmlTemplate('mails/new_user_created.html.twig')
@@ -146,7 +146,7 @@ class MailerService
     {
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
-            ->to($this->adminAdress)
+            ->to($this->adminAddress)
             ->subject('Une nouvelle demande de reservation à été crée')
             ->locale($user->getLanguage())
             ->htmlTemplate('mails/new_booking_created.html.twig')
