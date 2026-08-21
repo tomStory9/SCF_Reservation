@@ -1,9 +1,10 @@
+{# templates/mails/admin_new_user.html.twig #}
 <!DOCTYPE html>
 <html lang="ja">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>アカウント申請結果のお知らせ</title>
+		<title>新規会員登録</title>
 
 		<style>
 			body {
@@ -80,6 +81,48 @@
 				margin: 0 0 24px;
 			}
 
+			.section-title {
+				margin: 0 0 12px;
+				font-size: 14px;
+				font-weight: bold;
+				color: #033862;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			.details-box {
+				margin: 0 0 24px;
+				border: 1px solid #e5e7eb;
+				border-radius: 12px;
+				overflow: hidden;
+			}
+
+			.details-box table {
+				width: 100%;
+			}
+
+			.details-box td {
+				padding: 12px 18px;
+				font-size: 14px;
+				line-height: 1.6;
+				border-bottom: 1px solid #f0f0f0;
+			}
+
+			.details-box tr:last-child td {
+				border-bottom: none;
+			}
+
+			.details-box td.label {
+				width: 40%;
+				color: #6b7280;
+				background: #fafafa;
+			}
+
+			.details-box td.value {
+				color: #111827;
+				font-weight: bold;
+			}
+
 			.button-wrapper {
 				text-align: center;
 				padding: 20px 0 10px;
@@ -108,23 +151,6 @@
 				padding: 18px 20px;
 				font-size: 14px;
 				line-height: 1.6;
-			}
-
-			.reject-box {
-				background: #fef2f2;
-				border-left: 4px solid #b91c1c;
-				border-radius: 8px;
-				padding: 18px 22px;
-				margin: 0 0 24px;
-			}
-
-			.reject-box p {
-				margin: 0 0 10px;
-				color: #7f1d1d;
-			}
-
-			.reject-box p:last-child {
-				margin-bottom: 0;
 			}
 
 			.footer {
@@ -163,6 +189,10 @@
 					display: block;
 				}
 
+				.details-box td.label {
+					width: 45%;
+				}
+
 			}
 		</style>
 
@@ -191,7 +221,7 @@
 								</div>
 
 								<h1>
-									アカウント申請結果のお知らせ
+									新規会員登録
 								</h1>
 
 							</td>
@@ -203,18 +233,40 @@
 							<td class="content">
 
 								<p class="greeting">
-									{{ user.fullName }} 様
+									管理者様
 								</p>
 
-								<div class="reject-box">
+								<p>
+									新しい会員登録リクエストが届きましたのでお知らせいたします。内容をご確認のうえ、承認の対応をお願いいたします。
+								</p>
 
-									<p>
-										お客様のアカウント申請は承認されませんでした。
-									</p>
+								<p class="section-title">
+									登録者情報
+								</p>
 
-									<p>
-										誠に申し訳ございませんが、現在このアカウントではサービスをご利用いただけません。
-									</p>
+								<div class="details-box">
+
+									<table role="presentation">
+
+										<tr>
+											<td class="label">氏名</td>
+											<td class="value">{{ user.name }} {{ user.lastname }}</td>
+										</tr>
+
+										<tr>
+											<td class="label">メールアドレス</td>
+											<td class="value">{{ user.email }}</td>
+										</tr>
+
+									</table>
+
+								</div>
+
+								<div class="button-wrapper">
+
+									<a href="{{ absolute_url(ea_url().setController('App\\Controller\\Admin\\PendingUserCrudController')) }}" class="button">
+										管理画面で確認する
+									</a>
 
 								</div>
 

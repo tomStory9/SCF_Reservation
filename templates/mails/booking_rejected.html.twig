@@ -1,162 +1,239 @@
 {# templates/mails/booking_rejected.html.twig #}
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="x-apple-disable-message-reformatting">
 
-    <title>予約に関するお知らせ</title>
+	<head>
+		<meta charset="UTF-8">
+		<title>予約に関するお知らせ</title>
 
-    <style>
-        html,
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100% !important;
-            background-color: #f4f6f8;
-            -webkit-text-size-adjust: 100%;
-            -ms-text-size-adjust: 100%;
-        }
+		<style>
+			body {
+				margin: 0;
+				padding: 40px 20px;
+				background: #f5f7fa;
+				font-family: Arial, Helvetica, sans-serif;
+				color: #4b5563;
+			}
 
-        body,
-        table,
-        td,
-        p,
-        a {
-            font-family:
-                -apple-system,
-                BlinkMacSystemFont,
-                "Helvetica Neue",
-                "Hiragino Kaku Gothic ProN",
-                "Hiragino Sans",
-                Meiryo,
-                Arial,
-                sans-serif;
-        }
+			table {
+				border-collapse: collapse;
+				border-spacing: 0;
+			}
 
-        table {
-            border-spacing: 0;
-            border-collapse: collapse;
-        }
+			.wrapper {
+				width: 100%;
+			}
 
-        .wrapper {
-            width: 100%;
-            table-layout: fixed;
-            background-color: #f4f6f8;
-            padding: 24px 12px;
-        }
+			.card {
+				width: 100%;
+				max-width: 620px;
+				margin: auto;
+				background: #ffffff;
+				border-radius: 20px;
+				overflow: hidden;
+				box-shadow: 0 15px 40px rgba(3, 56, 98, 0.08);
+			}
 
-        .container {
-            width: 100%;
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #ffffff;
-            border-radius: 12px;
-            overflow: hidden;
-        }
+			.header {
+				background: #033862;
+				padding: 45px 40px;
+				text-align: center;
+			}
 
-        .header {
-            padding: 28px 24px;
-            background-color: #7f1d1d;
-            color: #ffffff;
-            text-align: center;
-        }
+			.logo-box {
+				display: inline-block;
+				background: #ffffff;
+				border-radius: 14px;
+				padding: 18px 28px;
+				margin-bottom: 30px;
+			}
 
-        .content {
-            padding: 32px 24px;
-            color: #1f2937;
-        }
+			.logo-box img {
+				height: 50px;
+				vertical-align: middle;
+			}
 
-        .notice-box {
-            margin: 24px 0;
-            padding: 20px;
-            border: 1px solid #fecaca;
-            border-radius: 10px;
-            background-color: #fef2f2;
-            color: #991b1b;
-        }
+			.logo-box img:first-child {
+				margin-right: 18px;
+			}
 
-        .footer {
-            padding: 20px 24px 28px;
-            color: #6b7280;
-            font-size: 12px;
-            line-height: 1.7;
-            text-align: center;
-        }
+			h1 {
+				margin: 0;
+				color: #ffffff;
+				font-size: 30px;
+				font-weight: bold;
+			}
 
-        @media screen and (max-width: 480px) {
-            .wrapper {
-                padding: 12px 8px;
-            }
+			.content {
+				padding: 50px;
+			}
 
-            .header {
-                padding: 24px 18px;
-            }
+			.content p {
+				margin: 0 0 22px;
+				line-height: 1.8;
+				font-size: 16px;
+			}
 
-            .content {
-                padding: 26px 18px;
-            }
+			.greeting {
+				font-size: 18px;
+				font-weight: bold;
+				color: #111827;
+				margin: 0 0 24px;
+			}
 
-            .notice-box {
-                padding: 18px 16px;
-            }
+			.reject-box {
+				background: #fef2f2;
+				border-left: 4px solid #b91c1c;
+				border-radius: 8px;
+				padding: 18px 22px;
+				margin: 0 0 24px;
+			}
 
-            .footer {
-                padding: 18px 24px 24px;
-            }
-        }
-    </style>
-</head>
+			.reject-box p {
+				margin: 0;
+				color: #7f1d1d;
+				font-weight: bold;
+			}
 
-<body>
-    <table role="presentation" width="100%" class="wrapper">
-        <tr>
-            <td align="center">
-                <table role="presentation" class="container">
-                    <tr>
-                        <td class="header">
-                            <h1 style="margin: 0; font-size: 24px; line-height: 1.4;">
-                                予約に関するお知らせ
-                            </h1>
-                        </td>
-                    </tr>
+			.divider {
+				margin: 40px 0;
+				border-top: 1px solid #ececec;
+			}
 
-                    <tr>
-                        <td class="content">
-                            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
-                               {{ user.fullName }} 様
-                            </p>
+			.info {
+				background: #fff8e5;
+				border: 1px solid #f3d37c;
+				border-radius: 12px;
+				padding: 18px 20px;
+				font-size: 14px;
+				line-height: 1.6;
+			}
 
-                            <p style="margin: 0 0 16px; font-size: 16px; line-height: 1.8;">
-                                このたびのご予約についてお知らせいたします。
-                            </p>
+			.footer {
+				background: #fafafa;
+				border-top: 1px solid #ececec;
+				padding: 30px;
+				text-align: center;
+				font-size: 13px;
+				color: #6b7280;
+				line-height: 1.7;
+			}
 
-                            <div class="notice-box">
-                                <p style="margin: 0; font-size: 16px; font-weight: bold; line-height: 1.8;">
-                                    申し訳ございませんが、今回のご予約を承認することができませんでした。
-                                </p>
-                            </div>
+			@media only screen and(max-width:600px) {
 
-                            <p style="margin: 0 0 16px; color: #4b5563; font-size: 14px; line-height: 1.8;">
-                                このメールにお支払い用のリンクは含まれておりません。
-                            </p>
+				body {
+					padding: 20px 10px;
+				}
 
-                            <p style="margin: 0; color: #4b5563; font-size: 14px; line-height: 1.8;">
-                                今回の処理に心当たりがない場合、または誤りと思われる場合は、サイト管理者までお問い合わせください。
-                            </p>
-                        </td>
-                    </tr>
+				.content {
+					padding: 32px 24px;
+				}
 
-                    <tr>
-                        <td class="footer">
-                            このメールはご予約に関する重要なお知らせです。<br>
-                            ご不明な点がございましたら、サイト管理者までご連絡ください。
-                        </td>
-                    </tr>
-                </table>
-            </td>
-        </tr>
-    </table>
-</body>
+				.logo-box {
+					padding: 15px 20px;
+				}
+
+				.logo-box img {
+					height: 40px;
+				}
+
+				h1 {
+					font-size: 24px;
+				}
+
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<table class="wrapper" role="presentation">
+
+			<tr>
+
+				<td align="center">
+
+					<table class="card" role="presentation">
+
+						<tr>
+
+							<td class="header">
+
+								<div class="logo-box">
+
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+
+								</div>
+
+								<h1>
+									予約に関するお知らせ
+								</h1>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td class="content">
+
+								<p class="greeting">
+									{{ user.fullName }} 様
+								</p>
+
+								<p>
+									このたびのご予約についてお知らせいたします。
+								</p>
+
+								<div class="reject-box">
+									<p>
+										申し訳ございませんが、今回のご予約を承認することができませんでした。
+									</p>
+								</div>
+
+								<p style="margin:0 0 16px; color:#4b5563; font-size:14px;">
+									このメールにお支払い用のリンクは含まれておりません。
+								</p>
+
+								<p style="margin:0; color:#4b5563; font-size:14px;">
+									今回の処理に心当たりがない場合、または誤りと思われる場合は、サイト管理者までお問い合わせください。
+								</p>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td class="footer">
+
+								<strong>Setoushi Circus Factory - 予約システム</strong>
+
+								<br><br>
+
+								©
+								{{ "now"|date("Y") }}
+
+								<br><br>
+
+								このメールはご予約に関する重要なお知らせです。<br>
+								ご不明な点がございましたら、サイト管理者までご連絡ください。
+
+							</td>
+
+						</tr>
+
+					</table>
+
+				</td>
+
+			</tr>
+
+		</table>
+
+	</body>
+
 </html>

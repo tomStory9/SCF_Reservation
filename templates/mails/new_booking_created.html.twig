@@ -1,10 +1,10 @@
-{# templates/mails/booking_confirmation.html.twig #}
+{# templates/mails/admin_new_booking.html.twig #}
 <!DOCTYPE html>
 <html lang="ja">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>予約確認</title>
+		<title>新規予約リクエスト</title>
 
 		<style>
 			body {
@@ -123,36 +123,44 @@
 				font-weight: bold;
 			}
 
-			.payment-box {
-				margin: 24px 0;
-				padding: 24px 20px;
+			.equipment-box {
+				margin: 0 0 24px;
+				background: #fff8e5;
 				border: 1px solid #f3d37c;
 				border-radius: 12px;
-				background: #fff8e5;
+				padding: 18px 20px;
+			}
+
+			.equipment-box p {
+				margin: 0 0 8px;
+				font-size: 14px;
+				line-height: 1.6;
+				color: #4b5563;
+			}
+
+			.equipment-box p:last-child {
+				margin-bottom: 0;
+			}
+
+			.total-box {
+				margin: 0 0 24px;
+				padding: 20px;
+				border-radius: 12px;
+				background: #033862;
 				text-align: center;
 			}
 
-			.payment-box .label {
-				margin: 0 0 8px;
-				color: #033862;
-				font-size: 14px;
-				line-height: 1.6;
+			.total-box .label {
+				margin: 0 0 6px;
+				color: #cbd5e1;
+				font-size: 13px;
 			}
 
-			.payment-box .amount {
-				margin: 0 0 18px;
-				color: #111827;
+			.total-box .amount {
+				margin: 0;
+				color: #ffffff;
 				font-size: 26px;
 				font-weight: bold;
-				line-height: 1.4;
-			}
-
-			.payment-box .prompt {
-				margin: 0 0 18px;
-				color: #033862;
-				font-size: 16px;
-				font-weight: bold;
-				line-height: 1.6;
 			}
 
 			.button-wrapper {
@@ -169,14 +177,6 @@
 				font-size: 16px;
 				font-weight: bold;
 				border-radius: 12px;
-			}
-
-			.fallback {
-				margin-top: 20px;
-				color: #6b7280;
-				font-size: 12px;
-				line-height: 1.7;
-				word-break: break-all;
 			}
 
 			.divider {
@@ -229,6 +229,10 @@
 					display: block;
 				}
 
+				.details-box td.label {
+					width: 45%;
+				}
+
 			}
 		</style>
 
@@ -257,7 +261,7 @@
 								</div>
 
 								<h1>
-									ご予約ありがとうございます
+									新規予約リクエスト
 								</h1>
 
 							</td>
@@ -269,19 +273,37 @@
 							<td class="content">
 
 								<p class="greeting">
-									{{ user.fullName }} 様
+									管理者様
 								</p>
 
 								<p>
-									このたびはご予約いただき、誠にありがとうございます。
-								</p>
-
-								<p>
-									ご予約を確定するには、以下のボタンからお支払い手続きを完了してください。
+									新しい予約リクエストが届きましたのでお知らせいたします。内容をご確認のうえ、承認または却下の対応をお願いいたします。
 								</p>
 
 								<p class="section-title">
-									ご予約内容
+									予約者情報
+								</p>
+
+								<div class="details-box">
+
+									<table role="presentation">
+
+										<tr>
+											<td class="label">氏名</td>
+											<td class="value">{{ booking.userBooking.fullName }}</td>
+										</tr>
+
+										<tr>
+											<td class="label">メールアドレス</td>
+											<td class="value">{{ booking.userBooking.email }}</td>
+										</tr>
+
+									</table>
+
+								</div>
+
+								<p class="section-title">
+									予約内容
 								</p>
 
 								<div class="details-box">
@@ -304,8 +326,18 @@
 										</tr>
 
 										<tr>
+											<td class="label">終日利用</td>
+											<td class="value">{{ booking.isFullDay ? 'はい' : 'いいえ' }}</td>
+										</tr>
+
+										<tr>
 											<td class="label">利用人数</td>
 											<td class="value">{{ booking.guestCount }} 名</td>
+										</tr>
+
+										<tr>
+											<td class="label">申請日時</td>
+											<td class="value">{{ booking.createdDate|date('Y年m月d日 H:i') }}</td>
 										</tr>
 
 									</table>
@@ -322,10 +354,17 @@
 
 										<table role="presentation">
 
+											<tr>
+												<td class="label" style="width:50%;">備品名</td>
+												<td class="label" style="width:15%; text-align:center;">数量</td>
+												<td class="label" style="width:35%; text-align:right;">金額</td>
+											</tr>
+
 											{% for be in booking.bookingEquipment %}
 												<tr>
-													<td class="value">{{ be.equipment.name }} × {{ be.quantity }}</td>
-													<td class="value" style="text-align:right; width:35%;">{{ be.totalPrice }} 円</td>
+													<td class="value">{{ be.equipment.name }}</td>
+													<td class="value" style="text-align:center;">× {{ be.quantity }}</td>
+													<td class="value" style="text-align:right;">{{ be.totalPrice }} 円</td>
 												</tr>
 											{% endfor %}
 
@@ -357,41 +396,25 @@
 
 								</div>
 
-								<div class="payment-box">
+								<div class="total-box">
 
 									<p class="label">
-										お支払い金額
+										合計金額
 									</p>
 
 									<p class="amount">
 										{{ booking.totalPrice }} 円
 									</p>
 
-									<p class="prompt">
-										お支払いはこちら
-									</p>
-
-									<div class="button-wrapper">
-
-										<a href="{{ stripe_checkout_url|e('html_attr') }}" class="button">
-											お支払い手続きへ進む
-										</a>
-
-									</div>
-
-									<p class="fallback">
-										ボタンが表示されない場合は、以下のリンクを開いてください。<br>
-										<a href="{{ stripe_checkout_url|e('html_attr') }}">
-											{{ stripe_checkout_url|e }}
-										</a>
-									</p>
-
 								</div>
 
-								<p style="margin:0; color:#4b5563; font-size:14px;">
-									お支払いが完了すると、予約が確定します。<br>
-									ご不明な点がございましたら、このメールに返信してお問い合わせください。
-								</p>
+								<div class="button-wrapper">
+
+									<a href="{{ absolute_url(ea_url().setController('App\\Controller\\Admin\\PendingBookingCrudController')) }}" class="button">
+										管理画面で確認する
+									</a>
+
+								</div>
 
 							</td>
 
@@ -410,8 +433,7 @@
 
 								<br><br>
 
-								このメールはご予約のお手続きに関する重要なお知らせです。<br>
-								心当たりがない場合は、リンクを開かずに削除してください。
+								このメールは自動送信されています。返信はご遠慮ください。
 
 							</td>
 

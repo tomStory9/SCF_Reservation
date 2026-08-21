@@ -226,7 +226,7 @@ readonly class BookingService
         }
         $booking->setEquipmentPrice($this->equipmentRepository->calculateTotalEquipmentPrice($booking));
         $booking->setTotalPrice($booking->getPrice() + $booking->getEquipmentPrice());
-
+        $this->mailerService->sendNewBookingAdmin($booking, $booking->getUserBooking());
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
     }

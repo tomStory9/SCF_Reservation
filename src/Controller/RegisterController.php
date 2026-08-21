@@ -9,6 +9,7 @@ use App\Form\UserFormType;
 use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -27,6 +28,7 @@ final class RegisterController extends AbstractController
     public function __construct(
         private readonly EmailVerifier $emailVerifier,
         private readonly SettingsRepository $settingsRepository,
+        private readonly MailerService $mailerService
     ) {
     }
 
@@ -83,7 +85,7 @@ final class RegisterController extends AbstractController
             } else {
                 $user->setUserStatus(UserStatus::APPROVED);
             }
-
+            $this->mailerService->sendNewUserAdmin($user);
             $entityManager->persist($user);
             $entityManager->flush();
 
