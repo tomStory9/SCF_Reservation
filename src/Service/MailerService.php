@@ -78,6 +78,22 @@ class MailerService
         $this->mailerInterface->send($email);
     }
 
+    public function sendBookingPending(Booking $booking, User $user): void
+    {
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($this->adminAdress)
+            ->subject('Votre demande de reservation à bien été prise en compte')
+            ->locale($user->getLanguage())
+            ->htmlTemplate('mails/booking_pending.html.twig')
+            ->context([
+                'user' => $user,
+                'booking' => $booking,
+            ]);
+
+        $this->mailerInterface->send($email);
+    }
+
     public function sendBookingConfirmationEmail(User $user, Booking $booking): void
     {
         $email = new TemplatedEmail()
