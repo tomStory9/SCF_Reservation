@@ -91,6 +91,7 @@ ENV ADMIN_ADRESS=admin@localhost
 
 RUN <<-EOF
 	mkdir -p var/cache var/log var/share
+    composer require doctrine/doctrine-fixtures-bundle
 	composer dump-autoload --classmap-authoritative 
 	composer dump-env prod
 	composer run-script post-install-cmd
