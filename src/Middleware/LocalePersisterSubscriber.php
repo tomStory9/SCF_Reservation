@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-class LocaleUserPersister implements EventSubscriberInterface
+class LocalePersisterSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly EntityManagerInterface $em,
