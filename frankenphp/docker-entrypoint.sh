@@ -34,6 +34,7 @@ if [ "$1" = 'frankenphp' ] || [ "$1" = 'php' ] || [ "$1" = 'bin/console' ]; then
             if php bin/console doctrine:migrations:status --no-interaction | grep -q "New Migrations:.*[1-9]"; then
                 echo 'Pending migrations detected, running migrations...'
                 php bin/console doctrine:migrations:migrate --no-interaction --all-or-nothing
+                php bin/console doctrine:fixtures:load --no-interaction
             else
                 echo 'Database already up to date, no migration to run.'
             fi
