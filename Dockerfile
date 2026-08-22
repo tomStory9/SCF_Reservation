@@ -128,10 +128,7 @@ RUN <<-EOF
     if [ -f importmap.php ]; then
         php bin/console asset-map:compile
     fi
-    
-    # Charger les fixtures avec --no-interaction pour éviter la confirmation
-    php bin/console doctrine:fixtures:load --no-interaction --append
-    
+        
     chmod +x bin/console
     chmod -R g=u var
     sync
