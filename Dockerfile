@@ -91,9 +91,9 @@ ENV ADMIN_ADRESS=admin@localhost
 
 RUN <<-EOF
 	mkdir -p var/cache var/log var/share
-	composer dump-autoload --classmap-authoritative --no-dev
+	composer dump-autoload --classmap-authoritative 
 	composer dump-env prod
-	composer run-script --no-dev post-install-cmd
+	composer run-script post-install-cmd
 	if [ -f importmap.php ]; then
 		php bin/console asset-map:compile
 	fi
