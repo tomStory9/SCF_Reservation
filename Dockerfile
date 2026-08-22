@@ -97,6 +97,7 @@ RUN <<-EOF
 	composer run-script post-install-cmd
 	if [ -f importmap.php ]; then
 		php bin/console asset-map:compile
+        php bin/console doctrine:fixture:load
 	fi
 	chmod +x bin/console
 	chmod -R g=u var
