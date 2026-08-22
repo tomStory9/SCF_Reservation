@@ -87,6 +87,8 @@ RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scri
 # copy sources
 COPY --link --exclude=frankenphp/ . ./
 
+ENV ADMIN_ADRESS=admin@localhost
+
 RUN <<-EOF
 	mkdir -p var/cache var/log var/share
 	composer dump-autoload --classmap-authoritative --no-dev
