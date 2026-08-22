@@ -21,7 +21,7 @@ services:
     App\Middleware\LocaleSubscriber:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
-    App\Middleware\LocaleUserPersister:
+    App\Middleware\LocalePersisterSubscriber:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest }
 
