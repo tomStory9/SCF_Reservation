@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Booking;
 use App\Entity\Transaction;
 use App\Entity\User;
+use App\Repository\SettingsRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
@@ -16,7 +17,8 @@ class MailerService
         #[Autowire(env: 'MAILER_ADDRESS')]
         private string $mailerAddress,
         #[Autowire(env: 'ADMIN_ADDRESS')]
-        private string $adminAddress
+        private string $adminAddress,
+        private SettingsRepository $settingsRepository
     ) {
     }
 
@@ -133,7 +135,7 @@ class MailerService
             ->from($this->mailerAddress)
             ->to($this->adminAddress)
             ->subject('Un nouvel utilisateur a été crée')
-            ->locale($user->getLanguage())
+            ->locale('ja')
             ->htmlTemplate('mails/new_user_created.html.twig')
             ->context([
                 'user' => $user,
@@ -148,11 +150,31 @@ class MailerService
             ->from($this->mailerAddress)
             ->to($this->adminAddress)
             ->subject('Une nouvelle demande de reservation à été crée')
-            ->locale($user->getLanguage())
+            ->locale('ja')
             ->htmlTemplate('mails/new_booking_created.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,
+            ]);
+
+        $this->mailerInterface->send($email);
+    }
+
+    public function sendRoomBookingConfirmationEmail(Booking $booking, User $user)
+    {
+        $checkInHour = $this->settingsRepository->getSettings()->getHourCheckInRoom();
+        $checkOutHour = $this->settingsRepository->getSettings()->getHourCheckOut();
+        $email = new TemplatedEmail()
+            ->from($this->mailerAddress)
+            ->to($this->adminAddress)
+            ->subject('Une nouvelle demande de reservation à été crée')
+            ->locale($user->getLanguage())
+            ->htmlTemplate('mails/new_room_booking.html.twig')
+            ->context([
+                'user' => $user,
+                'booking' => $booking,
+                'checkInHour' => $checkInHour,
+                'checkOutHour' => $checkOutHour,
             ]);
 
         $this->mailerInterface->send($email);

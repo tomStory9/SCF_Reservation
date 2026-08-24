@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>新規客室予約リクエスト</title>
+
+		<style>
+			body {
+				margin: 0;
+				padding: 40px 20px;
+				background: #f5f7fa;
+				font-family: Arial, Helvetica, sans-serif;
+				color: #4b5563;
+			}
+
+			table {
+				border-collapse: collapse;
+				border-spacing: 0;
+			}
+
+			.wrapper {
+				width: 100%;
+			}
+
+			.card {
+				width: 100%;
+				max-width: 620px;
+				margin: auto;
+				background: #ffffff;
+				border-radius: 20px;
+				overflow: hidden;
+				box-shadow: 0 15px 40px rgba(3, 56, 98, 0.08);
+			}
+
+			.header {
+				background: #033862;
+				padding: 45px 40px;
+				text-align: center;
+			}
+
+			.logo-box {
+				display: inline-block;
+				background: #ffffff;
+				border-radius: 14px;
+				padding: 18px 28px;
+				margin-bottom: 30px;
+			}
+
+			.logo-box img {
+				height: 50px;
+				vertical-align: middle;
+			}
+
+			.logo-box img:first-child {
+				margin-right: 18px;
+			}
+
+			h1 {
+				margin: 0;
+				color: #ffffff;
+				font-size: 30px;
+				font-weight: bold;
+			}
+
+			.content {
+				padding: 50px;
+			}
+
+			.content p {
+				margin: 0 0 22px;
+				line-height: 1.8;
+				font-size: 16px;
+			}
+
+			.greeting {
+				font-size: 18px;
+				font-weight: bold;
+				color: #111827;
+				margin: 0 0 24px;
+			}
+
+			.section-title {
+				margin: 0 0 12px;
+				font-size: 14px;
+				font-weight: bold;
+				color: #033862;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			.details-box {
+				margin: 0 0 24px;
+				border: 1px solid #e5e7eb;
+				border-radius: 12px;
+				overflow: hidden;
+			}
+
+			.details-box table {
+				width: 100%;
+			}
+
+			.details-box td {
+				padding: 12px 18px;
+				font-size: 14px;
+				line-height: 1.6;
+				border-bottom: 1px solid #f0f0f0;
+			}
+
+			.details-box tr:last-child td {
+				border-bottom: none;
+			}
+
+			.details-box td.label {
+				width: 40%;
+				color: #6b7280;
+				background: #fafafa;
+			}
+
+			.details-box td.value {
+				color: #111827;
+				font-weight: bold;
+			}
+
+			.hours-row {
+				display: table;
+				width: 100%;
+				margin: 0 0 24px;
+			}
+
+			.hours-col {
+				display: table-cell;
+				width: 50%;
+				vertical-align: top;
+			}
+
+			.hours-col:first-child {
+				padding-right: 8px;
+			}
+
+			.hours-col:last-child {
+				padding-left: 8px;
+			}
+
+			.hours-card {
+				background: #fff8e5;
+				border: 1px solid #f3d37c;
+				border-radius: 12px;
+				padding: 16px;
+				text-align: center;
+			}
+
+			.hours-card .label {
+				margin: 0 0 6px;
+				font-size: 12px;
+				color: #033862;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+			}
+
+			.hours-card .value {
+				margin: 0;
+				font-size: 20px;
+				font-weight: bold;
+				color: #111827;
+			}
+
+			.total-box {
+				margin: 0 0 24px;
+				padding: 20px;
+				border-radius: 12px;
+				background: #033862;
+				text-align: center;
+			}
+
+			.total-box .label {
+				margin: 0 0 6px;
+				color: #cbd5e1;
+				font-size: 13px;
+			}
+
+			.total-box .amount {
+				margin: 0;
+				color: #ffffff;
+				font-size: 26px;
+				font-weight: bold;
+			}
+
+			.button-wrapper {
+				text-align: center;
+				padding: 20px 0 10px;
+			}
+
+			.button {
+				display: inline-block;
+				padding: 16px 36px;
+				background: #e9b94d;
+				color: #033862 !important;
+				text-decoration: none;
+				font-size: 16px;
+				font-weight: bold;
+				border-radius: 12px;
+			}
+
+			.divider {
+				margin: 40px 0;
+				border-top: 1px solid #ececec;
+			}
+
+			.info {
+				background: #fff8e5;
+				border: 1px solid #f3d37c;
+				border-radius: 12px;
+				padding: 18px 20px;
+				font-size: 14px;
+				line-height: 1.6;
+			}
+
+			.footer {
+				background: #fafafa;
+				border-top: 1px solid #ececec;
+				padding: 30px;
+				text-align: center;
+				font-size: 13px;
+				color: #6b7280;
+				line-height: 1.7;
+			}
+
+			@media only screen and(max-width:600px) {
+
+				body {
+					padding: 20px 10px;
+				}
+
+				.content {
+					padding: 32px 24px;
+				}
+
+				.logo-box {
+					padding: 15px 20px;
+				}
+
+				.logo-box img {
+					height: 40px;
+				}
+
+				h1 {
+					font-size: 24px;
+				}
+
+				.button {
+					display: block;
+				}
+
+				.details-box td.label {
+					width: 45%;
+				}
+
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<table class="wrapper" role="presentation">
+
+			<tr>
+
+				<td align="center">
+
+					<table class="card" role="presentation">
+
+						<tr>
+
+							<td class="header">
+
+								<div class="logo-box">
+
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+
+								</div>
+
+								<h1>
+									新規客室予約リクエスト
+								</h1>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td class="content">
+
+								<p class="greeting">
+									管理者様
+								</p>
+
+								<p>
+									新しい客室予約リクエストが届きましたのでお知らせいたします。内容をご確認のうえ、承認または却下の対応をお願いいたします。
+								</p>
+
+								<p class="section-title">
+									予約者情報
+								</p>
+
+								<div class="details-box">
+
+									<table role="presentation">
+
+										<tr>
+											<td class="label">氏名</td>
+											<td class="value">{{ user.fullName }}</td>
+										</tr>
+
+										<tr>
+											<td class="label">メールアドレス</td>
+											<td class="value">{{ user.email }}</td>
+										</tr>
+
+									</table>
+
+								</div>
+
+								<p class="section-title">
+									予約内容
+								</p>
+
+								<div class="details-box">
+
+									<table role="presentation">
+
+										<tr>
+											<td class="label">客室</td>
+											<td class="value">{{ booking.zone.name }}</td>
+										</tr>
+
+										<tr>
+											<td class="label">チェックイン日</td>
+											<td class="value">{{ booking.startDate|date('Y年m月d日') }}</td>
+										</tr>
+
+										<tr>
+											<td class="label">チェックアウト日</td>
+											<td class="value">{{ booking.endDate|date('Y年m月d日') }}</td>
+										</tr>
+
+										<tr>
+											<td class="label">宿泊人数</td>
+											<td class="value">{{ booking.guestCount }} 名</td>
+										</tr>
+
+										<tr>
+											<td class="label">申請日時</td>
+											<td class="value">{{ booking.createdDate|date('Y年m月d日 H:i') }}</td>
+										</tr>
+
+									</table>
+
+								</div>
+
+								<div class="hours-row">
+
+									<div class="hours-col">
+										<div class="hours-card">
+											<p class="label">チェックイン</p>
+											<p class="value">{{ checkInHour|date('H:i') }}</p>
+										</div>
+									</div>
+
+									<div class="hours-col">
+										<div class="hours-card">
+											<p class="label">チェックアウト</p>
+											<p class="value">{{ checkOutHour|date('H:i') }}</p>
+										</div>
+									</div>
+
+								</div>
+
+								{% if booking.bookingEquipment|length > 0 %}
+
+									<p class="section-title">
+										利用備品
+									</p>
+
+									<div class="details-box">
+
+										<table role="presentation">
+
+											<tr>
+												<td class="label" style="width:50%;">備品名</td>
+												<td class="label" style="width:15%; text-align:center;">数量</td>
+												<td class="label" style="width:35%; text-align:right;">金額</td>
+											</tr>
+
+											{% for be in booking.bookingEquipment %}
+												<tr>
+													<td class="value">{{ be.equipment.name }}</td>
+													<td class="value" style="text-align:center;">× {{ be.quantity }}</td>
+													<td class="value" style="text-align:right;">{{ be.totalPrice }} 円</td>
+												</tr>
+											{% endfor %}
+
+										</table>
+
+									</div>
+
+								{% endif %}
+
+								<p class="section-title">
+									料金内訳
+								</p>
+
+								<div class="details-box">
+
+									<table role="presentation">
+
+										<tr>
+											<td class="label">客室料金</td>
+											<td class="value" style="text-align:right;">{{ booking.price }} 円</td>
+										</tr>
+
+										<tr>
+											<td class="label">備品料金</td>
+											<td class="value" style="text-align:right;">{{ booking.equipmentPrice }} 円</td>
+										</tr>
+
+									</table>
+
+								</div>
+
+								<div class="total-box">
+
+									<p class="label">
+										合計金額
+									</p>
+
+									<p class="amount">
+										{{ booking.totalPrice }} 円
+									</p>
+
+								</div>
+
+								<div class="button-wrapper">
+
+									<a href="{{ absolute_url(ea_url().setController('App\\Controller\\Admin\\PendingBookingCrudController').setAction('detail').setEntityId(booking.id)) }}" class="button">
+										管理画面で確認する
+									</a>
+
+								</div>
+
+							</td>
+
+						</tr>
+
+						<tr>
+
+							<td class="footer">
+
+								<strong>Setoushi Circus Factory - 予約システム</strong>
+
+								<br><br>
+
+								©
+								{{ "now"|date("Y") }}
+
+								<br><br>
+
+								このメールは自動送信されています。返信はご遠慮ください。
+
+							</td>
+
+						</tr>
+
+					</table>
+
+				</td>
+
+			</tr>
+
+		</table>
+
+	</body>
+
+</html>
