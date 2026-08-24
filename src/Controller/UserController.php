@@ -84,7 +84,11 @@ final class UserController extends AbstractController
                 }
 
                 $user->setIsVerified(false);
+            }
 
+            $this->entityManager->flush();
+
+            if ($emailChanged) {
                 $this->emailVerifier->sendEmailConfirmation(
                     'app_verify_email',
                     $user,
@@ -100,8 +104,6 @@ final class UserController extends AbstractController
             } else {
                 $this->addFlash('success', $this->translator->trans('flash.update_success'));
             }
-
-            $this->entityManager->flush();
 
             return $this->redirectToRoute('app_user_profile');
         }
