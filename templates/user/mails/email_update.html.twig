@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>メールアドレス変更の確認</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: #f5f7fa;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #4b5563;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .wrapper {
+            width: 100%;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 620px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(3, 56, 98, 0.08);
+        }
+
+        .header {
+            background: #033862;
+            padding: 45px 40px;
+            text-align: center;
+        }
+
+        .logo-box {
+            display: inline-block;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 18px 28px;
+            margin-bottom: 30px;
+        }
+
+        .logo-box img {
+            height: 50px;
+            vertical-align: middle;
+        }
+
+        .logo-box img:first-child {
+            margin-right: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .content p {
+            margin: 0 0 22px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .button-wrapper {
+            text-align: center;
+            padding: 20px 0 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 16px 36px;
+            background: #e9b94d;
+            color: #033862 !important;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+        }
+
+        .divider {
+            margin: 40px 0;
+            border-top: 1px solid #ececec;
+        }
+
+        .info {
+            background: #fff8e5;
+            border: 1px solid #f3d37c;
+            border-radius: 12px;
+            padding: 18px 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer {
+            background: #fafafa;
+            border-top: 1px solid #ececec;
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.7;
+        }
+
+        @media only screen and(max-width:600px) {
+
+            body {
+                padding: 20px 10px;
+            }
+
+            .content {
+                padding: 32px 24px;
+            }
+
+            .logo-box {
+                padding: 15px 20px;
+            }
+
+            .logo-box img {
+                height: 40px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .button {
+                display: block;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+<table class="wrapper" role="presentation">
+
+    <tr>
+
+        <td align="center">
+
+            <table class="card" role="presentation">
+
+                <tr>
+
+                    <td class="header">
+
+                        <div class="logo-box">
+
+                            <img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+
+                            <img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+
+                        </div>
+
+                        <h1>
+                            メールアドレスの変更を確認してください
+                        </h1>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="content">
+
+                        <p>
+                            いつもご利用ありがとうございます。
+                        </p>
+
+                        <p>
+                            アカウントの新しいメールアドレスとして、このアドレスが登録されました。<br>
+                            下のボタンをクリックして、メールアドレスの確認を完了してください。
+                        </p>
+
+                        <div class="button-wrapper">
+
+                            <a href="{{ signedUrl }}" class="button">
+                                新しいメールアドレスを確認する
+                            </a>
+
+                        </div>
+
+                        <div class="divider"></div>
+                        <div class="info">
+                            <strong>
+                                この確認メールに有効期限はありません
+                            </strong>
+
+                        </div>
+
+                        <p style="margin-top:32px">
+
+                            この変更に覚えがない場合は、第三者による不正アクセスの可能性があります。お手数ですが、至急お問い合わせください。
+
+                        </p>
+
+                    </td>
+
+                </tr>
+
+                <tr>
+
+                    <td class="footer">
+
+                        <strong>Setoushi Circus Factory - 予約システム</strong>
+
+                        <br><br>
+
+                        ©
+                        {{ "now"|date("Y") }}
+
+                        <br><br>
+
+                        このメールは自動送信されています。返信はご遠慮ください。
+
+                    </td>
+
+                </tr>
+
+            </table>
+
+        </td>
+
+    </tr>
+
+</table>
+
+</body>
+
+</html>

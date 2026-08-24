@@ -86,6 +86,21 @@ account:
         pending: 'En attente'
         not_provided: 'Non renseignée'
 
+        edit_button: 'Modifier mes informations'
+        edit_title: 'Modification du profil'
+        cancel_button: 'Annuler'
+        save_button: 'Enregistrer les modifications'
+
+    password:
+        edit_button: 'Changer mon mot de passe'
+        edit_title: 'Changement de mot de passe'
+        current: 'Mot de passe actuel'
+        new: 'Nouveau mot de passe'
+        confirm: 'Confirmer le nouveau mot de passe'
+        save_button: 'Mettre à jour le mot de passe'
+        update_success: 'Votre mot de passe a été modifié avec succès.'
+        mismatch: 'Les deux nouveaux mots de passe ne correspondent pas.'
+
 
 
 booking:

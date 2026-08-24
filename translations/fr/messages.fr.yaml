@@ -8,6 +8,9 @@ flash:
   email_verified: "Votre adresse email a été vérifiée."
   booking_created: "Votre réservation a bien été enregistrée et est en attente de validation."
 
+  update_success: 'Vos informations ont été mises à jour avec succès.'
+  email_changed_warning: 'Vos informations ont été enregistrées. Étant donné que vous avez modifié votre adresse e-mail, un lien de vérification vous a été envoyé. Veuillez consulter votre boîte de réception.'
+
 api:
   error:
     user_not_authenticated: "Utilisateur non connecté."
