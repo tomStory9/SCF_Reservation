@@ -140,7 +140,8 @@ final class RegisterController extends AbstractController
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request, TranslatorInterface $translator, UserRepository $userRepository): Response
     {
-        $id = $request->query->get('id'); // retrieve the user id from the URL
+        $id = $request->query->get('id');
+        $context = $request->query->get('context');
 
         // Verify the user ID exists and is not null
         if (null === $id) {
@@ -158,14 +159,22 @@ final class RegisterController extends AbstractController
             $this->emailVerifier->handleEmailConfirmation($request, $user);
         } catch (VerifyEmailExceptionInterface $exception) {
             $this->addFlash(
-                'verify_email_error',
+                'error',
                 $translator->trans($exception->getReason(), [], 'VerifyEmailBundle')
             );
+
+            if ('profile_update' === $context) {
+                return $this->redirectToRoute('app_user_profile_edit');
+            }
 
             return $this->redirectToRoute('app_register');
         }
 
         $this->addFlash('success', $translator->trans('flash.email_verified'));
+
+        if ('profile_update' === $context) {
+            return $this->redirectToRoute('app_user_profile');
+        }
 
         return $this->redirectToRoute('app_register');
     }

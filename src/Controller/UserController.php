@@ -92,7 +92,8 @@ final class UserController extends AbstractController
                         ->from(new Address($mailerAddress, 'Setoushi Circus Factory'))
                         ->to($user->getEmail())
                         ->subject('メールアドレスの確認をお願いします')
-                        ->htmlTemplate('security/register/mails/confirmation_email.html.twig')
+                        ->htmlTemplate('user/mails/email_update.html.twig'),
+                    ['context' => 'profile_update']
                 );
 
                 $this->addFlash('warning', $this->translator->trans('flash.email_changed_warning'));
