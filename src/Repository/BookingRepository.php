@@ -105,15 +105,15 @@ class BookingRepository extends ServiceEntityRepository
 
         if (!empty($conflictingCodes)) {
             $qb->where('z = :zone OR z.code IN (:conflictingCodes)')
+                ->setParameter('zone', $zone)
                 ->setParameter('conflictingCodes', $conflictingCodes);
         } else {
-            $qb->where('z = :zone');
+            $qb->where('z = :zone')
+                ->setParameter('zone', $zone);
         }
 
         $qb->andWhere('b.startDate < :end')
             ->andWhere('b.endDate > :start')
-            ->andWhere('b.bookingStatus = :status')
-            ->setParameter('zone', $zone)
             ->setParameter('start', $start)
             ->setParameter('end', $end);
 

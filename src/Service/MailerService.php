@@ -167,7 +167,7 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($this->adminAddress)
-            ->subject('Une nouvelle demande de reservation à été crée')
+            ->subject('Votre demande de reservation pour une chambre à bien été prise en compte')
             ->locale($user->getLanguage())
             ->htmlTemplate('mails/new_room_booking.html.twig')
             ->context([

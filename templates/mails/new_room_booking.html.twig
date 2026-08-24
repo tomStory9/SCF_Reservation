@@ -367,14 +367,14 @@
 									<div class="hours-col">
 										<div class="hours-card">
 											<p class="label">チェックイン</p>
-											<p class="value">{{ checkInHour|date('H:i') }}</p>
+											<p class="value">{{ '%02d:00'|format(checkInHour) }}</p>
 										</div>
 									</div>
 
 									<div class="hours-col">
 										<div class="hours-card">
 											<p class="label">チェックアウト</p>
-											<p class="value">{{ checkOutHour|date('H:i') }}</p>
+											<p class="value">{{ '%02d:00'|format(checkOutHour) }}</p>
 										</div>
 									</div>
 
