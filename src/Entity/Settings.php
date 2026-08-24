@@ -34,6 +34,9 @@ class Settings
     #[ORM\Column]
     private ?int $HourCheckOut = null;
 
+    #[ORM\Column]
+    private ?bool $isPendingRoomBlocking = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -119,6 +122,18 @@ class Settings
     public function setHourCheckOut(int $HourCheckOut): static
     {
         $this->HourCheckOut = $HourCheckOut;
+
+        return $this;
+    }
+
+    public function isPendingRoomBlocking(): ?bool
+    {
+        return $this->isPendingRoomBlocking;
+    }
+
+    public function setIsPendingRoomBlocking(bool $isPendingRoomBlocking): static
+    {
+        $this->isPendingRoomBlocking = $isPendingRoomBlocking;
 
         return $this;
     }

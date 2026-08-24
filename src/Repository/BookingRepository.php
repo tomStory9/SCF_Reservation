@@ -115,8 +115,15 @@ class BookingRepository extends ServiceEntityRepository
             ->andWhere('b.bookingStatus = :status')
             ->setParameter('zone', $zone)
             ->setParameter('start', $start)
-            ->setParameter('end', $end)
-            ->setParameter('status', BookingStatus::APPROVED);
+            ->setParameter('end', $end);
+
+        if ($this->settingsRepository->getSettings()->isPendingBookingBlocking()) {
+            $qb->andWhere('b.bookingStatus IN (:statuses)')
+                ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PENDING]);
+        } else {
+            $qb->andWhere('b.bookingStatus = :status')
+                ->setParameter('status', BookingStatus::APPROVED);
+        }
 
         if (null !== $excludeBookingId) {
             $qb->andWhere('b.id != :excludeId')
@@ -183,20 +190,25 @@ class BookingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getBookingsForZoneAndConflicts(Zone $zone, array $conflictingCodes = []): array
+    public function getBookingsForZoneAndConflicts(Zone $zone, array $conflictingCodes = [], string $type = 'training'): array
     {
         $qb = $this->createQueryBuilder('b')
             ->join('b.zone', 'z')
             ->andWhere('z = :zone')
             ->setParameter('zone', $zone);
 
-        if ($this->settingsRepository->getSettings()->isPendingBookingBlocking()) {
-            $qb->andWhere('b.bookingStatus IN (:statuses)')
-                ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PENDING]);
-        } else {
-            $qb->andWhere('b.bookingStatus = :status')
-                ->setParameter('status', BookingStatus::APPROVED);
+        $allowedStatuses = [BookingStatus::APPROVED];
+
+        if ('room' === $type && $this->settingsRepository->getSettings()->isPendingRoomBlocking()) {
+            $allowedStatuses[] = BookingStatus::PENDING;
         }
+
+        if ('training' === $type && $this->settingsRepository->getSettings()->isPendingBookingBlocking()) {
+            $allowedStatuses[] = BookingStatus::PENDING;
+        }
+
+        $qb->andWhere('b.bookingStatus IN (:statuses)')
+            ->setParameter('statuses', $allowedStatuses);
 
         if (!empty($conflictingCodes)) {
             $qb->andWhere('z.code IN (:conflictingCodes)')

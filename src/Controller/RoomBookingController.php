@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\SettingsRepository;
 use App\Service\BookingService;
 use App\Service\RoomBookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,7 +19,8 @@ final class RoomBookingController extends AbstractController
     public function __construct(
         private readonly RoomBookingService $roomBookingService,
         private readonly TranslatorInterface $translator,
-        private readonly BookingService $bookingService
+        private readonly BookingService $bookingService,
+        private readonly SettingsRepository $settingsRepository
     ) {
     }
 
@@ -33,10 +35,12 @@ final class RoomBookingController extends AbstractController
         $rooms = $this->roomBookingService->getBedRoomYamaichiWithPricing();
 
         $blockedPeriods = $this->bookingService->getUnavailiblePeriods();
+        $minDays = $this->settingsRepository->getSettings()->getMinDayRoomBooking();
 
         return $this->render('room_booking/index.html.twig', [
             'rooms' => $rooms,
             'blockedPeriods' => $blockedPeriods,
+            'minDays' => $minDays,
         ]);
     }
 

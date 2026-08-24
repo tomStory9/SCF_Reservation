@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Zone;
 use App\Enum\BookingStatus;
+use App\Enum\ZoneType;
 use App\Repository\EquipmentRepository;
 use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -72,7 +73,11 @@ final class ZoneController extends AbstractController
     #[Route('/zone/{id}/bookings', name: 'app_booking_by_zone', methods: ['GET'])]
     public function getExistingBookingsByZone(Zone $zone): JsonResponse
     {
-        $events = $this->bookingService->getBookingsByZoneForCalendar($zone);
+        $type = 'training';
+        if (ZoneType::BEDROOM == $zone->getTypeZone()) {
+            $type = 'room';
+        }
+        $events = $this->bookingService->getBookingsByZoneForCalendar($zone, $type);
 
         return new JsonResponse($events);
     }

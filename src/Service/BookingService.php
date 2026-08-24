@@ -35,12 +35,11 @@ readonly class BookingService
     ) {
     }
 
-    public function getBookingsByZoneForCalendar(Zone $zone): array
+    public function getBookingsByZoneForCalendar(Zone $zone, string $type = 'training'): array
     {
         $conflictingCodes = $this->kodaOverlapService->getConflictingZoneCodes($zone);
 
-        $bookings = $this->bookingRepository->getBookingsForZoneAndConflicts($zone, $conflictingCodes);
-
+        $bookings = $this->bookingRepository->getBookingsForZoneAndConflicts($zone, $conflictingCodes, $type);
         $events = [];
         foreach ($bookings as $booking) {
             $isFullDay = $booking->isFullDay();
