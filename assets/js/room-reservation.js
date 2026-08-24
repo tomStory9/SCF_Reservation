@@ -150,7 +150,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         id: event.id,
                         start: startStr,
                         end: exclusiveEndStr,
-                        title: texts.reserve,
+                        title: event.title,
+                        backgroundColor: event.backgroundColor,
                         allDay: true,
                         classNames: ['pointer-events-none']
                     };
