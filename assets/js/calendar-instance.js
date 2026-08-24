@@ -123,6 +123,7 @@ export function createCalendar({
 
         const startDate = normalizeDate(info.start);
         const endDate = normalizeDate(new Date(info.end.getTime() - 1));
+
         if (startDate !== endDate) return false;
         if (info.start < new Date()) return false;
         if (info.allDay) return !eventService.hasAnyEventOnDate(startDate);
@@ -170,7 +171,12 @@ export function createCalendar({
         displayEventTime: true,
         displayEventEnd: true,
         eventTimeFormat: { hour: '2-digit', minute: '2-digit', hour12: false },
-        validRange: { start: getTodayIsoString(), end: config.maxDate },
+        validRange: {
+            start: new Date(Date.now() + (config.minDays || 0) * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split('T')[0],
+            end: config.maxDate
+        },
 
         events: async (fetchInfo, successCallback, failureCallback) => {
             const blockedEvents = blockedPeriodsArray.map((bp) => {
