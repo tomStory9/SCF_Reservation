@@ -24,7 +24,7 @@ Encore
     .addEntry('reservation', './assets/js/booking-calendar.js')
     .addEntry('room_reservation', './assets/js/room-reservation.js')
     .addEntry('admin_dashboard', './assets/js/admin-dashboard.js')
-
+    .addEntry('carousel', './assets/js/carousel.js')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 
@@ -36,7 +36,7 @@ Encore
     .enableSingleRuntimeChunk()
     .copyFiles({
         from: './assets/img',
-        to: 'images/[path][name].[hash:8].[ext]',
+        to: 'images/[path][name].[hash:8].[ext]'
     })
     /*
      * FEATURE CONFIG

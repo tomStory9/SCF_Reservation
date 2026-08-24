@@ -13,8 +13,12 @@ class AppFixtures extends Fixture
         $setting = new Settings();
         $setting->setIsRoomBookingEnabled(true);
         $setting->setIsUserValidationRequired(true);
-        $manager->persist($setting);
+        $setting->setHourCheckInRoom(15);
+        $setting->setHourCheckOut(10);
+        $setting->setMinDayBooking(0);
+        $setting->setMinDayRoomBooking(1);
 
+        $manager->persist($setting);
         $manager->flush();
     }
 }

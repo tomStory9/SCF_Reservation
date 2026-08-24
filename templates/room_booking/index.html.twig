@@ -15,6 +15,7 @@
         {{ {
             locale: app.request.locale,
             blockedPeriods: blockedPeriods|default([]),
+            minDays: minDays,
             texts: {
                 noSelection: 'js.no_selection'|trans,
                 room: 'js.room'|trans,

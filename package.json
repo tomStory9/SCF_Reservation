@@ -34,6 +34,8 @@
         "@fullcalendar/interaction": "^6.1.21",
         "@fullcalendar/timegrid": "^6.1.21",
         "@tailwindcss/postcss": "^4.3.2",
+        "embla-carousel": "^8.6.0",
+        "embla-carousel-autoplay": "^8.6.0",
         "intl-tel-input": "^29.1.2",
         "postcss": "^8.5.18",
         "postcss-loader": "^8.2.1",

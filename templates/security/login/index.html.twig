@@ -3,7 +3,10 @@
 {% trans_default_domain 'login' %}
 
 {% block title %}{{ 'login.title'|trans }}{% endblock %}
-
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('carousel') }}
+{% endblock %}
 {% block body %}
 
 <div class="flex min-h-screen bg-white">
@@ -309,15 +312,38 @@
     </main>
 
     <aside class="hidden lg:block lg:w-1/2">
-
-        <img
-            src="{{ asset('build/images/loginBG.png') }}"
-            alt=""
-            class="h-screen w-full object-cover"
-        >
-
+        <div class="relative h-screen w-full overflow-hidden">
+            <div class="embla login-carousel h-full w-full">
+                <div class="embla__viewport h-full w-full">
+                    <div class="embla__container flex h-full w-full">
+                        <div class="embla__slide h-full w-full shrink-0">
+                            <img
+                                src="{{ asset('build/images/LOGINBG1.jpeg') }}"
+                                alt=""
+                                class="h-full w-full object-cover"
+                            >
+                        </div>
+                        <div class="embla__slide h-full w-full shrink-0">
+                            <img
+                                src="{{ asset('build/images/LOGINBG2.jpeg') }}"
+                                alt=""
+                                class="h-full w-full object-cover"
+                            >
+                        </div>
+                        <div class="embla__slide h-full w-full shrink-0">
+                            <img
+                                src="{{ asset('build/images/LOGINBG3.jpeg') }}"
+                                alt=""
+                                class="h-full w-full object-cover"
+                            >
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </aside>
 
 </div>
+
 
 {% endblock %}

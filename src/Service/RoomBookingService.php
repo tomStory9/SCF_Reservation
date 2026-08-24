@@ -21,6 +21,7 @@ readonly class RoomBookingService
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator,
         private TranslatorInterface $translator,
+        private readonly MailerService $mailerService
     ) {
     }
 
@@ -114,5 +115,7 @@ readonly class RoomBookingService
 
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
+        $this->mailerService->sendRoomBookingConfirmationEmail($booking, $booking->getUserBooking());
+        $this->mailerService->sendNewBookingAdmin($booking, $booking->getUserBooking());
     }
 }

@@ -92,7 +92,9 @@ document.addEventListener('DOMContentLoaded', function () {
             right: 'today'
         },
         validRange: {
-            start: new Date().toISOString().split('T')[0]
+            start: new Date(Date.now() + (config.minDays || 0) * 24 * 60 * 60 * 1000)
+                .toISOString()
+                .split('T')[0]
         },
 
         events: async function (fetchInfo, successCallback, failureCallback) {
@@ -148,10 +150,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         id: event.id,
                         start: startStr,
                         end: exclusiveEndStr,
-                        title: texts.reserve,
+                        title: event.title,
+                        backgroundColor: event.backgroundColor,
                         allDay: true,
-                        color: '#ff9f89',
-                        textColor: '#ffffff',
                         classNames: ['pointer-events-none']
                     };
                 });

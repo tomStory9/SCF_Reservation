@@ -5,9 +5,9 @@ namespace App\Controller;
 use App\Entity\User;
 use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
+use App\Repository\SettingsRepository;
 use App\Repository\UserRoleRepository;
 use App\Service\BookingService;
-use App\Service\MailerService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -24,7 +24,7 @@ final class BookingController extends AbstractController
         private readonly UserRoleRepository $userRoleRepository,
         private readonly BookingRepository $bookingRepository,
         private readonly TranslatorInterface $translator,
-        private readonly MailerService $mailerService,
+        private readonly SettingsRepository $settingsRepository
     ) {
     }
 
@@ -52,12 +52,15 @@ final class BookingController extends AbstractController
 
         $blockedPeriods = $this->bookingService->getUnavailiblePeriods();
 
+        $minDays = $this->settingsRepository->getSettings()->getMinDayBooking();
+
         return $this->render('user/reservation.html.twig', [
             'user' => $user,
             'facilities' => $facilities,
             'maxEndDate' => $maxEndDate,
             'remainingHours' => $remainingHours,
             'blockedPeriods' => $blockedPeriods,
+            'minDays' => $minDays,
         ]);
     }
 

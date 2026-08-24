@@ -35,19 +35,28 @@ readonly class BookingService
     ) {
     }
 
-    public function getBookingsByZoneForCalendar(Zone $zone): array
+    public function getBookingsByZoneForCalendar(Zone $zone, string $type = 'training'): array
     {
         $conflictingCodes = $this->kodaOverlapService->getConflictingZoneCodes($zone);
 
-        $bookings = $this->bookingRepository->getBookingsForZoneAndConflicts($zone, $conflictingCodes);
-
+        $bookings = $this->bookingRepository->getBookingsForZoneAndConflicts($zone, $conflictingCodes, $type);
         $events = [];
+
         foreach ($bookings as $booking) {
             $isFullDay = $booking->isFullDay();
-
+            $isPending = BookingStatus::PENDING === $booking->getBookingStatus();
             $isConflict = $booking->getZone() !== $zone;
 
-            if ($isFullDay) {
+            // Pour les rooms, on affiche toujours en mode "jour" (pas d'heures)
+            if ('room' === $type) {
+                $format = 'Y-m-d';
+                $startLabel = $booking->getStartDate()->format('d/m');
+                $endLabel = $booking->getEndDate()->format('d/m');
+
+                $title = $isConflict
+                    ? $this->translator->trans('calendar.event.unavailable_other_configuration')
+                    : sprintf('%s – %s', $startLabel, $endLabel);
+            } elseif ($isFullDay) {
                 $format = 'Y-m-d';
                 $title = $isConflict
                     ? $this->translator->trans('calendar.event.unavailable_other_configuration')
@@ -69,14 +78,18 @@ readonly class BookingService
                 'title' => $title,
                 'start' => $booking->getStartDate()->format($format),
                 'end' => $booking->getEndDate()->format($format),
-                'allDay' => $isFullDay,
+                'allDay' => $isFullDay || 'room' === $type,
             ];
 
             if ($isConflict) {
                 $event['color'] = '#cbd5e1';
                 $event['textColor'] = '#475569';
-
                 $event['interactive'] = false;
+            }
+
+            if ($isPending && !$isConflict) {
+                $event['backgroundColor'] = 'rgba(59, 130, 246, 0.6)';
+                $event['title'] = '⏳ '.$event['title'];
             }
 
             $events[] = $event;
