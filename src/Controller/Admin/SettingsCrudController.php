@@ -52,6 +52,10 @@ final class SettingsCrudController extends AbstractCrudController
         yield IntegerField::new('HourCheckOut', 'admin.field.hour_checkout')
             ->setHelp('admin.help.help_hour_checkout');
 
+        yield BooleanField::new('IsPendingRoomBlocking', 'admin.field.pending_room_blocking')
+            ->setHelp('admin.help.help_pending_room_blocking')
+            ->renderAsSwitch();
+
         yield FormField::addFieldset('admin.field.securite_inscription')
             ->setIcon('fas fa-user-shield');
 
