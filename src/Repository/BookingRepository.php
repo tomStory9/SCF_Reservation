@@ -16,8 +16,11 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class BookingRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    private readonly SettingsRepository $settingsRepository;
+
+    public function __construct(ManagerRegistry $registry, SettingsRepository $settingsRepository)
     {
+        $this->settingsRepository = $settingsRepository;
         parent::__construct($registry, Booking::class);
     }
 
@@ -184,16 +187,20 @@ class BookingRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('b')
             ->join('b.zone', 'z')
-            ->andWhere('b.bookingStatus = :status')
-            ->setParameter('status', BookingStatus::APPROVED);
+            ->andWhere('z = :zone')
+            ->setParameter('zone', $zone);
+
+        if ($this->settingsRepository->getSettings()->isPendingBookingBlocking()) {
+            $qb->andWhere('b.bookingStatus IN (:statuses)')
+                ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PENDING]);
+        } else {
+            $qb->andWhere('b.bookingStatus = :status')
+                ->setParameter('status', BookingStatus::APPROVED);
+        }
 
         if (!empty($conflictingCodes)) {
-            $qb->andWhere('z = :zone OR z.code IN (:conflictingCodes)')
-                ->setParameter('zone', $zone)
+            $qb->andWhere('z.code IN (:conflictingCodes)')
                 ->setParameter('conflictingCodes', $conflictingCodes);
-        } else {
-            $qb->andWhere('z = :zone')
-                ->setParameter('zone', $zone);
         }
 
         return $qb->getQuery()->getResult();

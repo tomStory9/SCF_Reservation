@@ -44,7 +44,7 @@ readonly class BookingService
         $events = [];
         foreach ($bookings as $booking) {
             $isFullDay = $booking->isFullDay();
-
+            $isPending = BookingStatus::PENDING === $booking->getBookingStatus();
             $isConflict = $booking->getZone() !== $zone;
 
             if ($isFullDay) {
@@ -77,6 +77,11 @@ readonly class BookingService
                 $event['textColor'] = '#475569';
 
                 $event['interactive'] = false;
+            }
+            if ($isPending && !$isConflict) {
+                $event['backgroundColor'] = 'rgba(59, 130, 246, 0.6)';
+
+                $event['title'] = '⏳ '.$event['title'];
             }
 
             $events[] = $event;
