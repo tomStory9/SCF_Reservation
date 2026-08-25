@@ -307,12 +307,21 @@ export function createCalendar({
             await notifySelectionChange();
             calendar.refetchEvents();
 
+            const priceDetailText = formatPriceDetail(prices, texts);
+            const freeRemainingText = formatFreeHoursRemaining(prices, texts);
+
             ui.updatePreview(
                 `<span class="font-semibold text-secondary">${texts.selectedPeriod}</span> ` +
                     `<span class="font-semibold text-primary">${period.label}</span>` +
                     `<br><span class="text-state">${texts.date} ${data.dateFr}</span>` +
                     `<br><span class="text-state">${texts.hours} ${period.start} → ${period.end}</span>` +
-                    `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
+                    `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>` +
+                    (freeRemainingText
+                        ? `<br><span class="text-state font-semibold text-accent">${freeRemainingText}</span>`
+                        : '') +
+                    (priceDetailText
+                        ? `<br><span class="text-state font-semibold text-primary">${priceDetailText}</span>`
+                        : '')
             );
         },
 
@@ -385,15 +394,65 @@ export function createCalendar({
             await notifySelectionChange();
             calendar.refetchEvents();
 
+            const priceDetailText = formatPriceDetail(prices, texts);
+            const freeRemainingText = formatFreeHoursRemaining(prices, texts);
+
             ui.updatePreview(
                 `<span class="font-semibold text-secondary">${texts.hourlySlot}</span> ` +
                     `<span class="font-semibold text-primary">${startData.time} → ${endData.time}</span>` +
                     `<br><span class="text-state">${texts.date} ${startData.dateFr}</span>` +
                     `<br><span class="text-state">${texts.duration} ${duration} heure(s)</span>` +
-                    `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>`
+                    `<br><span class="text-state">${texts.location} ${getSelectedZoneName()}</span>` +
+                    (freeRemainingText
+                        ? `<br><span class="text-state font-semibold text-accent">${freeRemainingText}</span>`
+                        : '') +
+                    (priceDetailText
+                        ? `<br><span class="text-state font-semibold text-primary">${priceDetailText}</span>`
+                        : '')
             );
         }
     });
 
     return calendar;
+}
+
+function formatPriceDetail(prices, texts) {
+    if (!prices) return '';
+
+    const freeUsed = prices.freeHoursUsed ?? 0;
+    const paidHours = prices.paidHours ?? 0;
+    const paidPrice = prices.price ?? 0;
+
+    const parts = [];
+
+    if (freeUsed > 0) {
+        parts.push(`${freeUsed} h gratuites`);
+    }
+
+    if (paidHours > 0) {
+        parts.push(`${paidHours} h payantes (${paidPrice} ¥)`);
+    } else if (paidPrice > 0) {
+        parts.push(`${paidPrice} ¥`);
+    }
+
+    if (parts.length === 0) {
+        return texts?.fullyFree ?? 'Gratuit';
+    }
+
+    return parts.join(' + ');
+}
+
+function formatFreeHoursRemaining(prices, texts) {
+    if (!prices) return '';
+
+    const freeRemaining = prices.freeHoursRemaining ?? 0;
+    const freeTotal = prices.freeHours ?? 0;
+
+    if (freeTotal <= 0) {
+        return '';
+    }
+
+    const label = texts?.freeHoursRemainingPattern ?? 'h gratuites restantes';
+
+    return `${freeRemaining}/${freeTotal} ${label}`;
 }

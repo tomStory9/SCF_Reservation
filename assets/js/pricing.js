@@ -29,20 +29,45 @@ export function createPricingService(getPricings, getFreeHours) {
                     return null;
                 }
 
+                const totalHours = 4;
+                const detail = calculateDiscountedPriceDetail(basePrice, freeHours, totalHours);
+
                 return {
-                    price: calculateDiscountedPrice(basePrice, freeHours, 4),
-                    basePrice
+                    price: detail.price,
+                    basePrice: detail.basePrice,
+                    freeHours: detail.freeHours,
+                    freeHoursUsed: detail.freeHoursUsed,
+                    paidHours: detail.paidHours,
+                    paidPrice: detail.paidPrice,
+                    freeHoursRemaining: Math.max(0, detail.freeHours - detail.freeHoursUsed)
                 };
             }
 
             if (mode === 'hour' && endIso) {
-                return getHourlyPrice(
+                const hourlyResult = getHourlyPrice(
                     current,
                     parseCalendarDate(endIso),
                     dayPricings,
                     pricings,
                     freeHours
                 );
+
+                if (!hourlyResult) {
+                    return null;
+                }
+
+                return {
+                    price: hourlyResult.price,
+                    basePrice: hourlyResult.basePrice,
+                    freeHours: hourlyResult.freeHours,
+                    freeHoursUsed: hourlyResult.freeHoursUsed,
+                    paidHours: hourlyResult.paidHours,
+                    paidPrice: hourlyResult.paidPrice,
+                    freeHoursRemaining: Math.max(
+                        0,
+                        hourlyResult.freeHours - hourlyResult.freeHoursUsed
+                    )
+                };
             }
 
             return null;
@@ -60,16 +85,36 @@ function parseCalendarDate(value) {
     return new Date(value);
 }
 
-function calculateDiscountedPrice(basePrice, freeHours, totalHours) {
-    if (freeHours >= totalHours) {
-        return 0;
+function calculateDiscountedPriceDetail(basePrice, freeHours, totalHours) {
+    const total = Number(totalHours) || 0;
+    const free = Number(freeHours) || 0;
+
+    if (total <= 0) {
+        return {
+            price: 0,
+            basePrice: 0,
+            freeHours: free,
+            freeHoursUsed: 0,
+            paidHours: 0,
+            paidPrice: 0,
+            freeHoursRemaining: free
+        };
     }
 
-    if (freeHours > 0) {
-        return Math.round(basePrice * ((totalHours - freeHours) / totalHours));
-    }
+    const freeHoursUsed = Math.max(0, Math.min(free, total));
+    const paidHours = total - freeHoursUsed;
 
-    return Math.round(basePrice);
+    const paidPrice = paidHours <= 0 ? 0 : Math.round(basePrice * (paidHours / total));
+
+    return {
+        price: paidPrice,
+        basePrice: Math.round(basePrice),
+        freeHours: free,
+        freeHoursUsed: freeHoursUsed,
+        paidHours,
+        paidPrice,
+        freeHoursRemaining: Math.max(0, free - freeHoursUsed)
+    };
 }
 
 function getHourlyPrice(start, end, initialDayPricings, allPricings, freeHours) {
@@ -101,8 +146,15 @@ function getHourlyPrice(start, end, initialDayPricings, allPricings, freeHours) 
         return null;
     }
 
+    const detail = calculateDiscountedPriceDetail(basePrice, freeHours, validHoursCount);
+
     return {
-        price: calculateDiscountedPrice(basePrice, freeHours, validHoursCount),
-        basePrice
+        price: detail.price,
+        basePrice: detail.basePrice,
+        freeHours: detail.freeHours,
+        freeHoursUsed: detail.freeHoursUsed,
+        paidHours: detail.paidHours,
+        paidPrice: detail.paidPrice,
+        freeHoursRemaining: detail.freeHoursRemaining
     };
 }
