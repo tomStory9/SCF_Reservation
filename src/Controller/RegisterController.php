@@ -85,10 +85,10 @@ final class RegisterController extends AbstractController
             } else {
                 $user->setUserStatus(UserStatus::APPROVED);
             }
-            $this->mailerService->sendNewUserAdmin($user);
+
             $entityManager->persist($user);
             $entityManager->flush();
-
+            $this->mailerService->sendNewUserAdmin($user);
             $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
                 $user,

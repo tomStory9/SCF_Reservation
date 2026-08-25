@@ -4,6 +4,8 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Enum\UserStatus;
+use App\Repository\SettingsRepository;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
@@ -25,13 +27,17 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
     private $entityManager;
     private $router;
     private $passwordHasher;
+    private SettingsRepository $settingsRepository;
+    private MailerService $mailerService;
 
-    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router, UserPasswordHasherInterface $passwordHasher)
+    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router, UserPasswordHasherInterface $passwordHasher, SettingsRepository $settingsRepository, MailerService $mailerService)
     {
         $this->clientRegistry = $clientRegistry;
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->passwordHasher = $passwordHasher;
+        $this->settingsRepository = $settingsRepository;
+        $this->mailerService = $mailerService;
     }
 
     public function supports(Request $request): ?bool
@@ -71,12 +77,19 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
                     $user->setIsVerified(true);
                     $user->setPhone($lineData['phone_number'] ?? ''); // TODO : try with a line account with phone number added and name lastname or find other solution
                     $user->setIsVerified(false);
-                    $user->setUserStatus(UserStatus::PENDING);
+
+                    $settings = $this->settingsRepository->getSettings();
+                    if ($settings->isUserValidationRequired()) {
+                        $user->setUserStatus(UserStatus::PENDING);
+                    } else {
+                        $user->setUserStatus(UserStatus::APPROVED);
+                    }
                     $user->setCompany(null);
                 }
                 $user->setLanguage($locale);
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
+                $this->mailerService->sendNewUserAdmin($user);
 
                 return $user;
             })

@@ -4,6 +4,8 @@ namespace App\Security;
 
 use App\Entity\User;
 use App\Enum\UserStatus;
+use App\Repository\SettingsRepository;
+use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use KnpU\OAuth2ClientBundle\Client\ClientRegistry;
 use KnpU\OAuth2ClientBundle\Security\Authenticator\OAuth2Authenticator;
@@ -27,14 +29,18 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
     private $router;
     private $passwordHasher;
     private $translator;
+    private SettingsRepository $settingsRepository;
+    private MailerService $mailerService;
 
-    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator)
+    public function __construct(ClientRegistry $clientRegistry, EntityManagerInterface $entityManager, RouterInterface $router, UserPasswordHasherInterface $passwordHasher, TranslatorInterface $translator, SettingsRepository $settingsRepository, MailerService $mailerService)
     {
         $this->clientRegistry = $clientRegistry;
         $this->entityManager = $entityManager;
         $this->router = $router;
         $this->passwordHasher = $passwordHasher;
         $this->translator = $translator;
+        $this->settingsRepository = $settingsRepository;
+        $this->mailerService = $mailerService;
     }
 
     public function supports(Request $request): ?bool
@@ -72,13 +78,21 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                     $user->setPhone($googleData['phone_number'] ?? '');
                     $user->setFilledInfo(false);
                     $user->setIsVerified(true);
-                    $user->setUserStatus(UserStatus::PENDING);
+                    $settings = $this->settingsRepository->getSettings();
+
+                    if ($settings->isUserValidationRequired()) {
+                        $user->setUserStatus(UserStatus::PENDING);
+                    } else {
+                        $user->setUserStatus(UserStatus::APPROVED);
+                    }
+
                     $user->setLanguage($request->getLocale());
                     $user->setCompany(null);
                 }
 
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
+                $this->mailerService->sendNewUserAdmin($user);
 
                 return $user;
             })
