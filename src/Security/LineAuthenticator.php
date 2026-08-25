@@ -43,9 +43,10 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
     {
         $client = $this->clientRegistry->getClient('line');
         $accessToken = $this->fetchAccessToken($client);
+        $locale = $request->getLocale();
 
         return new SelfValidatingPassport(
-            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client) {
+            new UserBadge($accessToken->getToken(), function () use ($accessToken, $client, $locale) {
                 $lineUser = $client->fetchUserFromToken($accessToken);
                 $lineData = $lineUser->toArray();
                 $email = $lineUser->getEmail();
@@ -61,7 +62,7 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
 
                 if (!$user) {
                     $user = new User();
-                    $user->setEmail($email ?? 'simon@ledoux.cat'); // TODO : wait for email applied in line dev (should say not cause sent bad photo)
+                    $user->setEmail($email ?? ''); // TODO : wait for email applied in line dev (should say not cause sent bad photo)
                     $user->setPassword($this->passwordHasher->hashPassword($user, bin2hex(random_bytes(32))));
                     $user->setLineId($lineUser->getId());
                     $user->setName($lineData['given_name'] ?? '');
@@ -71,8 +72,9 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
                     $user->setPhone($lineData['phone_number'] ?? ''); // TODO : try with a line account with phone number added and name lastname or find other solution
                     $user->setIsVerified(false);
                     $user->setUserStatus(UserStatus::PENDING);
+                    $user->setCompany(null);
                 }
-
+                $user->setLanguage($locale);
                 $this->entityManager->persist($user);
                 $this->entityManager->flush();
 
