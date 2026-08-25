@@ -1,9 +1,10 @@
+{% trans_default_domain 'emails' %}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 <head>
     <meta charset="UTF-8">
-    <title>メールアドレス変更の確認</title>
+    <title>{{ 'email_update.title'|trans }}</title>
 
     <style>
         body {
@@ -160,14 +161,14 @@
 
                         <div class="logo-box">
 
-                            <img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+                            <img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-                            <img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+                            <img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
                         </div>
 
                         <h1>
-                            メールアドレスの変更を確認してください
+                            {{ 'email_update.title'|trans }}
                         </h1>
 
                     </td>
@@ -179,18 +180,17 @@
                     <td class="content">
 
                         <p>
-                            いつもご利用ありがとうございます。
+                            {{ 'email_update.thanks'|trans }}
                         </p>
 
                         <p>
-                            アカウントの新しいメールアドレスとして、このアドレスが登録されました。<br>
-                            下のボタンをクリックして、メールアドレスの確認を完了してください。
+                            {{ 'email_update.instructions'|trans|nl2br }}
                         </p>
 
                         <div class="button-wrapper">
 
                             <a href="{{ signedUrl }}" class="button">
-                                新しいメールアドレスを確認する
+                                {{ 'email_update.button'|trans }}
                             </a>
 
                         </div>
@@ -198,14 +198,14 @@
                         <div class="divider"></div>
                         <div class="info">
                             <strong>
-                                この確認メールに有効期限はありません
+                                {{ 'verify_email.no_expiration'|trans }}
                             </strong>
 
                         </div>
 
                         <p style="margin-top:32px">
 
-                            この変更に覚えがない場合は、第三者による不正アクセスの可能性があります。お手数ですが、至急お問い合わせください。
+                            {{ 'email_update.warning'|trans }}
 
                         </p>
 
@@ -217,7 +217,7 @@
 
                     <td class="footer">
 
-                        <strong>Setoushi Circus Factory - 予約システム</strong>
+                        <strong>{{ 'common.footer_brand'|trans }}</strong>
 
                         <br><br>
 
@@ -226,7 +226,7 @@
 
                         <br><br>
 
-                        このメールは自動送信されています。返信はご遠慮ください。
+                        {{ 'common.auto_no_reply'|trans }}
 
                     </td>
 

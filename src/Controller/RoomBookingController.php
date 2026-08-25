@@ -63,6 +63,13 @@ final class RoomBookingController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => $this->translator->trans('api.error.invalid_data')], Response::HTTP_BAD_REQUEST);
         }
 
+        if (true !== ($data['termsAccepted'] ?? false)) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => $this->translator->trans('api.error.terms_consent_required'),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         try {
             $this->roomBookingService->createRoomBooking($data, $user);
         } catch (\Exception $exception) {

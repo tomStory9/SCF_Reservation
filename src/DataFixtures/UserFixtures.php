@@ -18,6 +18,7 @@ class UserFixtures extends Fixture
     public const string DEFAULT_USER = 'default_user';
 
     public const string DEFAULT_PASSWORD = 'test';
+    public const string ADMIN_PASSWORD = 'password';
 
     public function __construct(
         private readonly UserPasswordHasherInterface $passwordHasher
@@ -35,9 +36,9 @@ class UserFixtures extends Fixture
         $admin->setIsVerified(true);
         $admin->setUserStatus(UserStatus::APPROVED);
         $admin->setPassword(
-            $this->passwordHasher->hashPassword($admin, self::DEFAULT_PASSWORD)
+            $this->passwordHasher->hashPassword($admin, self::ADMIN_PASSWORD)
         );
-        $admin->setLanguage('jp');
+        $admin->setLanguage('ja');
         $admin->setRoles(['ROLE_ADMIN']);
         $manager->persist($admin);
         $this->addReference(self::ADMIN, $admin);

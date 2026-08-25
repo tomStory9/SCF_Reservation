@@ -218,6 +218,7 @@ readonly class BookingService
         $booking->setIsFullDay($data['isFullDay']);
         $booking->setBookingStatus(BookingStatus::PENDING);
         $booking->setCreatedDate(new \DateTimeImmutable());
+        $booking->setTermsAcceptedAt(new \DateTimeImmutable());
 
         $booking->setStartDate($start);
         $booking->setEndDate($end);
@@ -248,7 +249,7 @@ readonly class BookingService
     public function approveBooking(Booking $booking): void
     {
         if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
-            throw new \Exception('La réservation n\'est pas en attente de validation.');
+            throw new \Exception($this->translator->trans('admin.flash.booking_no_longer_pending'));
         }
 
         $booking->setBookingStatus(BookingStatus::APPROVED);
@@ -260,7 +261,7 @@ readonly class BookingService
     public function declineBooking(Booking $booking): void
     {
         if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
-            throw new \Exception('La réservation n\'est pas en attente de validation.');
+            throw new \Exception($this->translator->trans('admin.flash.booking_no_longer_pending'));
         }
 
         $booking->setBookingStatus(BookingStatus::DECLINED);

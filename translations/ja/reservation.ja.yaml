@@ -39,6 +39,9 @@ ui:
   select_for_equipment: "ゾーンと時間枠を選択すると、利用可能な機材が表示されます。"
   equipment_total: "機材合計："
   grand_total: "総合計："
+  terms_consent_before: ""
+  terms_link: "利用規約"
+  terms_consent_after: "に同意します"
   submit: "この時間枠を予約"
 
 js:
@@ -73,6 +76,7 @@ js:
   submit_booking: "この時間枠を予約"
   booking_error_title: "エラー"
   booking_error: "予約を保存できませんでした。"
+  accept_terms: "予約するには利用規約への同意が必要です。"
   network_error_title: "通信エラー"
   network_error: "サーバーとの通信中にエラーが発生しました。"
   pricing_loading_error: "料金を読み込めませんでした"
@@ -88,3 +92,4 @@ js:
   grand_total: "総合計："
   used_hours: "時間使用（12時間中）"
   selected_period_event: "選択した時間帯 · {period}"
+  blocked_period: "利用停止期間"

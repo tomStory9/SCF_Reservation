@@ -1,0 +1,90 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block page_title %}
+    {{ 'admin.user_history.title'|trans({'%user%': user.fullName}) }}
+{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ back_url }}">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        {{ 'admin.user_history.back'|trans }}
+    </a>
+{% endblock %}
+
+{% block main %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h2 class="h5 mb-1">{{ user.fullName }}</h2>
+            <p class="text-muted mb-0">{{ user.email }}</p>
+        </div>
+    </div>
+
+    {% if history is empty %}
+        <div class="alert alert-info mb-0">
+            {{ 'admin.user_history.empty'|trans }}
+        </div>
+    {% else %}
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>{{ 'admin.user_history.date'|trans }}</th>
+                        <th>{{ 'admin.user_history.actor'|trans }}</th>
+                        <th>{{ 'admin.user_history.action'|trans }}</th>
+                        <th>{{ 'admin.user_history.changes'|trans }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entry in history %}
+                        <tr>
+                            <td class="text-nowrap">
+                                {{ entry.loggedAt|date('Y-m-d H:i:s', 'Asia/Tokyo') }}
+                            </td>
+                            <td>{{ entry.username ?? ('admin.user_history.system'|trans) }}</td>
+                            <td>
+                                <span class="badge text-bg-{{ entry.action == 'create' ? 'success' : (entry.action == 'remove' ? 'danger' : 'primary') }}">
+                                    {{ ('admin.user_history.actions.' ~ entry.action)|trans }}
+                                </span>
+                                <span class="text-muted ms-1">#{{ entry.version }}</span>
+                            </td>
+                            <td>
+                                {% if entry.data is empty %}
+                                    <span class="text-muted">{{ 'admin.user_history.no_changes'|trans }}</span>
+                                {% else %}
+                                    <dl class="mb-0">
+                                        {% for field, value in entry.data %}
+                                            <div class="d-flex flex-wrap gap-2 mb-1">
+                                                <dt>{{ ('admin.user_history.fields.' ~ field)|trans }} :</dt>
+                                                <dd class="mb-0">
+                                                    {% if field == 'roles' and value is iterable %}
+                                                        {% for role in value %}
+                                                            {{ ('admin.enum.user_role.' ~ role|lower|replace({'role_': ''}))|trans }}{{ not loop.last ? ', ' }}
+                                                        {% endfor %}
+                                                    {% elseif field == 'userStatus' %}
+                                                        {{ ('admin.enum.user_status.' ~ value)|trans }}
+                                                    {% elseif field == 'Language' %}
+                                                        {{ ('admin.enum.language.' ~ (value == 'jp' ? 'ja' : value))|trans }}
+                                                    {% elseif value is same as(true) %}
+                                                        {{ 'admin.user_history.yes'|trans }}
+                                                    {% elseif value is same as(false) %}
+                                                        {{ 'admin.user_history.no'|trans }}
+                                                    {% elseif value is null or value == '' %}
+                                                        <span class="text-muted">{{ 'admin.user_history.empty_value'|trans }}</span>
+                                                    {% elseif value is iterable %}
+                                                        {{ value|join(', ') }}
+                                                    {% else %}
+                                                        {{ value }}
+                                                    {% endif %}
+                                                </dd>
+                                            </div>
+                                        {% endfor %}
+                                    </dl>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% endblock %}

@@ -30,13 +30,7 @@ class LocalePersisterSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $locale = $request->getSession()->get('_locale')
-            ?? $request->query->get('_locale')
-            ?? $request->cookies->get('_locale');
-
-        if (!\is_string($locale)) {
-            return;
-        }
+        $locale = User::normalizeLanguage($request->getLocale());
 
         if ($user->getLanguage() === $locale) {
             return;

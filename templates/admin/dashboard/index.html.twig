@@ -390,21 +390,33 @@
         </section>
     </div>
 
-    <dialog id="booking-modal" class="booking-modal">
+    <dialog
+        id="booking-modal"
+        class="booking-modal"
+        data-locale="{{ app.request.locale }}"
+        data-unknown-equipment="{{ 'admin.dashboard.modal.unknown_equipment'|trans }}"
+        data-quantity-label="{{ 'admin.dashboard.modal.quantity'|trans }}"
+        data-unit-price-label="{{ 'admin.dashboard.modal.unit_price'|trans }}"
+        data-total-price-label="{{ 'admin.dashboard.modal.total_price'|trans }}"
+        data-yes="{{ 'admin.user_history.yes'|trans }}"
+        data-no="{{ 'admin.user_history.no'|trans }}"
+        data-approve-error="{{ 'admin.dashboard.modal.approve_error'|trans }}"
+        data-decline-error="{{ 'admin.dashboard.modal.decline_error'|trans }}"
+    >
         <div class="booking-modal-header">
             <div>
                 <p class="booking-modal-eyebrow">
-                    Détail de la demande
+                    {{ 'admin.dashboard.modal.kicker'|trans }}
                 </p>
 
-                <h2>Détails de la réservation</h2>
+                <h2>{{ 'admin.dashboard.modal.title'|trans }}</h2>
             </div>
 
             <button
                 type="button"
                 class="booking-modal-close"
                 data-booking-modal-close
-                aria-label="Fermer la fenêtre"
+                aria-label="{{ 'admin.dashboard.modal.close_aria'|trans }}"
             >
                 ×
             </button>
@@ -413,62 +425,62 @@
         <div class="booking-modal-body">
             <dl class="booking-detail-grid">
                 <div>
-                    <dt>ID</dt>
+                    <dt>{{ 'admin.field.id'|trans }}</dt>
                     <dd id="modal-booking-id">-</dd>
                 </div>
 
                 <div>
-                    <dt>Statut</dt>
+                    <dt>{{ 'admin.field.status'|trans }}</dt>
                     <dd id="modal-booking-status">-</dd>
                 </div>
 
                 <div>
-                    <dt>Utilisateur</dt>
+                    <dt>{{ 'admin.field.user'|trans }}</dt>
                     <dd id="modal-booking-user">-</dd>
                 </div>
 
                 <div>
-                    <dt>Zone</dt>
+                    <dt>{{ 'admin.field.zone'|trans }}</dt>
                     <dd id="modal-booking-zone">-</dd>
                 </div>
 
                 <div>
-                    <dt>Début</dt>
+                    <dt>{{ 'admin.field.start_date'|trans }}</dt>
                     <dd id="modal-booking-start">-</dd>
                 </div>
 
                 <div>
-                    <dt>Fin</dt>
+                    <dt>{{ 'admin.field.end_date'|trans }}</dt>
                     <dd id="modal-booking-end">-</dd>
                 </div>
 
                 <div>
-                    <dt>Nombre de guests</dt>
+                    <dt>{{ 'admin.field.guest_count'|trans }}</dt>
                     <dd id="modal-booking-guest-count">-</dd>
                 </div>
 
                 <div>
-                    <dt>Journée complète</dt>
+                    <dt>{{ 'admin.dashboard.modal.full_day'|trans }}</dt>
                     <dd id="modal-booking-full-day">-</dd>
                 </div>
 
                 <div>
-                    <dt>Prix de la réservation</dt>
+                    <dt>{{ 'admin.dashboard.modal.booking_price'|trans }}</dt>
                     <dd id="modal-booking-booking-price">-</dd>
                 </div>
 
                 <div>
-                    <dt>Prix des équipements</dt>
+                    <dt>{{ 'admin.dashboard.modal.equipment_price'|trans }}</dt>
                     <dd id="modal-booking-equipment-total">-</dd>
                 </div>
 
                 <div class="booking-total-card">
-                    <dt>Prix total</dt>
+                    <dt>{{ 'admin.dashboard.modal.total_price'|trans }}</dt>
                     <dd id="modal-booking-total-price">-</dd>
                 </div>
 
                 <div class="booking-detail-grid-full">
-                    <dt>Équipements</dt>
+                    <dt>{{ 'admin.entity.equipments'|trans }}</dt>
                     <dd id="modal-booking-equipment">-</dd>
                 </div>
             </dl>
@@ -480,7 +492,7 @@
                 class="booking-modal-button booking-modal-button-close"
                 data-booking-modal-close
             >
-                Fermer
+                {{ 'admin.dashboard.modal.close'|trans }}
             </button>
 
             <button
@@ -488,7 +500,7 @@
                 id="booking-decline-button"
                 class="booking-modal-button booking-modal-button-decline"
             >
-                Refuser
+                {{ 'admin.action.decline'|trans }}
             </button>
 
             <button
@@ -496,7 +508,7 @@
                 id="booking-approve-button"
                 class="booking-modal-button booking-modal-button-approve"
             >
-                Accepter
+                {{ 'admin.action.approve'|trans }}
             </button>
         </div>
     </dialog>

@@ -1,10 +1,11 @@
 {# templates/mails/admin_new_user.html.twig #}
+{% trans_default_domain 'emails' %}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>新規会員登録</title>
+		<title>{{ 'admin_new_user.title'|trans }}</title>
 
 		<style>
 			body {
@@ -214,14 +215,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
 								</div>
 
 								<h1>
-									新規会員登録
+									{{ 'admin_new_user.title'|trans }}
 								</h1>
 
 							</td>
@@ -233,15 +234,15 @@
 							<td class="content">
 
 								<p class="greeting">
-									管理者様
+									{{ 'common.admin'|trans }}
 								</p>
 
 								<p>
-									新しい会員登録リクエストが届きましたのでお知らせいたします。内容をご確認のうえ、承認の対応をお願いいたします。
+									{{ 'admin_new_user.intro'|trans }}
 								</p>
 
 								<p class="section-title">
-									登録者情報
+									{{ 'common.applicant_info'|trans }}
 								</p>
 
 								<div class="details-box">
@@ -249,12 +250,12 @@
 									<table role="presentation">
 
 										<tr>
-											<td class="label">氏名</td>
+											<td class="label">{{ 'common.name'|trans }}</td>
 											<td class="value">{{ user.name }} {{ user.lastname }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">メールアドレス</td>
+											<td class="label">{{ 'common.email'|trans }}</td>
 											<td class="value">{{ user.email }}</td>
 										</tr>
 
@@ -265,7 +266,7 @@
 								<div class="button-wrapper">
 
 									<a href="{{ absolute_url(ea_url().setController('App\\Controller\\Admin\\PendingUserCrudController')) }}" class="button">
-										管理画面で確認する
+										{{ 'common.open_admin'|trans }}
 									</a>
 
 								</div>
@@ -278,7 +279,7 @@
 
 							<td class="footer">
 
-								<strong>Setoushi Circus Factory - 予約システム</strong>
+								<strong>{{ 'common.footer_brand'|trans }}</strong>
 
 								<br><br>
 
@@ -287,7 +288,7 @@
 
 								<br><br>
 
-								このメールは自動送信されています。返信はご遠慮ください。
+								{{ 'common.auto_no_reply'|trans }}
 
 							</td>
 

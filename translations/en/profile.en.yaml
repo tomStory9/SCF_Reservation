@@ -65,6 +65,20 @@ account:
     verified: 'Verified'
     pending: 'Pending'
     not_provided: 'Not provided'
+    edit_button: 'Edit my information'
+    edit_title: 'Edit profile'
+    cancel_button: 'Cancel'
+    save_button: 'Save changes'
+
+  password:
+    edit_button: 'Change my password'
+    edit_title: 'Change password'
+    current: 'Current password'
+    new: 'New password'
+    confirm: 'Confirm new password'
+    save_button: 'Update password'
+    update_success: 'Your password has been changed successfully.'
+    mismatch: 'The two new passwords do not match.'
 
 booking:
   status:

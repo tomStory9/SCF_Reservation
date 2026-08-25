@@ -65,6 +65,20 @@ account:
     verified: '確認済み'
     pending: '確認待ち'
     not_provided: '未登録'
+    edit_button: '登録情報を編集'
+    edit_title: 'プロフィール編集'
+    cancel_button: 'キャンセル'
+    save_button: '変更を保存'
+
+  password:
+    edit_button: 'パスワードを変更'
+    edit_title: 'パスワード変更'
+    current: '現在のパスワード'
+    new: '新しいパスワード'
+    confirm: '新しいパスワード（確認）'
+    save_button: 'パスワードを更新'
+    update_success: 'パスワードを変更しました。'
+    mismatch: '新しいパスワードが一致しません。'
 
 booking:
   status:

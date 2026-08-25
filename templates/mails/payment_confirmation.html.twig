@@ -1,9 +1,10 @@
+{% trans_default_domain 'emails' %}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>お支払い完了</title>
+		<title>{{ 'payment.title'|trans }}</title>
 
 		<style>
 			body {
@@ -169,14 +170,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
 								</div>
 
 								<h1>
-									お支払い完了
+									{{ 'payment.title'|trans }}
 								</h1>
 
 							</td>
@@ -190,16 +191,16 @@
 								<div class="status-icon">&#10003;</div>
 
 								<p>
-									お支払いを確認しました。
+									{{ 'payment.confirmed'|trans }}
 								</p>
 
 								<div class="details-box">
-									<p><strong>ユーザー：</strong> {{ user.fullName }}</p>
-									<p style="margin-top:8px;"><strong>金額：</strong> {{ transaction.paidPrice }} {{ currency|default('JPY') }}</p>
+									<p><strong>{{ 'common.user'|trans }}</strong> {{ user.fullName }}</p>
+									<p style="margin-top:8px;"><strong>{{ 'common.amount'|trans }}</strong> {{ transaction.paidPrice }} {{ currency|default('JPY') }}</p>
 								</div>
 
 								<p style="margin:0; font-size:14px; color:#6b7280;">
-									予約が確定しました。
+									{{ 'payment.booking_confirmed'|trans }}
 								</p>
 
 							</td>
@@ -210,7 +211,7 @@
 
 							<td class="footer">
 
-								<strong>Setoushi Circus Factory - 予約システム</strong>
+								<strong>{{ 'common.footer_brand'|trans }}</strong>
 
 								<br><br>
 
@@ -219,7 +220,7 @@
 
 								<br><br>
 
-								このメールは自動送信されています。返信はご遠慮ください。
+								{{ 'common.auto_no_reply'|trans }}
 
 							</td>
 

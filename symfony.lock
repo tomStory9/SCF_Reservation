@@ -98,6 +98,9 @@
             "bin/phpunit"
         ]
     },
+    "stof/doctrine-extensions-bundle": {
+        "version": "v1.15.3"
+    },
     "stripe/stripe-php": {
         "version": "21.1",
         "recipe": {

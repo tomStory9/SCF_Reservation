@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const priceContainer = document.getElementById('price-container');
     const priceDisplay = document.getElementById('price-display');
     const submitButton = document.getElementById('submit_booking');
+    const termsConsentInput = document.getElementById('terms-consent');
 
     if (!calendarEl || !config) return;
 
@@ -267,10 +268,21 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            if (!termsConsentInput?.checked) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: texts.warningTitle,
+                    text: texts.acceptTerms
+                });
+                termsConsentInput?.focus();
+                return;
+            }
+
             const payload = {
                 ...currentSelection,
                 roomId: activeRoomId,
-                bookingMode: 'room_night'
+                bookingMode: 'room_night',
+                termsAccepted: termsConsentInput.checked
             };
 
             try {

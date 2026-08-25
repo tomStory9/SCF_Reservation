@@ -1,10 +1,11 @@
+{% trans_default_domain 'emails' %}
 {# templates/mails/booking_rejected.html.twig #}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>予約に関するお知らせ</title>
+		<title>{{ 'booking_rejected.title'|trans }}</title>
 
 		<style>
 			body {
@@ -162,14 +163,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
 								</div>
 
 								<h1>
-									予約に関するお知らせ
+									{{ 'booking_rejected.title'|trans }}
 								</h1>
 
 							</td>
@@ -181,25 +182,25 @@
 							<td class="content">
 
 								<p class="greeting">
-									{{ user.fullName }} 様
+									{{ 'common.dear'|trans({'%name%': user.fullName}) }}
 								</p>
 
 								<p>
-									このたびのご予約についてお知らせいたします。
+									{{ 'booking_rejected.intro'|trans }}
 								</p>
 
 								<div class="reject-box">
 									<p>
-										申し訳ございませんが、今回のご予約を承認することができませんでした。
+										{{ 'booking_rejected.denied'|trans }}
 									</p>
 								</div>
 
 								<p style="margin:0 0 16px; color:#4b5563; font-size:14px;">
-									このメールにお支払い用のリンクは含まれておりません。
+									{{ 'booking_rejected.no_payment'|trans }}
 								</p>
 
 								<p style="margin:0; color:#4b5563; font-size:14px;">
-									今回の処理に心当たりがない場合、または誤りと思われる場合は、サイト管理者までお問い合わせください。
+									{{ 'booking_rejected.contact'|trans }}
 								</p>
 
 							</td>
@@ -210,7 +211,7 @@
 
 							<td class="footer">
 
-								<strong>Setoushi Circus Factory - 予約システム</strong>
+								<strong>{{ 'common.footer_brand'|trans }}</strong>
 
 								<br><br>
 
@@ -219,8 +220,8 @@
 
 								<br><br>
 
-								このメールはご予約に関する重要なお知らせです。<br>
-								ご不明な点がございましたら、サイト管理者までご連絡ください。
+								{{ 'common.important_booking'|trans }}<br>
+								{{ 'common.contact_admin'|trans }}
 
 							</td>
 

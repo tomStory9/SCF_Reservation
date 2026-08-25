@@ -71,6 +71,7 @@
 
                     bookingErrorTitle: 'js.booking_error_title'|trans,
                     bookingError: 'js.booking_error'|trans,
+                    acceptTerms: 'js.accept_terms'|trans,
 
                     networkErrorTitle: 'js.network_error_title'|trans,
                     networkError: 'js.network_error'|trans,
@@ -451,6 +452,24 @@
                                 id="button_submit_booking"
                                 class="mt-6 pt-2"
                             >
+                                <div class="mb-4 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+                                    <input
+                                        id="terms-consent"
+                                        type="checkbox"
+                                        required
+                                        aria-required="true"
+                                        class="mt-1 h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
+                                    >
+                                    <label for="terms-consent" class="text-sm leading-6 text-state">
+                                        {{ 'ui.terms_consent_before'|trans }}<a
+                                            href="{{ path('app_terms') }}"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="font-semibold text-primary underline hover:text-secondary"
+                                        >{{ 'ui.terms_link'|trans }}</a>{{ 'ui.terms_consent_after'|trans }}
+                                        <span aria-hidden="true" class="text-red-600">*</span>
+                                    </label>
+                                </div>
                                 <button
                                     id="submit_booking"
                                     type="button"

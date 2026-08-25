@@ -71,6 +71,9 @@ class Booking
     #[ORM\Column]
     private ?int $TotalPrice = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $termsAcceptedAt = null;
+
     public function __construct()
     {
         $this->bookingEquipment = new ArrayCollection();
@@ -297,6 +300,18 @@ class Booking
     public function setTotalPrice(int $TotalPrice): static
     {
         $this->TotalPrice = $TotalPrice;
+
+        return $this;
+    }
+
+    public function getTermsAcceptedAt(): ?\DateTimeImmutable
+    {
+        return $this->termsAcceptedAt;
+    }
+
+    public function setTermsAcceptedAt(?\DateTimeImmutable $termsAcceptedAt): static
+    {
+        $this->termsAcceptedAt = $termsAcceptedAt;
 
         return $this;
     }

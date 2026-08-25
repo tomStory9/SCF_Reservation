@@ -25,6 +25,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const locale = calendarElement.dataset.locale || 'fr';
+    const browserLocales = {
+        fr: 'fr-FR',
+        en: 'en-GB',
+        ja: 'ja-JP'
+    };
+    const translations = {
+        unknownEquipment: modal?.dataset.unknownEquipment || '-',
+        quantity: modal?.dataset.quantityLabel || '',
+        unitPrice: modal?.dataset.unitPriceLabel || '',
+        totalPrice: modal?.dataset.totalPriceLabel || '',
+        yes: modal?.dataset.yes || '',
+        no: modal?.dataset.no || '',
+        approveError: modal?.dataset.approveError || '',
+        declineError: modal?.dataset.declineError || ''
+    };
     let allEvents = [];
 
     try {
@@ -38,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return '-';
         }
 
-        return new Intl.DateTimeFormat('fr-FR', {
+        return new Intl.DateTimeFormat(browserLocales[locale] || browserLocales.fr, {
             dateStyle: 'full',
             timeStyle: 'short'
         }).format(new Date(value));
@@ -51,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return '-';
         }
 
-        return new Intl.NumberFormat('ja-JP', {
+        return new Intl.NumberFormat(browserLocales[locale] || browserLocales.ja, {
             style: 'currency',
             currency: 'JPY',
             maximumFractionDigits: 0
@@ -94,18 +109,19 @@ document.addEventListener('DOMContentLoaded', () => {
             item.className = 'booking-equipment-item';
 
             const name = document.createElement('strong');
-            name.textContent = equipment.name || equipment.equipmentName || 'Équipement inconnu';
+            name.textContent =
+                equipment.name || equipment.equipmentName || translations.unknownEquipment;
 
             const quantity = document.createElement('span');
-            quantity.textContent = `Quantité : ${equipment.quantity ?? 0}`;
+            quantity.textContent = `${translations.quantity}: ${equipment.quantity ?? 0}`;
 
             const unitPrice = document.createElement('span');
-            unitPrice.textContent = `Prix unitaire : ${formatPrice(
+            unitPrice.textContent = `${translations.unitPrice}: ${formatPrice(
                 equipment.unitPrice ?? equipment.equipmentUnitPrice
             )}`;
 
             const totalPrice = document.createElement('span');
-            totalPrice.textContent = `Prix total : ${formatPrice(
+            totalPrice.textContent = `${translations.totalPrice}: ${formatPrice(
                 equipment.totalPrice ?? equipment.bookingEquipmentTotalPrice
             )}`;
 
@@ -130,14 +146,14 @@ document.addEventListener('DOMContentLoaded', () => {
         safeSetText('modal-booking-start', formatDate(event.start));
         safeSetText('modal-booking-end', formatDate(event.end));
         safeSetText('modal-booking-guest-count', props.guests ?? '-');
-        safeSetText('modal-booking-full-day', props.isFullDay ? 'Oui' : 'Non');
+        safeSetText('modal-booking-full-day', props.isFullDay ? translations.yes : translations.no);
         safeSetText('modal-booking-booking-price', formatPrice(props.amount));
         safeSetText('modal-booking-equipment-total', formatPrice(props.equipmentTotalPrice));
         safeSetText('modal-booking-total-price', formatPrice(props.totalPrice));
 
         renderEquipmentList(props.equipment);
 
-        const isPending = ['En attente', 'Pending', 'pending'].includes(props.status);
+        const isPending = props.statusCode === 'pending';
 
         if (approveButton) {
             approveButton.hidden = !isPending;
@@ -238,7 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!response.ok) {
             console.error('[admin-dashboard] Failed to approve booking:', bookingId);
-            alert("Erreur lors de l'approbation");
+            alert(translations.approveError);
             return;
         }
 
@@ -261,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!response.ok) {
             console.error('[admin-dashboard] Failed to decline booking:', bookingId);
-            alert('Erreur lors du refus');
+            alert(translations.declineError);
             return;
         }
 

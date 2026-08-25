@@ -9,6 +9,7 @@ use App\Repository\SettingsRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MailerService
 {
@@ -18,23 +19,27 @@ class MailerService
         private string $mailerAddress,
         #[Autowire(env: 'ADMIN_ADDRESS')]
         private string $adminAddress,
-        private SettingsRepository $settingsRepository
+        private SettingsRepository $settingsRepository,
+        private TranslatorInterface $translator,
     ) {
     }
 
-    public function sendReminderEmail(Booking $booking, string $reminderLabel): void
+    public function sendReminderEmail(Booking $booking, string $reminderKey): void
     {
+        $locale = $this->getUserLocale($booking->getUserBooking());
+
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($booking->getUserBooking()->getEmail())
-            ->subject('予約リマインダー')
+            ->subject($this->translate('subject.booking_reminder', $locale))
             ->htmlTemplate('mails/booking_reminder.html.twig')
-            ->locale($$booking->getUserBooking()->getLanguage())
+            ->locale($locale)
             ->context([
                 'booking' => $booking,
                 'user' => $booking->getUserBooking(),
-                'reminderLabel' => $reminderLabel,
+                'reminderLabel' => $this->translate('reminder.'.$reminderKey, $locale),
                 'timezone' => 'Asia/Tokyo',
+                'emailLocale' => $locale,
             ]);
 
         $this->mailerInterface->send($email);
@@ -42,39 +47,46 @@ class MailerService
 
     public function sendApprovedEmail(User $user): void
     {
+        $locale = $this->getUserLocale($user);
+
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->locale($user->getLanguage())
-            ->subject('アカウントが承認されました')
+            ->locale($locale)
+            ->subject($this->translate('subject.account_approved', $locale))
             ->htmlTemplate('security/mails/account_creation_accepted.html.twig')
-            ->context(['user' => $user]);
+            ->context(['user' => $user, 'emailLocale' => $locale]);
         $this->mailerInterface->send($email);
     }
 
     public function sendDeniedEmail(User $user): void
     {
+        $locale = $this->getUserLocale($user);
+
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('アカウント申請が承認されませんでした')
-            ->locale($user->getLanguage())
+            ->subject($this->translate('subject.account_denied', $locale))
+            ->locale($locale)
             ->htmlTemplate('security/mails/account_creation_denied.html.twig')
-            ->context(['user' => $user]);
+            ->context(['user' => $user, 'emailLocale' => $locale]);
         $this->mailerInterface->send($email);
     }
 
     public function sendPaymentConfirmationEmail(User $user, Transaction $transaction): void
     {
+        $locale = $this->getUserLocale($user);
+
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('お支払い確認')
-            ->locale($user->getLanguage())
+            ->subject($this->translate('subject.payment_confirmation', $locale))
+            ->locale($locale)
             ->htmlTemplate('mails/payment_confirmation.html.twig')
             ->context([
                 'user' => $user,
                 'transaction' => $transaction,
+                'emailLocale' => $locale,
             ]);
 
         $this->mailerInterface->send($email);
@@ -82,15 +94,18 @@ class MailerService
 
     public function sendBookingPending(Booking $booking, User $user): void
     {
+        $locale = $this->getUserLocale($user);
+
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
-            ->to($this->adminAddress)
-            ->subject('Votre demande de reservation à bien été prise en compte')
-            ->locale($user->getLanguage())
+            ->to($user->getEmail())
+            ->subject($this->translate('subject.booking_pending', $locale))
+            ->locale($locale)
             ->htmlTemplate('mails/booking_pending.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,
+                'emailLocale' => $locale,
             ]);
 
         $this->mailerInterface->send($email);
@@ -98,16 +113,19 @@ class MailerService
 
     public function sendBookingConfirmationEmail(User $user, Booking $booking): void
     {
+        $locale = $this->getUserLocale($user);
+
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('予約確認')
-            ->locale($user->getLanguage())
+            ->subject($this->translate('subject.booking_confirmation', $locale))
+            ->locale($locale)
             ->htmlTemplate('mails/booking_confirmation.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,
                 'stripe_checkout_url' => $booking->getStripeCheckoutUrl(),
+                'emailLocale' => $locale,
             ]);
 
         $this->mailerInterface->send($email);
@@ -115,15 +133,18 @@ class MailerService
 
     public function sendBookingDeniedEmail(User $user, Booking $booking): void
     {
+        $locale = $this->getUserLocale($user);
+
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($user->getEmail())
-            ->subject('予約に関するお知らせ')
-            ->locale($user->getLanguage())
+            ->subject($this->translate('subject.booking_rejected', $locale))
+            ->locale($locale)
             ->htmlTemplate('mails/booking_rejected.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,
+                'emailLocale' => $locale,
             ]);
 
         $this->mailerInterface->send($email);
@@ -134,11 +155,12 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($this->adminAddress)
-            ->subject('Un nouvel utilisateur a été crée')
+            ->subject($this->translate('subject.admin_new_user', 'ja'))
             ->locale('ja')
             ->htmlTemplate('mails/new_user_created.html.twig')
             ->context([
                 'user' => $user,
+                'emailLocale' => 'ja',
             ]);
 
         $this->mailerInterface->send($email);
@@ -149,34 +171,47 @@ class MailerService
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
             ->to($this->adminAddress)
-            ->subject('Une nouvelle demande de reservation à été crée')
+            ->subject($this->translate('subject.admin_new_booking', 'ja'))
             ->locale('ja')
             ->htmlTemplate('mails/new_booking_created.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,
+                'emailLocale' => 'ja',
             ]);
 
         $this->mailerInterface->send($email);
     }
 
-    public function sendRoomBookingConfirmationEmail(Booking $booking, User $user)
+    public function sendRoomBookingConfirmationEmail(Booking $booking, User $user): void
     {
+        $locale = $this->getUserLocale($user);
         $checkInHour = $this->settingsRepository->getSettings()->getHourCheckInRoom();
         $checkOutHour = $this->settingsRepository->getSettings()->getHourCheckOut();
         $email = new TemplatedEmail()
             ->from($this->mailerAddress)
-            ->to($this->adminAddress)
-            ->subject('Votre demande de reservation pour une chambre à bien été prise en compte')
-            ->locale($user->getLanguage())
+            ->to($user->getEmail())
+            ->subject($this->translate('subject.room_booking_pending', $locale))
+            ->locale($locale)
             ->htmlTemplate('mails/new_room_booking.html.twig')
             ->context([
                 'user' => $user,
                 'booking' => $booking,
                 'checkInHour' => $checkInHour,
                 'checkOutHour' => $checkOutHour,
+                'emailLocale' => $locale,
             ]);
 
         $this->mailerInterface->send($email);
+    }
+
+    private function getUserLocale(User $user): string
+    {
+        return $user->getLanguage();
+    }
+
+    private function translate(string $key, string $locale): string
+    {
+        return $this->translator->trans($key, domain: 'emails', locale: $locale);
     }
 }

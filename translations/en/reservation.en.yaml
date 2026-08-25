@@ -39,6 +39,9 @@ ui:
   select_for_equipment: "Select a zone and time slot to view available equipment."
   equipment_total: "Equipment total:"
   grand_total: "Grand total:"
+  terms_consent_before: "I agree to the "
+  terms_link: "terms and conditions"
+  terms_consent_after: ""
   submit: "Book this time slot"
 
 js:
@@ -73,6 +76,7 @@ js:
   submit_booking: "Book this time slot"
   booking_error_title: "Error"
   booking_error: "The booking could not be saved."
+  accept_terms: "You must accept the terms and conditions to book."
   network_error_title: "Network error"
   network_error: "An error occurred while communicating with the server."
   pricing_loading_error: "Could not load pricing"
@@ -88,3 +92,4 @@ js:
   grand_total: "Grand total:"
   used_hours: "h used out of 12 h"
   selected_period_event: "Selected period · {period}"
+  blocked_period: "Blocked period"

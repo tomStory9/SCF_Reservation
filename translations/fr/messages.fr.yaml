@@ -4,6 +4,10 @@ app:
   logo_1: "Logo SCF"
   logo_2: "Logo Kitokuras"
 
+legal:
+  terms:
+    title: "Conditions générales d’utilisation"
+
 flash:
   email_verified: "Votre adresse email a été vérifiée."
   booking_created: "Votre réservation a bien été enregistrée et est en attente de validation."
@@ -15,6 +19,7 @@ api:
   error:
     user_not_authenticated: "Utilisateur non connecté."
     invalid_data: "Données invalides."
+    terms_consent_required: "Vous devez accepter les conditions générales d’utilisation pour réserver."
     missing_dates: "Les paramètres startDate et endDate sont obligatoires."
     invalid_date_format: "Le format des dates est invalide."
     invalid_date_order: "La date de fin doit être postérieure à la date de début."
@@ -74,13 +79,27 @@ admin:
       empty_title: "Aucun compte"
       empty_text: "Les nouveaux comptes apparaîtront ici."
       verified: "Adresse email vérifiée"
+    modal:
+      kicker: "Détail de la demande"
+      title: "Détails de la réservation"
+      close_aria: "Fermer la fenêtre"
+      close: "Fermer"
+      full_day: "Journée complète"
+      booking_price: "Prix de la réservation"
+      equipment_price: "Prix des équipements"
+      total_price: "Prix total"
+      unknown_equipment: "Équipement inconnu"
+      quantity: "Quantité"
+      unit_price: "Prix unitaire"
+      approve_error: "Impossible d’approuver la réservation."
+      decline_error: "Impossible de refuser la réservation."
   menu:
     return_to_app: "Retour à l'application"
     dashboard: "Tableau de bord"
     users: "Utilisateurs"
     user_roles: "Rôles utilisateurs"
     bookings: "Réservations"
-    facilities: "Facilities"
+    facilities: "Sites"
     zones: "Lieux"
     pricing: "Tarifs"
     time_slots: "Créneaux de réservation"
@@ -108,12 +127,18 @@ admin:
     equipment: "Équipement"
     equipments: "Équipements"
     settings: "Paramètres du site"
+    facility: "Site"
+    facilities: "Sites"
     blockout_period: "Période bloquée"
     blockout_periods: "Périodes bloquées"
   action:
     approve: "Approuver"
     decline: "Refuser"
+    ban: "Bannir"
+    history: "Historique"
     view_month: "Voir le mois"
+  confirm:
+    ban_user: "Bannir cet utilisateur ? Il sera immédiatement déconnecté et ne pourra plus se connecter."
   field:
     id: "Identifiant"
     email: "Adresse email"
@@ -121,17 +146,19 @@ admin:
     first_name: "Prénom"
     last_name: "Nom"
     phone: "Téléphone"
-    company: "Entreprise"
+    company: "Compagnie de cirque"
+    language: "Langue des emails"
     google_id: "Identifiant Google"
     line_id: "Identifiant LINE"
     verified_user: "Utilisateur vérifié"
+    new_password: "Nouveau mot de passe"
     role_name: "Nom du rôle"
     label: "Libellé"
     allocated_hours: "Heures gratuites mensuelles"
     max_advance_booking: "Délai maximal de réservation à l’avance"
     tarif: "Tarif"
     zone: "Zone"
-    facility: "Zone mère"
+    facility: "Site"
     user: "Utilisateur"
     start_date: "Date de début"
     end_date: "Date de fin"
@@ -157,11 +184,18 @@ admin:
     unit_price: "Prix unitaire"
     max_quantity: "Quantité maximale"
     gestion_chambre: "Gestion des chambres"
+    gestion_reservations: "Gestion des réservations d’espaces"
     securite_inscription: "Sécurité et inscriptions"
     reserver_chambre: "Réservation des chambres"
     validation_manuelle: "Validation manuelle requise"
+    min_day_room_booking: "Délai minimal de réservation d’une chambre"
+    hour_checkin_room: "Heure d’arrivée en chambre"
+    hour_checkout: "Heure de départ de la chambre"
+    pending_room_blocking: "Les demandes de chambre en attente bloquent les dates"
+    min_day_booking: "Délai minimal de réservation d’un espace"
+    pending_booking_blocking: "Les demandes d’espace en attente bloquent les créneaux"
     address: "Adresse"
-    internationalAddres: "Adresse International"
+    internationalAddress: "Adresse internationale"
     active: "Période active"
   filter:
     time_slot: "Créneau horaire"
@@ -176,6 +210,9 @@ admin:
     user_no_longer_pending: "Ce compte n’est plus en attente."
     user_approved: "Le compte a été approuvé."
     user_declined: "Le compte a été refusé."
+    user_banned: "Le compte a été banni."
+    user_already_banned: "Ce compte est déjà banni."
+    cannot_ban_yourself: "Vous ne pouvez pas bannir votre propre compte."
   enum:
     booking_status:
       pending: "En attente"
@@ -202,6 +239,10 @@ admin:
       fa_user: "Artiste ami"
       tm_user: "Membre stagiaire"
       default_user: "Utilisateur standard"
+    language:
+      fr: "Français"
+      en: "Anglais"
+      ja: "Japonais"
     week_day:
       monday: "Lundi"
       tuesday: "Mardi"
@@ -226,10 +267,47 @@ admin:
     unknown_zone: "Zone inconnue"
     back: "Retour aux réservations"
   help:
+    new_password: "Laissez ce champ vide pour conserver le mot de passe actuel."
     help_room_enable: "Si désactivé, le bouton disparaît de la navbar et les réservations sont bloquées pour les utilisateurs."
     help_verification_user: "Si activé, les administrateurs devront approuver chaque nouveau compte. Si désactivé, les comptes sont approuvés automatiquement."
+    help_min_day_room_booking: "Nombre minimal de jours entre la demande et l’arrivée."
+    help_hour_checkin_room: "Heure d’arrivée, exprimée de 0 à 23."
+    help_hour_checkout: "Heure de départ, exprimée de 0 à 23."
+    help_pending_room_blocking: "Si activé, une demande en attente rend immédiatement la chambre indisponible pour les autres utilisateurs."
+    help_min_day_booking: "Nombre minimal de jours entre la demande et le début de la réservation."
+    help_pending_booking_blocking: "Si activé, une demande en attente rend immédiatement le créneau indisponible pour les autres utilisateurs."
   settings:
     title: "Configuration du site"
+  user_history:
+    title: "Historique de %user%"
+    back: "Retour aux utilisateurs"
+    date: "Date"
+    actor: "Auteur"
+    action: "Action"
+    changes: "Modifications"
+    system: "Système"
+    empty: "Aucune modification n’a encore été enregistrée pour cet utilisateur."
+    no_changes: "Aucun champ détaillé"
+    empty_value: "Valeur vide"
+    yes: "Oui"
+    no: "Non"
+    actions:
+      create: "Création"
+      update: "Modification"
+      remove: "Suppression"
+    fields:
+      email: "Adresse email"
+      roles: "Type d’utilisateur"
+      name: "Prénom"
+      lastname: "Nom"
+      phone: "Téléphone"
+      company: "Compagnie de cirque"
+      googleId: "Identifiant Google"
+      lineId: "Identifiant LINE"
+      filledInfo: "Informations complétées"
+      isVerified: "Adresse email vérifiée"
+      userStatus: "Statut"
+      Language: "Langue des emails"
   booking_detail:
       title: 'Réservation #%id%'
       back_to_list: 'Retour à la liste'
@@ -239,7 +317,7 @@ admin:
       full_name: 'Nom complet'
       email: 'Email'
       phone: 'Téléphone'
-      company: 'Entreprise'
+      company: 'Compagnie de cirque'
 
       stay_details: 'Détails du Séjour'
       zone: 'Zone'
@@ -260,6 +338,9 @@ admin:
 
       tracking: 'Suivi'
       created_at: 'Créée le'
+      terms_consent: 'Consentement aux CGU'
+      terms_accepted_at: 'Acceptées le %date%'
+      terms_not_recorded: 'Non enregistré'
       check_in: 'Check-in'
       check_out: 'Check-out'
 

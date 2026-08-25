@@ -1,9 +1,10 @@
+{% trans_default_domain 'emails' %}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 <head>
     <meta charset="UTF-8">
-    <title>パスワードの再設定</title>
+    <title>{{ 'reset_password.title'|trans }}</title>
 
     <style>
         body {
@@ -160,14 +161,14 @@
 
                         <div class="logo-box">
 
-                            <img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+                            <img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-                            <img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+                            <img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
                         </div>
 
                         <h1>
-                            パスワードの再設定
+                            {{ 'reset_password.title'|trans }}
                         </h1>
 
                     </td>
@@ -179,18 +180,17 @@
                     <td class="content">
 
                         <p>
-                            こんにちは。
+                            {{ 'common.hello'|trans }}
                         </p>
 
                         <p>
-                            Setoushi Circus Factory のアカウントに対して、パスワード再設定のリクエストがありました。<br>
-                            新しいパスワードを設定するには、以下のボタンをクリックしてください。
+                            {{ 'reset_password.instructions'|trans|nl2br }}
                         </p>
 
                         <div class="button-wrapper">
 
                             <a href="{{ url('app_reset_password', {token: resetToken.token}) }}" class="button">
-                                パスワードを再設定する
+                                {{ 'reset_password.button'|trans }}
                             </a>
 
                         </div>
@@ -199,12 +199,12 @@
 
                         <div class="info">
                             <strong>
-                                このリンクの有効期限は {{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }} です。
+                                {{ 'reset_password.expiration'|trans({'%expiration%': resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle')}) }}
                             </strong>
                         </div>
 
                         <p style="margin-top:32px">
-                            もしこのリクエストに覚えがない場合は、このメールを無視していただいて構いません。現在のパスワードはそのまま維持されます。
+                            {{ 'reset_password.ignore'|trans }}
                         </p>
 
                     </td>
@@ -215,7 +215,7 @@
 
                     <td class="footer">
 
-                        <strong>Setoushi Circus Factory - 予約システム</strong>
+                        <strong>{{ 'common.footer_brand'|trans }}</strong>
 
                         <br><br>
 
@@ -224,7 +224,7 @@
 
                         <br><br>
 
-                        このメールは自動送信されています。返信はご遠慮ください。
+                        {{ 'common.auto_no_reply'|trans }}
 
                     </td>
 

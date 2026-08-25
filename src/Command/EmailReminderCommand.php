@@ -37,10 +37,10 @@ class EmailReminderCommand extends Command
         $this->logger->info('email:reminder コマンドを開始しました。');
 
         $reminders = [
-            ['+3 months', '3か月後'],
-            ['+1 month', '1か月後'],
-            ['+1 week', '1週間後'],
-            ['+1 day', '明日'],
+            ['+3 months', 'three_months', '3か月後'],
+            ['+1 month', 'one_month', '1か月後'],
+            ['+1 week', 'one_week', '1週間後'],
+            ['+1 day', 'tomorrow', '明日'],
         ];
 
         $globalFound = 0;
@@ -48,7 +48,7 @@ class EmailReminderCommand extends Command
         $globalErrors = 0;
 
         try {
-            foreach ($reminders as [$modifier, $label]) {
+            foreach ($reminders as [$modifier, $reminderKey, $label]) {
                 $bookings = $this->bookingRepository->findAllBookingInACertainTime($modifier);
                 $total = count($bookings);
 
@@ -82,7 +82,7 @@ class EmailReminderCommand extends Command
                         $io->text($processingMessage);
                         $this->logger->info($processingMessage);
 
-                        $this->mailerService->sendReminderEmail($booking, $label);
+                        $this->mailerService->sendReminderEmail($booking, $reminderKey);
 
                         ++$globalSuccess;
 

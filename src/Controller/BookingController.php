@@ -83,6 +83,13 @@ final class BookingController extends AbstractController
             return new JsonResponse(['success' => false, 'error' => $this->translator->trans('api.error.invalid_data')], Response::HTTP_BAD_REQUEST);
         }
 
+        if (true !== ($data['termsAccepted'] ?? false)) {
+            return new JsonResponse([
+                'success' => false,
+                'error' => $this->translator->trans('api.error.terms_consent_required'),
+            ], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         try {
             $this->bookingService->createBooking($data, $user);
         } catch (\Exception $exception) {
@@ -115,7 +122,7 @@ final class BookingController extends AbstractController
         if (!$booking) {
             return new JsonResponse([
                 'success' => false,
-                'error' => 'Réservation introuvable.',
+                'error' => $this->translator->trans('admin.flash.booking_not_found'),
             ], Response::HTTP_NOT_FOUND);
         }
 
@@ -123,7 +130,7 @@ final class BookingController extends AbstractController
 
         return new JsonResponse([
             'success' => true,
-            'message' => 'La réservation a bien été validée.',
+            'message' => $this->translator->trans('admin.flash.booking_approved'),
         ]);
     }
 
@@ -140,7 +147,7 @@ final class BookingController extends AbstractController
         if (!$booking) {
             return new JsonResponse([
                 'success' => false,
-                'error' => 'Réservation introuvable.',
+                'error' => $this->translator->trans('admin.flash.booking_not_found'),
             ], Response::HTTP_NOT_FOUND);
         }
 
@@ -148,7 +155,7 @@ final class BookingController extends AbstractController
 
         return new JsonResponse([
             'success' => true,
-            'message' => 'La réservation a bien été refusée.',
+            'message' => $this->translator->trans('admin.flash.booking_declined'),
         ]);
     }
 }

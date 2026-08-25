@@ -1,0 +1,153 @@
+subject:
+  booking_reminder: 'Booking reminder'
+  account_approved: 'Your account has been approved'
+  account_denied: 'Your account request was not approved'
+  payment_confirmation: 'Payment confirmation'
+  booking_pending: 'We have received your booking request'
+  booking_confirmation: 'Booking confirmation'
+  booking_rejected: 'Information about your booking'
+  admin_new_user: 'New account request'
+  admin_new_booking: 'New booking request'
+  room_booking_pending: 'We have received your room booking request'
+  verify_email: 'Please verify your email address'
+  email_update: 'Please verify your new email address'
+  reset_password: 'Reset your password'
+
+reminder:
+  three_months: 'in three months'
+  one_month: 'in one month'
+  one_week: 'in one week'
+  tomorrow: 'tomorrow'
+
+common:
+  scf_logo: 'SCF logo'
+  kitokuras_logo: 'Kitokuras logo'
+  dear: 'Hello %name%,'
+  hello: 'Hello,'
+  admin: 'Administrator,'
+  footer_brand: 'Setoushi Circus Factory - Booking system'
+  auto_generated: 'This email was sent automatically.'
+  auto_no_reply: 'This email was sent automatically. Please do not reply.'
+  important_booking: 'This email contains important information about your booking.'
+  contact_admin: 'If you have any questions, please contact the site administrator.'
+  contact: 'If you have any questions, please feel free to contact us.'
+  reply_contact: 'If you have any questions, you can reply directly to this email.'
+  ignore: 'If you did not make this request, you can ignore this email.'
+  login: 'Sign in'
+  open_admin: 'Open in admin panel'
+  applicant_info: 'Applicant information'
+  booking_details: 'Booking details'
+  zone: 'Zone'
+  start: 'Start date and time'
+  end: 'End date and time'
+  guests: 'Number of guests'
+  people: '%count% guest(s)'
+  equipment_used: 'Reserved equipment'
+  equipment_name: 'Equipment'
+  quantity: 'Quantity'
+  amount: 'Amount:'
+  price_details: 'Price breakdown'
+  zone_price: 'Zone price'
+  room_price: 'Room price'
+  equipment_price: 'Equipment price'
+  payment_amount: 'Amount due'
+  total: 'Total amount'
+  yen: '¥%amount%'
+  user: 'User:'
+  name: 'Name'
+  email: 'Email address'
+  full_day: 'All day'
+  yes: 'Yes'
+  no: 'No'
+  created_at: 'Request date'
+  room: 'Room'
+  checkin_date: 'Check-in date'
+  checkout_date: 'Check-out date'
+  checkin: 'Check-in'
+  checkout: 'Check-out'
+  location: 'Location'
+  address: 'Address'
+
+booking_confirmation:
+  title: 'Thank you for your booking'
+  thanks: 'Thank you very much for your booking.'
+  payment_instructions: 'To confirm your booking, please complete payment using the button below.'
+  payment_prompt: 'Make your payment'
+  payment_button: 'Proceed to payment'
+  link_fallback: 'If the button is not displayed, open the following link:'
+  payment_note: 'Your booking will be confirmed once payment is complete.'
+  ignore: 'If you did not make this booking, do not open the link and delete this email.'
+
+booking_pending:
+  title: 'We have received your booking request'
+  thanks: 'Thank you for your booking request.'
+  review: 'We are currently reviewing your request. We will email you shortly to let you know whether it has been approved or declined.'
+  no_payment_yet: 'No payment is required at this stage'
+  payment_later: 'If your booking is approved, we will send payment instructions in a separate email.'
+
+booking_rejected:
+  title: 'Information about your booking'
+  intro: 'We are contacting you about your booking request.'
+  denied: 'We are sorry, but we are unable to approve this booking.'
+  no_payment: 'This email does not contain a payment link.'
+  contact: 'If you did not make this request or believe this is a mistake, please contact the site administrator.'
+
+booking_reminder:
+  heading: 'Booking reminder'
+  title: 'Your booking is %when%'
+  intro: 'Your booking date is approaching. Your booking is %when%.'
+  until_booking: 'Until your booking'
+
+room_booking_pending:
+  title: 'We have received your room booking request'
+  thanks: 'Thank you for your room booking request.'
+  review: 'We are currently reviewing your request. We will email you shortly to let you know whether it has been approved or declined.'
+
+payment:
+  title: 'Payment complete'
+  confirmed: 'We have received your payment.'
+  booking_confirmed: 'Your booking is now confirmed.'
+
+account_approved:
+  title: 'Your account has been approved'
+  confirmed: 'Your account has been approved.'
+  login_available: 'You can now sign in and use the service.'
+
+account_denied:
+  title: 'Account request result'
+  denied: 'Your account request was not approved.'
+  unavailable: 'We are sorry, but this account cannot currently access the service.'
+
+verify_email:
+  title: 'Verify your email address'
+  thanks: 'Hello, and thank you for registering on our site.'
+  instructions: 'Click the button below to verify your email address and activate your account.'
+  button: 'Verify my email address'
+  no_expiration: 'This verification link does not expire'
+  ignore: 'If you did not create an account, you can ignore this email.'
+
+email_update:
+  title: 'Verify your new email address'
+  thanks: 'Thank you for using our service.'
+  instructions: |-
+    This address has been registered as the new email address for your account.
+    Click the button below to complete verification.
+  button: 'Verify new email address'
+  warning: 'If you did not make this change, your account may have been compromised. Please contact us immediately.'
+
+reset_password:
+  title: 'Reset your password'
+  instructions: |-
+    A password reset was requested for your Setoushi Circus Factory account.
+    Click the button below to set a new password.
+  button: 'Reset my password'
+  expiration: 'This link will expire in %expiration%.'
+  ignore: 'If you did not make this request, ignore this email. Your current password will remain unchanged.'
+
+admin_new_user:
+  title: 'New account request'
+  intro: 'A new account request has been received. Please review the information and process its approval.'
+
+admin_new_booking:
+  title: 'New booking request'
+  intro: 'A new booking request has been received. Please review the information and approve or decline it.'

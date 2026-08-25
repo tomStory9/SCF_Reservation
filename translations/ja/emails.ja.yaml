@@ -1,0 +1,153 @@
+subject:
+  booking_reminder: '予約リマインダー'
+  account_approved: 'アカウントが承認されました'
+  account_denied: 'アカウント申請が承認されませんでした'
+  payment_confirmation: 'お支払い確認'
+  booking_pending: '予約申請を受け付けました'
+  booking_confirmation: '予約確認'
+  booking_rejected: '予約に関するお知らせ'
+  admin_new_user: '新規アカウント申請'
+  admin_new_booking: '新規予約申請'
+  room_booking_pending: '客室予約申請を受け付けました'
+  verify_email: 'メールアドレスの確認をお願いします'
+  email_update: '新しいメールアドレスの確認をお願いします'
+  reset_password: 'パスワードの再設定'
+
+reminder:
+  three_months: '3か月後'
+  one_month: '1か月後'
+  one_week: '1週間後'
+  tomorrow: '明日'
+
+common:
+  scf_logo: 'SCFロゴ'
+  kitokuras_logo: 'Kitokurasロゴ'
+  dear: '%name% 様'
+  hello: 'こんにちは。'
+  admin: '管理者様'
+  footer_brand: 'Setoushi Circus Factory - 予約システム'
+  auto_generated: 'このメールは自動送信されています。'
+  auto_no_reply: 'このメールは自動送信されています。返信はご遠慮ください。'
+  important_booking: 'このメールは予約に関する重要なお知らせです。'
+  contact_admin: 'ご不明な点がございましたら、サイト管理者までご連絡ください。'
+  contact: 'ご不明な点がございましたら、お気軽にお問い合わせください。'
+  reply_contact: 'ご不明な点がございましたら、このメールに返信してお問い合わせください。'
+  ignore: 'この申請に心当たりがない場合は、このメールを無視してください。'
+  login: 'ログインする'
+  open_admin: '管理画面で確認する'
+  applicant_info: '申請者情報'
+  booking_details: '予約内容'
+  zone: 'ゾーン'
+  start: '開始日時'
+  end: '終了日時'
+  guests: '利用人数'
+  people: '%count%名'
+  equipment_used: '利用設備'
+  equipment_name: '設備名'
+  quantity: '数量'
+  amount: '金額：'
+  price_details: '料金内訳'
+  zone_price: 'ゾーン料金'
+  room_price: '客室料金'
+  equipment_price: '設備料金'
+  payment_amount: 'お支払い金額'
+  total: '合計金額'
+  yen: '%amount%円'
+  user: 'ユーザー：'
+  name: '氏名'
+  email: 'メールアドレス'
+  full_day: '終日利用'
+  yes: 'はい'
+  no: 'いいえ'
+  created_at: '申請日時'
+  room: '客室'
+  checkin_date: 'チェックイン日'
+  checkout_date: 'チェックアウト日'
+  checkin: 'チェックイン'
+  checkout: 'チェックアウト'
+  location: '場所'
+  address: '住所'
+
+booking_confirmation:
+  title: 'ご予約ありがとうございます'
+  thanks: 'このたびはご予約いただき、誠にありがとうございます。'
+  payment_instructions: '予約を確定するには、以下のボタンからお支払い手続きを完了してください。'
+  payment_prompt: 'お支払いはこちら'
+  payment_button: 'お支払い手続きへ進む'
+  link_fallback: 'ボタンが表示されない場合は、以下のリンクを開いてください。'
+  payment_note: 'お支払いが完了すると、予約が確定します。'
+  ignore: '心当たりがない場合は、リンクを開かずに削除してください。'
+
+booking_pending:
+  title: '予約申請を受け付けました'
+  thanks: 'このたびは予約申請をいただき、誠にありがとうございます。'
+  review: '現在、予約内容を確認しております。承認または却下の結果は、追ってメールでお知らせいたします。'
+  no_payment_yet: 'この段階では、お支払い手続きは発生しません'
+  payment_later: '予約が承認された場合、改めてお支払いのご案内をお送りいたします。'
+
+booking_rejected:
+  title: '予約に関するお知らせ'
+  intro: 'このたびの予約申請についてお知らせいたします。'
+  denied: '申し訳ございませんが、今回の予約を承認することができませんでした。'
+  no_payment: 'このメールにお支払い用のリンクは含まれておりません。'
+  contact: 'この申請に心当たりがない場合、または誤りと思われる場合は、サイト管理者までお問い合わせください。'
+
+booking_reminder:
+  heading: '予約リマインダー'
+  title: '予約は%when%です'
+  intro: '予約日時が近づいております。予約は%when%です。'
+  until_booking: '予約まで'
+
+room_booking_pending:
+  title: '客室予約申請を受け付けました'
+  thanks: 'このたびは客室予約申請をいただき、誠にありがとうございます。'
+  review: '現在、予約内容を確認しております。承認または却下の結果は、追ってメールでお知らせいたします。'
+
+payment:
+  title: 'お支払い完了'
+  confirmed: 'お支払いを確認しました。'
+  booking_confirmed: '予約が確定しました。'
+
+account_approved:
+  title: 'アカウント承認のお知らせ'
+  confirmed: 'お客様のアカウントは承認されました。'
+  login_available: 'ログインが可能になりましたので、ぜひご利用ください。'
+
+account_denied:
+  title: 'アカウント申請結果のお知らせ'
+  denied: 'お客様のアカウント申請は承認されませんでした。'
+  unavailable: '誠に申し訳ございませんが、現在このアカウントではサービスをご利用いただけません。'
+
+verify_email:
+  title: 'メールアドレスを確認してください'
+  thanks: 'こんにちは。当サイトにご登録いただきありがとうございます。'
+  instructions: '下のボタンをクリックして、メールアドレスを確認し、アカウントを有効化してください。'
+  button: 'メールアドレスを確認する'
+  no_expiration: 'この確認リンクに有効期限はありません'
+  ignore: 'アカウントを作成した覚えがない場合は、このメールを無視してください。'
+
+email_update:
+  title: '新しいメールアドレスを確認してください'
+  thanks: 'いつもご利用いただきありがとうございます。'
+  instructions: |-
+    アカウントの新しいメールアドレスとして、このアドレスが登録されました。
+    下のボタンをクリックして、メールアドレスの確認を完了してください。
+  button: '新しいメールアドレスを確認する'
+  warning: 'この変更に心当たりがない場合は、第三者による不正アクセスの可能性があります。至急お問い合わせください。'
+
+reset_password:
+  title: 'パスワードの再設定'
+  instructions: |-
+    Setoushi Circus Factory のアカウントに対して、パスワード再設定のリクエストがありました。
+    新しいパスワードを設定するには、以下のボタンをクリックしてください。
+  button: 'パスワードを再設定する'
+  expiration: 'このリンクの有効期限は%expiration%です。'
+  ignore: 'このリクエストに心当たりがない場合は、このメールを無視してください。現在のパスワードはそのまま維持されます。'
+
+admin_new_user:
+  title: '新規アカウント申請'
+  intro: '新しいアカウント申請が届きました。内容をご確認のうえ、承認の対応をお願いいたします。'
+
+admin_new_booking:
+  title: '新規予約申請'
+  intro: '新しい予約申請が届きました。内容をご確認のうえ、承認または却下の対応をお願いいたします。'

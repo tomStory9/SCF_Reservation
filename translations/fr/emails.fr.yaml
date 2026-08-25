@@ -1,0 +1,153 @@
+subject:
+  booking_reminder: 'Rappel de réservation'
+  account_approved: 'Votre compte a été approuvé'
+  account_denied: 'Votre demande de compte n’a pas été approuvée'
+  payment_confirmation: 'Confirmation de paiement'
+  booking_pending: 'Votre demande de réservation a bien été prise en compte'
+  booking_confirmation: 'Confirmation de réservation'
+  booking_rejected: 'Information concernant votre réservation'
+  admin_new_user: 'Nouvelle demande de création de compte'
+  admin_new_booking: 'Nouvelle demande de réservation'
+  room_booking_pending: 'Votre demande de réservation de chambre a bien été prise en compte'
+  verify_email: 'Veuillez confirmer votre adresse e-mail'
+  email_update: 'Veuillez confirmer votre nouvelle adresse e-mail'
+  reset_password: 'Réinitialisation de votre mot de passe'
+
+reminder:
+  three_months: 'dans trois mois'
+  one_month: 'dans un mois'
+  one_week: 'dans une semaine'
+  tomorrow: 'demain'
+
+common:
+  scf_logo: 'Logo SCF'
+  kitokuras_logo: 'Logo Kitokuras'
+  dear: 'Bonjour %name%,'
+  hello: 'Bonjour,'
+  admin: 'Administration,'
+  footer_brand: 'Setoushi Circus Factory - Système de réservation'
+  auto_generated: 'Cet e-mail a été envoyé automatiquement.'
+  auto_no_reply: 'Cet e-mail a été envoyé automatiquement. Merci de ne pas y répondre.'
+  important_booking: 'Cet e-mail contient une information importante concernant votre réservation.'
+  contact_admin: 'Pour toute question, veuillez contacter l’administration du site.'
+  contact: 'Pour toute question, n’hésitez pas à nous contacter.'
+  reply_contact: 'Pour toute question, vous pouvez répondre directement à cet e-mail.'
+  ignore: 'Si vous n’êtes pas à l’origine de cette demande, vous pouvez ignorer cet e-mail.'
+  login: 'Se connecter'
+  open_admin: 'Ouvrir dans l’administration'
+  applicant_info: 'Informations du demandeur'
+  booking_details: 'Détails de la réservation'
+  zone: 'Zone'
+  start: 'Date et heure de début'
+  end: 'Date et heure de fin'
+  guests: 'Nombre de personnes'
+  people: '%count% personne(s)'
+  equipment_used: 'Équipements réservés'
+  equipment_name: 'Équipement'
+  quantity: 'Quantité'
+  amount: 'Montant :'
+  price_details: 'Détail du prix'
+  zone_price: 'Prix de la zone'
+  room_price: 'Prix de la chambre'
+  equipment_price: 'Prix des équipements'
+  payment_amount: 'Montant à payer'
+  total: 'Montant total'
+  yen: '%amount% ¥'
+  user: 'Utilisateur :'
+  name: 'Nom'
+  email: 'Adresse e-mail'
+  full_day: 'Journée complète'
+  yes: 'Oui'
+  no: 'Non'
+  created_at: 'Date de la demande'
+  room: 'Chambre'
+  checkin_date: 'Date d’arrivée'
+  checkout_date: 'Date de départ'
+  checkin: 'Arrivée'
+  checkout: 'Départ'
+  location: 'Lieu'
+  address: 'Adresse'
+
+booking_confirmation:
+  title: 'Merci pour votre réservation'
+  thanks: 'Nous vous remercions pour votre réservation.'
+  payment_instructions: 'Pour confirmer votre réservation, veuillez effectuer le paiement à l’aide du bouton ci-dessous.'
+  payment_prompt: 'Effectuer le paiement'
+  payment_button: 'Accéder au paiement'
+  link_fallback: 'Si le bouton ne s’affiche pas, ouvrez le lien suivant :'
+  payment_note: 'Votre réservation sera confirmée dès que le paiement aura été effectué.'
+  ignore: 'Si vous n’êtes pas à l’origine de cette réservation, n’ouvrez pas le lien et supprimez cet e-mail.'
+
+booking_pending:
+  title: 'Votre demande de réservation a bien été reçue'
+  thanks: 'Nous vous remercions pour votre demande de réservation.'
+  review: 'Nous vérifions actuellement votre demande. Vous recevrez prochainement un e-mail vous indiquant si elle a été acceptée ou refusée.'
+  no_payment_yet: 'Aucun paiement n’est demandé à ce stade'
+  payment_later: 'Si votre réservation est approuvée, nous vous enverrons les instructions de paiement dans un nouvel e-mail.'
+
+booking_rejected:
+  title: 'Information concernant votre réservation'
+  intro: 'Nous revenons vers vous au sujet de votre demande de réservation.'
+  denied: 'Nous sommes désolés, mais nous ne pouvons pas approuver cette réservation.'
+  no_payment: 'Cet e-mail ne contient aucun lien de paiement.'
+  contact: 'Si vous n’êtes pas à l’origine de cette demande ou si vous pensez qu’il s’agit d’une erreur, veuillez contacter l’administration du site.'
+
+booking_reminder:
+  heading: 'Rappel de réservation'
+  title: 'Votre réservation est prévue %when%'
+  intro: 'La date de votre réservation approche : elle est prévue %when%.'
+  until_booking: 'Avant votre réservation'
+
+room_booking_pending:
+  title: 'Votre demande de réservation de chambre a bien été reçue'
+  thanks: 'Nous vous remercions pour votre demande de réservation de chambre.'
+  review: 'Nous vérifions actuellement votre demande. Vous recevrez prochainement un e-mail vous indiquant si elle a été acceptée ou refusée.'
+
+payment:
+  title: 'Paiement effectué'
+  confirmed: 'Votre paiement a bien été reçu.'
+  booking_confirmed: 'Votre réservation est maintenant confirmée.'
+
+account_approved:
+  title: 'Votre compte a été approuvé'
+  confirmed: 'Votre compte a bien été approuvé.'
+  login_available: 'Vous pouvez désormais vous connecter et utiliser le service.'
+
+account_denied:
+  title: 'Résultat de votre demande de compte'
+  denied: 'Votre demande de création de compte n’a pas été approuvée.'
+  unavailable: 'Nous sommes désolés, mais ce compte ne peut actuellement pas accéder au service.'
+
+verify_email:
+  title: 'Confirmez votre adresse e-mail'
+  thanks: 'Bonjour et merci de vous être inscrit sur notre site.'
+  instructions: 'Cliquez sur le bouton ci-dessous pour confirmer votre adresse e-mail et activer votre compte.'
+  button: 'Confirmer mon adresse e-mail'
+  no_expiration: 'Ce lien de confirmation n’expire pas'
+  ignore: 'Si vous n’avez pas créé de compte, vous pouvez ignorer cet e-mail.'
+
+email_update:
+  title: 'Confirmez votre nouvelle adresse e-mail'
+  thanks: 'Merci d’utiliser notre service.'
+  instructions: |-
+    Cette adresse a été enregistrée comme nouvelle adresse e-mail de votre compte.
+    Cliquez sur le bouton ci-dessous pour terminer la vérification.
+  button: 'Confirmer la nouvelle adresse e-mail'
+  warning: 'Si vous n’êtes pas à l’origine de ce changement, votre compte a peut-être été compromis. Contactez-nous au plus vite.'
+
+reset_password:
+  title: 'Réinitialisation du mot de passe'
+  instructions: |-
+    Une réinitialisation du mot de passe de votre compte Setoushi Circus Factory a été demandée.
+    Cliquez sur le bouton ci-dessous pour définir un nouveau mot de passe.
+  button: 'Réinitialiser mon mot de passe'
+  expiration: 'Ce lien expirera dans %expiration%.'
+  ignore: 'Si vous n’êtes pas à l’origine de cette demande, ignorez cet e-mail. Votre mot de passe actuel restera inchangé.'
+
+admin_new_user:
+  title: 'Nouvelle demande de création de compte'
+  intro: 'Une nouvelle demande de création de compte a été reçue. Veuillez consulter les informations et traiter sa validation.'
+
+admin_new_booking:
+  title: 'Nouvelle demande de réservation'
+  intro: 'Une nouvelle demande de réservation a été reçue. Veuillez consulter les informations et l’approuver ou la refuser.'

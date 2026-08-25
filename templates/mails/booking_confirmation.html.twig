@@ -1,10 +1,11 @@
+{% trans_default_domain 'emails' %}
 {# templates/mails/booking_confirmation.html.twig #}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>予約確認</title>
+		<title>{{ 'booking_confirmation.title'|trans }}</title>
 
 		<style>
 			body {
@@ -250,14 +251,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
 								</div>
 
 								<h1>
-									ご予約ありがとうございます
+									{{ 'booking_confirmation.title'|trans }}
 								</h1>
 
 							</td>
@@ -269,19 +270,19 @@
 							<td class="content">
 
 								<p class="greeting">
-									{{ user.fullName }} 様
+									{{ 'common.dear'|trans({'%name%': user.fullName}) }}
 								</p>
 
 								<p>
-									このたびはご予約いただき、誠にありがとうございます。
+									{{ 'booking_confirmation.thanks'|trans }}
 								</p>
 
 								<p>
-									ご予約を確定するには、以下のボタンからお支払い手続きを完了してください。
+									{{ 'booking_confirmation.payment_instructions'|trans }}
 								</p>
 
 								<p class="section-title">
-									ご予約内容
+									{{ 'common.booking_details'|trans }}
 								</p>
 
 								<div class="details-box">
@@ -289,23 +290,23 @@
 									<table role="presentation">
 
 										<tr>
-											<td class="label">ゾーン</td>
+											<td class="label">{{ 'common.zone'|trans }}</td>
 											<td class="value">{{ booking.zone.name }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">開始日時</td>
-											<td class="value">{{ booking.startDate|date('Y年m月d日 H:i') }}</td>
+											<td class="label">{{ 'common.start'|trans }}</td>
+											<td class="value">{{ booking.startDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">終了日時</td>
-											<td class="value">{{ booking.endDate|date('Y年m月d日 H:i') }}</td>
+											<td class="label">{{ 'common.end'|trans }}</td>
+											<td class="value">{{ booking.endDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">利用人数</td>
-											<td class="value">{{ booking.guestCount }} 名</td>
+											<td class="label">{{ 'common.guests'|trans }}</td>
+											<td class="value">{{ 'common.people'|trans({'%count%': booking.guestCount}) }}</td>
 										</tr>
 
 									</table>
@@ -315,7 +316,7 @@
 								{% if booking.bookingEquipment|length > 0 %}
 
 									<p class="section-title">
-										利用備品
+										{{ 'common.equipment_used'|trans }}
 									</p>
 
 									<div class="details-box">
@@ -325,7 +326,7 @@
 											{% for be in booking.bookingEquipment %}
 												<tr>
 													<td class="value">{{ be.equipment.name }} × {{ be.quantity }}</td>
-													<td class="value" style="text-align:right; width:35%;">{{ be.totalPrice }} 円</td>
+													<td class="value" style="text-align:right; width:35%;">{{ 'common.yen'|trans({'%amount%': be.totalPrice}) }}</td>
 												</tr>
 											{% endfor %}
 
@@ -336,7 +337,7 @@
 								{% endif %}
 
 								<p class="section-title">
-									料金内訳
+									{{ 'common.price_details'|trans }}
 								</p>
 
 								<div class="details-box">
@@ -344,13 +345,13 @@
 									<table role="presentation">
 
 										<tr>
-											<td class="label">ゾーン料金</td>
-											<td class="value" style="text-align:right;">{{ booking.price }} 円</td>
+											<td class="label">{{ 'common.zone_price'|trans }}</td>
+											<td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.price}) }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">備品料金</td>
-											<td class="value" style="text-align:right;">{{ booking.equipmentPrice }} 円</td>
+											<td class="label">{{ 'common.equipment_price'|trans }}</td>
+											<td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.equipmentPrice}) }}</td>
 										</tr>
 
 									</table>
@@ -360,27 +361,27 @@
 								<div class="payment-box">
 
 									<p class="label">
-										お支払い金額
+										{{ 'common.payment_amount'|trans }}
 									</p>
 
 									<p class="amount">
-										{{ booking.totalPrice }} 円
+										{{ 'common.yen'|trans({'%amount%': booking.totalPrice}) }}
 									</p>
 
 									<p class="prompt">
-										お支払いはこちら
+										{{ 'booking_confirmation.payment_prompt'|trans }}
 									</p>
 
 									<div class="button-wrapper">
 
 										<a href="{{ stripe_checkout_url|e('html_attr') }}" class="button">
-											お支払い手続きへ進む
+											{{ 'booking_confirmation.payment_button'|trans }}
 										</a>
 
 									</div>
 
 									<p class="fallback">
-										ボタンが表示されない場合は、以下のリンクを開いてください。<br>
+										{{ 'booking_confirmation.link_fallback'|trans }}<br>
 										<a href="{{ stripe_checkout_url|e('html_attr') }}">
 											{{ stripe_checkout_url|e }}
 										</a>
@@ -389,8 +390,8 @@
 								</div>
 
 								<p style="margin:0; color:#4b5563; font-size:14px;">
-									お支払いが完了すると、予約が確定します。<br>
-									ご不明な点がございましたら、このメールに返信してお問い合わせください。
+									{{ 'booking_confirmation.payment_note'|trans }}<br>
+									{{ 'common.reply_contact'|trans }}
 								</p>
 
 							</td>
@@ -401,7 +402,7 @@
 
 							<td class="footer">
 
-								<strong>Setoushi Circus Factory - 予約システム</strong>
+								<strong>{{ 'common.footer_brand'|trans }}</strong>
 
 								<br><br>
 
@@ -410,8 +411,8 @@
 
 								<br><br>
 
-								このメールはご予約のお手続きに関する重要なお知らせです。<br>
-								心当たりがない場合は、リンクを開かずに削除してください。
+								{{ 'common.important_booking'|trans }}<br>
+								{{ 'booking_confirmation.ignore'|trans }}
 
 							</td>
 

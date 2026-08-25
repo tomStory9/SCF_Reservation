@@ -192,6 +192,15 @@
                     <div class="booking-label">{{ 'admin.booking_detail.created_at'|trans }}</div>
                     <div class="booking-value" style="font-weight: normal;">{{ booking.createdDate|date('d/m/Y H:i') }}</div>
 
+                    <div class="booking-label">{{ 'admin.booking_detail.terms_consent'|trans }}</div>
+                    <div class="booking-value" style="font-weight: normal;">
+                        {% if booking.termsAcceptedAt %}
+                            {{ 'admin.booking_detail.terms_accepted_at'|trans({'%date%': booking.termsAcceptedAt|date('d/m/Y H:i')}) }}
+                        {% else %}
+                            <span style="color: var(--text-muted);">{{ 'admin.booking_detail.terms_not_recorded'|trans }}</span>
+                        {% endif %}
+                    </div>
+
                     <div class="booking-label">{{ 'admin.booking_detail.check_in'|trans }}</div>
                     <div class="booking-value" style="font-weight: normal;">{{ booking.CheckedInAt ? booking.CheckedInAt|date('d/m/Y H:i') : '<span style="color: var(--text-muted);">-</span>'|raw }}</div>
 

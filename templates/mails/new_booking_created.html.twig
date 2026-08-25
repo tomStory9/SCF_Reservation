@@ -1,10 +1,11 @@
+{% trans_default_domain 'emails' %}
 {# templates/mails/admin_new_booking.html.twig #}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>新規予約リクエスト</title>
+		<title>{{ 'admin_new_booking.title'|trans }}</title>
 
 		<style>
 			body {
@@ -254,14 +255,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
 								</div>
 
 								<h1>
-									新規予約リクエスト
+									{{ 'admin_new_booking.title'|trans }}
 								</h1>
 
 							</td>
@@ -273,15 +274,15 @@
 							<td class="content">
 
 								<p class="greeting">
-									管理者様
+									{{ 'common.admin'|trans }}
 								</p>
 
 								<p>
-									新しい予約リクエストが届きましたのでお知らせいたします。内容をご確認のうえ、承認または却下の対応をお願いいたします。
+									{{ 'admin_new_booking.intro'|trans }}
 								</p>
 
 								<p class="section-title">
-									予約者情報
+									{{ 'common.applicant_info'|trans }}
 								</p>
 
 								<div class="details-box">
@@ -289,12 +290,12 @@
 									<table role="presentation">
 
 										<tr>
-											<td class="label">氏名</td>
+											<td class="label">{{ 'common.name'|trans }}</td>
 											<td class="value">{{ booking.userBooking.fullName }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">メールアドレス</td>
+											<td class="label">{{ 'common.email'|trans }}</td>
 											<td class="value">{{ booking.userBooking.email }}</td>
 										</tr>
 
@@ -303,7 +304,7 @@
 								</div>
 
 								<p class="section-title">
-									予約内容
+									{{ 'common.booking_details'|trans }}
 								</p>
 
 								<div class="details-box">
@@ -311,33 +312,33 @@
 									<table role="presentation">
 
 										<tr>
-											<td class="label">ゾーン</td>
+											<td class="label">{{ 'common.zone'|trans }}</td>
 											<td class="value">{{ booking.zone.name }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">開始日時</td>
-											<td class="value">{{ booking.startDate|date('Y年m月d日 H:i') }}</td>
+											<td class="label">{{ 'common.start'|trans }}</td>
+											<td class="value">{{ booking.startDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">終了日時</td>
-											<td class="value">{{ booking.endDate|date('Y年m月d日 H:i') }}</td>
+											<td class="label">{{ 'common.end'|trans }}</td>
+											<td class="value">{{ booking.endDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">終日利用</td>
-											<td class="value">{{ booking.isFullDay ? 'はい' : 'いいえ' }}</td>
+											<td class="label">{{ 'common.full_day'|trans }}</td>
+											<td class="value">{{ booking.isFullDay ? 'common.yes'|trans : 'common.no'|trans }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">利用人数</td>
-											<td class="value">{{ booking.guestCount }} 名</td>
+											<td class="label">{{ 'common.guests'|trans }}</td>
+											<td class="value">{{ 'common.people'|trans({'%count%': booking.guestCount}) }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">申請日時</td>
-											<td class="value">{{ booking.createdDate|date('Y年m月d日 H:i') }}</td>
+											<td class="label">{{ 'common.created_at'|trans }}</td>
+											<td class="value">{{ booking.createdDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
 										</tr>
 
 									</table>
@@ -347,7 +348,7 @@
 								{% if booking.bookingEquipment|length > 0 %}
 
 									<p class="section-title">
-										利用備品
+										{{ 'common.equipment_used'|trans }}
 									</p>
 
 									<div class="details-box">
@@ -355,16 +356,16 @@
 										<table role="presentation">
 
 											<tr>
-												<td class="label" style="width:50%;">備品名</td>
-												<td class="label" style="width:15%; text-align:center;">数量</td>
-												<td class="label" style="width:35%; text-align:right;">金額</td>
+												<td class="label" style="width:50%;">{{ 'common.equipment_name'|trans }}</td>
+												<td class="label" style="width:15%; text-align:center;">{{ 'common.quantity'|trans }}</td>
+												<td class="label" style="width:35%; text-align:right;">{{ 'common.amount'|trans }}</td>
 											</tr>
 
 											{% for be in booking.bookingEquipment %}
 												<tr>
 													<td class="value">{{ be.equipment.name }}</td>
 													<td class="value" style="text-align:center;">× {{ be.quantity }}</td>
-													<td class="value" style="text-align:right;">{{ be.totalPrice }} 円</td>
+													<td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': be.totalPrice}) }}</td>
 												</tr>
 											{% endfor %}
 
@@ -375,7 +376,7 @@
 								{% endif %}
 
 								<p class="section-title">
-									料金内訳
+									{{ 'common.price_details'|trans }}
 								</p>
 
 								<div class="details-box">
@@ -383,13 +384,13 @@
 									<table role="presentation">
 
 										<tr>
-											<td class="label">ゾーン料金</td>
-											<td class="value" style="text-align:right;">{{ booking.price }} 円</td>
+											<td class="label">{{ 'common.zone_price'|trans }}</td>
+											<td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.price}) }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">備品料金</td>
-											<td class="value" style="text-align:right;">{{ booking.equipmentPrice }} 円</td>
+											<td class="label">{{ 'common.equipment_price'|trans }}</td>
+											<td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.equipmentPrice}) }}</td>
 										</tr>
 
 									</table>
@@ -399,11 +400,11 @@
 								<div class="total-box">
 
 									<p class="label">
-										合計金額
+									{{ 'common.total'|trans }}
 									</p>
 
 									<p class="amount">
-										{{ booking.totalPrice }} 円
+									{{ 'common.yen'|trans({'%amount%': booking.totalPrice}) }}
 									</p>
 
 								</div>
@@ -411,7 +412,7 @@
 								<div class="button-wrapper">
 
 									<a href="{{ absolute_url(ea_url().setController('App\\Controller\\Admin\\PendingBookingCrudController')) }}" class="button">
-										管理画面で確認する
+										{{ 'common.open_admin'|trans }}
 									</a>
 
 								</div>
@@ -424,7 +425,7 @@
 
 							<td class="footer">
 
-								<strong>Setoushi Circus Factory - 予約システム</strong>
+								<strong>{{ 'common.footer_brand'|trans }}</strong>
 
 								<br><br>
 
@@ -433,7 +434,7 @@
 
 								<br><br>
 
-								このメールは自動送信されています。返信はご遠慮ください。
+								{{ 'common.auto_no_reply'|trans }}
 
 							</td>
 

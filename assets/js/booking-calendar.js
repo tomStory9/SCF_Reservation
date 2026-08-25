@@ -67,6 +67,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const bookingModeLinks = document.querySelectorAll('.booking-mode-link');
     const submitButton = document.getElementById('submit_booking');
     const guestCountInput = document.getElementById('guest-count-input');
+    const termsConsentInput = document.getElementById('terms-consent');
     const mobileBookingModeLabel = document.getElementById('active-booking-mode-label-mobile');
 
     let calendar = null;
@@ -331,12 +332,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             return;
         }
 
+        if (!termsConsentInput?.checked) {
+            Swal.fire({
+                icon: 'warning',
+                title: config.texts.bookingErrorTitle,
+                text: config.texts.acceptTerms,
+                confirmButtonColor: '#d33'
+            });
+            termsConsentInput?.focus();
+            return;
+        }
+
         const selectedEquipments = getSelectedEquipmentPayload(equipmentState);
 
         const payload = {
             ...state.currentSelection,
             zoneId: state.activeZoneId,
-            equipments: selectedEquipments
+            equipments: selectedEquipments,
+            termsAccepted: termsConsentInput.checked
         };
 
         console.log('[reservation] Payload :', payload);

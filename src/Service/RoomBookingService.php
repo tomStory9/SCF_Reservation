@@ -103,6 +103,7 @@ readonly class RoomBookingService
         $booking->setIsFullDay(true);
         $booking->setBookingStatus(BookingStatus::PENDING);
         $booking->setCreatedDate(new \DateTimeImmutable());
+        $booking->setTermsAcceptedAt(new \DateTimeImmutable());
 
         $booking->setStartDate($start);
         $booking->setEndDate($end);

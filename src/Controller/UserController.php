@@ -89,14 +89,17 @@ final class UserController extends AbstractController
             $this->entityManager->flush();
 
             if ($emailChanged) {
+                $locale = $user->getLanguage();
                 $this->emailVerifier->sendEmailConfirmation(
                     'app_verify_email',
                     $user,
                     new TemplatedEmail()
                         ->from(new Address($mailerAddress, 'Setoushi Circus Factory'))
                         ->to($user->getEmail())
-                        ->subject('メールアドレスの確認をお願いします')
-                        ->htmlTemplate('user/mails/email_update.html.twig'),
+                        ->locale($locale)
+                        ->subject($this->translator->trans('subject.email_update', domain: 'emails', locale: $locale))
+                        ->htmlTemplate('user/mails/email_update.html.twig')
+                        ->context(['emailLocale' => $locale]),
                     ['context' => 'profile_update']
                 );
 

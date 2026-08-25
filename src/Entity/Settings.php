@@ -73,7 +73,7 @@ class Settings
 
     public function setMinDayBooking(int $minDayBooking): static
     {
-        $this->minDayRoomBooking = $minDayBooking;
+        $this->minDayBooking = $minDayBooking;
 
         return $this;
     }

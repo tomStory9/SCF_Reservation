@@ -17,6 +17,8 @@ class AppFixtures extends Fixture
         $setting->setHourCheckOut(10);
         $setting->setMinDayBooking(0);
         $setting->setMinDayRoomBooking(1);
+        $setting->setIsPendingBookingBlocking(false);
+        $setting->setIsPendingRoomBlocking(false);
 
         $manager->persist($setting);
         $manager->flush();

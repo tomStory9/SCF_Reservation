@@ -29,5 +29,5 @@ information:
     placeholder: "Your phone number"
     not_blank: "Phone number is required."
   company:
-    label: "Associated company"
-    placeholder: "Your associated company"
+    label: "Circus company"
+    placeholder: "Name of your circus company"

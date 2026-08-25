@@ -149,10 +149,12 @@ class ResetPasswordController extends AbstractController
         $email = new TemplatedEmail()
             ->from(new Address($mailerAddress, 'SCF'))
             ->to((string) $user->getEmail())
-            ->subject('Réinitialisation de votre mot de passe')
+            ->locale($user->getLanguage())
+            ->subject($translator->trans('subject.reset_password', domain: 'emails', locale: $user->getLanguage()))
             ->htmlTemplate('reset_password/mails/email.html.twig')
             ->context([
                 'resetToken' => $resetToken,
+                'emailLocale' => $user->getLanguage(),
             ])
         ;
 

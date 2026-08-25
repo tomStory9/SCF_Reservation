@@ -89,14 +89,17 @@ final class RegisterController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
             $this->mailerService->sendNewUserAdmin($user);
+            $locale = $user->getLanguage();
             $this->emailVerifier->sendEmailConfirmation(
                 'app_verify_email',
                 $user,
                 new TemplatedEmail()
                     ->from(new Address($mailerAddress, 'Setoushi Circus Factory'))
                     ->to($user->getEmail())
-                    ->subject('メールアドレスの確認をお願いします')
+                    ->locale($locale)
+                    ->subject($translator->trans('subject.verify_email', domain: 'emails', locale: $locale))
                     ->htmlTemplate('security/register/mails/confirmation_email.html.twig')
+                    ->context(['emailLocale' => $locale])
             );
 
             $this->addFlash('info', $translator->trans('flash.info_email', domain: 'validators'));

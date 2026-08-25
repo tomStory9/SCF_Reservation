@@ -7,12 +7,14 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_ID', fields: ['id'])]
+#[Gedmo\Loggable(logEntryClass: UserLogEntry::class)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -21,12 +23,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180)]
+    #[Gedmo\Versioned]
     private ?string $email = null;
 
     /**
      * @var list<string> The user roles
      */
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private array $roles = [];
 
     /**
@@ -36,15 +40,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 15)]
+    #[Gedmo\Versioned]
     private ?string $phone = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $company = null;
 
     /**
@@ -59,21 +67,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $googleId = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Gedmo\Versioned]
     private ?string $lineId = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?bool $filledInfo = null;
 
     #[ORM\Column]
+    #[Gedmo\Versioned]
     private ?bool $isVerified = null;
 
     #[ORM\Column(type: 'string', enumType: UserStatus::class)]
+    #[Gedmo\Versioned]
     private ?UserStatus $userStatus = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Versioned]
     private ?string $Language = null;
 
     public function getId(): ?int
@@ -294,15 +308,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLanguage(): ?string
+    public function getLanguage(): string
     {
-        return $this->Language;
+        return self::normalizeLanguage($this->Language);
     }
 
     public function setLanguage(string $Language): static
     {
-        $this->Language = $Language;
+        $this->Language = self::normalizeLanguage($Language);
 
         return $this;
+    }
+
+    public static function normalizeLanguage(?string $language): string
+    {
+        $locale = strtolower(str_replace('_', '-', (string) $language));
+        $locale = explode('-', $locale)[0];
+        $locale = 'jp' === $locale ? 'ja' : $locale;
+
+        return \in_array($locale, ['fr', 'en', 'ja'], true) ? $locale : 'ja';
     }
 }

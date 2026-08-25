@@ -2,6 +2,8 @@ errors:
   email_not_blank: "Email cannot be blank."
   email_invalid: "Please enter a valid email address."
   password_not_blank: "Password cannot be blank."
+  invalid_current: "The current password is incorrect."
+  booking_overlap: "This time slot is already booked."
   password_mismatch: "Passwords do not match."
   password_invalid: "Password must be at least 8 characters long, including one uppercase letter, one lowercase letter, one number, and one special character."
   password_too_short: "Password must be at least 8 characters long."

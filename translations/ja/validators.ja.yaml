@@ -2,6 +2,8 @@ errors:
   email_not_blank: "メールアドレスを入力してください。"
   email_invalid: "有効なメールアドレスを入力してください。"
   password_not_blank: "パスワードを入力してください。"
+  invalid_current: "現在のパスワードが正しくありません。"
+  booking_overlap: "この時間枠はすでに予約されています。"
   password_mismatch: "パスワードが一致しません。"
   password_invalid: "パスワードは8文字以上で、大文字・小文字・数字・特殊文字をそれぞれ1つ以上含める必要があります。"
   password_too_short: "パスワードは8文字以上である必要があります。"

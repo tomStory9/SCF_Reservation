@@ -270,6 +270,7 @@ class DashboardController extends AbstractDashboardController
                 'status' => $this->translator->trans(
                     'admin.enum.booking_status.'.$status->value,
                 ),
+                'statusCode' => $status->value,
                 'user' => $userName,
                 'zone' => $zoneName,
                 'facility' => $booking['facilityName'] ?? null,

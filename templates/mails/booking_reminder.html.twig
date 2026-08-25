@@ -1,3 +1,4 @@
+{% trans_default_domain 'emails' %}
 {% set facility = booking.zone.facility ?? null %}
 
 {% set nowTs = 'now'|date('U', timezone|default('Asia/Tokyo')) %}
@@ -17,13 +18,13 @@
 {% endif %}
 
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="light">
 <meta name="supported-color-schemes" content="light">
-<title>ご予約は{{ reminderLabel }}です</title>
+<title>{{ 'booking_reminder.title'|trans({'%when%': reminderLabel}) }}</title>
 <!--[if mso]>
 <style type="text/css">
     table, td { font-family: Arial, Helvetica, sans-serif; }
@@ -71,11 +72,11 @@
                         </table>
 
                         <p class="badge" style="margin:16px 0 6px 0; font-size:13px; font-weight:bold; letter-spacing:0.4px; text-transform:uppercase; color:#ffffff; opacity:0.9;">
-                            予約リマインダー
+                            {{ 'booking_reminder.heading'|trans }}
                         </p>
 
                         <h1 class="title" style="margin:0; font-size:21px; line-height:1.35; color:#ffffff; font-weight:bold;">
-                            ご予約は{{ reminderLabel }}です
+                            {{ 'booking_reminder.title'|trans({'%when%': reminderLabel}) }}
                         </h1>
                     </td>
                 </tr>
@@ -83,10 +84,10 @@
                 <tr>
                     <td class="px" style="padding:28px 28px 8px 28px;">
                         <p style="margin:0 0 8px 0; font-size:15px; line-height:1.6; color:#1f2328;">
-                            {{ user.fullName }} 様
+                            {{ 'common.dear'|trans({'%name%': user.fullName}) }}
                         </p>
                         <p style="margin:0; font-size:15px; line-height:1.6; color:#4b5563;">
-                            ご予約の日時が近づいております。ご予約は{{ reminderLabel }}です。
+                            {{ 'booking_reminder.intro'|trans({'%when%': reminderLabel}) }}
                         </p>
                     </td>
                 </tr>
@@ -100,7 +101,7 @@
                                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                                         <tr>
                                             <td class="row-label" style="font-size:13px; color:#6b7280; width:40%; vertical-align:top;">
-                                                ご予約まで
+                                                {{ 'booking_reminder.until_booking'|trans }}
                                             </td>
                                             <td class="row-value" style="font-size:15px; color:#1f2328; font-weight:bold; text-align:right;">
                                                 {{ reminderLabel }}
@@ -115,7 +116,7 @@
                                     <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                                         <tr>
                                             <td class="row-label" style="font-size:13px; color:#6b7280; width:40%; vertical-align:top;">
-                                                開始日時
+                                                {{ 'common.start'|trans }}
                                             </td>
                                             <td class="row-value" style="font-size:15px; color:#1f2328; font-weight:bold; text-align:right;">
                                                 {{ booking.startDate|date('Y/m/d H:i', timezone|default('Asia/Tokyo')) }}
@@ -131,7 +132,7 @@
                                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td class="row-label" style="font-size:13px; color:#6b7280; width:40%; vertical-align:top;">
-                                                    場所
+                                                    {{ 'common.location'|trans }}
                                                 </td>
                                                 <td class="row-value" style="font-size:15px; color:#1f2328; font-weight:bold; text-align:right;">
                                                     {{ facility.name }}
@@ -148,7 +149,7 @@
                                         <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
                                             <tr>
                                                 <td class="row-label" style="font-size:13px; color:#6b7280; width:40%; vertical-align:top;">
-                                                    住所
+                                                    {{ 'common.address'|trans }}
                                                 </td>
                                                 <td class="row-value" style="font-size:15px; color:#1f2328; font-weight:bold; text-align:right;">
                                                     {{ facility.address }}
@@ -166,14 +167,14 @@
                 <tr>
                     <td class="px" style="padding:20px 28px 32px 28px;">
                         <p style="margin:0; font-size:14px; line-height:1.6; color:#4b5563;">
-                            ご不明な点がございましたら、お気軽にお問い合わせください。
+                            {{ 'common.contact'|trans }}
                         </p>
                     </td>
                 </tr>
 
                 <tr>
                     <td class="px" style="padding:18px 28px; background:#fafafa; border-top:1px solid #edeef1; color:#9ca3af; font-size:12px; line-height:1.5; text-align:center;">
-                        このメールは自動送信されています。
+                        {{ 'common.auto_generated'|trans }}
                     </td>
                 </tr>
 

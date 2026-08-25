@@ -34,5 +34,5 @@ information:
     not_blank: "Le numéro de téléphone est obligatoire."
 
   company:
-    label: "Entreprise ou compagnie associée"
-    placeholder: "Votre entreprise ou compagnie associée"
+    label: "Compagnie de cirque"
+    placeholder: "Nom de votre compagnie de cirque"

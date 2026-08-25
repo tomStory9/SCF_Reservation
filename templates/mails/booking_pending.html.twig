@@ -1,10 +1,11 @@
+{% trans_default_domain 'emails' %}
 {# templates/mails/booking_pending.html.twig #}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>ご予約リクエストを受け付けました</title>
+		<title>{{ 'booking_pending.title'|trans }}</title>
 
 		<style>
 			body {
@@ -194,14 +195,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
 								</div>
 
 								<h1>
-									ご予約リクエストを受け付けました
+									{{ 'booking_pending.title'|trans }}
 								</h1>
 
 							</td>
@@ -213,19 +214,19 @@
 							<td class="content">
 
 								<p class="greeting">
-									{{ user.fullName }} 様
+									{{ 'common.dear'|trans({'%name%': user.fullName}) }}
 								</p>
 
 								<p>
-									このたびはご予約のお申し込みをいただき、誠にありがとうございます。
+									{{ 'booking_pending.thanks'|trans }}
 								</p>
 
 								<p>
-									現在、ご予約内容を確認しております。承認または却下の結果は、追ってメールにてお知らせいたしますので、今しばらくお待ちください。
+									{{ 'booking_pending.review'|trans }}
 								</p>
 
 								<p class="section-title">
-									ご予約内容
+									{{ 'common.booking_details'|trans }}
 								</p>
 
 								<div class="details-box">
@@ -233,23 +234,23 @@
 									<table role="presentation">
 
 										<tr>
-											<td class="label">ゾーン</td>
+											<td class="label">{{ 'common.zone'|trans }}</td>
 											<td class="value">{{ booking.zone.name }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">開始日時</td>
-											<td class="value">{{ booking.startDate|date('Y年m月d日 H:i') }}</td>
+											<td class="label">{{ 'common.start'|trans }}</td>
+											<td class="value">{{ booking.startDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">終了日時</td>
-											<td class="value">{{ booking.endDate|date('Y年m月d日 H:i') }}</td>
+											<td class="label">{{ 'common.end'|trans }}</td>
+											<td class="value">{{ booking.endDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
 										</tr>
 
 										<tr>
-											<td class="label">利用人数</td>
-											<td class="value">{{ booking.guestCount }} 名</td>
+											<td class="label">{{ 'common.guests'|trans }}</td>
+											<td class="value">{{ 'common.people'|trans({'%count%': booking.guestCount}) }}</td>
 										</tr>
 
 									</table>
@@ -259,7 +260,7 @@
 								{% if booking.bookingEquipment|length > 0 %}
 
 									<p class="section-title">
-										利用備品
+										{{ 'common.equipment_used'|trans }}
 									</p>
 
 									<div class="details-box">
@@ -280,14 +281,14 @@
 
 								<div class="info">
 									<strong>
-										この段階ではまだお支払い手続きは発生しません
+										{{ 'booking_pending.no_payment_yet'|trans }}
 									</strong>
 									<br>
-									ご予約が承認された場合、改めてお支払いのご案内をお送りいたします。
+									{{ 'booking_pending.payment_later'|trans }}
 								</div>
 
 								<p style="margin-top:32px">
-									ご不明な点がございましたら、このメールに返信してお問い合わせください。
+									{{ 'common.reply_contact'|trans }}
 								</p>
 
 							</td>
@@ -298,7 +299,7 @@
 
 							<td class="footer">
 
-								<strong>Setoushi Circus Factory - 予約システム</strong>
+								<strong>{{ 'common.footer_brand'|trans }}</strong>
 
 								<br><br>
 
@@ -307,8 +308,8 @@
 
 								<br><br>
 
-								このメールはご予約のお手続きに関する重要なお知らせです。<br>
-								心当たりがない場合は、このメールを無視してください。
+								{{ 'common.important_booking'|trans }}<br>
+								{{ 'common.ignore'|trans }}
 
 							</td>
 

@@ -1,9 +1,10 @@
+{% trans_default_domain 'emails' %}
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="{{ emailLocale|default('ja') }}">
 
 	<head>
 		<meta charset="UTF-8">
-		<title>メールアドレスの確認をお願いします</title>
+		<title>{{ 'verify_email.title'|trans }}</title>
 
 		<style>
 			body {
@@ -160,14 +161,14 @@
 
 								<div class="logo-box">
 
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="SCFロゴ">
+									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
 
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="Kitokurasロゴ">
+									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
 
 								</div>
 
 								<h1>
-									メールアドレスを確認してください
+									{{ 'verify_email.title'|trans }}
 								</h1>
 
 							</td>
@@ -179,17 +180,17 @@
 							<td class="content">
 
 								<p>
-									こんにちは。当サイトにご登録いただきありがとうございます。
+									{{ 'verify_email.thanks'|trans }}
 								</p>
 
 								<p>
-									下のボタンをクリックして、メールアドレスを確認し、アカウントを有効化してください。
+									{{ 'verify_email.instructions'|trans }}
 								</p>
 
 								<div class="button-wrapper">
 
 									<a href="{{ signedUrl }}" class="button">
-										メールアドレスを確認する
+										{{ 'verify_email.button'|trans }}
 									</a>
 
 								</div>
@@ -197,14 +198,14 @@
 								<div class="divider"></div>
 								<div class="info">
 									<strong>
-										この確認メールに有効期限はありません
+										{{ 'verify_email.no_expiration'|trans }}
 									</strong>
 
 								</div>
 
 								<p style="margin-top:32px">
 
-									アカウントを作成した覚えがない場合は、このメールを無視してください。
+									{{ 'verify_email.ignore'|trans }}
 
 								</p>
 
@@ -216,7 +217,7 @@
 
 							<td class="footer">
 
-								<strong>Setoushi Circus Factory - 予約システム</strong>
+								<strong>{{ 'common.footer_brand'|trans }}</strong>
 
 								<br><br>
 
@@ -225,7 +226,7 @@
 
 								<br><br>
 
-								このメールは自動送信されています。返信はご遠慮ください。
+								{{ 'common.auto_no_reply'|trans }}
 
 							</td>
 
