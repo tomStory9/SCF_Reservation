@@ -167,7 +167,7 @@ final class RegisterController extends AbstractController
                 return $this->redirectToRoute('app_user_profile_edit');
             }
 
-            return $this->redirectToRoute('app_register');
+            return $this->redirectToRoute('app_login');
         }
 
         $this->addFlash('success', $translator->trans('flash.email_verified'));
@@ -176,6 +176,6 @@ final class RegisterController extends AbstractController
             return $this->redirectToRoute('app_user_profile');
         }
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login');
     }
 }
