@@ -32,10 +32,9 @@ class ResetPasswordFormType extends AbstractType
                         message: 'errors.password_not_blank'
                     ),
                     new Length(min: 8, minMessage: 'errors.password_too_short'),
-                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', message: 'errors.password_invalid'), // regex pattern 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
+                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)\S{8,}$/', message: 'errors.password_invalid'), // regex pattern 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
                 ],
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -118,7 +118,7 @@ class UserCrudController extends AbstractCrudController
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new Length(min: 8, minMessage: 'errors.password_too_short'),
-                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', message: 'errors.password_invalid'),
+                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', message: 'errors.password_invalid'),
                 ],
             ])
             ->setHelp('admin.help.new_password')

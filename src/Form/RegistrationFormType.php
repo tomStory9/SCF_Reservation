@@ -36,23 +36,23 @@ class RegistrationFormType extends AbstractType
                     ),
                 ],
             ])
-             ->add(
-                 'name',
-                 TextType::class,
-                 [
-                     'label' => 'information.name.label',
-                     'translation_domain' => 'forms',
-                     'attr' => [
-                         'placeholder' => 'information.name.placeholder',
-                     ],
-                     'required' => true,
-                     'constraints' => [
-                         new NotBlank(
-                             message: 'information.name.not_blank',
-                         ),
-                     ],
-                 ]
-             )
+            ->add(
+                'name',
+                TextType::class,
+                [
+                    'label' => 'information.name.label',
+                    'translation_domain' => 'forms',
+                    'attr' => [
+                        'placeholder' => 'information.name.placeholder',
+                    ],
+                    'required' => true,
+                    'constraints' => [
+                        new NotBlank(
+                            message: 'information.name.not_blank',
+                        ),
+                    ],
+                ]
+            )
             ->add(
                 'lastname',
                 TextType::class,
@@ -93,7 +93,7 @@ class RegistrationFormType extends AbstractType
                         message: 'errors.password_not_blank'
                     ),
                     new Length(min: 8, minMessage: 'errors.password_too_short'),
-                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', message: 'errors.password_invalid'), // regex pattern 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
+                    new Regex(pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W)\S{8,}$/', message: 'errors.password_invalid'), // regex pattern 8 characters, at least one uppercase letter, one lowercase letter, one number and one special character
                 ],
             ]);
     }
