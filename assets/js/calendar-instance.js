@@ -157,6 +157,7 @@ export function createCalendar({
         slotDuration: '01:00:00',
         snapDuration: '01:00:00',
         selectMirror: true,
+        unselectAuto: false,
 
         selectOverlap: (event) => event.display === 'background',
         eventOverlap: false,
