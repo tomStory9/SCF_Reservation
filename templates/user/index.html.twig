@@ -1,589 +1,352 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}
-    {{ 'account.dashboard.title'|trans }}
-{% endblock %}
-
 {% trans_default_domain 'profile' %}
 
-{% block body %}
-    <div class="min-h-screen bg-slate-50 text-slate-900">
+{% block title %}{{ 'account.dashboard.title'|trans }}{% endblock %}
 
-        <a
-            href="#main-content"
-            class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-2"
-        >
-            {{ 'account.dashboard.skip_to_content'|trans }}
-        </a>
+{% block locale_switcher %}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('member_dashboard') }}
+{% endblock %}
+
+{% block body %}
+    {% set dateFormat = app.request.locale == 'ja' ? 'Y/m/d' : 'd/m/Y' %}
+    {% set filterQuery = {'scope': filters.scope, 'status': filters.status} %}
+
+    <div class="member-page">
+        <a href="#member-main" class="member-skip-link">{{ 'account.dashboard.skip_to_content'|trans }}</a>
 
         {% include 'user/_partials/_navbar.html.twig' %}
 
-        <main
-            id="main-content"
-            class="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8"
-        >
-
-            {% for message in app.flashes('success') %}
-                <div class="rounded-xl border border-green-200 bg-green-50 p-4">
-                    <div class="flex items-center">
-                        <div class="shrink-0">
-                            <svg
-                                class="h-5 w-5 text-green-500"
-                                viewBox="0 0 20 20"
-                                fill="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                                    clip-rule="evenodd"
-                                />
-                            </svg>
-                        </div>
-
-                        <div class="ml-3">
-                            <p class="text-sm font-medium text-green-800">
-                                {{ message }}
-                            </p>
-                        </div>
+        <main id="member-main" class="member-main">
+            {% for type, messages in app.flashes %}
+                {% for message in messages %}
+                    <div class="member-flash member-flash--{{ type }}" role="status">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4L19 6"/>
+                        </svg>
+                        {{ message }}
                     </div>
-                </div>
+                {% endfor %}
             {% endfor %}
 
-            <section class="rounded-[1.75rem] bg-white ring-1 ring-slate-200/70">
-
-                <div class="flex flex-col gap-3 border-b border-slate-200 px-5 py-5 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                    <div>
-                        <h2 class="text-lg font-semibold text-secondary">
-                            {{ 'account.dashboard.booking_list'|trans }}
-                        </h2>
-
-                        <p class="mt-1 text-sm text-state">
-                            {{ 'account.dashboard.booking_list_subtitle'|trans }}
-                        </p>
-                    </div>
-
-                    <a
-                        href="{{ path('app_home') }}"
-                        class="inline-flex min-h-11 items-center justify-center rounded-xl bg-secondary px-4 py-2 text-sm font-medium text-white transition hover:bg-secondary/90"
-                    >
-                        {{ 'account.dashboard.book_now'|trans }}
-                    </a>
+            <section class="member-hero" aria-labelledby="member-dashboard-title">
+                <div class="member-hero__content">
+                    <h1 id="member-dashboard-title">{{ 'account.dashboard.dashboard_heading'|trans }}</h1>
+                    <p class="member-hero__intro">{{ 'account.dashboard.welcome_subtitle'|trans }}</p>
                 </div>
 
-                {% if bookings is empty %}
-
-                    <div class="flex flex-col items-center justify-center px-6 py-16 text-center">
-                        <div class="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary/5 text-secondary">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                class="h-8 w-8"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-width="1.6"
-                                    d="M8 7V3m8 4V3m-9 8h10m-12 9h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z"
-                                />
+                <div class="member-hero__actions">
+                    <a href="{{ path('app_booking_index') }}" class="member-reservation-link">
+                        <span class="member-reservation-link__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 7v10M3 9v6m15-8v10m3-8v6M6 12h12"/>
                             </svg>
-                        </div>
+                        </span>
+                        <span>{{ 'account.dashboard.new_booking'|trans }}</span>
+                        <svg class="member-reservation-link__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/>
+                        </svg>
+                    </a>
 
-                        <h3 class="mt-5 text-lg font-semibold text-secondary">
-                            {{ 'account.dashboard.no_booking_title'|trans }}
-                        </h3>
-
-                        <p class="mt-2 max-w-md text-sm text-state">
-                            {{ 'account.dashboard.no_booking_text'|trans }}
-                        </p>
-
-                        <a
-                            href="{{ path('app_home') }}"
-                            class="mt-6 inline-flex min-h-11 items-center justify-center rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-secondary transition hover:bg-primary-hover"
-                        >
-                            {{ 'account.dashboard.new_booking'|trans }}
+                    {% if is_granted('FEATURE_ROOM_BOOKING') %}
+                        <a href="{{ path('app_room_booking') }}" class="member-reservation-link">
+                            <span class="member-reservation-link__icon">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 19v-8m18 8v-6a2 2 0 0 0-2-2H9a3 3 0 0 0-3 3v1m0 0h15M7 8a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z"/>
+                                </svg>
+                            </span>
+                            <span>{{ 'account.dashboard.new_room_booking'|trans }}</span>
+                            <svg class="member-reservation-link__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m9 18 6-6-6-6"/>
+                            </svg>
                         </a>
+                    {% endif %}
+                </div>
+            </section>
+
+            <section class="member-summary" aria-label="{{ 'account.dashboard.summary_label'|trans }}">
+                <article class="member-stat">
+                    <div class="member-stat__top">
+                        <span class="member-stat__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M5 11h14M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg>
+                        </span>
+                        <strong class="member-stat__value">{{ summary.upcoming }}</strong>
+                    </div>
+                    <p class="member-stat__label">{{ 'account.dashboard.stat_upcoming'|trans }}</p>
+                    <p class="member-stat__hint">{{ 'account.dashboard.stat_upcoming_hint'|trans }}</p>
+                </article>
+
+                <article class="member-stat">
+                    <div class="member-stat__top">
+                        <span class="member-stat__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 7v5l3 2"/></svg>
+                        </span>
+                        <strong class="member-stat__value">{{ summary.pending }}</strong>
+                    </div>
+                    <p class="member-stat__label">{{ 'account.dashboard.stat_pending'|trans }}</p>
+                    <p class="member-stat__hint">{{ 'account.dashboard.stat_pending_hint'|trans }}</p>
+                </article>
+
+                <article class="member-stat">
+                    <div class="member-stat__top">
+                        <span class="member-stat__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path stroke-linecap="round" d="M3 10h18M16 15h2"/></svg>
+                        </span>
+                        <strong class="member-stat__value">{{ summary.paymentDue }}</strong>
+                    </div>
+                    <p class="member-stat__label">{{ 'account.dashboard.stat_payment_due'|trans }}</p>
+                    <p class="member-stat__hint">{{ 'account.dashboard.stat_payment_due_hint'|trans }}</p>
+                </article>
+
+                <article class="member-stat">
+                    <div class="member-stat__top">
+                        <span class="member-stat__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m5 12 4 4L19 6"/><circle cx="12" cy="12" r="9"/></svg>
+                        </span>
+                        <strong class="member-stat__value">{{ summary.paid }}</strong>
+                    </div>
+                    <p class="member-stat__label">{{ 'account.dashboard.stat_paid'|trans }}</p>
+                    <p class="member-stat__hint">{{ 'account.dashboard.stat_paid_hint'|trans({'%total%': summary.total}) }}</p>
+                </article>
+            </section>
+
+            <section class="member-reservations" aria-labelledby="booking-list-title">
+                <div class="member-section-heading">
+                    <div>
+                        <h2 id="booking-list-title">{{ 'account.dashboard.booking_list'|trans }}</h2>
+                        <p>{{ 'account.dashboard.booking_list_subtitle'|trans }}</p>
+                    </div>
+                    <span class="member-result-count">{{ 'account.dashboard.result_count'|trans({'%count%': pagination.total}) }}</span>
+                </div>
+
+                <nav class="member-tabs" aria-label="{{ 'account.dashboard.scope_label'|trans }}">
+                    {% for scope in ['upcoming', 'past', 'all'] %}
+                        <a
+                            href="{{ path('app_home_user', filterQuery|merge({'scope': scope, 'page': 1})) }}"
+                            class="member-tab {{ filters.scope == scope ? 'is-active' : '' }}"
+                            {% if filters.scope == scope %}aria-current="page"{% endif %}
+                        >{{ ('account.dashboard.scope_' ~ scope)|trans }}</a>
+                    {% endfor %}
+                </nav>
+
+                <form method="get" action="{{ path('app_home_user') }}" class="member-filters">
+                    <input type="hidden" name="scope" value="{{ filters.scope }}">
+
+                    <div class="member-field">
+                        <label for="booking-status">{{ 'account.dashboard.status_filter_label'|trans }}</label>
+                        <select id="booking-status" name="status" data-auto-submit>
+                            <option value="">{{ 'account.dashboard.status_all'|trans }}</option>
+                            {% for status in ['pending', 'approved', 'paid', 'declined'] %}
+                                <option value="{{ status }}" {{ filters.status == status ? 'selected' : '' }}>{{ ('booking.status.' ~ status)|trans }}</option>
+                            {% endfor %}
+                        </select>
                     </div>
 
+                    {% if filters.status %}
+                        <div class="member-filter-actions">
+                            <a href="{{ path('app_home_user', {'scope': filters.scope}) }}" class="member-filter-reset">{{ 'account.dashboard.reset_filters'|trans }}</a>
+                        </div>
+                    {% endif %}
+                </form>
+
+                {% if bookings is empty %}
+                    <div class="member-empty">
+                        <span class="member-empty__icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3M5 11h14M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg>
+                        </span>
+
+                        {% if summary.total == 0 %}
+                            <h3>{{ 'account.dashboard.no_booking_title'|trans }}</h3>
+                            <p>{{ 'account.dashboard.no_booking_text'|trans }}</p>
+                            <a href="{{ path('app_booking_index') }}" class="member-button member-button--gold">{{ 'account.dashboard.new_booking'|trans }}</a>
+                        {% else %}
+                            <h3>{{ 'account.dashboard.no_result_title'|trans }}</h3>
+                            <p>{{ 'account.dashboard.no_result_text'|trans }}</p>
+                            <a href="{{ path('app_home_user') }}" class="member-button member-button--outline">{{ 'account.dashboard.show_all_bookings'|trans }}</a>
+                        {% endif %}
+                    </div>
                 {% else %}
-
-                    <div class="flex flex-col divide-y divide-slate-200">
-
+                    <div class="member-booking-list">
                         {% for booking in bookings %}
-
-                            {% set status = booking.bookingStatus.value|upper %}
+                            {% set status = booking.bookingStatus.value %}
                             {% set modalId = 'booking-details-' ~ booking.id %}
 
-                            {% set statusClasses = {
-                                'PENDING': 'bg-amber-100 text-amber-800',
-                                'APPROVED': 'bg-indigo-100 text-indigo-800',
-                                'CONFIRMED': 'bg-green-100 text-green-800',
-                                'PAID': 'bg-emerald-100 text-emerald-800',
-                                'CANCELLED': 'bg-rose-100 text-rose-800',
-                                'COMPLETED': 'bg-blue-100 text-blue-800'
-                            } %}
+                            <article class="member-booking">
+                                <time class="member-booking__date" datetime="{{ booking.startDate|date('c') }}">
+                                    <span class="member-booking__day">{{ booking.startDate|date('d') }}</span>
+                                    <span class="member-booking__month">{{ booking.startDate|date('m') }}</span>
+                                    <span class="member-booking__year">{{ booking.startDate|date('Y') }}</span>
+                                </time>
 
-                            <article class="px-5 py-5 sm:px-6">
-                                <div class="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
-
-                                    <div class="min-w-0 flex-1">
-
-                                        <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-                                            <div class="min-w-0">
-
-                                                <div class="flex flex-wrap items-center gap-2">
-                                                    <h3 class="text-base font-semibold text-secondary sm:text-lg">
-                                                        {{ booking.zone.name ?? ('account.dashboard.location_unavailable'|trans) }}
-                                                    </h3>
-
-                                                    <span class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ statusClasses[status] ?? 'bg-slate-100 text-slate-700' }}">
-                                                        {{ ('booking.status.' ~ status)|trans }}
-                                                    </span>
-
-                                                    <span class="inline-flex items-center rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold text-secondary">
-                                                        {{ booking.guestCount }}
-                                                        {{ 'account.dashboard.guests'|trans }}
-                                                    </span>
-                                                </div>
-
-                                                <p class="mt-2 text-sm text-state">
-                                                    {{ 'account.dashboard.booking'|trans }}
-                                                    #{{ booking.id }}
-                                                </p>
-
-                                                <div class="mt-4 rounded-2xl border border-secondary/10 bg-secondary/5 px-4 py-3">
-                                                    <p class="text-xs font-medium uppercase tracking-wide text-state">
-                                                        {{ 'account.dashboard.stay_period'|trans }}
-                                                    </p>
-
-                                                    <p class="mt-1 text-sm font-semibold text-secondary sm:text-base">
-                                                        {{ 'account.dashboard.from'|trans }}
-
-                                                        {{ booking.startDate
-                                                            ? booking.startDate|date('d/m/Y H:i')
-                                                            : '-'
-                                                        }}
-
-                                                        <span class="mx-2 text-state">→</span>
-
-                                                        {{ 'account.dashboard.to'|trans }}
-
-                                                        {{ booking.endDate
-                                                            ? booking.endDate|date('d/m/Y H:i')
-                                                            : '-'
-                                                        }}
-                                                    </p>
-                                                </div>
-
-                                                <div class="mt-4 flex flex-wrap items-center gap-2">
-                                                    <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-secondary">
-                                                        {{
-                                                            booking.isFullDay
-                                                                ? 'account.dashboard.full_day'|trans
-                                                                : 'account.dashboard.partial_day'|trans
-                                                        }}
-                                                    </span>
-
-                                                    <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-secondary">
-                                                        {{ booking.bookingEquipment|length }}
-                                                        {{ 'account.dashboard.equipment_count'|trans }}
-                                                    </span>
-                                                </div>
-
-                                                {# Statut PENDING #}
-                                                {% if status == 'PENDING' %}
-                                                    <div class="mt-5 rounded-2xl border border-amber-200 bg-amber-50 p-4">
-                                                        <p class="text-sm font-semibold text-amber-900">
-                                                            {{ 'account.dashboard.booking_pending_title'|trans }}
-                                                        </p>
-
-                                                        <p class="mt-1 text-sm text-amber-700">
-                                                            {{ 'account.dashboard.booking_pending_text'|trans }}
-                                                        </p>
-                                                    </div>
-                                                {% endif %}
-
-                                                {# Statut APPROVED #}
-                                                {% if status == 'APPROVED' %}
-                                                    <div class="mt-5 rounded-2xl border border-indigo-200 bg-indigo-50 p-4">
-                                                        <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                                                            <div>
-                                                                <p class="text-sm font-semibold text-indigo-900">
-                                                                    {{ 'account.dashboard.booking_approved_title'|trans }}
-                                                                </p>
-
-                                                                <p class="mt-1 text-sm text-indigo-700">
-                                                                    {{ 'account.dashboard.booking_approved_text'|trans }}
-                                                                </p>
-                                                            </div>
-
-                                                            {% if booking.stripeCheckoutUrl %}
-                                                                <a
-                                                                    href="{{ booking.stripeCheckoutUrl }}"
-                                                                    target="_blank"
-                                                                    rel="noopener noreferrer"
-                                                                    class="inline-flex min-h-11 items-center justify-center rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-indigo-700"
-                                                                >
-                                                                    {{ 'account.dashboard.proceed_to_payment'|trans }}
-                                                                </a>
-                                                            {% endif %}
-                                                        </div>
-                                                    </div>
-                                                {% endif %}
-
-                                                {# Statut PAID #}
-                                                {% if status == 'PAID' %}
-                                                    <div class="mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4">
-                                                        <div class="flex items-center gap-3">
-                                                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-emerald-100 text-emerald-700">
-                                                                <svg
-                                                                    xmlns="http://www.w3.org/2000/svg"
-                                                                    class="h-5 w-5"
-                                                                    viewBox="0 0 24 24"
-                                                                    fill="none"
-                                                                    stroke="currentColor"
-                                                                    stroke-width="2"
-                                                                >
-                                                                    <path
-                                                                        stroke-linecap="round"
-                                                                        stroke-linejoin="round"
-                                                                        d="m5 12 4 4L19 6"
-                                                                    />
-                                                                </svg>
-                                                            </div>
-
-                                                            <div>
-                                                                <p class="text-sm font-semibold text-emerald-900">
-                                                                    {{ 'account.dashboard.payment_confirmed_title'|trans }}
-                                                                </p>
-
-                                                                <p class="mt-1 text-sm text-emerald-700">
-                                                                    {{ 'account.dashboard.payment_confirmed_text'|trans }}
-                                                                </p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                {% endif %}
-
-                                                {# Statut CANCELLED #}
-                                                {% if status == 'CANCELLED' %}
-                                                    <div class="mt-5 rounded-2xl border border-rose-200 bg-rose-50 p-4">
-                                                        <p class="text-sm font-semibold text-rose-900">
-                                                            {{ 'account.dashboard.booking_cancelled_title'|trans }}
-                                                        </p>
-                                                    </div>
-                                                {% endif %}
-
-                                            </div>
-                                        </div>
+                                <div class="member-booking__main">
+                                    <div class="member-booking__heading">
+                                        <h3>{{ booking.zone.name ?? ('account.dashboard.location_unavailable'|trans) }}</h3>
+                                        <span class="member-status member-status--{{ status }}">{{ ('booking.status.' ~ status)|trans }}</span>
                                     </div>
 
-                                    <div class="flex shrink-0 flex-col gap-3 lg:items-end">
+                                    <p class="member-booking__facility">
+                                        {% if booking.zone.facility %}{{ booking.zone.facility.name }} · {% endif %}
+                                        {{ ('admin.enum.zone_type.' ~ booking.zone.typeZone.value)|trans({}, 'messages') }}
+                                        · {{ 'account.dashboard.booking_reference'|trans({'%id%': booking.id}) }}
+                                    </p>
 
-                                        <div class="rounded-2xl bg-[#fbf5ed] px-4 py-3 text-left lg:min-w-[190px] lg:text-right">
-                                            <p class="text-xs font-medium uppercase tracking-wide text-[#7a4b2a]">
-                                                {{ 'account.dashboard.total_price'|trans }}
-                                            </p>
+                                    <div class="member-booking__meta">
+                                        <span>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path stroke-linecap="round" d="M12 7v5l3 2"/></svg>
+                                            {{ booking.isFullDay ? '09:00–21:00' : booking.startDate|date('H:i') ~ '–' ~ booking.endDate|date('H:i') }}
+                                            {% if booking.startDate|date('Ymd') != booking.endDate|date('Ymd') %} · {{ booking.endDate|date(dateFormat) }}{% endif %}
+                                        </span>
+                                        <span>
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                            {{ 'account.dashboard.people_count'|trans({'%count%': booking.guestCount}) }}
+                                        </span>
+                                        {% if booking.bookingEquipment|length > 0 %}
+                                            <span>
+                                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16v13H4zM8 7V4h8v3M9 12h6"/></svg>
+                                                {{ 'account.dashboard.equipment_items'|trans({'%count%': booking.bookingEquipment|length}) }}
+                                            </span>
+                                        {% endif %}
+                                    </div>
 
-                                            <p class="mt-1 text-2xl font-bold leading-none text-secondary sm:text-3xl">
-                                                ¥{{ (booking.totalPrice ?? booking.price)|number_format(0, '.', ',') }}
-                                            </p>
+                                    {% if status == 'pending' %}
+                                        <p class="member-booking__note">{{ 'account.dashboard.booking_pending_text'|trans }}</p>
+                                    {% elseif status == 'approved' %}
+                                        <p class="member-booking__note">{{ 'account.dashboard.booking_approved_text'|trans }}</p>
+                                    {% elseif status == 'paid' %}
+                                        <p class="member-booking__note">{{ 'account.dashboard.payment_confirmed_text'|trans }}</p>
+                                    {% elseif status == 'declined' %}
+                                        <p class="member-booking__note">{{ 'account.dashboard.booking_declined_text'|trans }}</p>
+                                    {% endif %}
+                                </div>
 
-                                            {% if booking.equipmentPrice > 0 %}
-                                                <p class="mt-2 text-xs text-[#7a4b2a]">
-                                                    {{ 'account.dashboard.including_equipment'|trans }}
-                                                    ¥{{ booking.equipmentPrice|number_format(0, '.', ',') }}
-                                                </p>
-                                            {% endif %}
-                                        </div>
+                                <div class="member-booking__aside">
+                                    <div>
+                                        <div class="member-booking__price-label">{{ 'account.dashboard.total_price'|trans }}</div>
+                                        <strong class="member-booking__price">¥{{ (booking.totalPrice ?? booking.price ?? 0)|number_format(0, '.', ',') }}</strong>
+                                    </div>
 
-                                        <div class="flex flex-col gap-2 sm:flex-row lg:flex-col">
-
-                                            <button
-                                                type="button"
-                                                onclick="document.getElementById('{{ modalId }}').showModal()"
-                                                class="inline-flex min-h-11 items-center justify-center rounded-xl bg-secondary px-4 py-2 text-sm font-medium text-white transition hover:bg-secondary/90"
-                                            >
-                                                {{ 'account.dashboard.view_details'|trans }}
-                                            </button>
-
-                                            {% if status == 'APPROVED' and booking.stripeCheckoutUrl %}
-                                                <a
-                                                    href="{{ booking.stripeCheckoutUrl }}"
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    class="inline-flex min-h-11 items-center justify-center rounded-xl border border-indigo-200 bg-indigo-50 px-4 py-2 text-sm font-semibold text-indigo-700 transition hover:bg-indigo-100"
-                                                >
-                                                    {{ 'account.dashboard.pay_now'|trans }}
-                                                </a>
-                                            {% elseif status == 'PAID' %}
-                                                <span class="inline-flex min-h-11 items-center justify-center rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
-                                                    {{ 'account.dashboard.payment_completed'|trans }}
-                                                </span>
-                                            {% endif %}
-
-                                        </div>
+                                    <div class="member-booking__actions">
+                                        <button type="button" class="member-button member-button--outline" data-booking-dialog-open="{{ modalId }}">{{ 'account.dashboard.view_details'|trans }}</button>
+                                        {% if status == 'approved' and booking.stripeCheckoutUrl %}
+                                            <a href="{{ booking.stripeCheckoutUrl }}" target="_blank" rel="noopener noreferrer" class="member-button member-button--navy">{{ 'account.dashboard.pay_now'|trans }}</a>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </article>
 
-                            {# Modal des détails #}
-                            <dialog
-                                id="{{ modalId }}"
-                                class="w-[calc(100%-2rem)] max-w-2xl rounded-3xl p-0 shadow-2xl backdrop:bg-slate-900/60"
-                            >
-                                <div class="overflow-hidden rounded-3xl bg-white">
-
-                                    <div class="flex items-start justify-between border-b border-slate-200 px-5 py-5 sm:px-6">
-                                        <div>
-                                            <p class="text-xs font-medium uppercase tracking-wide text-state">
-                                                {{ 'account.dashboard.booking'|trans }}
-                                                #{{ booking.id }}
-                                            </p>
-
-                                            <h2 class="mt-1 text-xl font-bold text-secondary">
-                                                {{ booking.zone.name ?? ('account.dashboard.location_unavailable'|trans) }}
-                                            </h2>
-                                        </div>
-
-                                        <button
-                                            type="button"
-                                            onclick="document.getElementById('{{ modalId }}').close()"
-                                            class="rounded-xl p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900"
-                                            aria-label="{{ 'account.dashboard.close'|trans }}"
-                                        >
-                                            <svg
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="h-6 w-6"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                stroke="currentColor"
-                                                stroke-width="2"
-                                            >
-                                                <path
-                                                    stroke-linecap="round"
-                                                    stroke-linejoin="round"
-                                                    d="M6 18 18 6M6 6l12 12"
-                                                />
-                                            </svg>
-                                        </button>
+                            <dialog id="{{ modalId }}" class="member-dialog" data-booking-dialog aria-labelledby="{{ modalId }}-title">
+                                <div class="member-dialog__header">
+                                    <div>
+                                        <p class="member-dialog__reference">{{ 'account.dashboard.booking_reference'|trans({'%id%': booking.id}) }}</p>
+                                        <h2 id="{{ modalId }}-title">{{ booking.zone.name ?? ('account.dashboard.location_unavailable'|trans) }}</h2>
                                     </div>
+                                    <button type="button" class="member-icon-button" data-booking-dialog-close aria-label="{{ 'account.dashboard.close'|trans }}">
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" d="M6 6l12 12M18 6 6 18"/></svg>
+                                    </button>
+                                </div>
 
-                                    <div class="max-h-[70vh] space-y-6 overflow-y-auto px-5 py-5 sm:px-6">
+                                <div class="member-dialog__body">
+                                    <section class="member-dialog__section">
+                                        <h3>{{ 'account.dashboard.booking_information'|trans }}</h3>
+                                        <dl class="member-detail-grid">
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.status'|trans }}</dt><dd><span class="member-status member-status--{{ status }}">{{ ('booking.status.' ~ status)|trans }}</span></dd></div>
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.booking_type'|trans }}</dt><dd>{{ ('admin.enum.zone_type.' ~ booking.zone.typeZone.value)|trans({}, 'messages') }}</dd></div>
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.start_date'|trans }}</dt><dd>{{ booking.startDate|date(dateFormat) }} · {{ booking.isFullDay ? '09:00' : booking.startDate|date('H:i') }}</dd></div>
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.end_date'|trans }}</dt><dd>{{ booking.endDate|date(dateFormat) }} · {{ booking.isFullDay ? '21:00' : booking.endDate|date('H:i') }}</dd></div>
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.number_of_people'|trans }}</dt><dd>{{ booking.guestCount }}</dd></div>
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.created_date'|trans }}</dt><dd>{{ booking.createdDate|date(dateFormat ~ ' · H:i') }}</dd></div>
+                                        </dl>
+                                    </section>
 
-                                        {# Informations générales #}
-                                        <section>
-                                            <h3 class="text-sm font-semibold uppercase tracking-wide text-state">
-                                                {{ 'account.dashboard.booking_information'|trans }}
-                                            </h3>
+                                    <section class="member-dialog__section">
+                                        <h3>{{ 'account.dashboard.facility_details'|trans }}</h3>
+                                        <dl class="member-detail-grid">
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.facility'|trans }}</dt><dd>{{ booking.zone.facility.name ?? ('account.dashboard.not_available'|trans) }}</dd></div>
+                                            <div class="member-detail"><dt>{{ 'account.dashboard.booking_mode'|trans }}</dt><dd>{{ booking.isFullDay ? ('account.dashboard.full_day'|trans) : ('account.dashboard.partial_day'|trans) }}</dd></div>
+                                        </dl>
+                                    </section>
 
-                                            <dl class="mt-3 grid gap-3 sm:grid-cols-2">
-
-                                                <div class="rounded-xl bg-slate-50 p-3">
-                                                    <dt class="text-xs text-state">
-                                                        {{ 'account.dashboard.status'|trans }}
-                                                    </dt>
-
-                                                    <dd class="mt-1 text-sm font-semibold text-secondary">
-                                                        {{ ('booking.status.' ~ status)|trans }}
-                                                    </dd>
-                                                </div>
-
-                                                <div class="rounded-xl bg-slate-50 p-3">
-                                                    <dt class="text-xs text-state">
-                                                        {{ 'account.dashboard.number_of_people'|trans }}
-                                                    </dt>
-
-                                                    <dd class="mt-1 text-sm font-semibold text-secondary">
-                                                        {{ booking.guestCount }}
-                                                    </dd>
-                                                </div>
-
-                                                <div class="rounded-xl bg-slate-50 p-3">
-                                                    <dt class="text-xs text-state">
-                                                        {{ 'account.dashboard.start_date'|trans }}
-                                                    </dt>
-
-                                                    <dd class="mt-1 text-sm font-semibold text-secondary">
-                                                        {{ booking.startDate
-                                                            ? 'account.dashboard.date_time'|trans({
-                                                                '%date%': booking.startDate|date('Y-m-d'),
-                                                                '%time%': booking.startDate|date('H:i')
-                                                            })
-                                                            : '-'
-                                                        }}
-                                                    </dd>
-                                                </div>
-
-                                                <div class="rounded-xl bg-slate-50 p-3">
-                                                    <dt class="text-xs text-state">
-                                                        {{ 'account.dashboard.end_date'|trans }}
-                                                    </dt>
-
-                                                    <dd class="mt-1 text-sm font-semibold text-secondary">
-                                                        {{ booking.endDate
-                                                            ? 'account.dashboard.date_time'|trans({
-                                                                '%date%': booking.endDate|date('Y-m-d'),
-                                                                '%time%': booking.endDate|date('H:i')
-                                                            })
-                                                            : '-'
-                                                        }}
-                                                    </dd>
-                                                </div>
-
-                                                <div class="rounded-xl bg-slate-50 p-3">
-                                                    <dt class="text-xs text-state">
-                                                        {{ 'account.dashboard.booking_type'|trans }}
-                                                    </dt>
-
-                                                    <dd class="mt-1 text-sm font-semibold text-secondary">
-                                                        {{
-                                                            booking.isFullDay
-                                                                ? 'account.dashboard.full_day'|trans
-                                                                : 'account.dashboard.partial_day'|trans
-                                                        }}
-                                                    </dd>
-                                                </div>
-
-                                                <div class="rounded-xl bg-slate-50 p-3">
-                                                    <dt class="text-xs text-state">
-                                                        {{ 'account.dashboard.created_date'|trans }}
-                                                    </dt>
-
-                                                    <dd class="mt-1 text-sm font-semibold text-secondary">
-                                                        {{ booking.createdDate
-                                                            ? booking.createdDate|date('d/m/Y H:i')
-                                                            : '-'
-                                                        }}
-                                                    </dd>
-                                                </div>
-
-                                            </dl>
-                                        </section>
-
-                                        {# Équipements réservés #}
-                                        <section>
-                                            <div class="flex items-center justify-between gap-3">
-                                                <h3 class="text-sm font-semibold uppercase tracking-wide text-state">
-                                                    {{ 'account.dashboard.reserved_equipment'|trans }}
-                                                </h3>
-
-                                                <span class="text-sm font-semibold text-secondary">
-                                                    {{ (booking.equipmentPrice ?? 0)|number_format(0, '.', ',') }} ¥
-                                                </span>
+                                    <section class="member-dialog__section">
+                                        <h3>{{ 'account.dashboard.reserved_equipment'|trans }}</h3>
+                                        {% if booking.bookingEquipment is empty %}
+                                            <div class="member-detail">{{ 'account.dashboard.no_reserved_equipment'|trans }}</div>
+                                        {% else %}
+                                            <div class="member-equipment-list">
+                                                {% for bookingEquipment in booking.bookingEquipment %}
+                                                    <div class="member-equipment-row">
+                                                        <div>
+                                                            <strong>{{ bookingEquipment.equipment.name ?? ('account.dashboard.equipment'|trans) }}</strong>
+                                                            <small>{{ 'account.dashboard.quantity'|trans }}: {{ bookingEquipment.quantity }}</small>
+                                                        </div>
+                                                        <strong>¥{{ bookingEquipment.totalPrice|number_format(0, '.', ',') }}</strong>
+                                                    </div>
+                                                {% endfor %}
                                             </div>
+                                        {% endif %}
+                                    </section>
 
-                                            {% if booking.bookingEquipment is empty %}
+                                    <section class="member-dialog__section">
+                                        <h3>{{ 'account.dashboard.price_summary'|trans }}</h3>
+                                        <div class="member-price-summary">
+                                            <div><span>{{ 'account.dashboard.booking_price'|trans }}</span><strong>¥{{ (booking.price ?? 0)|number_format(0, '.', ',') }}</strong></div>
+                                            <div><span>{{ 'account.dashboard.equipment'|trans }}</span><strong>¥{{ (booking.equipmentPrice ?? 0)|number_format(0, '.', ',') }}</strong></div>
+                                            <div class="member-price-summary__total"><span>{{ 'account.dashboard.total'|trans }}</span><strong>¥{{ (booking.totalPrice ?? booking.price ?? 0)|number_format(0, '.', ',') }}</strong></div>
+                                        </div>
+                                    </section>
+                                </div>
 
-                                                <div class="mt-3 rounded-xl bg-slate-50 p-4 text-sm text-state">
-                                                    {{ 'account.dashboard.no_reserved_equipment'|trans }}
-                                                </div>
-
-                                            {% else %}
-
-                                                <div class="mt-3 overflow-hidden rounded-2xl border border-slate-200">
-                                                    <div class="divide-y divide-slate-200">
-
-                                                        {% for bookingEquipment in booking.bookingEquipment %}
-                                                            <div class="flex items-center justify-between gap-4 px-4 py-4">
-
-                                                                <div class="min-w-0">
-                                                                    <p class="truncate text-sm font-semibold text-secondary">
-                                                                        {{ bookingEquipment.equipment.name ?? ('account.dashboard.equipment'|trans) }}
-                                                                    </p>
-
-                                                                    <p class="mt-1 text-xs text-state">
-                                                                        {{ 'account.dashboard.quantity'|trans }}
-                                                                        : {{ bookingEquipment.quantity }}
-
-                                                                        {% if bookingEquipment.equipment.unitPrice is defined %}
-                                                                            · {{ 'account.dashboard.unit_price'|trans }}
-                                                                            : {{ bookingEquipment.equipment.unitPrice|number_format(0, '.', ',') }} ¥
-                                                                        {% endif %}
-                                                                    </p>
-                                                                </div>
-
-                                                                <p class="shrink-0 text-sm font-bold text-secondary">
-                                                                    {{ bookingEquipment.totalPrice|number_format(0, '.', ',') }} ¥
-                                                                </p>
-                                                            </div>
-                                                        {% endfor %}
-
-                                                    </div>
-                                                </div>
-
-                                            {% endif %}
-                                        </section>
-
-                                        {# Résumé financier #}
-                                        <section class="rounded-2xl bg-[#fbf5ed] p-4">
-                                            <h3 class="text-sm font-semibold uppercase tracking-wide text-[#7a4b2a]">
-                                                {{ 'account.dashboard.price_summary'|trans }}
-                                            </h3>
-
-                                            <dl class="mt-3 space-y-2 text-sm">
-
-                                                <div class="flex items-center justify-between gap-4">
-                                                    <dt class="text-[#7a4b2a]">
-                                                        {{ 'account.dashboard.booking_price'|trans }}
-                                                    </dt>
-
-                                                    <dd class="font-semibold text-secondary">
-                                                        {{ (booking.price ?? 0)|number_format(0, '.', ',') }} ¥
-                                                    </dd>
-                                                </div>
-
-                                                <div class="flex items-center justify-between gap-4">
-                                                    <dt class="text-[#7a4b2a]">
-                                                        {{ 'account.dashboard.equipment'|trans }}
-                                                    </dt>
-
-                                                    <dd class="font-semibold text-secondary">
-                                                        {{ (booking.equipmentPrice ?? 0)|number_format(0, '.', ',') }} ¥
-                                                    </dd>
-                                                </div>
-
-                                                <div class="border-t border-[#d9c2aa] pt-2">
-                                                    <div class="flex items-center justify-between gap-4">
-                                                        <dt class="font-bold text-[#7a4b2a]">
-                                                            {{ 'account.dashboard.total'|trans }}
-                                                        </dt>
-
-                                                        <dd class="text-lg font-bold text-secondary">
-                                                            {{
-                                                                (booking.totalPrice ?? booking.price ?? 0)
-                                                                |number_format(0, '.', ',')
-                                                            }} ¥
-                                                        </dd>
-                                                    </div>
-                                                </div>
-
-                                            </dl>
-                                        </section>
-
-                                    </div>
-
-                                    <div class="flex justify-end border-t border-slate-200 px-5 py-4 sm:px-6">
-                                        <button
-                                            type="button"
-                                            onclick="document.getElementById('{{ modalId }}').close()"
-                                            class="inline-flex min-h-11 items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-secondary transition hover:bg-slate-100"
-                                        >
-                                            {{ 'account.dashboard.close'|trans }}
-                                        </button>
-                                    </div>
-
+                                <div class="member-dialog__footer">
+                                    {% if status == 'approved' and booking.stripeCheckoutUrl %}
+                                        <a href="{{ booking.stripeCheckoutUrl }}" target="_blank" rel="noopener noreferrer" class="member-button member-button--gold">{{ 'account.dashboard.proceed_to_payment'|trans }}</a>
+                                    {% endif %}
+                                    <button type="button" class="member-button member-button--outline" data-booking-dialog-close>{{ 'account.dashboard.close'|trans }}</button>
                                 </div>
                             </dialog>
-
                         {% endfor %}
-
                     </div>
-                {% endif %}
 
+                    {% if pagination.pages > 1 %}
+                        {% set pageStart = max(1, pagination.page - 2) %}
+                        {% set pageEnd = min(pagination.pages, pagination.page + 2) %}
+                        <div class="member-pagination-wrap">
+                            <p class="member-pagination-summary">{{ 'account.dashboard.pagination_summary'|trans({
+                                '%start%': ((pagination.page - 1) * pagination.perPage) + 1,
+                                '%end%': min(pagination.total, pagination.page * pagination.perPage),
+                                '%total%': pagination.total
+                            }) }}</p>
+
+                            <nav class="member-pagination" aria-label="{{ 'account.dashboard.pagination_label'|trans }}">
+                                {% if pagination.page > 1 %}
+                                    <a href="{{ path('app_home_user', filterQuery|merge({'page': pagination.page - 1})) }}" aria-label="{{ 'account.dashboard.previous_page'|trans }}">←</a>
+                                {% else %}
+                                    <span class="is-disabled" aria-hidden="true">←</span>
+                                {% endif %}
+
+                                {% for pageNumber in pageStart..pageEnd %}
+                                    {% if pageNumber == pagination.page %}
+                                        <span class="is-current" aria-current="page">{{ pageNumber }}</span>
+                                    {% else %}
+                                        <a href="{{ path('app_home_user', filterQuery|merge({'page': pageNumber})) }}" aria-label="{{ 'account.dashboard.page_number'|trans({'%page%': pageNumber}) }}">{{ pageNumber }}</a>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if pagination.page < pagination.pages %}
+                                    <a href="{{ path('app_home_user', filterQuery|merge({'page': pagination.page + 1})) }}" aria-label="{{ 'account.dashboard.next_page'|trans }}">→</a>
+                                {% else %}
+                                    <span class="is-disabled" aria-hidden="true">→</span>
+                                {% endif %}
+                            </nav>
+                        </div>
+                    {% endif %}
+                {% endif %}
             </section>
         </main>
     </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('member_dashboard') }}
 {% endblock %}

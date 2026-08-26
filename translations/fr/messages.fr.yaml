@@ -41,6 +41,7 @@ admin:
     unknown_zone: "Zone inconnue"
     unknown_user: "Utilisateur inconnu"
     actions:
+      statistics: "Statistiques"
       users: "Gérer les utilisateurs"
       pending_bookings: "Traiter les demandes"
       view_all_bookings: "Voir toutes les réservations"
@@ -93,9 +94,13 @@ admin:
       unit_price: "Prix unitaire"
       approve_error: "Impossible d’approuver la réservation."
       decline_error: "Impossible de refuser la réservation."
+  statistics:
+    title: "Statistiques"
+    back_to_dashboard: "Retour au tableau de bord"
   menu:
     return_to_app: "Retour à l'application"
     dashboard: "Tableau de bord"
+    statistics: "Statistiques"
     users: "Utilisateurs"
     user_roles: "Rôles utilisateurs"
     bookings: "Réservations"

@@ -7,8 +7,10 @@ use App\Entity\User;
 use App\Entity\UserRole;
 use App\Entity\Zone;
 use App\Enum\BookingStatus;
+use App\Enum\ZoneType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -98,6 +100,101 @@ class BookingRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * @return array{
+     *     items: list<Booking>,
+     *     page: int,
+     *     pages: int,
+     *     total: int,
+     *     perPage: int
+     * }
+     */
+    public function paginateForUser(
+        User $user,
+        int $requestedPage,
+        int $perPage,
+        ?BookingStatus $status,
+        string $scope,
+        \DateTimeImmutable $now,
+    ): array {
+        $queryBuilder = $this->createQueryBuilder('booking')
+            ->addSelect('zone', 'facility')
+            ->join('booking.zone', 'zone')
+            ->leftJoin('zone.facility', 'facility')
+            ->andWhere('booking.userBooking = :user')
+            ->setParameter('user', $user);
+
+        if (null !== $status) {
+            $queryBuilder
+                ->andWhere('booking.bookingStatus = :status')
+                ->setParameter('status', $status);
+        }
+
+        if ('upcoming' === $scope) {
+            $queryBuilder
+                ->andWhere('booking.endDate >= :now')
+                ->andWhere('booking.bookingStatus != :declinedStatus')
+                ->setParameter('now', $now, Types::DATETIME_IMMUTABLE)
+                ->setParameter('declinedStatus', BookingStatus::DECLINED)
+                ->orderBy('booking.startDate', 'ASC');
+        } elseif ('past' === $scope) {
+            $queryBuilder
+                ->andWhere('booking.endDate < :now')
+                ->setParameter('now', $now, Types::DATETIME_IMMUTABLE)
+                ->orderBy('booking.startDate', 'DESC');
+        } else {
+            $queryBuilder->orderBy('booking.startDate', 'DESC');
+        }
+
+        $total = count(new Paginator($queryBuilder, true));
+        $pages = max(1, (int) ceil($total / $perPage));
+        $page = min(max(1, $requestedPage), $pages);
+
+        $queryBuilder
+            ->setFirstResult(($page - 1) * $perPage)
+            ->setMaxResults($perPage);
+
+        $paginator = new Paginator($queryBuilder, true);
+
+        return [
+            'items' => array_values(iterator_to_array($paginator->getIterator())),
+            'page' => $page,
+            'pages' => $pages,
+            'total' => $total,
+            'perPage' => $perPage,
+        ];
+    }
+
+    /**
+     * @return array{total: int, upcoming: int, pending: int, paymentDue: int, paid: int}
+     */
+    public function getUserDashboardSummary(User $user, \DateTimeImmutable $now): array
+    {
+        $summary = $this->createQueryBuilder('booking')
+            ->select('COUNT(booking.id) AS total')
+            ->addSelect('SUM(CASE WHEN booking.endDate >= :now AND booking.bookingStatus != :declinedStatus THEN 1 ELSE 0 END) AS upcoming')
+            ->addSelect('SUM(CASE WHEN booking.bookingStatus = :pendingStatus THEN 1 ELSE 0 END) AS pending')
+            ->addSelect('SUM(CASE WHEN booking.bookingStatus = :approvedStatus THEN 1 ELSE 0 END) AS paymentDue')
+            ->addSelect('SUM(CASE WHEN booking.bookingStatus = :paidStatus THEN 1 ELSE 0 END) AS paid')
+            ->andWhere('booking.userBooking = :user')
+            ->setParameter('user', $user)
+            ->setParameter('now', $now, Types::DATETIME_IMMUTABLE)
+            ->setParameter('declinedStatus', BookingStatus::DECLINED)
+            ->setParameter('pendingStatus', BookingStatus::PENDING)
+            ->setParameter('approvedStatus', BookingStatus::APPROVED)
+            ->setParameter('paidStatus', BookingStatus::PAID)
+            ->getQuery()
+            ->getSingleResult();
+
+        return [
+            'total' => (int) ($summary['total'] ?? 0),
+            'upcoming' => (int) ($summary['upcoming'] ?? 0),
+            'pending' => (int) ($summary['pending'] ?? 0),
+            'paymentDue' => (int) ($summary['paymentDue'] ?? 0),
+            'paid' => (int) ($summary['paid'] ?? 0),
+        ];
+    }
+
     public function hasOverlap($zone, \DateTimeInterface $start, \DateTimeInterface $end, ?int $excludeBookingId = null, array $conflictingCodes = []): bool
     {
         $qb = $this->createQueryBuilder('b')
@@ -153,16 +250,20 @@ class BookingRepository extends ServiceEntityRepository
         $endOfMonth = new \DateTimeImmutable('first day of next month midnight');
 
         $bookings = $this->createQueryBuilder('b')
+            ->join('b.zone', 'z')
             ->where('b.userBooking = :user')
+            ->andWhere('z.typeZone = :trainingType')
             ->andWhere('b.startDate >= :startOfMonth')
             ->andWhere('b.startDate < :endOfMonth')
             ->andWhere('b.bookingStatus IN (:validStatuses)')
             ->setParameter('user', $user)
+            ->setParameter('trainingType', ZoneType::TRAINING)
             ->setParameter('startOfMonth', $startOfMonth)
             ->setParameter('endOfMonth', $endOfMonth)
             ->setParameter('validStatuses', [
                 BookingStatus::PENDING,
                 BookingStatus::APPROVED,
+                BookingStatus::PAID,
             ])
             ->getQuery()
             ->getResult();

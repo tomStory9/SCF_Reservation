@@ -75,6 +75,7 @@ admin:
     unknown_zone: "不明なゾーン"
     unknown_user: "不明なユーザー"
     actions:
+      statistics: "統計"
       users: "ユーザー管理"
       pending_bookings: "申請を確認"
       view_all_bookings: "すべての予約を見る"
@@ -127,9 +128,13 @@ admin:
       unit_price: "単価"
       approve_error: "予約を承認できませんでした。"
       decline_error: "予約を却下できませんでした。"
+  statistics:
+    title: "統計"
+    back_to_dashboard: "ダッシュボードに戻る"
   menu:
     return_to_app: "アプリに戻る"
     dashboard: "ダッシュボード"
+    statistics: "統計"
     users: "ユーザー"
     user_roles: "ユーザーロール"
     bookings: "予約"

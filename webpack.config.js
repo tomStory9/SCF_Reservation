@@ -24,6 +24,7 @@ Encore
     .addEntry('reservation', './assets/js/booking-calendar.js')
     .addEntry('room_reservation', './assets/js/room-reservation.js')
     .addEntry('admin_dashboard', './assets/js/admin-dashboard.js')
+    .addEntry('member_dashboard', './assets/js/member-dashboard.js')
     .addEntry('carousel', './assets/js/carousel.js')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()

@@ -75,6 +75,7 @@ admin:
     unknown_zone: "Unknown zone"
     unknown_user: "Unknown user"
     actions:
+      statistics: "Statistics"
       users: "Manage users"
       pending_bookings: "Review requests"
       view_all_bookings: "View all bookings"
@@ -127,9 +128,13 @@ admin:
       unit_price: "Unit price"
       approve_error: "The booking could not be approved."
       decline_error: "The booking could not be declined."
+  statistics:
+    title: "Statistics"
+    back_to_dashboard: "Back to dashboard"
   menu:
     return_to_app: "Back to application"
     dashboard: "Dashboard"
+    statistics: "Statistics"
     users: "Users"
     user_roles: "User roles"
     bookings: "Bookings"

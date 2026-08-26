@@ -8,6 +8,7 @@ use App\Repository\BookingRepository;
 use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
+use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -130,12 +131,19 @@ class DashboardController extends AbstractDashboardController
             'bookingDetailUrls' => $bookingDetailUrls,
             'userDetailUrls' => $userDetailUrls,
             'urls' => [
+                'statistics' => $this->generateUrl('admin_statistics'),
                 'bookings' => $this->generateAdminUrl(BookingCrudController::class),
                 'pendingBookings' => $this->generateAdminUrl(PendingBookingCrudController::class),
                 'users' => $this->generateAdminUrl(UserCrudController::class),
                 'pendingUsers' => $this->generateAdminUrl(PendingUserCrudController::class),
             ],
         ]);
+    }
+
+    #[AdminRoute(path: '/statistics', name: 'statistics')]
+    public function statistics(): Response
+    {
+        return $this->render('admin/statistics/index.html.twig');
     }
 
     public function configureAssets(): Assets
@@ -165,6 +173,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('admin.menu.return_to_app', 'fas fa-arrow-left', 'app_home');
 
         yield MenuItem::linkToDashboard('admin.menu.dashboard', 'fa fa-home');
+        yield MenuItem::linkToRoute('admin.menu.statistics', 'fa fa-chart-line', 'admin_statistics');
         yield MenuItem::linkTo(UserCrudController::class, 'admin.menu.users', 'fa fa-users');
         yield MenuItem::linkTo(UserRoleCrudController::class, 'admin.menu.user_roles', 'fa fa-users');
         yield MenuItem::linkTo(BookingCrudController::class, 'admin.menu.bookings', 'fa fa-book');

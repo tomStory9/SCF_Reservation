@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block page_actions %}
+    <a class="btn btn-secondary" href="{{ urls.statistics }}">
+        <i class="fa fa-chart-line" aria-hidden="true"></i>
+        {{ 'admin.dashboard.actions.statistics'|trans }}
+    </a>
+
     <a class="btn btn-secondary" href="{{ urls.users }}">
         <i class="fa fa-users" aria-hidden="true"></i>
         {{ 'admin.dashboard.actions.users'|trans }}

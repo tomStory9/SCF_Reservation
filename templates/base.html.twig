@@ -27,6 +27,7 @@
 
 	<body class="bg-slate-100 text-slate-800 antialiased font-[Inter]">
 
+		{% block locale_switcher %}
 		<header class="absolute top-0 right-0 p-6 z-50">
 
 			<div class="flex items-center gap-2 bg-white/80 backdrop-blur rounded-full shadow px-2 py-2">
@@ -49,13 +50,13 @@
 			</div>
 
 		</header>
+		{% endblock %}
 
 		{% block body %}{% endblock %}
 
 		{{ encore_entry_script_tags('app') }}
 
 		{% block javascripts %}{% endblock %}
-		{{ encore_entry_script_tags('app') }}
 
 	</body>
 </html>

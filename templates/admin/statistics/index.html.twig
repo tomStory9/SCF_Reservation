@@ -1,0 +1,15 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block content_title %}
+    {{ 'admin.statistics.title'|trans }}
+{% endblock %}
+
+{% block page_actions %}
+    <a class="btn btn-secondary" href="{{ path('admin') }}">
+        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+        {{ 'admin.statistics.back_to_dashboard'|trans }}
+    </a>
+{% endblock %}
+
+{% block main %}
+{% endblock %}

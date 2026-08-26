@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Enum\BookingStatus;
 use App\Form\ChangePasswordFormType;
 use App\Form\UserFormType;
+use App\Repository\BookingRepository;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +26,7 @@ final class UserController extends AbstractController
 {
     public function __construct(
         private readonly UserRepository $userRepository,
+        private readonly BookingRepository $bookingRepository,
         private readonly EntityManagerInterface $entityManager,
         private readonly EmailVerifier $emailVerifier,
         private readonly TranslatorInterface $translator,
@@ -32,13 +35,34 @@ final class UserController extends AbstractController
 
     #[IsGranted('ROLE_USER')]
     #[Route('/user', name: 'app_home_user')]
-    public function index(): Response
+    public function index(Request $request): Response
     {
+        /** @var User $user */
         $user = $this->getUser();
+        $statusValue = (string) $request->query->get('status', '');
+        $status = '' === $statusValue ? null : BookingStatus::tryFrom($statusValue);
+        $scope = (string) $request->query->get('scope', 'upcoming');
+        $scope = \in_array($scope, ['upcoming', 'past', 'all'], true) ? $scope : 'upcoming';
+        $page = max(1, $request->query->getInt('page', 1));
+        $now = new \DateTimeImmutable('now', new \DateTimeZone('Asia/Tokyo'));
+        $pagination = $this->bookingRepository->paginateForUser(
+            $user,
+            $page,
+            5,
+            $status,
+            $scope,
+            $now,
+        );
 
         return $this->render('user/index.html.twig', [
             'user' => $user,
-            'bookings' => $user->getBookings(),
+            'bookings' => $pagination['items'],
+            'pagination' => $pagination,
+            'summary' => $this->bookingRepository->getUserDashboardSummary($user, $now),
+            'filters' => [
+                'status' => $status?->value ?? '',
+                'scope' => $scope,
+            ],
         ]);
     }
 

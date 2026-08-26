@@ -1,126 +1,126 @@
 {% trans_default_domain 'profile' %}
-<nav class="sticky top-0 z-50 border-b border-slate-200 bg-white">
-	<div class="mx-auto w-full px-4 py-4 sm:px-6 lg:px-10 xl:px-12">
-		<div
-			class="flex w-full items-center">
-			{# Gauche : logo + identité #}
-			<div class="flex flex-1 items-center justify-start gap-4 lg:gap-6">
-				<a href="{{ path('app_home') }}" class="flex shrink-0 items-center justify-center rounded-2xl bg-white p-2">
-					<img src="{{ asset('build/images/scf.svg') }}" alt="SCF" class="h-10 w-auto">
-				</a>
+{% set currentRoute = app.request.attributes.get('_route') ?? '' %}
+{% set memberRemainingFreeHours = remainingHours is defined ? remainingHours : remaining_free_hours(app.user) %}
+{% set memberRemainingFreeHoursLabel = 'account.dashboard.free_hours_value'|trans({'%hours%': memberRemainingFreeHours|round(1)}) %}
 
-				<div class="min-w-0">
-					<p class="hidden text-xs font-medium uppercase tracking-[0.2em] text-state sm:block">
-						{{ 'account.dashboard.space'|trans }}
-					</p>
-					<h1 class="truncate text-sm font-semibold text-secondary sm:text-lg">
-						{{ app.user.name }}
-						{{ app.user.lastname }}
-					</h1>
-				</div>
-			</div>
+<nav class="sticky top-0 z-50 border-b border-[#dce5eb] bg-white/95 shadow-[0_4px_18px_rgba(3,56,98,0.06)] backdrop-blur" aria-label="{{ 'account.dashboard.member_navigation'|trans }}">
+    <div class="mx-auto flex min-h-[4.75rem] w-full max-w-[82rem] items-center gap-3 px-4 sm:px-6 lg:px-8">
+        <a href="{{ path('app_home') }}" class="flex shrink-0 items-center gap-3 rounded-xl focus:outline-none focus:ring-4 focus:ring-primary/30">
+            <img src="{{ asset('build/images/scf.svg') }}" alt="SCF" class="h-11 w-auto sm:h-12">
+            <span class="hidden border-l border-secondary/15 pl-3 sm:block">
+                <span class="block text-[0.62rem] font-extrabold uppercase tracking-[0.18em] text-[#607487]">{{ 'account.dashboard.space'|trans }}</span>
+                <span class="mt-0.5 block max-w-40 truncate text-sm font-bold text-secondary">{{ app.user.name }} {{ app.user.lastname }}</span>
+            </span>
+        </a>
 
-			{# Centre : navigation #}
-			<div class="hidden flex-1 items-center justify-center lg:flex">
-				<div class="flex items-center gap-6 xl:gap-8">
-					<a href="{{ path('app_booking_index') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') == 'app_booking_index' ? 'text-primary' : 'text-secondary' }}">
-						{{ 'account.dashboard.new_booking'|trans }}
-					</a>
+        <div class="hidden flex-1 items-center justify-center lg:flex">
+            <div class="flex items-center gap-1 rounded-2xl bg-[#f3f6f8] p-1.5">
+                <a
+                    href="{{ path('app_home_user') }}"
+                    class="rounded-xl px-4 py-2.5 text-sm font-bold transition {{ currentRoute == 'app_home_user' ? 'bg-white text-secondary shadow-sm ring-1 ring-secondary/10' : 'text-[#526779] hover:bg-white/70 hover:text-secondary' }}"
+                    {% if currentRoute == 'app_home_user' %}aria-current="page"{% endif %}
+                >{{ 'account.dashboard.my_account'|trans }}</a>
 
-                    {% if is_granted('FEATURE_ROOM_BOOKING') %}
-                    <a href="{{ path('app_room_booking') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') == 'app_room_booking' ? 'text-primary' : 'text-secondary' }}">
-                        {{ 'account.dashboard.new_room_booking'|trans }}
-                    </a>
-                    {% endif %}
+                <a
+                    href="{{ path('app_booking_index') }}"
+                    class="rounded-xl px-4 py-2.5 text-sm font-bold transition {{ currentRoute starts with 'app_booking' ? 'bg-white text-secondary shadow-sm ring-1 ring-secondary/10' : 'text-[#526779] hover:bg-white/70 hover:text-secondary' }}"
+                    {% if currentRoute starts with 'app_booking' %}aria-current="page"{% endif %}
+                >{{ 'account.dashboard.training_short'|trans }}</a>
 
-					<a href="{{ path('app_home_user') }}" class="text-sm font-semibold transition hover:text-primary {{ app.request.attributes.get('_route') starts with 'app_home_user' ? 'text-primary' : 'text-secondary' }}">
-						{{ 'account.dashboard.my_account'|trans }}
-					</a>
-				</div>
-			</div>
+                {% if is_granted('FEATURE_ROOM_BOOKING') %}
+                    <a
+                        href="{{ path('app_room_booking') }}"
+                        class="rounded-xl px-4 py-2.5 text-sm font-bold transition {{ currentRoute starts with 'app_room_booking' ? 'bg-white text-secondary shadow-sm ring-1 ring-secondary/10' : 'text-[#526779] hover:bg-white/70 hover:text-secondary' }}"
+                        {% if currentRoute starts with 'app_room_booking' %}aria-current="page"{% endif %}
+                    >{{ 'account.dashboard.rooms_short'|trans }}</a>
+                {% endif %}
+            </div>
+        </div>
 
-			{# Droite : langues + profil #}
-			<div class="flex flex-1 items-center justify-end gap-4 sm:gap-5 lg:gap-6">
-				<div class="hidden items-center gap-1 rounded-2xl border border-secondary/10 bg-secondary/5 p-1 sm:flex">
-					<a href="{{ path('app_switch_locale', {'locale': 'fr'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'fr' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
-						FR
-					</a>
+        <div class="ml-auto flex items-center gap-2 sm:gap-3">
+            <a
+                href="{{ path('app_booking_index') }}"
+                class="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-primary/70 bg-[#fff8e8] px-2.5 text-secondary transition hover:bg-[#fff1cf] focus:outline-none focus:ring-4 focus:ring-primary/30 sm:px-3"
+                aria-label="{{ 'account.dashboard.free_hours_remaining'|trans }} : {{ memberRemainingFreeHoursLabel }}"
+                title="{{ 'account.dashboard.free_hours_remaining'|trans }}"
+            >
+                <svg class="h-4 w-4 text-[#9a6b00]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" aria-hidden="true">
+                    <circle cx="12" cy="12" r="9"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 7v5l3 2"/>
+                </svg>
+                <span class="text-[0.68rem] font-bold text-[#755500] sm:text-xs">{{ 'account.dashboard.free_hours_short'|trans }}</span>
+                <span class="text-[#b0831d]" aria-hidden="true">·</span>
+                <strong class="text-xs font-extrabold sm:text-sm">{{ memberRemainingFreeHoursLabel }}</strong>
+            </a>
 
-					<a href="{{ path('app_switch_locale', {'locale': 'en'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'en' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
-						EN
-					</a>
+            <div class="hidden items-center rounded-xl border border-[#dce5eb] bg-white p-1 sm:flex" aria-label="{{ 'account.dashboard.language_label'|trans }}">
+                {% for locale in ['fr', 'en', 'ja'] %}
+                    <a
+                        href="{{ path('app_switch_locale', {'locale': locale}) }}"
+                        class="inline-flex min-h-9 min-w-10 items-center justify-center rounded-lg px-2 text-xs font-extrabold transition {{ app.request.locale == locale ? 'bg-secondary text-white' : 'text-[#526779] hover:bg-[#f3f6f8] hover:text-secondary' }}"
+                        lang="{{ locale }}"
+                        {% if app.request.locale == locale %}aria-current="true"{% endif %}
+                    >{{ locale == 'ja' ? '日本語' : locale|upper }}</a>
+                {% endfor %}
+            </div>
 
-					<a href="{{ path('app_switch_locale', {'locale': 'ja'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-sm font-medium transition {{ app.request.locale == 'ja' ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}">
-						JA
-					</a>
-				</div>
+            <details class="group relative">
+                <summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-xl border border-transparent px-1.5 py-1.5 text-secondary transition hover:border-[#dce5eb] hover:bg-[#f8fafb] focus:outline-none focus:ring-4 focus:ring-primary/30 sm:px-2.5">
+                    <span class="grid h-9 w-9 place-items-center rounded-xl bg-[#fff1cf] text-sm font-extrabold text-secondary">
+                        {{ app.user.name|first|upper }}{{ app.user.lastname|first|upper }}
+                    </span>
+                    <svg class="h-4 w-4 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="m7 10 5 5 5-5"/></svg>
+                </summary>
 
-				<details class="relative">
-					<summary class="flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-xl px-2 py-2 text-sm text-secondary transition hover:text-primary">
-						<div class="flex h-9 w-9 items-center justify-center rounded-xl bg-[#f3e7d7] text-[#7a4b2a]">
-							<svg xmlns="http://www.w3.org/2000/svg" class="h-4.5 w-4.5" fill="none" viewbox="0 0 24 24" stroke="currentColor">
-								<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M15.75 6.75a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.5 20.118a7.5 7.5 0 0115 0A17.933 17.933 0 0112 21.75a17.933 17.933 0 01-7.5-1.632z"/>
-							</svg>
-						</div>
+                <div class="absolute right-0 mt-2 w-[min(18rem,calc(100vw-1rem))] overflow-hidden rounded-2xl border border-[#d6e1e8] bg-white shadow-[0_18px_50px_rgba(3,56,98,0.18)]">
+                    <div class="border-b border-[#e2e9ee] bg-[#f6f8fa] px-4 py-3.5">
+                        <p class="truncate text-sm font-extrabold text-secondary">{{ app.user.name }} {{ app.user.lastname }}</p>
+                        <p class="mt-0.5 truncate text-xs font-medium text-[#526779]">{{ app.user.email }}</p>
+                    </div>
 
-						<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 shrink-0 text-secondary" fill="none" viewbox="0 0 24 24" stroke="currentColor">
-							<path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M19 9l-7 7-7-7"/>
-						</svg>
-					</summary>
+                    <div class="p-2">
+                        <a href="{{ path('app_user_profile') }}" class="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-bold text-secondary transition hover:bg-[#fff5dd]">
+                            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path stroke-linecap="round" d="M4 21a8 8 0 0 1 16 0"/></svg>
+                            {{ 'account.dashboard.my_info'|trans }}
+                        </a>
+                        <a href="{{ path('app_user_change_password') }}" class="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-bold text-secondary transition hover:bg-[#fff5dd]">
+                            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path stroke-linecap="round" d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+                            {{ 'account.dashboard.change_password'|trans }}
+                        </a>
 
-					<div class="absolute right-0 mt-2 w-64 overflow-hidden rounded-2xl border border-[#dcc3a5] bg-white shadow-lg">
-						<div class="border-b border-[#ead8c2] bg-[#fbf5ed] px-4 py-3">
-							<p class="truncate text-sm font-semibold text-secondary">
-								{{ app.user.name }}
-								{{ app.user.lastname }}
-							</p>
-							<p class="truncate text-xs text-state">
-								{{ app.user.email }}
-							</p>
-						</div>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('admin') }}" class="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-bold text-secondary transition hover:bg-[#fff5dd]">
+                                <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path stroke-linecap="round" stroke-linejoin="round" d="M19.4 15a1.7 1.7 0 0 0 .34 1.88l.06.06-2.83 2.83-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 .6 1.7 1.7 0 0 0-.4 1.1V21h-4v-.09A1.7 1.7 0 0 0 8.6 19.4a1.7 1.7 0 0 0-1.88.34l-.06.06-2.83-2.83.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-.6-1 1.7 1.7 0 0 0-1.1-.4H3v-4h.09A1.7 1.7 0 0 0 4.6 8.6a1.7 1.7 0 0 0-.34-1.88l-.06-.06 2.83-2.83.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-.6 1.7 1.7 0 0 0 .4-1.1V3h4v.09A1.7 1.7 0 0 0 15.4 4.6a1.7 1.7 0 0 0 1.88-.34l.06-.06 2.83 2.83-.06.06A1.7 1.7 0 0 0 19.4 9c.12.38.34.72.65.98.3.26.7.4 1.1.4H21v4h-.09A1.7 1.7 0 0 0 19.4 15Z"/></svg>
+                                {{ 'account.dashboard.admin'|trans }}
+                            </a>
+                        {% endif %}
 
-						<div class="flex flex-col p-2">
-							<a href="{{ path('app_user_profile') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-secondary transition hover:bg-[#f8efe4]">
-								{{ 'account.dashboard.my_info'|trans }}
-							</a>
+                        <div class="my-1 border-t border-[#e2e9ee]"></div>
+                        <a href="{{ path('app_logout') }}" class="flex min-h-11 items-center gap-3 rounded-xl px-3 py-2 text-sm font-bold text-[#9f1239] transition hover:bg-[#fff1f2]">
+                            <svg class="h-4.5 w-4.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M10 17l5-5-5-5M15 12H3M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"/></svg>
+                            {{ 'account.dashboard.logout'|trans }}
+                        </a>
+                    </div>
 
-							<a href="{{ path('app_user_change_password') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-secondary transition hover:bg-[#f8efe4]">
-								{{ 'account.dashboard.change_password'|trans }}
-							</a>
+                    <div class="grid grid-cols-3 gap-1 border-t border-[#e2e9ee] bg-[#f8fafb] p-2 sm:hidden">
+                        {% for locale in ['fr', 'en', 'ja'] %}
+                            <a href="{{ path('app_switch_locale', {'locale': locale}) }}" class="inline-flex min-h-10 items-center justify-center rounded-lg text-xs font-extrabold {{ app.request.locale == locale ? 'bg-secondary text-white' : 'text-secondary hover:bg-white' }}" lang="{{ locale }}">{{ locale == 'ja' ? '日本語' : locale|upper }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </details>
+        </div>
+    </div>
 
-                            {% if is_granted('ROLE_ADMIN') %}
-                                <a href="{{ path('admin') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-secondary transition hover:bg-[#f8efe4]">
-                                    {{ 'account.dashboard.admin'|trans }}
-                                </a>
-                            {% endif %}
+    <div class="border-t border-[#edf1f4] px-3 py-2 lg:hidden">
+        <div class="mx-auto flex max-w-[82rem] items-center gap-2 overflow-x-auto">
+            <a href="{{ path('app_home_user') }}" class="shrink-0 rounded-lg px-3 py-2 text-xs font-extrabold {{ currentRoute == 'app_home_user' ? 'bg-secondary text-white' : 'bg-[#f3f6f8] text-secondary' }}">{{ 'account.dashboard.my_account'|trans }}</a>
+            <a href="{{ path('app_booking_index') }}" class="shrink-0 rounded-lg px-3 py-2 text-xs font-extrabold {{ currentRoute starts with 'app_booking' ? 'bg-secondary text-white' : 'bg-[#f3f6f8] text-secondary' }}">{{ 'account.dashboard.training_short'|trans }}</a>
+            {% if is_granted('FEATURE_ROOM_BOOKING') %}
+                <a href="{{ path('app_room_booking') }}" class="shrink-0 rounded-lg px-3 py-2 text-xs font-extrabold {{ currentRoute starts with 'app_room_booking' ? 'bg-secondary text-white' : 'bg-[#f3f6f8] text-secondary' }}">{{ 'account.dashboard.rooms_short'|trans }}</a>
+            {% endif %}
+        </div>
+    </div>
 
-							<div class="my-1 border-t border-slate-100"></div>
-
-							<a href="{{ path('app_logout') }}" class="inline-flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-danger transition hover:bg-red-50">
-								{{ 'account.dashboard.logout'|trans }}
-							</a>
-						</div>
-
-						<div class="border-t border-slate-100 p-2 sm:hidden">
-							<div class="grid grid-cols-3 gap-2">
-								<a href="{{ path('app_switch_locale', {'locale': 'fr'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'fr' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
-									FR
-								</a>
-
-								<a href="{{ path('app_switch_locale', {'locale': 'en'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'en' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
-									EN
-								</a>
-
-								<a href="{{ path('app_switch_locale', {'locale': 'ja'}) }}" class="inline-flex min-h-10 items-center justify-center rounded-xl px-3 py-2 text-xs font-medium transition {{ app.request.locale == 'ja' ? 'bg-secondary text-white' : 'bg-secondary/5 text-secondary hover:bg-secondary/10' }}">
-									JA
-								</a>
-							</div>
-						</div>
-					</div>
-				</details>
-			</div>
-		</div>
-	</div>
-
-	<div class="h-1 w-full bg-secondary"></div>
+    <div class="h-1 bg-gradient-to-r from-secondary via-primary to-secondary"></div>
 </nav>
