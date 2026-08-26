@@ -294,9 +294,7 @@ class BookingRepository extends ServiceEntityRepository
     public function getBookingsForZoneAndConflicts(Zone $zone, array $conflictingCodes = [], string $type = 'training'): array
     {
         $qb = $this->createQueryBuilder('b')
-            ->join('b.zone', 'z')
-            ->andWhere('z = :zone')
-            ->setParameter('zone', $zone);
+            ->join('b.zone', 'z');
 
         $allowedStatuses = [BookingStatus::APPROVED];
 
@@ -312,8 +310,12 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameter('statuses', $allowedStatuses);
 
         if (!empty($conflictingCodes)) {
-            $qb->andWhere('z.code IN (:conflictingCodes)')
+            $qb->andWhere('z = :zone OR z.code IN (:conflictingCodes)')
+                ->setParameter('zone', $zone)
                 ->setParameter('conflictingCodes', $conflictingCodes);
+        } else {
+            $qb->andWhere('z = :zone')
+                ->setParameter('zone', $zone);
         }
 
         return $qb->getQuery()->getResult();
