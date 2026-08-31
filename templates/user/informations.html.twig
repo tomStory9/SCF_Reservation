@@ -46,7 +46,6 @@
             </div>
 
             <section class="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm sm:p-12">
-
                 <div class="mb-14 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     <div>
                         <p class="text-xs font-bold uppercase tracking-[0.2em] text-state">
@@ -69,34 +68,19 @@
 
                 <div class="grid grid-cols-1 gap-x-16 gap-y-12 sm:grid-cols-2">
                     <div>
-                        <p class="text-sm font-medium uppercase tracking-wider text-state">
-                            {{ 'account.profile.lastname'|trans }}
-                        </p>
-                        <p class="mt-2 text-xl font-semibold text-secondary">
-                            {{ user.lastname }}
-                        </p>
+                        <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.lastname'|trans }}</p>
+                        <p class="mt-2 text-xl font-semibold text-secondary">{{ user.lastname }}</p>
                     </div>
-
-                    {# Prénom #}
                     <div>
-                        <p class="text-sm font-medium uppercase tracking-wider text-state">
-                            {{ 'account.profile.firstname'|trans }}
-                        </p>
-                        <p class="mt-2 text-xl font-semibold text-secondary">
-                            {{ user.name }}
-                        </p>
+                        <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.firstname'|trans }}</p>
+                        <p class="mt-2 text-xl font-semibold text-secondary">{{ user.name }}</p>
                     </div>
 
                     {# Email #}
                     <div>
-                        <p class="text-sm font-medium uppercase tracking-wider text-state">
-                            {{ 'account.profile.email'|trans }}
-                        </p>
+                        <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.email'|trans }}</p>
                         <div class="mt-2 flex flex-wrap items-center gap-4">
-                            <p class="text-xl font-semibold text-secondary">
-                                {{ user.email }}
-                            </p>
-
+                            <p class="text-xl font-semibold text-secondary">{{ user.email }}</p>
                             {% if user.isVerified %}
                                 <span class="inline-flex items-center gap-1.5 rounded-md bg-green-50 px-2.5 py-1 text-xs font-bold uppercase tracking-widest text-green-700 ring-1 ring-inset ring-green-600/20">
                                     {{ 'account.profile.verified'|trans }}
@@ -111,22 +95,71 @@
 
                     {# Téléphone #}
                     <div>
-                        <p class="text-sm font-medium uppercase tracking-wider text-state">
-                            {{ 'account.profile.phone'|trans }}
-                        </p>
-                        <p class="mt-2 text-xl font-semibold text-secondary">
-                            {{ user.phone ?: 'account.profile.not_provided'|trans }}
-                        </p>
+                        <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.phone'|trans }}</p>
+                        <p class="mt-2 text-xl font-semibold text-secondary">{{ user.phone ?: 'account.profile.not_provided'|trans }}</p>
                     </div>
 
-                    {# Compagnie de cirque #}
-                    <div class="sm:col-span-2">
-                        <p class="text-sm font-medium uppercase tracking-wider text-state">
-                            {{ 'account.profile.company'|trans }}
-                        </p>
-                        <p class="mt-2 text-xl font-semibold text-secondary">
-                            {{ user.company ?: 'account.profile.not_provided'|trans }}
-                        </p>
+                    {# Localisation & Naissance #}
+                    <div>
+                        <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.birth_date'|trans }}</p>
+                        <p class="mt-2 text-xl font-semibold text-secondary">{{ user.birthDate ? user.birthDate|date('Y-m-d') : '-' }}</p>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.residence_city'|trans }} & {{ 'account.profile.nationalitie'|trans }}</p>
+                        <p class="mt-2 text-xl font-semibold text-secondary">{{ user.residenceCity }}, {{ user.nationalitie }}</p>
+                    </div>
+
+                    {# Profil Cirque #}
+                    <div class="sm:col-span-2 border-t border-slate-100 pt-8 mt-4">
+                        <h3 class="text-lg font-bold text-secondary mb-6">{{ 'account.profile.circus_profile'|trans }}</h3>
+                        <div class="grid grid-cols-1 gap-x-16 gap-y-12 sm:grid-cols-2">
+
+                            <div>
+                                <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.specialties'|trans }}</p>
+                                <div class="mt-2 flex flex-wrap gap-2">
+                                    {% for specialty in user.specialties %}
+                                        <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-sm font-medium text-slate-800">
+                                            {{ specialty.name }}
+                                        </span>
+                                    {% else %}
+                                        <p class="text-lg text-slate-400">{{ 'account.profile.not_provided'|trans }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.experience'|trans }}</p>
+                                <p class="mt-2 text-xl font-semibold text-secondary">
+                                    {% if user.practiceStartYear %}
+                                        {{ ("now"|date("Y")) - user.practiceStartYear }} {{ 'account.profile.years'|trans }} ({{ 'account.profile.since'|trans }} {{ user.practiceStartYear }})
+                                    {% else %}
+                                        {{ 'account.profile.not_provided'|trans }}
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.last_performance'|trans }}</p>
+                                <p class="mt-2 text-xl font-semibold text-secondary">{{ user.lastPerformance ?: 'account.profile.not_provided'|trans }}</p>
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.company'|trans }}</p>
+                                <p class="mt-2 text-xl font-semibold text-secondary">{{ user.company ?: 'account.profile.not_provided'|trans }}</p>
+                            </div>
+
+                            <div>
+                                <p class="text-sm font-medium uppercase tracking-wider text-state">{{ 'account.profile.instagram'|trans }}</p>
+                                {% if user.instagramAccount %}
+                                    <a href="https://instagram.com/{{ user.instagramAccount|replace({'@': ''}) }}" target="_blank" class="mt-2 inline-block text-xl font-semibold text-blue-600 hover:underline">
+                                        {{ user.instagramAccount }}
+                                    </a>
+                                {% else %}
+                                    <p class="mt-2 text-xl font-semibold text-secondary">{{ 'account.profile.not_provided'|trans }}</p>
+                                {% endif %}
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </section>

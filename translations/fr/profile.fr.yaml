@@ -135,6 +135,18 @@ account:
         cancel_button: 'Annuler'
         save_button: 'Enregistrer les modifications'
 
+        birth_date: 'Date de naissance'
+        residence_city: 'Ville de résidence'
+        nationalitie: 'Nationalité'
+        circus_profile: 'Profil Cirque'
+        specialties: 'Spécialités'
+        experience: 'Expérience'
+        years: 'ans'
+        since: 'depuis'
+        last_performance: 'Dernière représentation'
+        instagram: 'Instagram'
+        specialties_placeholder: 'Sélectionnez vos spécialités...'
+
     password:
         edit_button: 'Changer mon mot de passe'
         edit_title: 'Changement de mot de passe'

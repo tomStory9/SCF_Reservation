@@ -46,6 +46,15 @@ class Zone
     #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'zone')]
     private Collection $equipment;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $jpDesc = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $enDesc = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $frDesc = null;
+
     public function __construct()
     {
         $this->pricings = new ArrayCollection();
@@ -197,6 +206,42 @@ class Zone
                 $equipment->setZone(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getJpDesc(): ?string
+    {
+        return $this->jpDesc;
+    }
+
+    public function setJpDesc(?string $jpDesc): static
+    {
+        $this->jpDesc = $jpDesc;
+
+        return $this;
+    }
+
+    public function getEnDesc(): ?string
+    {
+        return $this->enDesc;
+    }
+
+    public function setEnDesc(?string $enDesc): static
+    {
+        $this->enDesc = $enDesc;
+
+        return $this;
+    }
+
+    public function getFrDesc(): ?string
+    {
+        return $this->frDesc;
+    }
+
+    public function setFrDesc(?string $frDesc): static
+    {
+        $this->frDesc = $frDesc;
 
         return $this;
     }

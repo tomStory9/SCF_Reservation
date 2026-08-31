@@ -6,6 +6,7 @@ use App\Enum\UserStatus;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -64,6 +65,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
+        $this->specialties = new ArrayCollection();
     }
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -89,6 +91,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 255)]
     #[Gedmo\Versioned]
     private ?string $Language = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $nationalitie = null;
+
+    /**
+     * @var Collection<int, Specialty>
+     */
+    #[ORM\ManyToMany(targetEntity: Specialty::class, inversedBy: 'users')]
+    private Collection $specialties;
+
+    #[ORM\Column(length: 255)]
+    private ?string $residenceCity = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE)]
+    private ?\DateTimeImmutable $birthDate = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lastPerformance = null;
+
+    #[ORM\Column]
+    private ?int $practiceStartYear = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $instagramAccount = null;
 
     public function getId(): ?int
     {
@@ -327,5 +353,101 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $locale = 'jp' === $locale ? 'ja' : $locale;
 
         return \in_array($locale, ['fr', 'en', 'ja'], true) ? $locale : 'ja';
+    }
+
+    public function getNationalitie(): ?string
+    {
+        return $this->nationalitie;
+    }
+
+    public function setNationalitie(string $nationalitie): static
+    {
+        $this->nationalitie = $nationalitie;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Specialty>
+     */
+    public function getSpecialties(): Collection
+    {
+        return $this->specialties;
+    }
+
+    public function addSpecialty(Specialty $specialty): static
+    {
+        if (!$this->specialties->contains($specialty)) {
+            $this->specialties->add($specialty);
+        }
+
+        return $this;
+    }
+
+    public function removeSpecialty(Specialty $specialty): static
+    {
+        $this->specialties->removeElement($specialty);
+
+        return $this;
+    }
+
+    public function getResidenceCity(): ?string
+    {
+        return $this->residenceCity;
+    }
+
+    public function setResidenceCity(string $residenceCity): static
+    {
+        $this->residenceCity = $residenceCity;
+
+        return $this;
+    }
+
+    public function getBirthDate(): ?\DateTimeImmutable
+    {
+        return $this->birthDate;
+    }
+
+    public function setBirthDate(\DateTimeImmutable $birthDate): static
+    {
+        $this->birthDate = $birthDate;
+
+        return $this;
+    }
+
+    public function getLastPerformance(): ?string
+    {
+        return $this->lastPerformance;
+    }
+
+    public function setLastPerformance(?string $lastPerformance): static
+    {
+        $this->lastPerformance = $lastPerformance;
+
+        return $this;
+    }
+
+    public function getPracticeStartYear(): ?int
+    {
+        return $this->practiceStartYear;
+    }
+
+    public function setPracticeStartYear(int $practiceStartYear): static
+    {
+        $this->practiceStartYear = $practiceStartYear;
+
+        return $this;
+    }
+
+    public function getInstagramAccount(): ?string
+    {
+        return $this->instagramAccount;
+    }
+
+    public function setInstagramAccount(?string $instagramAccount): static
+    {
+        $this->instagramAccount = $instagramAccount;
+
+        return $this;
     }
 }

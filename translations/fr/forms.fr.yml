@@ -1,5 +1,5 @@
 login:
-  email: Votre email 
+  email: Votre email
   password: Votre mot de passe
   email_placeholder: Entrez votre email
   password_placeholder: Entrez votre mot de passe
@@ -36,3 +36,31 @@ information:
   company:
     label: "Compagnie de cirque"
     placeholder: "Nom de votre compagnie de cirque"
+
+  nationalitie:
+    label: 'Nationalité(s)'
+    placeholder: 'Ex: Française, Japonaise...'
+    not_blank: 'Veuillez renseigner votre nationalité.'
+
+  residence_city:
+    label: 'Ville de résidence'
+    placeholder: 'Ex: Paris, Tokyo...'
+    not_blank: 'Veuillez renseigner votre ville de résidence.'
+
+  birth_date:
+    label: 'Date de naissance'
+    not_blank: 'Veuillez renseigner votre date de naissance.'
+
+  practice_start_year:
+    label: 'Année de début de pratique'
+    not_blank: 'Veuillez indiquer depuis quelle année vous pratiquez.'
+
+  last_performance:
+    label: 'Dernière représentation (Nom/lien...)'
+    placeholder: "Ex: Gala d'hiver - Décembre 2025"
+
+  instagram:
+    label: 'Compte Instagram (@...)'
+
+  specialties:
+    label: 'Spécialités cirque'
