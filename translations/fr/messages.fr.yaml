@@ -212,6 +212,8 @@ admin:
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"
+    user_booking: "Personne qui a réservé"
+    booking_status: "Statut de la reservation"
   flash:
     booking_not_found: "Réservation introuvable."
     booking_no_longer_pending: "Cette réservation n’est plus en attente."
