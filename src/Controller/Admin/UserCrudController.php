@@ -15,8 +15,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto;
+use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
+use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
@@ -86,10 +88,37 @@ class UserCrudController extends AbstractCrudController
                     $user->setRoles($roleAsString ? [$roleAsString] : []);
                 },
             ]);
+
         yield TextField::new('name', 'admin.field.first_name');
-        yield TextField::new('lastName', 'admin.field.last_name');
+        yield TextField::new('lastname', 'admin.field.last_name');
+        yield DateField::new('birthDate', 'admin.field.birth_date');
+        yield TextField::new('nationalitie', 'admin.field.nationalitie');
+        yield TextField::new('residenceCity', 'admin.field.residence_city');
         yield TextField::new('phone', 'admin.field.phone');
+
+        yield AssociationField::new('specialties', 'admin.field.specialties')
+            ->setFormTypeOption('by_reference', false)
+            ->formatValue(function ($specialties) {
+                if (!$specialties) {
+                    return '';
+                }
+
+                $html = '';
+                foreach ($specialties as $specialty) {
+                    $html .= sprintf('<span class="badge badge-info" style="margin-right: 4px;">%s</span>', $specialty->getName());
+                }
+
+                return $html;
+            })
+            ->renderAsHtml();
+
+        yield IntegerField::new('practiceStartYear', 'admin.field.practice_start_year');
         yield TextField::new('company', 'admin.field.company');
+        yield TextField::new('lastPerformance', 'admin.field.last_performance')
+            ->hideOnIndex();
+        yield TextField::new('instagramAccount', 'admin.field.instagram_account')
+            ->hideOnIndex();
+
         yield ChoiceField::new('language', 'admin.field.language')
             ->setChoices([
                 'admin.enum.language.fr' => 'fr',
@@ -99,17 +128,21 @@ class UserCrudController extends AbstractCrudController
             ->formatValue(fn ($value) => null === $value
                 ? null
                 : $this->translator->trans('admin.enum.language.'.$value));
-        yield IntegerField::new('googleId', 'admin.field.google_id');
-        yield IntegerField::new('lineId', 'admin.field.line_id');
+
+        yield IntegerField::new('googleId', 'admin.field.google_id')
+            ->hideOnIndex();
+        yield IntegerField::new('lineId', 'admin.field.line_id')
+            ->hideOnIndex();
+
         yield ChoiceField::new('userStatus', 'admin.field.user_status')
             ->setFormType(EnumType::class)
-            ->setFormTypeOptions([
-                'class' => UserStatus::class,
-            ])
+            ->setFormTypeOptions(['class' => UserStatus::class])
             ->formatValue(fn ($value) => null === $value
                 ? null
                 : $this->translator->trans('admin.enum.user_status.'.$value->value));
+
         yield BooleanField::new('isVerified', 'admin.field.verified_user');
+
         yield TextField::new('newPassword', 'admin.field.new_password')
             ->setFormType(PasswordType::class)
             ->setFormTypeOptions([
