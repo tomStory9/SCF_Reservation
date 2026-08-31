@@ -7,11 +7,13 @@ use App\Enum\BookingStatus;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -59,6 +61,13 @@ class BookingCrudController extends AbstractCrudController
         yield DateTimeField::new('CheckedInAt', 'admin.field.checked_in_at');
         yield DateTimeField::new('CheckedOutAt', 'admin.field.checked_out_at');
         yield DateTimeField::new('createdDate', 'admin.field.created_date');
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(EntityFilter::new('userBooking', 'admin.filter.user_booking'))
+            ->add(EntityFilter::new('zone', 'admin.filter.zone'));
     }
 
     public function configureCrud(Crud $crud): Crud

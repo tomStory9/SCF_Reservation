@@ -1,0 +1,23 @@
+.ts-control {
+    border-radius: 0.75rem !important;
+    border-color: #cbd5e1 !important;
+    background-color: #f8fafc !important;
+    padding: 0.75rem 1rem !important;
+    font-size: 1.125rem !important;
+    color: #033862 !important;
+    min-height: 54px;
+}
+
+.ts-control.focus {
+    background-color: #ffffff !important;
+    border-color: #033862 !important;
+    box-shadow: 0 0 0 1px #033862 !important;
+}
+
+.ts-control .item {
+    background-color: #e2e8f0 !important;
+    color: #0f172a !important;
+    border-radius: 0.5rem !important;
+    padding: 4px 8px !important;
+    border: none !important;
+}

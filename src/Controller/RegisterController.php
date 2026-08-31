@@ -78,6 +78,11 @@ final class RegisterController extends AbstractController
             $user->setIsVerified(false);
             $user->setLanguage($request->getLocale());
 
+            $user->setNationalitie('');
+            $user->setResidenceCity('');
+            $user->setBirthDate(new \DateTimeImmutable('1970-01-01'));
+            $user->setPracticeStartYear((int) date('Y'));
+
             $settings = $this->settingsRepository->getSettings();
 
             if ($settings->isUserValidationRequired()) {
@@ -146,14 +151,12 @@ final class RegisterController extends AbstractController
         $id = $request->query->get('id');
         $context = $request->query->get('context');
 
-        // Verify the user ID exists and is not null
         if (null === $id) {
             return $this->redirectToRoute('app_home');
         }
 
         $user = $userRepository->find($id);
 
-        // Ensure the user exists in persistence
         if (null === $user) {
             return $this->redirectToRoute('app_home');
         }

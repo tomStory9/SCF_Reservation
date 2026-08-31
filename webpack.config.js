@@ -26,6 +26,7 @@ Encore
     .addEntry('admin_dashboard', './assets/js/admin-dashboard.js')
     .addEntry('member_dashboard', './assets/js/member-dashboard.js')
     .addEntry('carousel', './assets/js/carousel.js')
+    .addEntry('user-profile', './assets/js/user-profile.js')
     // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
     .splitEntryChunks()
 

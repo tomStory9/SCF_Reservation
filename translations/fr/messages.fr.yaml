@@ -202,9 +202,18 @@ admin:
     address: "Adresse"
     internationalAddress: "Adresse internationale"
     active: "Période active"
+    birth_date: 'Date de naissance'
+    nationalitie: 'Nationalité'
+    residence_city: 'Ville de résidence'
+    specialties: 'Spécialités cirque'
+    practice_start_year: 'Année de début (pratique)'
+    last_performance: 'Dernière représentation'
+    instagram_account: 'Compte Instagram'
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"
+    user_booking: "Personne qui a réservé"
+    booking_status: "Statut de la reservation"
   flash:
     booking_not_found: "Réservation introuvable."
     booking_no_longer_pending: "Cette réservation n’est plus en attente."
