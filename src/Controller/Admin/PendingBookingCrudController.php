@@ -13,12 +13,16 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -175,6 +179,18 @@ final class PendingBookingCrudController extends AbstractCrudController
         );
     }
 
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(EntityFilter::new('userBooking', 'admin.filter.user_booking'))
+            ->add(EntityFilter::new('zone', 'admin.filter.zone'))
+            ->add(DateTimeFilter::new('startDate', 'admin.field.start_date'))
+            ->add(DateTimeFilter::new('endDate', 'admin.field.end_date'))
+            ->add(DateTimeFilter::new('createdDate', 'admin.field.created_date'))
+            ->add(BooleanFilter::new('isFullDay', 'admin.field.is_full_day'))
+        ;
+    }
+
     public function createIndexQueryBuilder(
         $searchDto,
         $entityDto,
@@ -194,6 +210,9 @@ final class PendingBookingCrudController extends AbstractCrudController
             );
     }
 
+    /**
+     * @throws \DateMalformedStringException
+     */
     #[AdminRoute(
         path: '/monthly-bookings',
         name: 'monthly_bookings',
