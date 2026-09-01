@@ -39,6 +39,9 @@ class ZoneCrudController extends AbstractCrudController
         yield AssociationField::new('facility', 'admin.field.facility')
             ->formatValue(fn ($value, $entity) => $value?->getName())
             ->setFormTypeOption('choice_label', 'name');
+        yield TextField::new('frDesc', 'admin.field.zone_desc_fr');
+        yield TextField::new('enDesc', 'admin.field.zone_desc_en');
+        yield TextField::new('jpDesc', 'admin.field.zone_desc_jp');
     }
 
     public function configureCrud(Crud $crud): Crud
