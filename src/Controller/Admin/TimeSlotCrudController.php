@@ -5,9 +5,11 @@ namespace App\Controller\Admin;
 use App\Entity\TimeSlot;
 use App\Enum\TimeSlotPeriod;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TimeField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -36,6 +38,21 @@ class TimeSlotCrudController extends AbstractCrudController
             ->formatValue(fn ($value) => null === $value
                 ? null
                 : $this->translator->trans('admin.enum.time_slot_period.'.$value->value));
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        $periodChoices = [];
+        foreach (TimeSlotPeriod::cases() as $case) {
+            $periodChoices['admin.enum.time_slot_period.'.$case->value] = $case;
+        }
+
+        return $filters
+            ->add(
+                ChoiceFilter::new('period', 'admin.field.period')
+                ->setChoices($periodChoices)
+            )
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud
