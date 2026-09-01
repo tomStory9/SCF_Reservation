@@ -13,6 +13,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\DateTimeFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
@@ -67,7 +70,23 @@ class BookingCrudController extends AbstractCrudController
     {
         return $filters
             ->add(EntityFilter::new('userBooking', 'admin.filter.user_booking'))
-            ->add(EntityFilter::new('zone', 'admin.filter.zone'));
+            ->add(EntityFilter::new('zone', 'admin.filter.zone'))
+
+            ->add(
+                ChoiceFilter::new('bookingStatus', 'admin.field.status')
+                ->setChoices([
+                    'admin.enum.booking_status.pending' => BookingStatus::PENDING,
+                    'admin.enum.booking_status.approved' => BookingStatus::APPROVED,
+                    'admin.enum.booking_status.paid' => BookingStatus::PAID,
+                    'admin.enum.booking_status.declined' => BookingStatus::DECLINED,
+                ])
+            )
+
+            ->add(DateTimeFilter::new('startDate', 'admin.field.start_date'))
+            ->add(DateTimeFilter::new('endDate', 'admin.field.end_date'))
+            ->add(DateTimeFilter::new('createdDate', 'admin.field.created_date'))
+
+            ->add(BooleanFilter::new('isFullDay', 'admin.field.is_full_day'));
     }
 
     public function configureCrud(Crud $crud): Crud
