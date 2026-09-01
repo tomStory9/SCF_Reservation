@@ -14,6 +14,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Dto\SearchDto;
 use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -57,7 +58,6 @@ class PricingCrudController extends AbstractCrudController
         yield IntegerField::new('fullPrice', 'admin.field.full_price');
         yield IntegerField::new('reducedPriceA', 'admin.field.reduced_price_a');
         yield IntegerField::new('reducedPriceB', 'admin.field.reduced_price_b');
-        // yield IntegerField::new('guestCount', 'Guest Count');
     }
 
     public function configureFilters(Filters $filters): Filters
@@ -65,6 +65,9 @@ class PricingCrudController extends AbstractCrudController
         return $filters
             ->add(EntityFilter::new('timeSlot', 'admin.filter.time_slot'))
             ->add(EntityFilter::new('zone', 'admin.filter.zone'))
+            ->add(NumericFilter::new('fullPrice', 'admin.field.full_price'))
+            ->add(NumericFilter::new('reducedPriceA', 'admin.field.reduced_price_a'))
+            ->add(NumericFilter::new('reducedPriceB', 'admin.field.reduced_price_b'))
         ;
     }
 
