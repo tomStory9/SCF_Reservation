@@ -98,6 +98,8 @@ class UserCrudController extends AbstractCrudController
 
         yield AssociationField::new('specialties', 'admin.field.specialties')
             ->setFormTypeOption('by_reference', false)
+            ->setCrudController(SpecialtyCrudController::class)
+            ->autocomplete()
             ->formatValue(function ($specialties) {
                 if (!$specialties) {
                     return '';

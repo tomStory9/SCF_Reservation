@@ -137,6 +137,8 @@ admin:
     facilities: "Sites"
     blockout_period: "Période bloquée"
     blockout_periods: "Périodes bloquées"
+    specialty: "Spécialité"
+    specialties: "Spécialités"
   action:
     approve: "Approuver"
     decline: "Refuser"
@@ -220,6 +222,8 @@ admin:
     zone: "Zone"
     booking_status: "Statut de la reservation"
     user_booking: 'Utilisateur (Réservation)'
+    equipment_name: 'Nom de l''équipement'
+    unit_price: 'Prix unitaire'
   flash:
     booking_not_found: "Réservation introuvable."
     booking_no_longer_pending: "Cette réservation n’est plus en attente."
