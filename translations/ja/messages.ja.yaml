@@ -148,6 +148,7 @@ admin:
     configuration: "設定"
     parametre: "サイト設定"
     blockout_periods: "利用停止期間"
+    specialties: "サーカスの演目"
   entity:
     user: "ユーザー"
     users: "ユーザー"
