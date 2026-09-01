@@ -11,6 +11,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Config\KeyValueStore;
 use EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -21,6 +22,10 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\ChoiceField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\BooleanFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\ChoiceFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\EntityFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use EasyCorp\Bundle\EasyAdminBundle\Router\AdminUrlGenerator;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -158,6 +163,34 @@ class UserCrudController extends AbstractCrudController
             ])
             ->setHelp('admin.help.new_password')
             ->onlyWhenUpdating();
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(TextFilter::new('email', 'admin.field.email'))
+            ->add(TextFilter::new('lastname', 'admin.field.last_name'))
+            ->add(TextFilter::new('company', 'admin.field.company'))
+            ->add(EntityFilter::new('specialties', 'admin.field.specialties'))
+            ->add(
+                ChoiceFilter::new('userStatus', 'admin.field.user_status')
+                ->setChoices([
+                    'admin.enum.user_status.pending' => UserStatus::PENDING,
+                    'admin.enum.user_status.approved' => UserStatus::APPROVED,
+                    'admin.enum.user_status.suspended' => UserStatus::SUSPENDED,
+                    'admin.enum.user_status.declined' => UserStatus::DECLINED,
+                ])
+            )
+            ->add(
+                ChoiceFilter::new('language', 'admin.field.language')
+                ->setChoices([
+                    'admin.enum.language.fr' => 'fr',
+                    'admin.enum.language.en' => 'en',
+                    'admin.enum.language.ja' => 'ja',
+                ])
+            )
+            ->add(BooleanFilter::new('isVerified', 'admin.field.verified_user'))
+        ;
     }
 
     public function createEditFormBuilder(EntityDto $entityDto, KeyValueStore $formOptions, AdminContext $context): FormBuilderInterface
