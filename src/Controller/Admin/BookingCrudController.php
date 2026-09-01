@@ -74,12 +74,12 @@ class BookingCrudController extends AbstractCrudController
 
             ->add(
                 ChoiceFilter::new('bookingStatus', 'admin.field.status')
-                ->setChoices([
-                    'admin.enum.booking_status.pending' => BookingStatus::PENDING,
-                    'admin.enum.booking_status.approved' => BookingStatus::APPROVED,
-                    'admin.enum.booking_status.paid' => BookingStatus::PAID,
-                    'admin.enum.booking_status.declined' => BookingStatus::DECLINED,
-                ])
+                    ->setChoices([
+                        $this->translator->trans('admin.enum.booking_status.pending') => BookingStatus::PENDING,
+                        $this->translator->trans('admin.enum.booking_status.approved') => BookingStatus::APPROVED,
+                        $this->translator->trans('admin.enum.booking_status.paid') => BookingStatus::PAID,
+                        $this->translator->trans('admin.enum.booking_status.declined') => BookingStatus::DECLINED,
+                    ])
             )
 
             ->add(DateTimeFilter::new('startDate', 'admin.field.start_date'))

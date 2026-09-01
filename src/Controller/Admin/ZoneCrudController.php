@@ -52,7 +52,8 @@ class ZoneCrudController extends AbstractCrudController
     {
         $typeChoices = [];
         foreach (ZoneType::cases() as $case) {
-            $typeChoices['admin.enum.zone_type.'.$case->value] = $case;
+            $label = $this->translator->trans('admin.enum.zone_type.'.$case->value);
+            $typeChoices[$label] = $case;
         }
 
         return $filters

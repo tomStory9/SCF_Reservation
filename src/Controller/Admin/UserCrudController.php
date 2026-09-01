@@ -175,18 +175,18 @@ class UserCrudController extends AbstractCrudController
             ->add(
                 ChoiceFilter::new('userStatus', 'admin.field.user_status')
                 ->setChoices([
-                    'admin.enum.user_status.pending' => UserStatus::PENDING,
-                    'admin.enum.user_status.approved' => UserStatus::APPROVED,
-                    'admin.enum.user_status.suspended' => UserStatus::SUSPENDED,
-                    'admin.enum.user_status.declined' => UserStatus::DECLINED,
+                    $this->translator->trans('admin.enum.user_status.pending') => UserStatus::PENDING,
+                    $this->translator->trans('admin.enum.user_status.approved') => UserStatus::APPROVED,
+                    $this->translator->trans('admin.enum.user_status.suspended') => UserStatus::SUSPENDED,
+                    $this->translator->trans('admin.enum.user_status.declined') => UserStatus::DECLINED,
                 ])
             )
             ->add(
                 ChoiceFilter::new('language', 'admin.field.language')
                 ->setChoices([
-                    'admin.enum.language.fr' => 'fr',
-                    'admin.enum.language.en' => 'en',
-                    'admin.enum.language.ja' => 'ja',
+                    $this->translator->trans('admin.enum.language.fr') => 'fr',
+                    $this->translator->trans('admin.enum.language.en') => 'en',
+                    $this->translator->trans('admin.enum.language.ja') => 'ja',
                 ])
             )
             ->add(BooleanFilter::new('isVerified', 'admin.field.verified_user'))

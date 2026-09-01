@@ -44,7 +44,8 @@ class TimeSlotCrudController extends AbstractCrudController
     {
         $periodChoices = [];
         foreach (TimeSlotPeriod::cases() as $case) {
-            $periodChoices['admin.enum.time_slot_period.'.$case->value] = $case;
+            $label = $this->translator->trans('admin.enum.time_slot_period.'.$case->value);
+            $periodChoices[$label] = $case;
         }
 
         return $filters
