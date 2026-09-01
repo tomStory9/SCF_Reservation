@@ -4,9 +4,12 @@ namespace App\Controller\Admin;
 
 use App\Entity\UserRole;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Filters;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\NumericFilter;
+use EasyCorp\Bundle\EasyAdminBundle\Filter\TextFilter;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
@@ -24,6 +27,18 @@ class UserRoleCrudController extends AbstractCrudController
         yield IntegerField::new('allocatedHoursPerMonth', 'admin.field.allocated_hours');
         yield IntegerField::new('maxAdvanceBookingDays', 'admin.field.max_advance_booking');
         yield TextField::new('tarif', 'admin.field.tarif');
+    }
+
+    public function configureFilters(Filters $filters): Filters
+    {
+        return $filters
+            ->add(TextFilter::new('roleName', 'admin.field.role_name'))
+            ->add(TextFilter::new('label', 'admin.field.label'))
+            ->add(TextFilter::new('tarif', 'admin.field.tarif'))
+
+            ->add(NumericFilter::new('allocatedHoursPerMonth', 'admin.field.allocated_hours'))
+            ->add(NumericFilter::new('maxAdvanceBookingDays', 'admin.field.max_advance_booking'))
+        ;
     }
 
     public function configureCrud(Crud $crud): Crud

@@ -176,6 +176,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToRoute('admin.menu.statistics', 'fa fa-chart-line', 'admin_statistics');
         yield MenuItem::linkTo(UserCrudController::class, 'admin.menu.users', 'fa fa-users');
         yield MenuItem::linkTo(UserRoleCrudController::class, 'admin.menu.user_roles', 'fa fa-users');
+        yield MenuItem::linkTo(SpecialtyCrudController::class, 'admin.menu.specialties', 'fa fa-book');
         yield MenuItem::linkTo(BookingCrudController::class, 'admin.menu.bookings', 'fa fa-book');
         yield MenuItem::linkTo(FacilityCrudController::class, 'admin.menu.facilities', 'fa fa-building');
         yield MenuItem::linkTo(ZoneCrudController::class, 'admin.menu.zones', 'fa fa-map-marker');

@@ -103,6 +103,7 @@ admin:
     statistics: "Statistiques"
     users: "Utilisateurs"
     user_roles: "Rôles utilisateurs"
+    specialties: "Spécialité de cirque"
     bookings: "Réservations"
     facilities: "Sites"
     zones: "Lieux"
@@ -136,6 +137,8 @@ admin:
     facilities: "Sites"
     blockout_period: "Période bloquée"
     blockout_periods: "Périodes bloquées"
+    specialty: "Spécialité"
+    specialties: "Spécialités"
   action:
     approve: "Approuver"
     decline: "Refuser"
@@ -186,6 +189,7 @@ admin:
     max_capacity: "Capacité maximale"
     user_status: "Statut de l’utilisateur"
     equipment_name: "Nom de l’équipement"
+    specialty_name: "Nom de la spécialité"
     unit_price: "Prix unitaire"
     max_quantity: "Quantité maximale"
     gestion_chambre: "Gestion des chambres"
@@ -209,11 +213,17 @@ admin:
     practice_start_year: 'Année de début (pratique)'
     last_performance: 'Dernière représentation'
     instagram_account: 'Compte Instagram'
+    zone_desc_fr: "Description française"
+    zone_desc_en: "Description anglaise"
+    zone_desc_jp: "Description japonaise"
+    is_full_day: 'Journée complète'
   filter:
     time_slot: "Créneau horaire"
     zone: "Zone"
-    user_booking: "Personne qui a réservé"
     booking_status: "Statut de la reservation"
+    user_booking: 'Utilisateur (Réservation)'
+    equipment_name: 'Nom de l''équipement'
+    unit_price: 'Prix unitaire'
   flash:
     booking_not_found: "Réservation introuvable."
     booking_no_longer_pending: "Cette réservation n’est plus en attente."
