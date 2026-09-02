@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Repository\BookingRepository;
 use App\Repository\FacilityRepository;
 use App\Repository\SettingsRepository;
+use App\Repository\TimeSlotRepository;
 use App\Repository\UserRoleRepository;
 use App\Service\BookingService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +25,8 @@ final class BookingController extends AbstractController
         private readonly UserRoleRepository $userRoleRepository,
         private readonly BookingRepository $bookingRepository,
         private readonly TranslatorInterface $translator,
-        private readonly SettingsRepository $settingsRepository
+        private readonly SettingsRepository $settingsRepository,
+        private readonly TimeSlotRepository $timeSlotRepository
     ) {
     }
 
@@ -54,6 +56,17 @@ final class BookingController extends AbstractController
 
         $minDays = $this->settingsRepository->getSettings()->getMinDayBooking();
 
+        $periods = $this->timeSlotRepository->findAllPeriod();
+        $calendarPeriods = [];
+        foreach ($periods as $periodData) {
+            $period = $periodData['period'];
+
+            $calendarPeriods[$period->value] = [
+                'start' => $periodData['startTime']->format('H:i'),
+                'end' => $periodData['endTime']->format('H:i'),
+            ];
+        }
+
         return $this->render('user/reservation.html.twig', [
             'user' => $user,
             'facilities' => $facilities,
@@ -61,6 +74,7 @@ final class BookingController extends AbstractController
             'remainingHours' => $remainingHours,
             'blockedPeriods' => $blockedPeriods,
             'minDays' => $minDays,
+            'periods' => $calendarPeriods,
         ]);
     }
 

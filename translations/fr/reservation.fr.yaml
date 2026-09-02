@@ -93,3 +93,8 @@ js:
   used_hours: "h utilisées sur 12 h"
   selected_period_event: "Période sélectionnée · {period}"
   blocked_period: "Période bloquée"
+  free_hours_used_pattern: "{hours} h gratuites"
+  paid_hours_pattern: "{hours} h payantes ({price} ¥)"
+  fully_free: "Gratuit"
+  free_hours_remaining_pattern: "h gratuites restantes"
+  hours_unit: "heure(s)"

@@ -15,4 +15,15 @@ class TimeSlotRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, TimeSlot::class);
     }
+
+    public function findAllPeriod(): array
+    {
+        return $this->createQueryBuilder('t')
+            ->select('DISTINCT t.period, t.startTime, t.endTime')
+            ->where('t.period NOT LIKE :period')
+            ->setParameter('period', 'hourly')
+            ->orderBy('t.period', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

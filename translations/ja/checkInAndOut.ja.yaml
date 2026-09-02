@@ -1,45 +1,45 @@
 page:
-  title: "チェックイン / チェックアウト"
-  heading: "チェックイン / チェックアウト"
-  description: "現在の滞在状況と予約情報をすぐに確認できます。"
+    title: 'チェックイン / チェックアウト'
+    heading: 'チェックイン / チェックアウト'
+    description: '現在の滞在状況と予約情報をすぐに確認できます。'
 header:
-  badge: "予約"
+    badge: '予約'
 section:
-  current_status: "現在のステータス"
+    current_status: '現在のステータス'
 remaining_time:
-  before_checkout: "チェックアウトまでの残り時間：%time%"
+    before_checkout: 'チェックアウトまでの残り時間：%time%'
 booking:
-  start: "開始"
-  end: "終了"
-  checked_in_at: "チェックイン済み"
-  checked_out_at: "チェックアウト済み"
-  not_recorded: "未登録"
+    start: '開始'
+    end: '終了'
+    checked_in_at: 'チェックイン済み'
+    checked_out_at: 'チェックアウト済み'
+    not_recorded: '未登録'
 status:
-  checked_in:
-    label: "チェックイン完了"
-    message: "チェックインが正常に登録されました。"
-  checked_out:
-    label: "チェックアウト完了"
-    message: "チェックアウトが正常に登録されました。"
-  checked_in_waiting_checkout:
-    label: "チェックイン済み"
-    message: "チェックインはすでに登録されています。まもなくチェックアウトが可能になります。"
-    message_with_remaining_time: "チェックインはすでに登録されています。チェックアウトを行うには、あと %time% お待ちください。"
-  waiting_check_in:
-    label: "チェックイン不可"
-    message: "チェックイン可能な時間帯にまだ入っていません。"
-  waiting_check_out:
-    label: "チェックアウト不可"
-    message: "チェックインは完了していますが、チェックアウト可能な時間帯にまだ入っていません。"
-  already_done:
-    label: "予約終了"
-    message: "チェックインとチェックアウトはすでに登録されています。"
-  outside_window:
-    label: "操作不可"
-    message: "チェックインまたはチェックアウトの許可された時間帯内ではありません。"
-  no_booking:
-    label: "予約なし"
-    message: "予約が見つかりませんでした。"
-  unknown:
-    label: "不明なステータス"
-    message: "システムは現在の状態を正確に判断できませんでした。"
+    checked_in:
+        label: 'チェックイン完了'
+        message: 'チェックインが正常に登録されました。'
+    checked_out:
+        label: 'チェックアウト完了'
+        message: 'チェックアウトが正常に登録されました。'
+    checked_in_waiting_checkout:
+        label: 'チェックイン済み'
+        message: 'チェックインはすでに登録されています。まもなくチェックアウトが可能になります。'
+        message_with_remaining_time: 'チェックインはすでに登録されています。チェックアウトを行うには、あと %time% お待ちください。'
+    waiting_check_in:
+        label: 'チェックイン不可'
+        message: 'チェックイン可能な時間帯にまだ入っていません。'
+    waiting_check_out:
+        label: 'チェックアウト不可'
+        message: 'チェックインは完了していますが、チェックアウト可能な時間帯にまだ入っていません。'
+    already_done:
+        label: '予約終了'
+        message: 'チェックインとチェックアウトはすでに登録されています。'
+    outside_window:
+        label: '操作不可'
+        message: 'チェックインまたはチェックアウトの許可された時間帯内ではありません。'
+    no_booking:
+        label: '予約なし'
+        message: '予約が見つかりませんでした。'
+    unknown:
+        label: '不明なステータス'
+        message: 'システムは現在の状態を正確に判断できませんでした。'
