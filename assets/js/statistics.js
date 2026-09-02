@@ -71,19 +71,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- GRAPHIQUE 3 : Mensuel ---
-    const monthlyDataAllYears = data.monthly;
+    const monthlyDataAllYears = data.monthly || {};
     const yearFilter = document.getElementById('monthly-year-filter');
 
+    const availableKeys = Object.keys(monthlyDataAllYears);
     let currentYear = yearFilter
         ? yearFilter.value
-        : Object.keys(monthlyDataAllYears).sort().reverse()[0];
+        : availableKeys.length > 0
+          ? availableKeys.sort().reverse()[0]
+          : null;
+
     const monthLabels = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
     function getMonthlyDataForYear(year) {
-        const yearData = monthlyDataAllYears[year];
+        const yearData = monthlyDataAllYears[year] || {};
+
         return {
-            counts: monthLabels.map((m) => yearData[m].count),
-            revenues: monthLabels.map((m) => yearData[m].revenue)
+            counts: monthLabels.map((m) => (yearData[m] ? yearData[m].count : 0)),
+            revenues: monthLabels.map((m) => (yearData[m] ? yearData[m].revenue : 0))
         };
     }
 
@@ -146,35 +151,74 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- GRAPHIQUE 4 : Zones ---
-    const zoneLabels = Object.keys(data.zones);
-    new Chart(document.getElementById('zoneChart').getContext('2d'), {
+    const allZoneNames = data.allZoneNames;
+    const rawBookings = data.rawBookings;
+
+    const userFilter = document.getElementById('zone-user-filter');
+    const startFilter = document.getElementById('zone-start-filter');
+    const endFilter = document.getElementById('zone-end-filter');
+    const zoneCtx = document.getElementById('zoneChart').getContext('2d');
+
+    const zoneChart = new Chart(zoneCtx, {
         type: 'bar',
         data: {
-            labels: zoneLabels,
+            labels: allZoneNames,
             datasets: [
-                {
-                    label: 'Réservations',
-                    data: zoneLabels.map((k) => data.zones[k].count),
-                    backgroundColor: '#10B981',
-                    yAxisID: 'y'
-                },
-                {
-                    label: 'Revenus (¥)',
-                    data: zoneLabels.map((k) => data.zones[k].revenue),
-                    backgroundColor: '#F59E0B',
-                    yAxisID: 'y1'
-                }
+                { label: 'Réservations', data: [], backgroundColor: '#10B981', yAxisID: 'y' },
+                { label: 'Revenus (¥)', data: [], backgroundColor: '#F59E0B', yAxisID: 'y1' }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
             scales: {
-                y: { type: 'linear', position: 'left' },
-                y1: { type: 'linear', position: 'right', grid: { drawOnChartArea: false } }
+                y: {
+                    type: 'linear',
+                    position: 'left',
+                    title: { display: true, text: 'Réservations', color: textColor }
+                },
+                y1: {
+                    type: 'linear',
+                    position: 'right',
+                    grid: { drawOnChartArea: false },
+                    title: { display: true, text: 'Revenus (¥)', color: textColor }
+                }
             }
         }
     });
+
+    function updateZoneChart() {
+        const selectedUserId = userFilter.value;
+        const startDate = startFilter.value;
+        const endDate = endFilter.value;
+
+        const dynamicZoneStats = {};
+        allZoneNames.forEach((z) => {
+            dynamicZoneStats[z] = { count: 0, revenue: 0 };
+        });
+
+        rawBookings.forEach((booking) => {
+            if (selectedUserId !== '' && booking.userId.toString() !== selectedUserId) return;
+
+            if (startDate !== '' && booking.startDate < startDate) return;
+            if (endDate !== '' && booking.startDate > endDate) return;
+
+            if (dynamicZoneStats[booking.zoneName] !== undefined) {
+                dynamicZoneStats[booking.zoneName].count++;
+                dynamicZoneStats[booking.zoneName].revenue += booking.price;
+            }
+        });
+
+        zoneChart.data.datasets[0].data = allZoneNames.map((z) => dynamicZoneStats[z].count);
+        zoneChart.data.datasets[1].data = allZoneNames.map((z) => dynamicZoneStats[z].revenue);
+        zoneChart.update();
+    }
+
+    if (userFilter) userFilter.addEventListener('change', updateZoneChart);
+    if (startFilter) startFilter.addEventListener('change', updateZoneChart);
+    if (endFilter) endFilter.addEventListener('change', updateZoneChart);
+
+    updateZoneChart();
 
     // --- GRAPHIQUE 5 : Top Users ---
     new Chart(document.getElementById('topUsersChart').getContext('2d'), {

@@ -4,8 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Repository\BookingRepository;
 use App\Repository\UserRepository;
+use App\Repository\ZoneRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
@@ -13,13 +15,28 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class StatisticsController extends AbstractController
 {
     #[AdminRoute(path: '/statistics', name: 'admin_statistics')]
-    public function statistics(UserRepository $userRepository, BookingRepository $bookingRepository): Response
-    {
+    public function statistics(
+        Request $request,
+        UserRepository $userRepository,
+        BookingRepository $bookingRepository,
+        ZoneRepository $zoneRepository
+    ): Response {
         $currentYear = (int) date('Y');
+        $selectedYear = $request->query->getInt('year', $currentYear);
         $oldestYear = $bookingRepository->getOldestBookingYear();
 
         $availableYears = range($currentYear, $oldestYear);
         rsort($availableYears);
+
+        if (!in_array($selectedYear, $availableYears, true)) {
+            $selectedYear = $currentYear;
+        }
+
+        $allZones = $zoneRepository->findAll();
+        $allZoneNames = array_map(fn ($z) => $z->getName(), $allZones);
+
+        $allUsers = $userRepository->findBy([], ['name' => 'ASC']);
+        $usersForFilter = array_map(fn ($u) => ['id' => $u->getId(), 'name' => $u->getFullName()], $allUsers);
 
         $nationalities = $userRepository->getNationalityStats();
         $cities = $userRepository->getCityStats();
@@ -27,32 +44,40 @@ class StatisticsController extends AbstractController
         $avgPracticeYears = $userRepository->getAveragePracticeYears();
         $totalUsers = $userRepository->countTotalUsers();
 
-        $bookings = $bookingRepository->getRawDataForStatistics();
+        $bookings = $bookingRepository->getRawDataForStatistics($selectedYear);
 
         $monthlyStats = [];
-        foreach ($availableYears as $year) {
-            for ($i = 1; $i <= 12; ++$i) {
-                $monthlyStats[$year][sprintf('%02d', $i)] = ['count' => 0, 'revenue' => 0];
-            }
+        for ($i = 1; $i <= 12; ++$i) {
+            $monthKey = sprintf('%04d-%02d', $selectedYear, $i);
+            $monthlyStats[$monthKey] = ['label' => sprintf('%02d', $i), 'count' => 0, 'revenue' => 0];
         }
 
         $zoneStats = [];
         $userStats = [];
         $totalBookings = count($bookings);
         $totalRevenue = 0;
+        $totalBookedHours = 0;
+
+        $serializedBookingsForJS = [];
 
         foreach ($bookings as $b) {
+            /** @var \DateTimeImmutable $start */
             $start = $b['startDate'];
-            $y = $start->format('Y');
-            $m = $start->format('m');
+            /** @var \DateTimeImmutable $end */
+            $end = $b['endDate'];
+
+            $monthKey = $start->format('Y-m');
             $price = (int) $b['price'];
 
             $totalRevenue += $price;
 
-            if (isset($monthlyStats[$y][$m])) {
-                ++$monthlyStats[$y][$m]['count'];
-                $monthlyStats[$y][$m]['revenue'] += $price;
+            if (isset($monthlyStats[$monthKey])) {
+                ++$monthlyStats[$monthKey]['count'];
+                $monthlyStats[$monthKey]['revenue'] += $price;
             }
+
+            $hours = $b['isFullDay'] ? 12 : (($end->getTimestamp() - $start->getTimestamp()) / 3600);
+            $totalBookedHours += $hours;
 
             $zoneName = $b['zoneName'];
             if (!isset($zoneStats[$zoneName])) {
@@ -67,18 +92,24 @@ class StatisticsController extends AbstractController
             }
             ++$userStats[$userId]['count'];
             $userStats[$userId]['revenue'] += $price;
+
+            $serializedBookingsForJS[] = [
+                'userId' => $userId,
+                'zoneName' => $zoneName,
+                'price' => $price,
+                'startDate' => $start->format('Y-m-d'),
+            ];
         }
 
-        $currentMonthKey = date('m');
-
-        $currentMonthRevenue = $monthlyStats[$currentYear][$currentMonthKey]['revenue'] ?? 0;
+        $currentMonthKey = date('Y-m');
+        $currentMonthRevenue = $monthlyStats[$currentMonthKey]['revenue'] ?? 0;
 
         $currentYearRevenue = 0;
-        foreach ($monthlyStats[$currentYear] as $monthData) {
+        foreach ($monthlyStats as $monthData) {
             $currentYearRevenue += $monthData['revenue'];
         }
-
         $avgMonthlyRevenue = $currentYearRevenue / 12;
+
         $avgBookingsPerUser = $totalUsers > 0 ? $totalBookings / $totalUsers : 0;
 
         usort($userStats, fn ($a, $b) => $b['revenue'] <=> $a['revenue']);
@@ -89,9 +120,11 @@ class StatisticsController extends AbstractController
         $monthlyCapacityHours = $daysInCurrentMonth * 12 * $numberOfZones;
 
         $currentMonthBookedHours = 0;
-        foreach ($bookings as $b) {
-            if ($b['startDate']->format('Y-m') === date('Y-m')) {
-                $currentMonthBookedHours += $b['isFullDay'] ? 12 : (($b['endDate']->getTimestamp() - $b['startDate']->getTimestamp()) / 3600);
+        if ($selectedYear === $currentYear) {
+            foreach ($bookings as $b) {
+                if ($b['startDate']->format('Y-m') === $currentMonthKey) {
+                    $currentMonthBookedHours += $b['isFullDay'] ? 12 : (($b['endDate']->getTimestamp() - $b['startDate']->getTimestamp()) / 3600);
+                }
             }
         }
         $occupancyRate = $monthlyCapacityHours > 0 ? ($currentMonthBookedHours / $monthlyCapacityHours) * 100 : 0;
@@ -101,13 +134,16 @@ class StatisticsController extends AbstractController
             'cities' => $cities,
             'specialties' => $specialties,
             'monthly' => $monthlyStats,
-            'zones' => $zoneStats,
             'topUsers' => $topUsers,
+            'allZoneNames' => $allZoneNames,
+            'rawBookings' => $serializedBookingsForJS,
         ];
 
         return $this->render('admin/statistics/index.html.twig', [
             'chartData' => json_encode($chartData),
             'availableYears' => $availableYears,
+            'selectedYear' => $selectedYear,
+            'usersForFilter' => $usersForFilter,
             'kpis' => [
                 'avgPracticeYears' => $avgPracticeYears,
                 'avgBookingsPerUser' => round($avgBookingsPerUser, 1),

@@ -107,9 +107,29 @@
         <section class="scf-dashboard__lists-grid">
             <article class="scf-panel">
                 <header class="scf-panel__header">
-                    <h3>Performances par Zone</h3>
+                    <h3 style="margin-bottom: 15px;">Performances par Zone</h3>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 150px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Utilisateur</label>
+                            <select id="zone-user-filter" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px; outline: none; cursor: pointer;">
+                                <option value="">Tous les utilisateurs</option>
+                                {% for u in usersForFilter %}
+                                    <option value="{{ u.id }}">{{ u.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Du</label>
+                            <input type="date" id="zone-start-filter" value="{{ "now"|date("Y") }}-01-01" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Au</label>
+                            <input type="date" id="zone-end-filter" value="{{ "now"|date("Y") }}-12-31" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                    </div>
                 </header>
-                <div class="chart-container">
+                <div class="chart-container" style="padding-top: 10px;">
                     <canvas id="zoneChart"></canvas>
                 </div>
             </article>
