@@ -99,7 +99,9 @@ final class UserController extends AbstractController
                 $existingUser = $this->userRepository->findOneBy(['email' => $user->getEmail()]);
                 if ($existingUser && $existingUser->getId() !== $user->getId()) {
                     $form->get('email')->addError(
-                        new FormError('flash.error_email')
+                        new FormError(
+                            $this->translator->trans('flash.error_email', domain: 'validators'),
+                        )
                     );
 
                     return $this->render('user/edit_informations.html.twig', [

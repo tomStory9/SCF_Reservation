@@ -2,6 +2,7 @@ errors:
   email_not_blank: "L'email ne peut pas être vide."
   email_invalid: "Veuillez saisir une adresse email valide."
   password_not_blank: "Le mot de passe ne peut pas être vide."
+  current_password_not_blank: "Veuillez renseigner votre mot de passe actuel."
   invalid_current: 'Le mot de passe actuel est incorrect.'
   booking_overlap: 'Ce créneau est déjà réservé.'
   password_mismatch: "Les mots de passe ne correspondent pas."
@@ -25,3 +26,11 @@ information:
     not_blank: "Le nom est obligatoire."
   phone:
     not_blank: "Le numéro de téléphone est obligatoire."
+  nationalitie:
+    not_blank: "Veuillez renseigner votre nationalité."
+  residence_city:
+    not_blank: "Veuillez renseigner votre ville de résidence."
+  birth_date:
+    not_blank: "Veuillez renseigner votre date de naissance."
+  practice_start_year:
+    not_blank: "Veuillez indiquer depuis quelle année vous pratiquez."

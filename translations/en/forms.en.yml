@@ -31,3 +31,26 @@ information:
   company:
     label: "Circus company"
     placeholder: "Name of your circus company"
+  nationalitie:
+    label: "Nationality or nationalities"
+    placeholder: "e.g. French, Japanese..."
+    not_blank: "Please enter your nationality."
+  residence_city:
+    label: "City of residence"
+    placeholder: "e.g. Paris, Tokyo..."
+    not_blank: "Please enter your city of residence."
+  birth_date:
+    label: "Date of birth"
+    not_blank: "Please enter your date of birth."
+  practice_start_year:
+    label: "Year you started practising"
+    placeholder: "e.g. 2015"
+    not_blank: "Please enter the year you started practising."
+  last_performance:
+    label: "Latest performance (name/link...)"
+    placeholder: "e.g. Winter Gala - December 2025"
+  instagram:
+    label: "Instagram account (@...)"
+    placeholder: "@username"
+  specialties:
+    label: "Circus specialties"

@@ -22,7 +22,7 @@ class ChangePasswordFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new NotBlank(
-                        message: 'Veuillez renseigner votre mot de passe actuel',
+                        message: 'errors.current_password_not_blank',
                     ),
                     new UserPassword(
                         message: 'errors.invalid_current',

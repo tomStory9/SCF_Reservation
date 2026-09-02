@@ -48,7 +48,8 @@ final class UserBanControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/admin/user');
 
         self::assertResponseIsSuccessful();
-        $banAction = $crawler->filter('.action-ban');
+        $targetRowSelector = sprintf('tr[data-id="%d"]', $targetId);
+        $banAction = $crawler->filter($targetRowSelector.' .action-ban');
         self::assertCount(1, $banAction);
 
         $formId = $banAction->attr('data-ea-action-form-id');
@@ -67,7 +68,7 @@ final class UserBanControllerTest extends WebTestCase
         self::assertSame(UserStatus::APPROVED, $target->getUserStatus());
 
         $crawler = $this->client->request('GET', '/admin/user');
-        $formId = $crawler->filter('.action-ban')->attr('data-ea-action-form-id');
+        $formId = $crawler->filter($targetRowSelector.' .action-ban')->attr('data-ea-action-form-id');
         self::assertNotNull($formId);
         $this->client->submit($crawler->filter('form#'.$formId)->form());
 
@@ -83,7 +84,7 @@ final class UserBanControllerTest extends WebTestCase
         self::assertSame('suspended', $history[0]->getData()['userStatus']);
 
         $crawler = $this->client->followRedirect();
-        self::assertCount(0, $crawler->filter('.action-ban'));
+        self::assertCount(0, $crawler->filter($targetRowSelector.' .action-ban'));
     }
 
     public function testBanButtonIsNotDisplayedForTheCurrentAdministrator(): void
@@ -94,7 +95,10 @@ final class UserBanControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/admin/user');
 
         self::assertResponseIsSuccessful();
-        self::assertCount(0, $crawler->filter('.action-ban'));
+        self::assertCount(0, $crawler->filter(sprintf(
+            'tr[data-id="%d"] .action-ban',
+            $administrator->getId(),
+        )));
     }
 
     /**
@@ -110,6 +114,10 @@ final class UserBanControllerTest extends WebTestCase
             ->setLastname('Tester')
             ->setPhone('0123456789')
             ->setCompany(null)
+            ->setNationalitie('French')
+            ->setResidenceCity('Paris')
+            ->setBirthDate(new \DateTimeImmutable('1990-01-01'))
+            ->setPracticeStartYear(2000)
             ->setFilledInfo(true)
             ->setIsVerified(true)
             ->setUserStatus(UserStatus::APPROVED)

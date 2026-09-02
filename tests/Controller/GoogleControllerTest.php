@@ -9,8 +9,8 @@ final class GoogleControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/google');
+        $client->request('GET', '/connect/google');
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseRedirects();
     }
 }

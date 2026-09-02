@@ -2,6 +2,7 @@ errors:
   email_not_blank: "Email cannot be blank."
   email_invalid: "Please enter a valid email address."
   password_not_blank: "Password cannot be blank."
+  current_password_not_blank: "Please enter your current password."
   invalid_current: "The current password is incorrect."
   booking_overlap: "This time slot is already booked."
   password_mismatch: "Passwords do not match."
@@ -25,3 +26,11 @@ information:
     not_blank: "Last name is required."
   phone:
     not_blank: "Phone number is required."
+  nationalitie:
+    not_blank: "Please enter your nationality."
+  residence_city:
+    not_blank: "Please enter your city of residence."
+  birth_date:
+    not_blank: "Please enter your date of birth."
+  practice_start_year:
+    not_blank: "Please enter the year you started practising."

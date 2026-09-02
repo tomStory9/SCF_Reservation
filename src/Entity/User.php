@@ -196,7 +196,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -208,7 +208,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): static
+    public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
 
@@ -220,7 +220,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->phone;
     }
 
-    public function setPhone(string $phone): static
+    public function setPhone(?string $phone): static
     {
         $this->phone = $phone;
 
@@ -360,7 +360,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->nationalitie;
     }
 
-    public function setNationalitie(string $nationalitie): static
+    public function setNationalitie(?string $nationalitie): static
     {
         $this->nationalitie = $nationalitie;
 
@@ -396,7 +396,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->residenceCity;
     }
 
-    public function setResidenceCity(string $residenceCity): static
+    public function setResidenceCity(?string $residenceCity): static
     {
         $this->residenceCity = $residenceCity;
 
@@ -408,7 +408,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->birthDate;
     }
 
-    public function setBirthDate(\DateTimeImmutable $birthDate): static
+    public function setBirthDate(?\DateTimeImmutable $birthDate): static
     {
         $this->birthDate = $birthDate;
 
@@ -432,7 +432,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->practiceStartYear;
     }
 
-    public function setPracticeStartYear(int $practiceStartYear): static
+    public function setPracticeStartYear(?int $practiceStartYear): static
     {
         $this->practiceStartYear = $practiceStartYear;
 

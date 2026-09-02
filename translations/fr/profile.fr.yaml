@@ -99,7 +99,7 @@ account:
         status_all: 'Tous les statuts'
         reset_filters: 'Réinitialiser'
         no_result_title: 'Aucune réservation ne correspond'
-        no_result_text: 'Modifiez votre recherche ou vos filtres pour retrouver une réservation.'
+        no_result_text: 'Modifiez vos filtres pour retrouver une réservation.'
         show_all_bookings: 'Afficher toutes les réservations'
         booking_reference: 'Réservation nº %id%'
         people_count: 'Personnes : %count%'

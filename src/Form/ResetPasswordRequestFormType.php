@@ -23,10 +23,10 @@ class ResetPasswordRequestFormType extends AbstractType
                 ],
                 'constraints' => [
                     new NotBlank(
-                        message: 'Veuillez renseigner votre adresse e-mail.',
+                        message: 'errors.email_not_blank',
                     ),
                     new Email(
-                        message: 'Veuillez renseigner une adresse e-mail valide.',
+                        message: 'errors.email_invalid',
                     ),
                 ],
             ])

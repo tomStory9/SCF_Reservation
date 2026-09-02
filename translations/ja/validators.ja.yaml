@@ -2,6 +2,7 @@ errors:
   email_not_blank: "メールアドレスを入力してください。"
   email_invalid: "有効なメールアドレスを入力してください。"
   password_not_blank: "パスワードを入力してください。"
+  current_password_not_blank: "現在のパスワードを入力してください。"
   invalid_current: "現在のパスワードが正しくありません。"
   booking_overlap: "この時間枠はすでに予約されています。"
   password_mismatch: "パスワードが一致しません。"
@@ -25,3 +26,11 @@ information:
     not_blank: "姓は必須です。"
   phone:
     not_blank: "電話番号は必須です。"
+  nationalitie:
+    not_blank: "国籍を入力してください。"
+  residence_city:
+    not_blank: "居住地を入力してください。"
+  birth_date:
+    not_blank: "生年月日を入力してください。"
+  practice_start_year:
+    not_blank: "サーカスを始めた年を入力してください。"

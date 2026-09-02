@@ -9,8 +9,8 @@ final class LineControllerTest extends WebTestCase
     public function testIndex(): void
     {
         $client = static::createClient();
-        $client->request('GET', '/line');
+        $client->request('GET', '/connect/line');
 
-        self::assertResponseIsSuccessful();
+        self::assertResponseRedirects();
     }
 }

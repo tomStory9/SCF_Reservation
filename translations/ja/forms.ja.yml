@@ -31,3 +31,26 @@ information:
   company:
     label: "サーカス団体"
     placeholder: "所属するサーカス団体名を入力してください"
+  nationalitie:
+    label: "国籍"
+    placeholder: "例：フランス、日本..."
+    not_blank: "国籍を入力してください。"
+  residence_city:
+    label: "居住地"
+    placeholder: "例：パリ、東京..."
+    not_blank: "居住地を入力してください。"
+  birth_date:
+    label: "生年月日"
+    not_blank: "生年月日を入力してください。"
+  practice_start_year:
+    label: "サーカスを始めた年"
+    placeholder: "例：2015"
+    not_blank: "サーカスを始めた年を入力してください。"
+  last_performance:
+    label: "直近の公演（名称・リンクなど）"
+    placeholder: "例：冬のガラ公演 - 2025年12月"
+  instagram:
+    label: "Instagramアカウント（@...）"
+    placeholder: "@ユーザー名"
+  specialties:
+    label: "サーカスの専門分野"

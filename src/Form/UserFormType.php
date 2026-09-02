@@ -85,7 +85,7 @@ class UserFormType extends AbstractType
                 'label' => 'information.practice_start_year.label',
                 'translation_domain' => 'forms',
                 'attr' => [
-                    'placeholder' => 'ex: 2015',
+                    'placeholder' => 'information.practice_start_year.placeholder',
                     'min' => 1950,
                     'max' => (int) date('Y'),
                 ],
@@ -101,7 +101,7 @@ class UserFormType extends AbstractType
             ->add('instagramAccount', TextType::class, [
                 'label' => 'information.instagram.label',
                 'translation_domain' => 'forms',
-                'attr' => ['placeholder' => '@pseudo'],
+                'attr' => ['placeholder' => 'information.instagram.placeholder'],
                 'required' => false,
             ])
             ->add('specialties', EntityType::class, [
