@@ -1,15 +1,134 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
 
 {% block content_title %}
-    {{ 'admin.statistics.title'|trans }}
+    {{ 'admin.statistics.title'|trans({}, 'messages')|default('Tableau de bord & Statistiques') }}
 {% endblock %}
 
 {% block page_actions %}
     <a class="btn btn-secondary" href="{{ path('admin') }}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-        {{ 'admin.statistics.back_to_dashboard'|trans }}
+        <i class="fa fa-arrow-left" aria-hidden="true"></i> Retour
     </a>
 {% endblock %}
 
+{% block head_stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('statistics') }}
+    <style>
+        .kpi-card { border-radius: 12px; border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: transform 0.2s; }
+        .kpi-card:hover { transform: translateY(-3px); }
+        .kpi-icon { font-size: 2rem; opacity: 0.3; position: absolute; right: 20px; top: 20px; }
+        .kpi-value { font-size: 1.8rem; font-weight: bold; margin-bottom: 0; }
+        .kpi-label { font-size: 0.9rem; color: #6c757d; text-transform: uppercase; font-weight: 600; }
+        .chart-container { position: relative; height: 350px; width: 100%; }
+        #residenceMap { height: 400px; border-radius: 12px; z-index: 1; }
+    </style>
+{% endblock %}
+
 {% block main %}
+    <div id="stats-data" data-charts="{{ chartData|e('html_attr') }}" style="display: none;"></div>
+
+    <div class="row mb-4 g-3">
+        <div class="col-md-4 col-lg-2">
+            <div class="card kpi-card h-100 p-3 bg-white">
+                <i class="fa fa-users kpi-icon text-primary"></i>
+                <p class="kpi-label">Utilisateurs</p>
+                <p class="kpi-value text-primary">{{ kpis.totalUsers }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <div class="card kpi-card h-100 p-3 bg-white">
+                <i class="fa fa-dumbbell kpi-icon text-success"></i>
+                <p class="kpi-label">Pratique moy.</p>
+                <p class="kpi-value text-success">{{ kpis.avgPracticeYears }} <small class="text-muted" style="font-size: 1rem;">ans</small></p>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <div class="card kpi-card h-100 p-3 bg-white">
+                <i class="fa fa-ticket kpi-icon text-info"></i>
+                <p class="kpi-label">Résa / Compte</p>
+                <p class="kpi-value text-info">{{ kpis.avgBookingsPerUser }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <div class="card kpi-card h-100 p-3 bg-white">
+                <i class="fa fa-yen-sign kpi-icon text-warning"></i>
+                <p class="kpi-label">Revenus (Ce mois)</p>
+                <p class="kpi-value text-warning">¥{{ kpis.currentMonthRevenue|number_format(0, '.', ',') }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <div class="card kpi-card h-100 p-3 bg-white">
+                <i class="fa fa-chart-line kpi-icon text-danger"></i>
+                <p class="kpi-label">Moyenne mensuelle</p>
+                <p class="kpi-value text-danger">¥{{ kpis.avgMonthlyRevenue|number_format(0, '.', ',') }}</p>
+            </div>
+        </div>
+        <div class="col-md-4 col-lg-2">
+            <div class="card kpi-card h-100 p-3 bg-white">
+                <i class="fa fa-percent kpi-icon text-secondary"></i>
+                <p class="kpi-label">Taux occupation</p>
+                <p class="kpi-value text-secondary">{{ kpis.occupancyRate }}%</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-3">
+        <div class="col-md-8">
+            <div class="card shadow-sm border-0 p-3 h-100">
+                <h5 class="mb-3">Réservations et Revenus par Mois</h5>
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card shadow-sm border-0 p-3 h-100">
+                <h5 class="mb-3">Nationalités</h5>
+                <div class="chart-container">
+                    <canvas id="nationalityChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 p-3 h-100">
+                <h5 class="mb-3">Performances par Zone (Revenus & Réservations)</h5>
+                <div class="chart-container">
+                    <canvas id="zoneChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 p-3 h-100">
+                <h5 class="mb-3">Spécialités de cirque pratiquées</h5>
+                <div class="chart-container">
+                    <canvas id="specialtyChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4 g-3">
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 p-3 h-100">
+                <h5 class="mb-3">Top Utilisateurs (Réservations & Dépenses)</h5>
+                <div class="chart-container" style="height: 400px;">
+                    <canvas id="topUsersChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 p-3 h-100">
+                <h5 class="mb-3">Carte des Résidences <span id="map-loading" class="spinner-border spinner-border-sm text-primary d-none" role="status"></span></h5>
+                <div id="residenceMap"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('statistics') }}
 {% endblock %}

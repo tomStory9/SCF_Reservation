@@ -497,4 +497,31 @@ class BookingRepository extends ServiceEntityRepository
 
         return array_values($grouped);
     }
+
+    /**
+     * Récupère toutes les données nécessaires pour les statistiques de réservation
+     * (Revenus par mois, par zone, par utilisateur, taux de remplissage).
+     */
+    public function getRawDataForStatistics(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->select('
+                b.id,
+                b.startDate,
+                b.endDate,
+                b.TotalPrice as price,
+                b.isFullDay,
+                z.name as zoneName,
+                u.id as userId,
+                u.name as userFirstName,
+                u.lastname as userLastName
+            ')
+            ->join('b.zone', 'z')
+            ->join('b.userBooking', 'u')
+            ->where('b.bookingStatus IN (:statuses)')
+            ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PAID])
+            ->orderBy('b.startDate', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

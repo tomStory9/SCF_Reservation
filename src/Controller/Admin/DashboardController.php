@@ -141,9 +141,123 @@ class DashboardController extends AbstractDashboardController
     }
 
     #[AdminRoute(path: '/statistics', name: 'statistics')]
-    public function statistics(): Response
+    public function statistics(UserRepository $userRepository, BookingRepository $bookingRepository): Response
     {
-        return $this->render('admin/statistics/index.html.twig');
+        // --- 1. STATISTIQUES UTILISATEURS ---
+        $nationalities = $userRepository->getNationalityStats();
+        $cities = $userRepository->getCityStats();
+        $specialties = $userRepository->getSpecialtyStats();
+        $avgPracticeYears = $userRepository->getAveragePracticeYears();
+        $totalUsers = $userRepository->countTotalUsers();
+
+        // --- 2. STATISTIQUES RÉSERVATIONS & FINANCES ---
+        $bookings = $bookingRepository->getRawDataForStatistics();
+
+        $monthlyStats = [];
+        $zoneStats = [];
+        $userStats = [];
+
+        $totalBookings = count($bookings);
+        $totalRevenue = 0;
+        $totalBookedHours = 0;
+
+        foreach ($bookings as $b) {
+            /** @var \DateTimeImmutable $start */
+            $start = $b['startDate'];
+            /** @var \DateTimeImmutable $end */
+            $end = $b['endDate'];
+
+            $monthKey = $start->format('Y-m'); // Ex: "2026-08"
+            $price = (int) $b['price'];
+            $totalRevenue += $price;
+
+            // Calcul des heures réservées
+            if ($b['isFullDay']) {
+                $hours = 12; // De 9h à 21h
+            } else {
+                $hours = ($end->getTimestamp() - $start->getTimestamp()) / 3600;
+            }
+            $totalBookedHours += $hours;
+
+            // --- Stats par Mois ---
+            if (!isset($monthlyStats[$monthKey])) {
+                $monthlyStats[$monthKey] = ['count' => 0, 'revenue' => 0];
+            }
+            ++$monthlyStats[$monthKey]['count'];
+            $monthlyStats[$monthKey]['revenue'] += $price;
+
+            // --- Stats par Zone ---
+            $zoneName = $b['zoneName'];
+            if (!isset($zoneStats[$zoneName])) {
+                $zoneStats[$zoneName] = ['count' => 0, 'revenue' => 0];
+            }
+            ++$zoneStats[$zoneName]['count'];
+            $zoneStats[$zoneName]['revenue'] += $price;
+
+            // --- Stats par Utilisateur (Top des clients) ---
+            $userId = $b['userId'];
+            if (!isset($userStats[$userId])) {
+                $userStats[$userId] = [
+                    'name' => $b['userFirstName'].' '.$b['userLastName'],
+                    'count' => 0,
+                    'revenue' => 0,
+                ];
+            }
+            ++$userStats[$userId]['count'];
+            $userStats[$userId]['revenue'] += $price;
+        }
+
+        // Tri des mois chronologiquement
+        ksort($monthlyStats);
+
+        // Récupération des données du mois en cours
+        $currentMonthKey = date('Y-m');
+        $currentMonthRevenue = $monthlyStats[$currentMonthKey]['revenue'] ?? 0;
+
+        $avgMonthlyRevenue = count($monthlyStats) > 0 ? $totalRevenue / count($monthlyStats) : 0;
+        $avgBookingsPerUser = $totalUsers > 0 ? $totalBookings / $totalUsers : 0;
+
+        // Tri des top utilisateurs par revenus dépensés
+        usort($userStats, fn ($a, $b) => $b['revenue'] <=> $a['revenue']);
+        $topUsers = array_slice($userStats, 0, 15); // On garde le top 15 pour le graph CNAC
+
+        // --- 3. CALCUL DU TAUX DE REMPLISSAGE (Occupancy Rate) ---
+        // On prend le mois en cours par défaut
+        $daysInCurrentMonth = (int) date('t');
+        $numberOfZones = count($zoneStats) > 0 ? count($zoneStats) : 1;
+        // Capacité = nb de jours * 12 heures d'ouverture * nb de zones
+        $monthlyCapacityHours = $daysInCurrentMonth * 12 * $numberOfZones;
+
+        // On filtre les heures réservées uniquement pour le mois en cours
+        $currentMonthBookedHours = 0;
+        foreach ($bookings as $b) {
+            if ($b['startDate']->format('Y-m') === $currentMonthKey) {
+                $currentMonthBookedHours += $b['isFullDay'] ? 12 : (($b['endDate']->getTimestamp() - $b['startDate']->getTimestamp()) / 3600);
+            }
+        }
+        $occupancyRate = $monthlyCapacityHours > 0 ? ($currentMonthBookedHours / $monthlyCapacityHours) * 100 : 0;
+
+        // Préparation du tableau final pour Javascript
+        $chartData = [
+            'nationalities' => $nationalities,
+            'cities' => $cities,
+            'specialties' => $specialties,
+            'monthly' => $monthlyStats,
+            'zones' => $zoneStats,
+            'topUsers' => $topUsers,
+        ];
+
+        return $this->render('admin/statistics/index.html.twig', [
+            'chartData' => json_encode($chartData),
+            'kpis' => [
+                'avgPracticeYears' => $avgPracticeYears,
+                'avgBookingsPerUser' => round($avgBookingsPerUser, 1),
+                'currentMonthRevenue' => $currentMonthRevenue,
+                'avgMonthlyRevenue' => round($avgMonthlyRevenue),
+                'occupancyRate' => round($occupancyRate, 1),
+                'totalUsers' => $totalUsers,
+            ],
+        ]);
     }
 
     public function configureAssets(): Assets

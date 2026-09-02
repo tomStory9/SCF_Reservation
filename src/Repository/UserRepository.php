@@ -44,4 +44,72 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * Récupère la répartition des nationalités.
+     */
+    public function getNationalityStats(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.nationalitie as name, COUNT(u.id) as count')
+            ->groupBy('u.nationalitie')
+            ->orderBy('count', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Récupère la répartition des villes de résidence pour la carte.
+     */
+    public function getCityStats(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->select('u.residenceCity as city, COUNT(u.id) as count')
+            ->where('u.residenceCity IS NOT NULL')
+            ->groupBy('u.residenceCity')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Récupère le nombre d'utilisateurs par spécialité de cirque.
+     */
+    public function getSpecialtyStats(): array
+    {
+        return $this->createQueryBuilder('u')
+            ->join('u.specialties', 's')
+            ->select('s.name as name, COUNT(u.id) as count')
+            ->groupBy('s.name')
+            ->orderBy('count', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
+    /**
+     * Calcule le nombre d'années de pratique moyen.
+     */
+    public function getAveragePracticeYears(): float
+    {
+        $currentYear = (int) date('Y');
+
+        $result = $this->createQueryBuilder('u')
+            ->select('AVG(:currentYear - u.practiceStartYear) as avgYears')
+            ->where('u.practiceStartYear IS NOT NULL')
+            ->setParameter('currentYear', $currentYear)
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        return $result ? round((float) $result, 1) : 0.0;
+    }
+
+    /**
+     * Compte le nombre total d'utilisateurs.
+     */
+    public function countTotalUsers(): int
+    {
+        return (int) $this->createQueryBuilder('u')
+            ->select('COUNT(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }
