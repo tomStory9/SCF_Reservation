@@ -1,15 +1,15 @@
 register:
-  title: Sign Up
-  subtitle: Please fill in the form to create an account.
-  already_account: Already have an account?
-  login: Log in
-  submit: Sign Up
+    title: Sign Up
+    subtitle: Please fill in the form to create an account.
+    already_account: Already have an account?
+    login: Log in
+    submit: Sign Up
 app:
-  name: "Setoushi Circus Factory - Booking System"
-  logo_1: "SCF Logo"
-  logo_2: "Kitokuras Logo"
+    name: 'Setoushi Circus Factory - Booking System'
+    logo_1: 'SCF Logo'
+    logo_2: 'Kitokuras Logo'
 profile:
-  complete:
-    title: "Complete your information"
-    subtitle: "Enter your personal details to finalize your registration and access the full site."
-    submit: "Save my information"
+    complete:
+        title: 'Complete your information'
+        subtitle: 'Enter your personal details to finalize your registration and access the full site.'
+        submit: 'Save my information'

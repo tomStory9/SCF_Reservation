@@ -1,374 +1,367 @@
 app:
-  title: "SCF Reservations"
-  description: "Book spaces and rooms at Setoushi Circus Factory."
-  logo_1: "SCF logo"
-  logo_2: "Kitokuras logo"
-
+    title: 'SCF Reservations'
+    description: 'Book spaces and rooms at Setoushi Circus Factory.'
+    logo_1: 'SCF logo'
+    logo_2: 'Kitokuras logo'
 legal:
-  terms:
-    title: "Terms and conditions"
-
+    terms:
+        title: 'Terms and conditions'
 flash:
-  email_verified: "Your email address has been verified."
-  booking_created: "Your booking has been recorded and is awaiting approval."
-  update_success: "Your information has been updated successfully."
-  email_changed_warning: "Your information has been saved. Because you changed your email address, a verification link has been sent to you. Please check your inbox."
-
+    email_verified: 'Your email address has been verified.'
+    booking_created: 'Your booking has been recorded and is awaiting approval.'
+    update_success: 'Your information has been updated successfully.'
+    email_changed_warning: 'Your information has been saved. Because you changed your email address, a verification link has been sent to you. Please check your inbox.'
 api:
-  error:
-    user_not_authenticated: "You are not signed in."
-    invalid_data: "Invalid data."
-    terms_consent_required: "You must accept the terms and conditions to book."
-    missing_dates: "The startDate and endDate parameters are required."
-    invalid_date_format: "The date format is invalid."
-    invalid_date_order: "The end date must be after the start date."
-
+    error:
+        user_not_authenticated: 'You are not signed in.'
+        invalid_data: 'Invalid data.'
+        terms_consent_required: 'You must accept the terms and conditions to book.'
+        missing_dates: 'The startDate and endDate parameters are required.'
+        invalid_date_format: 'The date format is invalid.'
+        invalid_date_order: 'The end date must be after the start date.'
 calendar:
-  event:
-    full_day: "All day"
-    unavailable: "Unavailable"
-    unavailable_other_configuration: "Unavailable (other configuration)"
-
+    event:
+        full_day: 'All day'
+        unavailable: 'Unavailable'
+        unavailable_other_configuration: 'Unavailable (other configuration)'
 stripe:
-  booking_name: "SCF booking"
-  booking_description: "Training space booking"
-
+    booking_name: 'SCF booking'
+    booking_description: 'Training space booking'
 admin:
-  booking_detail:
-    title: "Booking #%id%"
-    back_to_list: "Back to list"
-    edit: "Edit"
-    client_info: "Client information"
-    full_name: "Full name"
-    email: "Email"
-    phone: "Phone"
-    company: "Circus company"
-    stay_details: "Booking details"
-    zone: "Zone"
-    period: "Period"
-    date_full_day: "%date% (all day)"
-    date_from: "From %date%"
-    date_to: "To %date%"
-    guests: "Participants"
-    guest_count: "{0} No participants|{1} 1 participant|]1,Inf[ %count% participants"
-    status: "Status"
-    equipments_reserved: "Reserved equipment"
-    equipment: "Equipment"
-    quantity: "Quantity"
-    unit_price: "Unit price"
-    subtotal: "Subtotal"
-    no_equipment: "No additional equipment was selected for this booking."
-    tracking: "Tracking"
-    created_at: "Created on"
-    terms_consent: "Terms consent"
-    terms_accepted_at: "Accepted on %date%"
-    terms_not_recorded: "Not recorded"
-    check_in: "Check-in"
-    check_out: "Check-out"
-    finances: "Finances"
-    room_price: "Room price"
-    equipment_price: "Equipment price"
-    total: "Total"
-  dashboard:
-    title: "Overview"
-    key_metrics: "Key metrics"
-    unknown_zone: "Unknown zone"
-    unknown_user: "Unknown user"
-    actions:
-      statistics: "Statistics"
-      users: "Manage users"
-      pending_bookings: "Review requests"
-      view_all_bookings: "View all bookings"
-      view_all: "View all"
-    stats:
-      pending_bookings: "Pending requests"
-      pending_bookings_help: "Bookings waiting for review"
-      today_bookings: "Bookings today"
-      today_bookings_help: "Spaces occupied or scheduled"
-      month_value: "Confirmed value this month"
-      month_value_help: "Approved or paid bookings"
-      pending_users: "Pending accounts"
-      pending_users_help: "Registrations awaiting approval"
-    calendar:
-      kicker: "Schedule"
-      title: "Booking calendar"
-      subtitle: "Week, day or month view of active bookings."
-      legend: "Status legend"
-      empty: "No bookings to display for this period."
-    activity:
-      kicker: "Summary"
-      title: "Overall activity"
-      next_seven_days: "Next 7 days"
-      total_users: "Users"
-      status_breakdown: "Booking status breakdown"
-    pending:
-      kicker: "To review"
-      title: "Latest requests"
-      subtitle: "The most recent bookings awaiting review."
-      empty_title: "Everything is up to date"
-      empty_text: "There are no booking requests awaiting approval."
-    users:
-      kicker: "Users"
-      title: "Latest accounts"
-      subtitle: "The newest accounts, ordered by ID."
-      empty_title: "No accounts"
-      empty_text: "New accounts will appear here."
-      verified: "Verified email address"
-    modal:
-      kicker: "Request details"
-      title: "Booking details"
-      close_aria: "Close dialog"
-      close: "Close"
-      full_day: "All day"
-      booking_price: "Booking price"
-      equipment_price: "Equipment price"
-      total_price: "Total price"
-      unknown_equipment: "Unknown equipment"
-      quantity: "Quantity"
-      unit_price: "Unit price"
-      approve_error: "The booking could not be approved."
-      decline_error: "The booking could not be declined."
-  statistics:
-    title: "Statistics"
-    back_to_dashboard: "Back to dashboard"
-  menu:
-    return_to_app: "Back to application"
-    dashboard: "Dashboard"
-    statistics: "Statistics"
-    users: "Users"
-    user_roles: "User roles"
-    bookings: "Bookings"
-    facilities: "Facilities"
-    zones: "Locations"
-    pricing: "Pricing"
-    time_slots: "Booking time slots"
-    pending_users: "Pending users"
-    pending_bookings: "Pending bookings"
-    equipments: "Equipment"
-    configuration: "Configuration"
-    parametre: "Site settings"
-    blockout_periods: "Blocked periods"
-    specialties: "Circus specialties"
-  entity:
-    user: "User"
-    users: "Users"
-    user_role: "User role"
-    user_roles: "User roles"
-    booking: "Booking"
-    bookings: "Bookings"
-    zone: "Location"
-    zones: "Locations"
-    pricing: "Price"
-    pricings: "Pricing"
-    time_slot: "Time slot"
-    time_slots: "Time slots"
-    pending_user: "Pending account"
-    pending_users: "Pending accounts"
-    equipment: "Equipment"
-    equipments: "Equipment"
-    settings: "Site settings"
-    facility: "Facility"
-    facilities: "Facilities"
-    blockout_period: "Blocked period"
-    blockout_periods: "Blocked periods"
-    specialty: "Specialty"
-    specialties: "Specialties"
-  action:
-    approve: "Approve"
-    decline: "Decline"
-    ban: "Ban"
-    history: "History"
-    view_month: "View month"
-  confirm:
-    ban_user: "Ban this user? They will be signed out immediately and will no longer be able to sign in."
-  field:
-    id: "ID"
-    email: "Email address"
-    user_type: "User type"
-    first_name: "First name"
-    last_name: "Last name"
-    phone: "Phone"
-    company: "Circus company"
-    language: "Email language"
-    google_id: "Google ID"
-    line_id: "LINE ID"
-    verified_user: "Verified user"
-    new_password: "New password"
-    role_name: "Role name"
-    label: "Label"
-    allocated_hours: "Monthly free hours"
-    max_advance_booking: "Maximum advance booking period"
-    tarif: "Rate"
-    zone: "Zone"
-    facility: "Facility"
-    user: "User"
-    start_date: "Start date"
-    end_date: "End date"
-    price: "Price"
-    guest_count: "Number of visitors"
-    status: "Status"
-    created_date: "Booking date"
-    checked_in_at: "Checked in at"
-    checked_out_at: "Checked out at"
-    week_day: "Weekday"
-    time_slot: "Time slot"
-    full_price: "Full price"
-    reduced_price_a: "Reduced price A"
-    reduced_price_b: "Reduced price B"
-    start_time: "Start time"
-    end_time: "End time"
-    period: "Period"
-    name: "Name"
-    type: "Type"
-    max_capacity: "Maximum capacity"
-    user_status: "User status"
-    equipment_name: "Equipment name"
-    unit_price: "Unit price"
-    max_quantity: "Maximum quantity"
-    gestion_chambre: "Room management"
-    gestion_reservations: "Space booking management"
-    securite_inscription: "Security and registrations"
-    reserver_chambre: "Room bookings"
-    validation_manuelle: "Manual approval required"
-    min_day_room_booking: "Minimum room booking notice"
-    hour_checkin_room: "Room check-in hour"
-    hour_checkout: "Room check-out hour"
-    pending_room_blocking: "Pending room requests block dates"
-    min_day_booking: "Minimum space booking notice"
-    pending_booking_blocking: "Pending space requests block time slots"
-    address: "Address"
-    internationalAddress: "International address"
-    active: "Active period"
-    birth_date: "Date of birth"
-    nationalitie: "Nationality"
-    residence_city: "City of residence"
-    specialties: "Circus specialties"
-    practice_start_year: "Year practice started"
-    last_performance: "Latest performance"
-    instagram_account: "Instagram account"
-    specialty_name: "Specialty name"
-    zone_desc_fr: "French description"
-    zone_desc_en: "English description"
-    zone_desc_jp: "Japanese description"
-    is_full_day: "All day"
-  filter:
-    time_slot: "Time slot"
-    zone: "Zone"
-    booking_status: "Booking status"
-    user_booking: "Booking user"
-    equipment_name: "Equipment name"
-    unit_price: "Unit price"
-  flash:
-    booking_not_found: "Booking not found."
-    booking_no_longer_pending: "This booking is no longer pending."
-    booking_approved: "The booking has been approved."
-    booking_declined: "The booking has been declined."
-    booking_user_or_date_not_found: "The user or booking date could not be found."
-    user_not_found: "User not found."
-    user_no_longer_pending: "This account is no longer pending."
-    user_approved: "The account has been approved."
-    user_declined: "The account has been declined."
-    user_banned: "The account has been banned."
-    user_already_banned: "This account is already banned."
-    cannot_ban_yourself: "You cannot ban your own account."
-  enum:
-    booking_status:
-      pending: "Pending"
-      approved: "Approved"
-      declined: "Declined"
-      paid: "Paid"
-    user_status:
-      pending: "Pending"
-      approved: "Approved"
-      declined: "Declined"
-      suspended: "Suspended"
-    time_slot_period:
-      hourly: "Hourly"
-      morning: "Morning"
-      afternoon: "Afternoon"
-      evening: "Evening"
-    zone_type:
-      training: "Training space"
-      bedroom: "Bedroom"
-    user_role:
-      admin: "Administrator"
-      ca_user: "Collective artist"
-      aa_user: "Associate artist"
-      fa_user: "Friend artist"
-      tm_user: "Trainee member"
-      default_user: "Standard user"
-    language:
-      fr: "French"
-      en: "English"
-      ja: "Japanese"
-    week_day:
-      monday: "Monday"
-      tuesday: "Tuesday"
-      wednesday: "Wednesday"
-      thursday: "Thursday"
-      friday: "Friday"
-      saturday: "Saturday"
-      sunday: "Sunday"
-  monthly:
-    title: "Monthly bookings"
-    close: "Close"
-    already_booked_hours: "Hours already booked this month"
-    current_booking: "Current booking"
-    total_after_booking: "Total after this booking:"
-    list: "Booking list"
-    empty: "No bookings for this month."
-    date: "Date"
-    zone: "Zone"
-    status: "Status"
-    duration: "Duration"
-    visitors: "Visitors"
-    unknown_zone: "Unknown zone"
-    back: "Back to bookings"
-  help:
-    new_password: "Leave this field empty to keep the current password."
-    help_room_enable: "When disabled, the button is removed from the navigation bar and users cannot book rooms."
-    help_verification_user: "When enabled, administrators must approve every new account. When disabled, accounts are approved automatically."
-    help_min_day_room_booking: "Minimum number of days between the request and check-in."
-    help_hour_checkin_room: "Check-in hour, from 0 to 23."
-    help_hour_checkout: "Check-out hour, from 0 to 23."
-    help_pending_room_blocking: "When enabled, a pending request immediately makes the room unavailable to other users."
-    help_min_day_booking: "Minimum number of days between the request and the start of the booking."
-    help_pending_booking_blocking: "When enabled, a pending request immediately makes the time slot unavailable to other users."
-  settings:
-    title: "Site settings"
-  user_history:
-    title: "History for %user%"
-    back: "Back to users"
-    date: "Date"
-    actor: "Author"
-    action: "Action"
-    changes: "Changes"
-    system: "System"
-    empty: "No changes have been recorded for this user yet."
-    no_changes: "No field details"
-    empty_value: "Empty value"
-    yes: "Yes"
-    no: "No"
-    actions:
-      create: "Created"
-      update: "Updated"
-      remove: "Deleted"
-    fields:
-      email: "Email address"
-      roles: "User type"
-      name: "First name"
-      lastname: "Last name"
-      phone: "Phone"
-      company: "Circus company"
-      googleId: "Google ID"
-      lineId: "LINE ID"
-      filledInfo: "Information completed"
-      isVerified: "Verified email address"
-      userStatus: "Status"
-      Language: "Email language"
-
+    dashboard:
+        title: 'Overview'
+        key_metrics: 'Key metrics'
+        unknown_zone: 'Unknown zone'
+        unknown_user: 'Unknown user'
+        actions:
+            statistics: 'Statistics'
+            users: 'Manage users'
+            pending_bookings: 'Review requests'
+            view_all_bookings: 'View all bookings'
+            view_all: 'View all'
+        stats:
+            pending_bookings: 'Pending requests'
+            pending_bookings_help: 'Bookings waiting for review'
+            today_bookings: 'Bookings today'
+            today_bookings_help: 'Spaces occupied or scheduled'
+            month_value: 'Confirmed value this month'
+            month_value_help: 'Approved or paid bookings'
+            pending_users: 'Pending accounts'
+            pending_users_help: 'Registrations awaiting approval'
+        calendar:
+            kicker: 'Schedule'
+            title: 'Booking calendar'
+            subtitle: 'Week, day or month view of active bookings.'
+            legend: 'Status legend'
+            empty: 'No bookings to display for this period.'
+        activity:
+            kicker: 'Summary'
+            title: 'Overall activity'
+            next_seven_days: 'Next 7 days'
+            total_users: 'Users'
+            status_breakdown: 'Booking status breakdown'
+        pending:
+            kicker: 'To review'
+            title: 'Latest requests'
+            subtitle: 'The most recent bookings awaiting review.'
+            empty_title: 'Everything is up to date'
+            empty_text: 'There are no booking requests awaiting approval.'
+        users:
+            kicker: 'Users'
+            title: 'Latest accounts'
+            subtitle: 'The newest accounts, ordered by ID.'
+            empty_title: 'No accounts'
+            empty_text: 'New accounts will appear here.'
+            verified: 'Verified email address'
+        modal:
+            kicker: 'Request details'
+            title: 'Booking details'
+            close_aria: 'Close dialog'
+            close: 'Close'
+            full_day: 'All day'
+            booking_price: 'Booking price'
+            equipment_price: 'Equipment price'
+            total_price: 'Total price'
+            unknown_equipment: 'Unknown equipment'
+            quantity: 'Quantity'
+            unit_price: 'Unit price'
+            approve_error: 'The booking could not be approved.'
+            decline_error: 'The booking could not be declined.'
+    statistics:
+        title: 'Statistics'
+        back_to_dashboard: 'Back to dashboard'
+    menu:
+        return_to_app: 'Back to application'
+        dashboard: 'Dashboard'
+        statistics: 'Statistics'
+        users: 'Users'
+        user_roles: 'User roles'
+        specialties: 'Circus Specialty'
+        bookings: 'Bookings'
+        facilities: 'Facilities'
+        zones: 'Locations'
+        pricing: 'Pricing'
+        time_slots: 'Booking time slots'
+        pending_users: 'Pending users'
+        pending_bookings: 'Pending bookings'
+        equipments: 'Equipment'
+        configuration: 'Configuration'
+        parametre: 'Site settings'
+        blockout_periods: 'Blocked periods'
+    entity:
+        user: 'User'
+        users: 'Users'
+        user_role: 'User role'
+        user_roles: 'User roles'
+        booking: 'Booking'
+        bookings: 'Bookings'
+        zone: 'Location'
+        zones: 'Locations'
+        pricing: 'Price'
+        pricings: 'Pricing'
+        time_slot: 'Time slot'
+        time_slots: 'Time slots'
+        pending_user: 'Pending account'
+        pending_users: 'Pending accounts'
+        equipment: 'Equipment'
+        equipments: 'Equipment'
+        settings: 'Site settings'
+        facility: 'Facility'
+        facilities: 'Facilities'
+        blockout_period: 'Blocked period'
+        blockout_periods: 'Blocked periods'
+        specialty: 'Specialty'
+        specialties: 'Specialties'
+    action:
+        approve: 'Approve'
+        decline: 'Decline'
+        ban: 'Ban'
+        history: 'History'
+        view_month: 'View month'
+    confirm:
+        ban_user: 'Ban this user? They will be signed out immediately and will no longer be able to sign in.'
+    field:
+        id: 'ID'
+        email: 'Email address'
+        user_type: 'User type'
+        first_name: 'First name'
+        last_name: 'Last name'
+        phone: 'Phone'
+        company: 'Circus company'
+        language: 'Email language'
+        google_id: 'Google ID'
+        line_id: 'LINE ID'
+        verified_user: 'Verified user'
+        new_password: 'New password'
+        role_name: 'Role name'
+        label: 'Label'
+        allocated_hours: 'Monthly free hours'
+        max_advance_booking: 'Maximum advance booking period'
+        tarif: 'Rate'
+        zone: 'Zone'
+        facility: 'Facility'
+        user: 'User'
+        start_date: 'Start date'
+        end_date: 'End date'
+        price: 'Price'
+        guest_count: 'Number of visitors'
+        status: 'Status'
+        created_date: 'Booking date'
+        checked_in_at: 'Checked in at'
+        checked_out_at: 'Checked out at'
+        week_day: 'Weekday'
+        time_slot: 'Time slot'
+        full_price: 'Full price'
+        reduced_price_a: 'Reduced price A'
+        reduced_price_b: 'Reduced price B'
+        start_time: 'Start time'
+        end_time: 'End time'
+        period: 'Period'
+        name: 'Name'
+        type: 'Type'
+        max_capacity: 'Maximum capacity'
+        user_status: 'User status'
+        equipment_name: 'Equipment name'
+        specialty_name: 'Specialty Name'
+        unit_price: 'Unit price'
+        max_quantity: 'Maximum quantity'
+        gestion_chambre: 'Room management'
+        gestion_reservations: 'Space booking management'
+        securite_inscription: 'Security and registrations'
+        reserver_chambre: 'Room bookings'
+        validation_manuelle: 'Manual approval required'
+        min_day_room_booking: 'Minimum room booking notice'
+        hour_checkin_room: 'Room check-in hour'
+        hour_checkout: 'Room check-out hour'
+        pending_room_blocking: 'Pending room requests block dates'
+        min_day_booking: 'Minimum space booking notice'
+        pending_booking_blocking: 'Pending space requests block time slots'
+        address: 'Address'
+        internationalAddress: 'International address'
+        active: 'Active period'
+        birth_date: 'Date of Birth'
+        nationalitie: 'Nationality'
+        residence_city: 'City of Residence'
+        specialties: 'Circus Specialties'
+        practice_start_year: 'Start Year (Practice)'
+        last_performance: 'Last Performance'
+        instagram_account: 'Instagram Account'
+        zone_desc_fr: 'French Description'
+        zone_desc_en: 'English Description'
+        zone_desc_jp: 'Japanese Description'
+        is_full_day: 'Full Day'
+    filter:
+        time_slot: 'Time slot'
+        zone: 'Zone'
+        booking_status: 'Booking Status'
+        user_booking: 'User (Booking)'
+        equipment_name: 'Equipment Name'
+        unit_price: 'Unit Price'
+    flash:
+        booking_not_found: 'Booking not found.'
+        booking_no_longer_pending: 'This booking is no longer pending.'
+        booking_approved: 'The booking has been approved.'
+        booking_declined: 'The booking has been declined.'
+        booking_user_or_date_not_found: 'The user or booking date could not be found.'
+        user_not_found: 'User not found.'
+        user_no_longer_pending: 'This account is no longer pending.'
+        user_approved: 'The account has been approved.'
+        user_declined: 'The account has been declined.'
+        user_banned: 'The account has been banned.'
+        user_already_banned: 'This account is already banned.'
+        cannot_ban_yourself: 'You cannot ban your own account.'
+    enum:
+        booking_status:
+            pending: 'Pending'
+            approved: 'Approved'
+            declined: 'Declined'
+            paid: 'Paid'
+        user_status:
+            pending: 'Pending'
+            approved: 'Approved'
+            declined: 'Declined'
+            suspended: 'Suspended'
+        time_slot_period:
+            hourly: 'Hourly'
+            morning: 'Morning'
+            afternoon: 'Afternoon'
+            evening: 'Evening'
+        zone_type:
+            training: 'Training space'
+            bedroom: 'Bedroom'
+        user_role:
+            admin: 'Administrator'
+            ca_user: 'Collective artist'
+            aa_user: 'Associate artist'
+            fa_user: 'Friend artist'
+            tm_user: 'Trainee member'
+            default_user: 'Standard user'
+        language:
+            fr: 'French'
+            en: 'English'
+            ja: 'Japanese'
+        week_day:
+            monday: 'Monday'
+            tuesday: 'Tuesday'
+            wednesday: 'Wednesday'
+            thursday: 'Thursday'
+            friday: 'Friday'
+            saturday: 'Saturday'
+            sunday: 'Sunday'
+    monthly:
+        title: 'Monthly bookings'
+        close: 'Close'
+        already_booked_hours: 'Hours already booked this month'
+        current_booking: 'Current booking'
+        total_after_booking: 'Total after this booking:'
+        list: 'Booking list'
+        empty: 'No bookings for this month.'
+        date: 'Date'
+        zone: 'Zone'
+        status: 'Status'
+        duration: 'Duration'
+        visitors: 'Visitors'
+        unknown_zone: 'Unknown zone'
+        back: 'Back to bookings'
+    help:
+        new_password: 'Leave this field empty to keep the current password.'
+        help_room_enable: 'When disabled, the button is removed from the navigation bar and users cannot book rooms.'
+        help_verification_user: 'When enabled, administrators must approve every new account. When disabled, accounts are approved automatically.'
+        help_min_day_room_booking: 'Minimum number of days between the request and check-in.'
+        help_hour_checkin_room: 'Check-in hour, from 0 to 23.'
+        help_hour_checkout: 'Check-out hour, from 0 to 23.'
+        help_pending_room_blocking: 'When enabled, a pending request immediately makes the room unavailable to other users.'
+        help_min_day_booking: 'Minimum number of days between the request and the start of the booking.'
+        help_pending_booking_blocking: 'When enabled, a pending request immediately makes the time slot unavailable to other users.'
+    settings:
+        title: 'Site settings'
+    user_history:
+        title: 'History for %user%'
+        back: 'Back to users'
+        date: 'Date'
+        actor: 'Author'
+        action: 'Action'
+        changes: 'Changes'
+        system: 'System'
+        empty: 'No changes have been recorded for this user yet.'
+        no_changes: 'No field details'
+        empty_value: 'Empty value'
+        yes: 'Yes'
+        no: 'No'
+        actions:
+            create: 'Created'
+            update: 'Updated'
+            remove: 'Deleted'
+        fields:
+            email: 'Email address'
+            roles: 'User type'
+            name: 'First name'
+            lastname: 'Last name'
+            phone: 'Phone'
+            company: 'Circus company'
+            googleId: 'Google ID'
+            lineId: 'LINE ID'
+            filledInfo: 'Information completed'
+            isVerified: 'Verified email address'
+            userStatus: 'Status'
+            Language: 'Email language'
+    booking_detail:
+        title: 'Booking #%id%'
+        back_to_list: 'Back to list'
+        edit: 'Edit'
+        client_info: 'Client information'
+        full_name: 'Full name'
+        email: 'Email'
+        phone: 'Phone'
+        company: 'Circus company'
+        stay_details: 'Booking details'
+        zone: 'Zone'
+        period: 'Period'
+        date_full_day: '%date% (all day)'
+        date_from: 'From %date%'
+        date_to: 'To %date%'
+        guests: 'Participants'
+        guest_count: '{0} No participants|{1} 1 participant|]1,Inf[ %count% participants'
+        status: 'Status'
+        equipments_reserved: 'Reserved equipment'
+        equipment: 'Equipment'
+        quantity: 'Quantity'
+        unit_price: 'Unit price'
+        subtotal: 'Subtotal'
+        no_equipment: 'No additional equipment was selected for this booking.'
+        tracking: 'Tracking'
+        created_at: 'Created on'
+        terms_consent: 'Terms consent'
+        terms_accepted_at: 'Accepted on %date%'
+        terms_not_recorded: 'Not recorded'
+        check_in: 'Check-in'
+        check_out: 'Check-out'
+        finances: 'Finances'
+        room_price: 'Room price'
+        equipment_price: 'Equipment price'
+        total: 'Total'
 scaffold:
-  title: "Hello %controller%!"
-  intro: "This message comes from:"
-  controller_path: "Controller:"
-  template_path: "Template:"
+    title: 'Hello %controller%!'
+    intro: 'This message comes from:'
+    controller_path: 'Controller:'
+    template_path: 'Template:'

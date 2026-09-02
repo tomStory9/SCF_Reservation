@@ -1,10 +1,9 @@
 paiement:
-  success:
-    title: "Payment confirmed"
-    message: "Your transaction has been successfully processed."
-    close_page: "You can now close this page."
-  cancel:
-    title: "Payment cancelled"
-    message: "Your transaction has been cancelled."
-    close_page: "You can now close this page."
-
+    success:
+        title: 'Payment confirmed'
+        message: 'Your transaction has been successfully processed.'
+        close_page: 'You can now close this page.'
+    cancel:
+        title: 'Payment cancelled'
+        message: 'Your transaction has been cancelled.'
+        close_page: 'You can now close this page.'

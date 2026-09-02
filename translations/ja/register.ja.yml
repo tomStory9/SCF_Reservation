@@ -1,15 +1,15 @@
 register:
-  title: 新規登録
-  subtitle: アカウントを作成するには、フォームにご記入ください。
-  already_account: すでにアカウントをお持ちですか？
-  login: ログイン
-  submit: 登録する
+    title: 新規登録
+    subtitle: アカウントを作成するには、フォームにご記入ください。
+    already_account: すでにアカウントをお持ちですか？
+    login: ログイン
+    submit: 登録する
 app:
-  name: "Setoushi Circus Factory - 予約システム"
-  logo_1: "SCFロゴ"
-  logo_2: "Kitokurasロゴ"
+    name: 'Setoushi Circus Factory - 予約システム'
+    logo_1: 'SCFロゴ'
+    logo_2: 'Kitokurasロゴ'
 profile:
-  complete:
-    title: "プロフィール情報を入力してください"
-    subtitle: "登録を完了してサイト全体にアクセスするために、個人情報をご入力ください。"
-    submit: "情報を保存する"
+    complete:
+        title: 'プロフィール情報を入力してください'
+        subtitle: '登録を完了してサイト全体にアクセスするために、個人情報をご入力ください。'
+        submit: '情報を保存する'

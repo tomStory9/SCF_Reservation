@@ -22,7 +22,8 @@
                 maxDate: maxEndDate|date('Y-m-d'),
                 blockedPeriods: blockedPeriods|default([]),
                 minDays: minDays,
-
+            
+                periods: periods|default([]),
                 endpoints: {
                     zones: '/facility/{facilityId}/zones',
                     pricings: '/zone/{zoneId}/pricings',
@@ -92,7 +93,13 @@
                     grandTotal: 'js.grand_total'|trans,
 
                     usedHours: 'js.used_hours'|trans,
-                    selectedPeriodEvent: 'js.selected_period_event'|trans
+                    selectedPeriodEvent: 'js.selected_period_event'|trans,
+
+                        freeHoursUsedPattern: 'js.free_hours_used_pattern'|trans,
+    paidHoursPattern: 'js.paid_hours_pattern'|trans,
+    fullyFree: 'js.fully_free'|trans,
+    freeHoursRemainingPattern: 'js.free_hours_remaining_pattern'|trans,
+    hoursUnit: 'js.hours_unit'|trans
                 }
             }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
         }}

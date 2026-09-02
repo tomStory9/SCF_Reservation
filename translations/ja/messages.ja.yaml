@@ -1,374 +1,367 @@
 app:
-  title: "SCF予約システム"
-  description: "Setoushi Circus Factoryのスペースや客室を予約できます。"
-  logo_1: "SCFロゴ"
-  logo_2: "Kitokurasロゴ"
-
+    title: 'SCF予約システム'
+    description: 'Setoushi Circus Factoryのスペースや客室を予約できます。'
+    logo_1: 'SCFロゴ'
+    logo_2: 'Kitokurasロゴ'
 legal:
-  terms:
-    title: "利用規約"
-
+    terms:
+        title: '利用規約'
 flash:
-  email_verified: "メールアドレスを確認しました。"
-  booking_created: "予約を受け付けました。現在、承認待ちです。"
-  update_success: "登録情報を更新しました。"
-  email_changed_warning: "登録情報を保存しました。メールアドレスが変更されたため、確認用リンクを送信しました。受信トレイをご確認ください。"
-
+    email_verified: 'メールアドレスを確認しました。'
+    booking_created: '予約を受け付けました。現在、承認待ちです。'
+    update_success: '登録情報を更新しました。'
+    email_changed_warning: '登録情報を保存しました。メールアドレスが変更されたため、確認用リンクを送信しました。受信トレイをご確認ください。'
 api:
-  error:
-    user_not_authenticated: "ログインしていません。"
-    invalid_data: "入力データが無効です。"
-    terms_consent_required: "予約するには利用規約への同意が必要です。"
-    missing_dates: "startDateとendDateは必須です。"
-    invalid_date_format: "日付の形式が無効です。"
-    invalid_date_order: "終了日時は開始日時より後に設定してください。"
-
+    error:
+        user_not_authenticated: 'ログインしていません。'
+        invalid_data: '入力データが無効です。'
+        terms_consent_required: '予約するには利用規約への同意が必要です。'
+        missing_dates: 'startDateとendDateは必須です。'
+        invalid_date_format: '日付の形式が無効です。'
+        invalid_date_order: '終了日時は開始日時より後に設定してください。'
 calendar:
-  event:
-    full_day: "終日"
-    unavailable: "利用不可"
-    unavailable_other_configuration: "利用不可（別の構成で予約済み）"
-
+    event:
+        full_day: '終日'
+        unavailable: '利用不可'
+        unavailable_other_configuration: '利用不可（別の構成で予約済み）'
 stripe:
-  booking_name: "SCF予約"
-  booking_description: "練習スペースの予約"
-
+    booking_name: 'SCF予約'
+    booking_description: '練習スペースの予約'
 admin:
-  booking_detail:
-    title: "予約 #%id%"
-    back_to_list: "一覧に戻る"
-    edit: "編集"
-    client_info: "利用者情報"
-    full_name: "氏名"
-    email: "メールアドレス"
-    phone: "電話番号"
-    company: "サーカス団体"
-    stay_details: "予約詳細"
-    zone: "ゾーン"
-    period: "期間"
-    date_full_day: "%date%（終日）"
-    date_from: "%date%から"
-    date_to: "%date%まで"
-    guests: "利用者"
-    guest_count: "%count%名"
-    status: "ステータス"
-    equipments_reserved: "予約済み設備"
-    equipment: "設備"
-    quantity: "数量"
-    unit_price: "単価"
-    subtotal: "小計"
-    no_equipment: "追加設備は選択されていません。"
-    tracking: "利用状況"
-    created_at: "作成日時"
-    terms_consent: "利用規約への同意"
-    terms_accepted_at: "%date%に同意"
-    terms_not_recorded: "記録なし"
-    check_in: "チェックイン"
-    check_out: "チェックアウト"
-    finances: "料金"
-    room_price: "スペース料金"
-    equipment_price: "設備料金"
-    total: "合計"
-  dashboard:
-    title: "概要"
-    key_metrics: "主要指標"
-    unknown_zone: "不明なゾーン"
-    unknown_user: "不明なユーザー"
-    actions:
-      statistics: "統計"
-      users: "ユーザー管理"
-      pending_bookings: "申請を確認"
-      view_all_bookings: "すべての予約を見る"
-      view_all: "すべて見る"
-    stats:
-      pending_bookings: "承認待ち予約"
-      pending_bookings_help: "確認が必要な予約"
-      today_bookings: "本日の予約"
-      today_bookings_help: "本日利用中または予定の施設"
-      month_value: "今月の確定予約金額"
-      month_value_help: "承認済みまたは支払い済みの予約"
-      pending_users: "承認待ちアカウント"
-      pending_users_help: "承認が必要な新規登録"
-    calendar:
-      kicker: "スケジュール"
-      title: "予約カレンダー"
-      subtitle: "有効な予約を週・日・月表示で確認できます。"
-      legend: "ステータス凡例"
-      empty: "この期間に表示できる予約はありません。"
-    activity:
-      kicker: "サマリー"
-      title: "全体の利用状況"
-      next_seven_days: "今後7日間"
-      total_users: "ユーザー"
-      status_breakdown: "予約ステータスの内訳"
-    pending:
-      kicker: "要確認"
-      title: "最新の予約申請"
-      subtitle: "最近受け付けた承認待ちの予約です。"
-      empty_title: "すべて確認済みです"
-      empty_text: "承認待ちの予約申請はありません。"
-    users:
-      kicker: "ユーザー"
-      title: "最近追加されたアカウント"
-      subtitle: "ID順で表示した最新のアカウントです。"
-      empty_title: "アカウントがありません"
-      empty_text: "新しいアカウントがここに表示されます。"
-      verified: "確認済みメールアドレス"
-    modal:
-      kicker: "申請詳細"
-      title: "予約詳細"
-      close_aria: "ダイアログを閉じる"
-      close: "閉じる"
-      full_day: "終日利用"
-      booking_price: "予約料金"
-      equipment_price: "設備料金"
-      total_price: "合計金額"
-      unknown_equipment: "不明な設備"
-      quantity: "数量"
-      unit_price: "単価"
-      approve_error: "予約を承認できませんでした。"
-      decline_error: "予約を却下できませんでした。"
-  statistics:
-    title: "統計"
-    back_to_dashboard: "ダッシュボードに戻る"
-  menu:
-    return_to_app: "アプリに戻る"
-    dashboard: "ダッシュボード"
-    statistics: "統計"
-    users: "ユーザー"
-    user_roles: "ユーザーロール"
-    bookings: "予約"
-    facilities: "施設"
-    zones: "場所"
-    pricing: "料金"
-    time_slots: "予約時間枠"
-    pending_users: "承認待ちユーザー"
-    pending_bookings: "承認待ち予約"
-    equipments: "設備"
-    configuration: "設定"
-    parametre: "サイト設定"
-    blockout_periods: "利用停止期間"
-    specialties: "サーカスの専門分野"
-  entity:
-    user: "ユーザー"
-    users: "ユーザー"
-    user_role: "ユーザーロール"
-    user_roles: "ユーザーロール"
-    booking: "予約"
-    bookings: "予約"
-    zone: "場所"
-    zones: "場所"
-    pricing: "料金"
-    pricings: "料金"
-    time_slot: "時間枠"
-    time_slots: "時間枠"
-    pending_user: "承認待ちアカウント"
-    pending_users: "承認待ちアカウント"
-    equipment: "設備"
-    equipments: "設備"
-    settings: "サイト設定"
-    facility: "施設"
-    facilities: "施設"
-    blockout_period: "利用停止期間"
-    blockout_periods: "利用停止期間"
-    specialty: "専門分野"
-    specialties: "専門分野"
-  action:
-    approve: "承認"
-    decline: "却下"
-    ban: "利用停止"
-    history: "変更履歴"
-    view_month: "月別表示"
-  confirm:
-    ban_user: "このユーザーを利用停止にしますか？直ちにログアウトされ、以後ログインできなくなります。"
-  field:
-    id: "ID"
-    email: "メールアドレス"
-    user_type: "ユーザー種別"
-    first_name: "名"
-    last_name: "姓"
-    phone: "電話番号"
-    company: "サーカス団体"
-    language: "メールの言語"
-    google_id: "Google ID"
-    line_id: "LINE ID"
-    verified_user: "確認済みユーザー"
-    new_password: "新しいパスワード"
-    role_name: "ロール名"
-    label: "表示名"
-    allocated_hours: "月間無料時間"
-    max_advance_booking: "予約可能な最大先行日数"
-    tarif: "料金区分"
-    zone: "ゾーン"
-    facility: "施設"
-    user: "ユーザー"
-    start_date: "開始日時"
-    end_date: "終了日時"
-    price: "料金"
-    guest_count: "利用人数"
-    status: "ステータス"
-    created_date: "予約受付日時"
-    checked_in_at: "チェックイン日時"
-    checked_out_at: "チェックアウト日時"
-    week_day: "曜日"
-    time_slot: "時間枠"
-    full_price: "通常料金"
-    reduced_price_a: "割引料金A"
-    reduced_price_b: "割引料金B"
-    start_time: "開始時刻"
-    end_time: "終了時刻"
-    period: "時間帯"
-    name: "名前"
-    type: "種類"
-    max_capacity: "最大定員"
-    user_status: "ユーザーステータス"
-    equipment_name: "設備名"
-    unit_price: "単価"
-    max_quantity: "最大数量"
-    gestion_chambre: "客室管理"
-    gestion_reservations: "スペース予約管理"
-    securite_inscription: "セキュリティと登録"
-    reserver_chambre: "客室予約"
-    validation_manuelle: "手動承認を必須にする"
-    min_day_room_booking: "客室予約の最低事前日数"
-    hour_checkin_room: "客室のチェックイン時刻"
-    hour_checkout: "客室のチェックアウト時刻"
-    pending_room_blocking: "承認待ちの客室申請で日付を確保する"
-    min_day_booking: "スペース予約の最低事前日数"
-    pending_booking_blocking: "承認待ちのスペース申請で時間枠を確保する"
-    address: "住所"
-    internationalAddress: "国際表記の住所"
-    active: "有効"
-    birth_date: "生年月日"
-    nationalitie: "国籍"
-    residence_city: "居住地"
-    specialties: "サーカスの専門分野"
-    practice_start_year: "サーカスを始めた年"
-    last_performance: "直近の公演"
-    instagram_account: "Instagramアカウント"
-    specialty_name: "専門分野名"
-    zone_desc_fr: "フランス語の説明"
-    zone_desc_en: "英語の説明"
-    zone_desc_jp: "日本語の説明"
-    is_full_day: "終日"
-  filter:
-    time_slot: "時間枠"
-    zone: "ゾーン"
-    booking_status: "予約ステータス"
-    user_booking: "予約ユーザー"
-    equipment_name: "設備名"
-    unit_price: "単価"
-  flash:
-    booking_not_found: "予約が見つかりません。"
-    booking_no_longer_pending: "この予約は承認待ちではありません。"
-    booking_approved: "予約を承認しました。"
-    booking_declined: "予約を却下しました。"
-    booking_user_or_date_not_found: "ユーザーまたは予約日が見つかりません。"
-    user_not_found: "ユーザーが見つかりません。"
-    user_no_longer_pending: "このアカウントは承認待ちではありません。"
-    user_approved: "アカウントを承認しました。"
-    user_declined: "アカウントを却下しました。"
-    user_banned: "アカウントを利用停止にしました。"
-    user_already_banned: "このアカウントはすでに利用停止中です。"
-    cannot_ban_yourself: "自分のアカウントを利用停止にすることはできません。"
-  enum:
-    booking_status:
-      pending: "承認待ち"
-      approved: "承認済み"
-      declined: "却下"
-      paid: "支払い済み"
-    user_status:
-      pending: "承認待ち"
-      approved: "承認済み"
-      declined: "却下"
-      suspended: "停止中"
-    time_slot_period:
-      hourly: "時間単位"
-      morning: "午前"
-      afternoon: "午後"
-      evening: "夜間"
-    zone_type:
-      training: "練習スペース"
-      bedroom: "客室"
-    user_role:
-      admin: "管理者"
-      ca_user: "コレクティブアーティスト"
-      aa_user: "アソシエイトアーティスト"
-      fa_user: "フレンドアーティスト"
-      tm_user: "研修メンバー"
-      default_user: "一般ユーザー"
-    language:
-      fr: "フランス語"
-      en: "英語"
-      ja: "日本語"
-    week_day:
-      monday: "月曜日"
-      tuesday: "火曜日"
-      wednesday: "水曜日"
-      thursday: "木曜日"
-      friday: "金曜日"
-      saturday: "土曜日"
-      sunday: "日曜日"
-  monthly:
-    title: "月間予約"
-    close: "閉じる"
-    already_booked_hours: "今月の予約済み時間"
-    current_booking: "現在の予約"
-    total_after_booking: "この予約を含む合計："
-    list: "予約一覧"
-    empty: "今月の予約はありません。"
-    date: "日付"
-    zone: "ゾーン"
-    status: "ステータス"
-    duration: "時間"
-    visitors: "利用人数"
-    unknown_zone: "不明なゾーン"
-    back: "予約一覧に戻る"
-  help:
-    new_password: "現在のパスワードを変更しない場合は空欄のままにしてください。"
-    help_room_enable: "無効にすると、ナビゲーションバーからボタンが非表示になり、ユーザーは客室を予約できなくなります。"
-    help_verification_user: "有効にすると、管理者による新規アカウントの承認が必要です。無効にすると、アカウントは自動的に承認されます。"
-    help_min_day_room_booking: "申請日からチェックイン日までに必要な最低日数です。"
-    help_hour_checkin_room: "チェックイン時刻を0～23の数値で指定します。"
-    help_hour_checkout: "チェックアウト時刻を0～23の数値で指定します。"
-    help_pending_room_blocking: "有効にすると、承認待ちの申請でも他のユーザーはその客室を予約できなくなります。"
-    help_min_day_booking: "申請日から予約開始日までに必要な最低日数です。"
-    help_pending_booking_blocking: "有効にすると、承認待ちの申請でも他のユーザーはその時間枠を予約できなくなります。"
-  settings:
-    title: "サイト設定"
-  user_history:
-    title: "%user% の変更履歴"
-    back: "ユーザー一覧へ戻る"
-    date: "日時"
-    actor: "変更者"
-    action: "操作"
-    changes: "変更内容"
-    system: "システム"
-    empty: "このユーザーの変更履歴はまだありません。"
-    no_changes: "フィールドの詳細なし"
-    empty_value: "空の値"
-    yes: "はい"
-    no: "いいえ"
-    actions:
-      create: "作成"
-      update: "更新"
-      remove: "削除"
-    fields:
-      email: "メールアドレス"
-      roles: "ユーザー種別"
-      name: "名"
-      lastname: "姓"
-      phone: "電話番号"
-      company: "サーカス団体"
-      googleId: "Google ID"
-      lineId: "LINE ID"
-      filledInfo: "情報入力済み"
-      isVerified: "確認済みメールアドレス"
-      userStatus: "ステータス"
-      Language: "メールの言語"
-
+    dashboard:
+        title: '概要'
+        key_metrics: '主要指標'
+        unknown_zone: '不明なゾーン'
+        unknown_user: '不明なユーザー'
+        actions:
+            statistics: '統計'
+            users: 'ユーザー管理'
+            pending_bookings: '申請を確認'
+            view_all_bookings: 'すべての予約を見る'
+            view_all: 'すべて見る'
+        stats:
+            pending_bookings: '承認待ち予約'
+            pending_bookings_help: '確認が必要な予約'
+            today_bookings: '本日の予約'
+            today_bookings_help: '本日利用中または予定の施設'
+            month_value: '今月の確定予約金額'
+            month_value_help: '承認済みまたは支払い済みの予約'
+            pending_users: '承認待ちアカウント'
+            pending_users_help: '承認が必要な新規登録'
+        calendar:
+            kicker: 'スケジュール'
+            title: '予約カレンダー'
+            subtitle: '有効な予約を週・日・月表示で確認できます。'
+            legend: 'ステータス凡例'
+            empty: 'この期間に表示できる予約はありません。'
+        activity:
+            kicker: 'サマリー'
+            title: '全体の利用状況'
+            next_seven_days: '今後7日間'
+            total_users: 'ユーザー'
+            status_breakdown: '予約ステータスの内訳'
+        pending:
+            kicker: '要確認'
+            title: '最新の予約申請'
+            subtitle: '最近受け付けた承認待ちの予約です。'
+            empty_title: 'すべて確認済みです'
+            empty_text: '承認待ちの予約申請はありません。'
+        users:
+            kicker: 'ユーザー'
+            title: '最近追加されたアカウント'
+            subtitle: 'ID順で表示した最新のアカウントです。'
+            empty_title: 'アカウントがありません'
+            empty_text: '新しいアカウントがここに表示されます。'
+            verified: '確認済みメールアドレス'
+        modal:
+            kicker: '申請詳細'
+            title: '予約詳細'
+            close_aria: 'ダイアログを閉じる'
+            close: '閉じる'
+            full_day: '終日利用'
+            booking_price: '予約料金'
+            equipment_price: '設備料金'
+            total_price: '合計金額'
+            unknown_equipment: '不明な設備'
+            quantity: '数量'
+            unit_price: '単価'
+            approve_error: '予約を承認できませんでした。'
+            decline_error: '予約を却下できませんでした。'
+    statistics:
+        title: '統計'
+        back_to_dashboard: 'ダッシュボードに戻る'
+    menu:
+        return_to_app: 'アプリに戻る'
+        dashboard: 'ダッシュボード'
+        statistics: '統計'
+        users: 'ユーザー'
+        user_roles: 'ユーザーロール'
+        specialties: 'サーカスの演目'
+        bookings: '予約'
+        facilities: '施設'
+        zones: '場所'
+        pricing: '料金'
+        time_slots: '予約時間枠'
+        pending_users: '承認待ちユーザー'
+        pending_bookings: '承認待ち予約'
+        equipments: '設備'
+        configuration: '設定'
+        parametre: 'サイト設定'
+        blockout_periods: '利用停止期間'
+    entity:
+        user: 'ユーザー'
+        users: 'ユーザー'
+        user_role: 'ユーザーロール'
+        user_roles: 'ユーザーロール'
+        booking: '予約'
+        bookings: '予約'
+        zone: '場所'
+        zones: '場所'
+        pricing: '料金'
+        pricings: '料金'
+        time_slot: '時間枠'
+        time_slots: '時間枠'
+        pending_user: '承認待ちアカウント'
+        pending_users: '承認待ちアカウント'
+        equipment: '設備'
+        equipments: '設備'
+        settings: 'サイト設定'
+        facility: '施設'
+        facilities: '施設'
+        blockout_period: '利用停止期間'
+        blockout_periods: '利用停止期間'
+        specialty: '専門種目'
+        specialties: '専門種目一覧'
+    action:
+        approve: '承認'
+        decline: '却下'
+        ban: '利用停止'
+        history: '変更履歴'
+        view_month: '月別表示'
+    confirm:
+        ban_user: 'このユーザーを利用停止にしますか？直ちにログアウトされ、以後ログインできなくなります。'
+    field:
+        id: 'ID'
+        email: 'メールアドレス'
+        user_type: 'ユーザー種別'
+        first_name: '名'
+        last_name: '姓'
+        phone: '電話番号'
+        company: 'サーカス団体'
+        language: 'メールの言語'
+        google_id: 'Google ID'
+        line_id: 'LINE ID'
+        verified_user: '確認済みユーザー'
+        new_password: '新しいパスワード'
+        role_name: 'ロール名'
+        label: '表示名'
+        allocated_hours: '月間無料時間'
+        max_advance_booking: '予約可能な最大先行日数'
+        tarif: '料金区分'
+        zone: 'ゾーン'
+        facility: '施設'
+        user: 'ユーザー'
+        start_date: '開始日時'
+        end_date: '終了日時'
+        price: '料金'
+        guest_count: '利用人数'
+        status: 'ステータス'
+        created_date: '予約受付日時'
+        checked_in_at: 'チェックイン日時'
+        checked_out_at: 'チェックアウト日時'
+        week_day: '曜日'
+        time_slot: '時間枠'
+        full_price: '通常料金'
+        reduced_price_a: '割引料金A'
+        reduced_price_b: '割引料金B'
+        start_time: '開始時刻'
+        end_time: '終了時刻'
+        period: '時間帯'
+        name: '名前'
+        type: '種類'
+        max_capacity: '最大定員'
+        user_status: 'ユーザーステータス'
+        equipment_name: '設備名'
+        specialty_name: '専門種目名'
+        unit_price: '単価'
+        max_quantity: '最大数量'
+        gestion_chambre: '客室管理'
+        gestion_reservations: 'スペース予約管理'
+        securite_inscription: 'セキュリティと登録'
+        reserver_chambre: '客室予約'
+        validation_manuelle: '手動承認を必須にする'
+        min_day_room_booking: '客室予約の最低事前日数'
+        hour_checkin_room: '客室のチェックイン時刻'
+        hour_checkout: '客室のチェックアウト時刻'
+        pending_room_blocking: '承認待ちの客室申請で日付を確保する'
+        min_day_booking: 'スペース予約の最低事前日数'
+        pending_booking_blocking: '承認待ちのスペース申請で時間枠を確保する'
+        address: '住所'
+        internationalAddress: '国際表記の住所'
+        active: '有効'
+        birth_date: '生年月日'
+        nationalitie: '国籍'
+        residence_city: '居住都市'
+        specialties: 'サーカス専門種目'
+        practice_start_year: '開始年（練習）'
+        last_performance: '最終公演'
+        instagram_account: 'Instagramアカウント'
+        zone_desc_fr: 'フランス語の説明'
+        zone_desc_en: '英語の説明'
+        zone_desc_jp: '日本語の説明'
+        is_full_day: '終日'
+    filter:
+        time_slot: '時間枠'
+        zone: 'ゾーン'
+        booking_status: '予約ステータス'
+        user_booking: 'ユーザー（予約）'
+        equipment_name: '器材名'
+        unit_price: '単価'
+    flash:
+        booking_not_found: '予約が見つかりません。'
+        booking_no_longer_pending: 'この予約は承認待ちではありません。'
+        booking_approved: '予約を承認しました。'
+        booking_declined: '予約を却下しました。'
+        booking_user_or_date_not_found: 'ユーザーまたは予約日が見つかりません。'
+        user_not_found: 'ユーザーが見つかりません。'
+        user_no_longer_pending: 'このアカウントは承認待ちではありません。'
+        user_approved: 'アカウントを承認しました。'
+        user_declined: 'アカウントを却下しました。'
+        user_banned: 'アカウントを利用停止にしました。'
+        user_already_banned: 'このアカウントはすでに利用停止中です。'
+        cannot_ban_yourself: '自分のアカウントを利用停止にすることはできません。'
+    enum:
+        booking_status:
+            pending: '承認待ち'
+            approved: '承認済み'
+            declined: '却下'
+            paid: '支払い済み'
+        user_status:
+            pending: '承認待ち'
+            approved: '承認済み'
+            declined: '却下'
+            suspended: '停止中'
+        time_slot_period:
+            hourly: '時間単位'
+            morning: '午前'
+            afternoon: '午後'
+            evening: '夜間'
+        zone_type:
+            training: '練習スペース'
+            bedroom: '客室'
+        user_role:
+            admin: '管理者'
+            ca_user: 'コレクティブアーティスト'
+            aa_user: 'アソシエイトアーティスト'
+            fa_user: 'フレンドアーティスト'
+            tm_user: '研修メンバー'
+            default_user: '一般ユーザー'
+        language:
+            fr: 'フランス語'
+            en: '英語'
+            ja: '日本語'
+        week_day:
+            monday: '月曜日'
+            tuesday: '火曜日'
+            wednesday: '水曜日'
+            thursday: '木曜日'
+            friday: '金曜日'
+            saturday: '土曜日'
+            sunday: '日曜日'
+    monthly:
+        title: '月間予約'
+        close: '閉じる'
+        already_booked_hours: '今月の予約済み時間'
+        current_booking: '現在の予約'
+        total_after_booking: 'この予約を含む合計：'
+        list: '予約一覧'
+        empty: '今月の予約はありません。'
+        date: '日付'
+        zone: 'ゾーン'
+        status: 'ステータス'
+        duration: '時間'
+        visitors: '利用人数'
+        unknown_zone: '不明なゾーン'
+        back: '予約一覧に戻る'
+    help:
+        new_password: '現在のパスワードを変更しない場合は空欄のままにしてください。'
+        help_room_enable: '無効にすると、ナビゲーションバーからボタンが非表示になり、ユーザーは客室を予約できなくなります。'
+        help_verification_user: '有効にすると、管理者による新規アカウントの承認が必要です。無効にすると、アカウントは自動的に承認されます。'
+        help_min_day_room_booking: '申請日からチェックイン日までに必要な最低日数です。'
+        help_hour_checkin_room: 'チェックイン時刻を0～23の数値で指定します。'
+        help_hour_checkout: 'チェックアウト時刻を0～23の数値で指定します。'
+        help_pending_room_blocking: '有効にすると、承認待ちの申請でも他のユーザーはその客室を予約できなくなります。'
+        help_min_day_booking: '申請日から予約開始日までに必要な最低日数です。'
+        help_pending_booking_blocking: '有効にすると、承認待ちの申請でも他のユーザーはその時間枠を予約できなくなります。'
+    settings:
+        title: 'サイト設定'
+    user_history:
+        title: '%user% の変更履歴'
+        back: 'ユーザー一覧へ戻る'
+        date: '日時'
+        actor: '変更者'
+        action: '操作'
+        changes: '変更内容'
+        system: 'システム'
+        empty: 'このユーザーの変更履歴はまだありません。'
+        no_changes: 'フィールドの詳細なし'
+        empty_value: '空の値'
+        yes: 'はい'
+        no: 'いいえ'
+        actions:
+            create: '作成'
+            update: '更新'
+            remove: '削除'
+        fields:
+            email: 'メールアドレス'
+            roles: 'ユーザー種別'
+            name: '名'
+            lastname: '姓'
+            phone: '電話番号'
+            company: 'サーカス団体'
+            googleId: 'Google ID'
+            lineId: 'LINE ID'
+            filledInfo: '情報入力済み'
+            isVerified: '確認済みメールアドレス'
+            userStatus: 'ステータス'
+            Language: 'メールの言語'
+    booking_detail:
+        title: '予約 #%id%'
+        back_to_list: '一覧に戻る'
+        edit: '編集'
+        client_info: '利用者情報'
+        full_name: '氏名'
+        email: 'メールアドレス'
+        phone: '電話番号'
+        company: 'サーカス団体'
+        stay_details: '予約詳細'
+        zone: 'ゾーン'
+        period: '期間'
+        date_full_day: '%date%（終日）'
+        date_from: '%date%から'
+        date_to: '%date%まで'
+        guests: '利用者'
+        guest_count: '%count%名'
+        status: 'ステータス'
+        equipments_reserved: '予約済み設備'
+        equipment: '設備'
+        quantity: '数量'
+        unit_price: '単価'
+        subtotal: '小計'
+        no_equipment: '追加設備は選択されていません。'
+        tracking: '利用状況'
+        created_at: '作成日時'
+        terms_consent: '利用規約への同意'
+        terms_accepted_at: '%date%に同意'
+        terms_not_recorded: '記録なし'
+        check_in: 'チェックイン'
+        check_out: 'チェックアウト'
+        finances: '料金'
+        room_price: 'スペース料金'
+        equipment_price: '設備料金'
+        total: '合計'
 scaffold:
-  title: "こんにちは、%controller%！"
-  intro: "このメッセージの参照元："
-  controller_path: "コントローラー："
-  template_path: "テンプレート："
+    title: 'こんにちは、%controller%！'
+    intro: 'このメッセージの参照元：'
+    controller_path: 'コントローラー：'
+    template_path: 'テンプレート：'

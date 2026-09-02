@@ -1,56 +1,54 @@
 login:
-  email: Your email
-  password: Your password
-  email_placeholder: Enter your email
-  password_placeholder: Enter your password
+    email: Your email
+    password: Your password
+    email_placeholder: Enter your email
+    password_placeholder: Enter your password
 register:
-  email: Your email
-  password: Your password
-  password_confirmation: Confirm your password
-  email_placeholder: Enter your email
-  password_placeholder: Enter your password
-  password_confirmation_placeholder: Confirm your password
+    email: Your email
+    password: Your password
+    password_confirmation: Confirm your password
+    email_placeholder: Enter your email
+    password_placeholder: Enter your password
+    password_confirmation_placeholder: Confirm your password
 information:
-  email:
-    label: "Email address"
-    placeholder: "Your email address"
-    not_blank: "Email address is required."
-    invalid: "Please enter a valid email address."
-  name:
-    label: "First name"
-    placeholder: "Your first name"
-    not_blank: "First name is required."
-  lastname:
-    label: "Last name"
-    placeholder: "Your last name"
-    not_blank: "Last name is required."
-  phone:
-    label: "Phone"
-    placeholder: "Your phone number"
-    not_blank: "Phone number is required."
-  company:
-    label: "Circus company"
-    placeholder: "Name of your circus company"
-  nationalitie:
-    label: "Nationality or nationalities"
-    placeholder: "e.g. French, Japanese..."
-    not_blank: "Please enter your nationality."
-  residence_city:
-    label: "City of residence"
-    placeholder: "e.g. Paris, Tokyo..."
-    not_blank: "Please enter your city of residence."
-  birth_date:
-    label: "Date of birth"
-    not_blank: "Please enter your date of birth."
-  practice_start_year:
-    label: "Year you started practising"
-    placeholder: "e.g. 2015"
-    not_blank: "Please enter the year you started practising."
-  last_performance:
-    label: "Latest performance (name/link...)"
-    placeholder: "e.g. Winter Gala - December 2025"
-  instagram:
-    label: "Instagram account (@...)"
-    placeholder: "@username"
-  specialties:
-    label: "Circus specialties"
+    email:
+        label: 'Email address'
+        placeholder: 'Your email address'
+        not_blank: 'Email address is required.'
+        invalid: 'Please enter a valid email address.'
+    name:
+        label: 'First name'
+        placeholder: 'Your first name'
+        not_blank: 'First name is required.'
+    lastname:
+        label: 'Last name'
+        placeholder: 'Your last name'
+        not_blank: 'Last name is required.'
+    phone:
+        label: 'Phone'
+        placeholder: 'Your phone number'
+        not_blank: 'Phone number is required.'
+    company:
+        label: 'Circus company'
+        placeholder: 'Name of your circus company'
+    nationalitie:
+        label: 'Nationality(ies)'
+        placeholder: 'E.g.: French, Japanese...'
+        not_blank: 'Please enter your nationality.'
+    residence_city:
+        label: 'City of residence'
+        placeholder: 'E.g.: Paris, Tokyo...'
+        not_blank: 'Please enter your city of residence.'
+    birth_date:
+        label: 'Date of birth'
+        not_blank: 'Please enter your date of birth.'
+    practice_start_year:
+        label: 'Year you started practicing'
+        not_blank: 'Please indicate the year you started practicing.'
+    last_performance:
+        label: 'Last performance (Name/link...)'
+        placeholder: 'E.g.: Winter Gala - December 2025'
+    instagram:
+        label: 'Instagram account (@...)'
+    specialties:
+        label: 'Circus specialties'
