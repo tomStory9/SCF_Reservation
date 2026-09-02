@@ -23,6 +23,7 @@ import { createEquipmentUI } from './equipment-ui.js';
 document.addEventListener('DOMContentLoaded', async () => {
     const calendarElement = document.getElementById('calendar-holder');
     const zoneSelectElement = document.getElementById('zone-select');
+    const locationDescriptionElement = document.getElementById('location-description');
 
     if (!calendarElement || !zoneSelectElement) {
         console.warn('[reservation] Éléments nécessaires introuvables');
@@ -157,6 +158,25 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (equipmentUI) {
                 equipmentUI.reset();
+            }
+
+            if (locationDescriptionElement) {
+                if (!zoneId) {
+                    locationDescriptionElement.textContent = '-';
+                } else {
+                    const option = zoneTomSelect.options[zoneId];
+                    if (option) {
+                        let desc = option.frDesc;
+
+                        if (config.locale === 'en') {
+                            desc = option.enDesc || option.frDesc;
+                        } else if (config.locale === 'ja') {
+                            desc = option.jpDesc || option.frDesc;
+                        }
+
+                        locationDescriptionElement.textContent = desc || '';
+                    }
+                }
             }
 
             if (!zoneId) {
