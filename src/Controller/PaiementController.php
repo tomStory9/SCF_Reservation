@@ -14,6 +14,7 @@ use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 final class PaiementController extends AbstractController
 {
@@ -26,7 +27,8 @@ final class PaiementController extends AbstractController
         EntityManagerInterface $entityManager,
         BookingRepository $bookingRepository,
         UserRepository $userRepository,
-        MailerService $mailerService
+        MailerService $mailerService,
+        TranslatorInterface $translator
     ): Response {
         $stripe = new StripeClient($stripeSecretKey);
 
@@ -50,6 +52,8 @@ final class PaiementController extends AbstractController
             $entityManager->flush();
 
             $mailerService->sendBookingPending($booking, $user);
+
+            $this->addFlash('success', 'Votre empreinte bancaire a bien été enregistrée. Votre demande est en attente de validation.');
         } else {
             $transaction = $booking->getTransaction() ?? new Transaction();
             $transaction->setPaidPrice($session->amount_total);
@@ -67,16 +71,18 @@ final class PaiementController extends AbstractController
             $entityManager->flush();
 
             $mailerService->sendPaymentConfirmationEmail($user, $transaction);
+
+            $this->addFlash('success', 'Votre paiement a été validé avec succès.');
         }
 
-        return $this->render('paiement/success.html.twig', [
-            'controller_name' => 'PaiementController',
-        ]);
+        return $this->redirectToRoute('app_home_user');
     }
 
     #[Route('/paiement/cancel', name: 'app_paiement_cancel')]
     public function cancel(): Response
     {
-        return $this->render('paiement/cancel.html.twig', []);
+        $this->addFlash('warning', 'Le processus de paiement a été annulé.');
+
+        return $this->redirectToRoute('app_home_user');
     }
 }
