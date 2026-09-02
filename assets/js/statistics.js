@@ -72,8 +72,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // --- GRAPHIQUE 3 : Mensuel ---
-    const monthLabels = Object.keys(data.monthly);
-    new Chart(document.getElementById('monthlyChart').getContext('2d'), {
+    const monthlyDataAllYears = data.monthly;
+    const yearFilter = document.getElementById('monthly-year-filter');
+
+    // Année sélectionnée (ou la plus récente s'il n'y a pas de select)
+    let currentYear = yearFilter
+        ? yearFilter.value
+        : Object.keys(monthlyDataAllYears).sort().reverse()[0];
+    const monthLabels = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+    // Fonction pour extraire les données d'une année précise
+    function getMonthlyDataForYear(year) {
+        const yearData = monthlyDataAllYears[year];
+        return {
+            counts: monthLabels.map((m) => yearData[m].count),
+            revenues: monthLabels.map((m) => yearData[m].revenue)
+        };
+    }
+
+    let currentChartData = getMonthlyDataForYear(currentYear);
+    const monthCtx = document.getElementById('monthlyChart').getContext('2d');
+
+    const monthlyChart = new Chart(monthCtx, {
         type: 'bar',
         data: {
             labels: monthLabels,
@@ -81,7 +101,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     type: 'line',
                     label: 'Revenus (¥)',
-                    data: monthLabels.map((k) => data.monthly[k].revenue),
+                    data: currentChartData.revenues,
                     borderColor: '#e9b94d',
                     backgroundColor: '#e9b94d',
                     borderWidth: 3,
@@ -91,8 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     type: 'bar',
                     label: 'Réservations',
-                    data: monthLabels.map((k) => data.monthly[k].count),
-                    backgroundColor: '#3B82F6', // Plus clair que 033862
+                    data: currentChartData.counts,
+                    backgroundColor: '#3B82F6',
                     borderRadius: 4,
                     yAxisID: 'y'
                 }
@@ -116,6 +136,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // On met à jour UNIQUEMENT ce graphique quand l'année change
+    if (yearFilter) {
+        yearFilter.addEventListener('change', (e) => {
+            const selectedYear = e.target.value;
+            const newData = getMonthlyDataForYear(selectedYear);
+
+            monthlyChart.data.datasets[0].data = newData.revenues;
+            monthlyChart.data.datasets[1].data = newData.counts;
+            monthlyChart.update();
+        });
+    }
 
     // --- GRAPHIQUE 4 : Zones ---
     const zoneLabels = Object.keys(data.zones);

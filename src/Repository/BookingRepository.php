@@ -499,22 +499,33 @@ class BookingRepository extends ServiceEntityRepository
     }
 
     /**
-     * Récupère toutes les données nécessaires pour les statistiques de réservation
-     * (Revenus par mois, par zone, par utilisateur, taux de remplissage).
+     * Trouve l'année de la plus ancienne réservation validée/payée.
+     */
+    public function getOldestBookingYear(): int
+    {
+        $result = $this->createQueryBuilder('b')
+            ->select('MIN(b.startDate)')
+            ->where('b.bookingStatus IN (:statuses)')
+            ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PAID])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if (!$result) {
+            return (int) date('Y');
+        }
+
+        return (int) new \DateTimeImmutable($result)->format('Y');
+    }
+
+    /**
+     * Ajout du paramètre $year pour filtrer les résultats sur une année précise.
      */
     public function getRawDataForStatistics(): array
     {
         return $this->createQueryBuilder('b')
             ->select('
-                b.id,
-                b.startDate,
-                b.endDate,
-                b.TotalPrice as price,
-                b.isFullDay,
-                z.name as zoneName,
-                u.id as userId,
-                u.name as userFirstName,
-                u.lastname as userLastName
+                b.id, b.startDate, b.endDate, b.TotalPrice as price, b.isFullDay,
+                z.name as zoneName, u.id as userId, u.name as userFirstName, u.lastname as userLastName
             ')
             ->join('b.zone', 'z')
             ->join('b.userBooking', 'u')
