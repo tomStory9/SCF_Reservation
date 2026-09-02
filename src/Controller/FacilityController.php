@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Facility;
+use App\Entity\Zone;
 use App\Repository\ZoneRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -20,6 +21,9 @@ final class FacilityController extends AbstractController
     #[Route('/facility/{id}/zones', name: 'app_booking_training_zone', methods: ['GET'])]
     public function getTrainingZoneByFacility(Facility $facility): JsonResponse
     {
+        /**
+         * @var Zone[] $zones
+         */
         $zones = $this->zoneRepository->getTrainingZonesByFacility($facility);
 
         $zonesJson = [];
@@ -28,6 +32,9 @@ final class FacilityController extends AbstractController
                 'id' => $zone->getId(),
                 'name' => $zone->getName(),
                 'code' => $zone->getCode(),
+                'frDesc' => $zone->getfrDesc(),
+                'enDesc' => $zone->getEnDesc(),
+                'jpDesc' => $zone->getjpDesc(),
             ];
         }
 

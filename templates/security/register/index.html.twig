@@ -52,6 +52,27 @@
                 <div class="grid min-w-0 gap-4 sm:grid-cols-2">
 
                     <div class="min-w-0">
+                        {{ form_label(registrationForm.lastname, null, {
+                            label_attr: {
+                                class: 'mb-2 block text-sm font-medium text-state'
+                            }
+                        }) }}
+
+                        {{ form_widget(registrationForm.lastname, {
+                            attr: {
+                                class: 'min-w-0 w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                                ~ (registrationForm.lastname.vars.errors|length
+                                ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
+                                : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
+                            }
+                        }) }}
+
+                        <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
+                            {{ form_errors(registrationForm.lastname) }}
+                        </div>
+                    </div>
+
+                    <div class="min-w-0">
                         {{ form_label(registrationForm.name, null, {
                             label_attr: {
                                 class: 'mb-2 block text-sm font-medium text-state'
@@ -69,27 +90,6 @@
 
                         <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
                             {{ form_errors(registrationForm.name) }}
-                        </div>
-                    </div>
-
-                    <div class="min-w-0">
-                        {{ form_label(registrationForm.lastname, null, {
-                            label_attr: {
-                                class: 'mb-2 block text-sm font-medium text-state'
-                            }
-                        }) }}
-
-                        {{ form_widget(registrationForm.lastname, {
-                            attr: {
-                                class: 'min-w-0 w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
-                                    ~ (registrationForm.lastname.vars.errors|length
-                                        ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
-                                        : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
-                            }
-                        }) }}
-
-                        <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
-                            {{ form_errors(registrationForm.lastname) }}
                         </div>
                     </div>
 
