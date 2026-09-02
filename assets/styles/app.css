@@ -30,3 +30,16 @@ body {
 .iti input {
     padding-left: 90px !important;
 }
+
+.auth-message,
+.auth-form-error {
+    overflow-wrap: anywhere;
+}
+
+.auth-form-error ul {
+    display: grid;
+    gap: 0.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}

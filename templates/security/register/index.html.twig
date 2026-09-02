@@ -8,27 +8,27 @@
     {{ encore_entry_script_tags('carousel') }}
 {% endblock %}
 {% block body %}
-<div class="flex min-h-screen bg-white">
+<div class="flex min-h-dvh overflow-x-hidden bg-white lg:h-dvh lg:overflow-hidden">
 
-    <main class="flex w-full items-center justify-center p-4 lg:w-1/2 lg:p-8">
-        <div class="w-full max-w-lg">
+    <main class="flex min-h-dvh w-full min-w-0 overflow-x-hidden px-4 pb-8 pt-24 sm:px-6 lg:h-dvh lg:min-h-0 lg:w-1/2 lg:overflow-y-auto lg:p-8">
+        <div class="mx-auto my-auto w-full min-w-0 max-w-lg">
 
-            <div class="mb-6 flex items-center justify-center gap-4">
+            <div class="mb-4 flex items-center justify-center gap-3 sm:mb-6 sm:gap-4">
                 <img
                     src="{{ asset('build/images/scf.svg') }}"
                     alt="{{ 'app.logo_1'|trans }}"
-                    class="h-14 w-auto"
+                    class="h-11 w-auto max-w-[45%] sm:h-14"
                 >
 
                 <img
                     src="{{ asset('build/images/kitokuras.svg') }}"
                     alt="{{ 'app.logo_2'|trans }}"
-                    class="h-14 w-auto"
+                    class="h-11 w-auto max-w-[45%] sm:h-14"
                 >
             </div>
 
-            <div class="mb-6 text-center">
-                <h1 class="text-3xl font-bold text-primary">
+            <div class="mb-4 text-center sm:mb-6">
+                <h1 class="text-2xl font-bold text-primary sm:text-3xl">
                     {{ 'register.title'|trans }}
                 </h1>
 
@@ -38,7 +38,7 @@
             </div>
 
             {% if registrationForm.vars.errors|length %}
-                <div class="mb-6 rounded-xl border border-danger bg-danger/10 p-4 text-sm text-danger">
+                <div class="auth-form-error mb-4 min-w-0 rounded-xl border border-danger bg-danger/10 p-3 text-sm text-danger sm:mb-6 sm:p-4">
                     {{ form_errors(registrationForm) }}
                 </div>
             {% endif %}
@@ -49,9 +49,9 @@
                 }
             }) }}
 
-                <div class="grid gap-4 sm:grid-cols-2">
+                <div class="grid min-w-0 gap-4 sm:grid-cols-2">
 
-                    <div>
+                    <div class="min-w-0">
                         {{ form_label(registrationForm.name, null, {
                             label_attr: {
                                 class: 'mb-2 block text-sm font-medium text-state'
@@ -60,19 +60,19 @@
 
                         {{ form_widget(registrationForm.name, {
                             attr: {
-                                class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                                class: 'min-w-0 w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
                                     ~ (registrationForm.name.vars.errors|length
                                         ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
                                         : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
                             }
                         }) }}
 
-                        <div class="mt-2 text-sm font-medium text-danger">
+                        <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
                             {{ form_errors(registrationForm.name) }}
                         </div>
                     </div>
 
-                    <div>
+                    <div class="min-w-0">
                         {{ form_label(registrationForm.lastname, null, {
                             label_attr: {
                                 class: 'mb-2 block text-sm font-medium text-state'
@@ -81,21 +81,21 @@
 
                         {{ form_widget(registrationForm.lastname, {
                             attr: {
-                                class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                                class: 'min-w-0 w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
                                     ~ (registrationForm.lastname.vars.errors|length
                                         ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
                                         : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
                             }
                         }) }}
 
-                        <div class="mt-2 text-sm font-medium text-danger">
+                        <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
                             {{ form_errors(registrationForm.lastname) }}
                         </div>
                     </div>
 
                 </div>
 
-                <div>
+                <div class="min-w-0">
                     {{ form_label(registrationForm.email, null, {
                         label_attr: {
                             class: 'mb-2 block text-sm font-medium text-state'
@@ -104,19 +104,19 @@
 
                     {{ form_widget(registrationForm.email, {
                         attr: {
-                            class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                            class: 'min-w-0 w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
                                 ~ (registrationForm.email.vars.errors|length
                                     ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
                                     : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
                         }
                     }) }}
 
-                    <div class="mt-2 text-sm font-medium text-danger">
+                    <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
                         {{ form_errors(registrationForm.email) }}
                     </div>
                 </div>
 
-                <div>
+                <div class="min-w-0">
                     {{ form_label(registrationForm.plainPassword.first, null, {
                         label_attr: {
                             class: 'mb-2 block text-sm font-medium text-state'
@@ -125,19 +125,19 @@
 
                     {{ form_widget(registrationForm.plainPassword.first, {
                         attr: {
-                            class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                            class: 'min-w-0 w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
                                 ~ (registrationForm.plainPassword.first.vars.errors|length
                                     ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
                                     : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
                         }
                     }) }}
 
-                    <div class="mt-2 text-sm font-medium text-danger">
+                    <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
                         {{ form_errors(registrationForm.plainPassword.first) }}
                     </div>
                 </div>
 
-                <div>
+                <div class="min-w-0">
                     {{ form_label(registrationForm.plainPassword.second, null, {
                         label_attr: {
                             class: 'mb-2 block text-sm font-medium text-state'
@@ -146,14 +146,14 @@
 
                     {{ form_widget(registrationForm.plainPassword.second, {
                         attr: {
-                            class: 'w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
+                            class: 'min-w-0 w-full rounded-xl border bg-white px-4 py-3 text-state outline-none transition placeholder:text-state '
                                 ~ (registrationForm.plainPassword.second.vars.errors|length
                                     ? 'border-danger focus:border-danger focus:ring-2 focus:ring-danger'
                                     : 'border-state focus:border-primary focus:ring-2 focus:ring-primary')
                         }
                     }) }}
 
-                    <div class="mt-2 text-sm font-medium text-danger">
+                    <div class="auth-form-error mt-2 min-w-0 text-sm font-medium text-danger">
                         {{ form_errors(registrationForm.plainPassword.second) }}
                     </div>
                 </div>
@@ -181,8 +181,8 @@
         </div>
     </main>
 
-    <aside class="hidden lg:block lg:w-1/2">
-        <div class="relative h-screen w-full overflow-hidden">
+    <aside class="hidden lg:block lg:h-dvh lg:w-1/2">
+        <div class="relative h-full w-full overflow-hidden">
             <div class="embla login-carousel h-full w-full">
                 <div class="embla__viewport h-full w-full">
                     <div class="embla__container flex h-full w-full">
