@@ -148,7 +148,7 @@ readonly class BookingService
      * @throws \DateMalformedStringException
      * @throws \Exception
      */
-    public function createBooking(array $data, User $user): void
+    public function createBooking(array $data, User $user): ?string
     {
         $zone = $this->zoneRepository->find($data['zoneId']);
 
@@ -239,12 +239,29 @@ readonly class BookingService
             $this->entityManager->persist($bookingEquipment);
             $booking->addBookingEquipment($bookingEquipment);
         }
+
         $booking->setEquipmentPrice($this->equipmentRepository->calculateTotalEquipmentPrice($booking));
         $booking->setTotalPrice($booking->getPrice() + $booking->getEquipmentPrice());
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
+
         $this->mailerService->sendNewBookingAdmin($booking, $booking->getUserBooking());
+
+        if ($booking->getTotalPrice() > 0) {
+            return $this->stripePaymentService->createPaymentLink(
+                $booking->getTotalPrice(),
+                $user->getId(),
+                $booking->getId(),
+                'jpy',
+                null,
+                null,
+                true
+            );
+        }
+
         $this->mailerService->sendBookingPending($booking, $booking->getUserBooking());
+
+        return null;
     }
 
     /**
