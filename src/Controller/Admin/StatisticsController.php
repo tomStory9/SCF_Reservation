@@ -5,16 +5,16 @@ namespace App\Controller\Admin;
 use App\Repository\BookingRepository;
 use App\Repository\UserRepository;
 use App\Repository\ZoneRepository;
-use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[IsGranted('ROLE_ADMIN')]
 class StatisticsController extends AbstractController
 {
-    #[AdminRoute(path: '/statistics', name: 'admin_statistics')]
+    #[Route(path: '/statistics', name: 'admin_statistics')]
     public function statistics(
         Request $request,
         UserRepository $userRepository,

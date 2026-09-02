@@ -130,6 +130,7 @@ class DashboardController extends AbstractDashboardController
             'bookingDetailUrls' => $bookingDetailUrls,
             'userDetailUrls' => $userDetailUrls,
             'urls' => [
+                'statistics' => $this->generateUrl('admin_statistics'),
                 'bookings' => $this->generateAdminUrl(BookingCrudController::class),
                 'pendingBookings' => $this->generateAdminUrl(PendingBookingCrudController::class),
                 'users' => $this->generateAdminUrl(UserCrudController::class),
