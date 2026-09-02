@@ -1,17 +1,24 @@
 import Chart from 'chart.js/auto';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css'; // Importe le CSS de Leaflet directement via Webpack
+import 'leaflet/dist/leaflet.css';
+import '../styles/statistics.css';
 
 document.addEventListener('DOMContentLoaded', () => {
     const dataElement = document.getElementById('stats-data');
-
-    if (!dataElement) {
-        return;
-    }
+    if (!dataElement) return;
 
     const data = JSON.parse(dataElement.dataset.charts);
+
+    const isDarkMode = document.body.classList.contains('ea-dark-scheme');
+    const textColor = isDarkMode ? '#cbd5e1' : '#475569';
+    const gridColor = isDarkMode ? '#334155' : '#e2e8f0';
+
+    Chart.defaults.color = textColor;
+    Chart.defaults.scale.grid.color = gridColor;
+    Chart.defaults.scale.grid.borderColor = gridColor;
+
+    // Palette de couleurs plus lumineuse pour bien ressortir sur le noir
     const colors = [
-        '#033862',
         '#e9b94d',
         '#3B82F6',
         '#10B981',
@@ -20,32 +27,35 @@ document.addEventListener('DOMContentLoaded', () => {
         '#8B5CF6',
         '#EC4899',
         '#14B8A6',
-        '#F97316'
+        '#F97316',
+        '#6366f1'
     ];
 
-    // --- GRAPHIQUE 1 : Nationalités (Camembert) ---
-    const natCtx = document.getElementById('nationalityChart').getContext('2d');
-    new Chart(natCtx, {
+    // --- GRAPHIQUE 1 : Nationalités ---
+    new Chart(document.getElementById('nationalityChart').getContext('2d'), {
         type: 'doughnut',
         data: {
             labels: data.nationalities.map((n) => n.name),
             datasets: [
                 {
                     data: data.nationalities.map((n) => n.count),
-                    backgroundColor: colors
+                    backgroundColor: colors,
+                    borderColor: isDarkMode ? '#1e293b' : '#ffffff', // Bordure adaptée au fond du panel
+                    borderWidth: 2
                 }
             ]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { position: 'bottom' } }
+            plugins: {
+                legend: { position: 'bottom', labels: { color: textColor, padding: 20 } }
+            }
         }
     });
 
-    // --- GRAPHIQUE 2 : Spécialités (Barres horizontales) ---
-    const specCtx = document.getElementById('specialtyChart').getContext('2d');
-    new Chart(specCtx, {
+    // --- GRAPHIQUE 2 : Spécialités ---
+    new Chart(document.getElementById('specialtyChart').getContext('2d'), {
         type: 'bar',
         data: {
             labels: data.specialties.map((s) => s.name),
@@ -61,13 +71,9 @@ document.addEventListener('DOMContentLoaded', () => {
         options: { indexAxis: 'y', responsive: true, maintainAspectRatio: false }
     });
 
-    // --- GRAPHIQUE 3 : Mensuel (Ligne + Barres) ---
+    // --- GRAPHIQUE 3 : Mensuel ---
     const monthLabels = Object.keys(data.monthly);
-    const monthCounts = monthLabels.map((k) => data.monthly[k].count);
-    const monthRevenues = monthLabels.map((k) => data.monthly[k].revenue);
-
-    const monthCtx = document.getElementById('monthlyChart').getContext('2d');
-    new Chart(monthCtx, {
+    new Chart(document.getElementById('monthlyChart').getContext('2d'), {
         type: 'bar',
         data: {
             labels: monthLabels,
@@ -75,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     type: 'line',
                     label: 'Revenus (¥)',
-                    data: monthRevenues,
+                    data: monthLabels.map((k) => data.monthly[k].revenue),
                     borderColor: '#e9b94d',
                     backgroundColor: '#e9b94d',
                     borderWidth: 3,
@@ -84,9 +90,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                     type: 'bar',
-                    label: 'Nombre de réservations',
-                    data: monthCounts,
-                    backgroundColor: '#033862',
+                    label: 'Réservations',
+                    data: monthLabels.map((k) => data.monthly[k].count),
+                    backgroundColor: '#3B82F6', // Plus clair que 033862
                     borderRadius: 4,
                     yAxisID: 'y'
                 }
@@ -98,16 +104,14 @@ document.addEventListener('DOMContentLoaded', () => {
             scales: {
                 y: {
                     type: 'linear',
-                    display: true,
                     position: 'left',
-                    title: { display: true, text: 'Réservations' }
+                    title: { display: true, text: 'Réservations', color: textColor }
                 },
                 y1: {
                     type: 'linear',
-                    display: true,
                     position: 'right',
                     grid: { drawOnChartArea: false },
-                    title: { display: true, text: 'Revenus (¥)' }
+                    title: { display: true, text: 'Revenus (¥)', color: textColor }
                 }
             }
         }
@@ -115,8 +119,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- GRAPHIQUE 4 : Zones ---
     const zoneLabels = Object.keys(data.zones);
-    const zoneCtx = document.getElementById('zoneChart').getContext('2d');
-    new Chart(zoneCtx, {
+    new Chart(document.getElementById('zoneChart').getContext('2d'), {
         type: 'bar',
         data: {
             labels: zoneLabels,
@@ -145,9 +148,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- GRAPHIQUE 5 : Top Users (Type CNAC) ---
-    const topUsersCtx = document.getElementById('topUsersChart').getContext('2d');
-    new Chart(topUsersCtx, {
+    // --- GRAPHIQUE 5 : Top Users ---
+    new Chart(document.getElementById('topUsersChart').getContext('2d'), {
         type: 'bar',
         data: {
             labels: data.topUsers.map((u) => u.name),
@@ -177,21 +179,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- 6. CARTE LEAFLET (Résidences type Immich) ---
+    // --- 6. CARTE LEAFLET ---
     const map = L.map('residenceMap').setView([36.2048, 138.2529], 5);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '© OpenStreetMap contributors'
+        attribution: '© OpenStreetMap'
     }).addTo(map);
 
     const mapLoader = document.getElementById('map-loading');
 
     async function placeCitiesOnMap() {
-        if (data.cities.length > 0) mapLoader.classList.remove('d-none');
+        if (data.cities.length > 0 && mapLoader) mapLoader.classList.remove('d-none');
 
         for (const city of data.cities) {
             try {
+                // Respect de l'API gratuite (1 sec d'attente)
                 await new Promise((r) => setTimeout(r, 1000));
-
                 const res = await fetch(
                     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city.city)}`
                 );
@@ -203,20 +205,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     L.circleMarker([lat, lon], {
                         radius: 8 + city.count * 2,
-                        fillColor: '#EF4444',
+                        fillColor: '#e9b94d', // Couleur or SCF
                         color: '#fff',
                         weight: 2,
                         opacity: 1,
                         fillOpacity: 0.8
                     })
                         .addTo(map)
-                        .bindPopup(`<b>${city.city}</b><br>${city.count} résident(s)`);
+                        .bindPopup(
+                            `<b style="color:#1e293b;">${city.city}</b><br><span style="color:#475569;">${city.count} résident(s)</span>`
+                        );
                 }
             } catch (e) {
                 console.warn('Impossible de trouver la ville : ' + city.city);
             }
         }
-        mapLoader.classList.add('d-none');
+        if (mapLoader) mapLoader.classList.add('d-none');
     }
 
     placeCitiesOnMap();
