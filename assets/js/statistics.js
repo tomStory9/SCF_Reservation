@@ -17,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     Chart.defaults.scale.grid.color = gridColor;
     Chart.defaults.scale.grid.borderColor = gridColor;
 
-    // Palette de couleurs plus lumineuse pour bien ressortir sur le noir
     const colors = [
         '#e9b94d',
         '#3B82F6',
@@ -40,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 {
                     data: data.nationalities.map((n) => n.count),
                     backgroundColor: colors,
-                    borderColor: isDarkMode ? '#1e293b' : '#ffffff', // Bordure adaptée au fond du panel
+                    borderColor: isDarkMode ? '#1e293b' : '#ffffff',
                     borderWidth: 2
                 }
             ]
@@ -75,13 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthlyDataAllYears = data.monthly;
     const yearFilter = document.getElementById('monthly-year-filter');
 
-    // Année sélectionnée (ou la plus récente s'il n'y a pas de select)
     let currentYear = yearFilter
         ? yearFilter.value
         : Object.keys(monthlyDataAllYears).sort().reverse()[0];
     const monthLabels = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
-    // Fonction pour extraire les données d'une année précise
     function getMonthlyDataForYear(year) {
         const yearData = monthlyDataAllYears[year];
         return {
@@ -137,7 +134,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // On met à jour UNIQUEMENT ce graphique quand l'année change
     if (yearFilter) {
         yearFilter.addEventListener('change', (e) => {
             const selectedYear = e.target.value;
@@ -224,7 +220,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         for (const city of data.cities) {
             try {
-                // Respect de l'API gratuite (1 sec d'attente)
                 await new Promise((r) => setTimeout(r, 1000));
                 const res = await fetch(
                     `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(city.city)}`
@@ -237,7 +232,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     L.circleMarker([lat, lon], {
                         radius: 8 + city.count * 2,
-                        fillColor: '#e9b94d', // Couleur or SCF
+                        fillColor: '#e9b94d',
                         color: '#fff',
                         weight: 2,
                         opacity: 1,

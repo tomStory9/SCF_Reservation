@@ -21,18 +21,15 @@ class StatisticsController extends AbstractController
         $availableYears = range($currentYear, $oldestYear);
         rsort($availableYears);
 
-        // --- 1. STATISTIQUES UTILISATEURS ---
         $nationalities = $userRepository->getNationalityStats();
         $cities = $userRepository->getCityStats();
         $specialties = $userRepository->getSpecialtyStats();
         $avgPracticeYears = $userRepository->getAveragePracticeYears();
         $totalUsers = $userRepository->countTotalUsers();
 
-        // --- 2. STATISTIQUES RÉSERVATIONS ---
         $bookings = $bookingRepository->getRawDataForStatistics();
 
         $monthlyStats = [];
-        // On initialise TOUS les mois de TOUTES les années à zéro
         foreach ($availableYears as $year) {
             for ($i = 1; $i <= 12; ++$i) {
                 $monthlyStats[$year][sprintf('%02d', $i)] = ['count' => 0, 'revenue' => 0];
@@ -52,7 +49,6 @@ class StatisticsController extends AbstractController
 
             $totalRevenue += $price;
 
-            // Ajout dans la bonne année / bon mois
             if (isset($monthlyStats[$y][$m])) {
                 ++$monthlyStats[$y][$m]['count'];
                 $monthlyStats[$y][$m]['revenue'] += $price;
@@ -74,15 +70,20 @@ class StatisticsController extends AbstractController
         }
 
         $currentMonthKey = date('m');
-        // KPIs globaux
+
         $currentMonthRevenue = $monthlyStats[$currentYear][$currentMonthKey]['revenue'] ?? 0;
-        $avgMonthlyRevenue = count($availableYears) > 0 ? $totalRevenue / (count($availableYears) * 12) : 0;
+
+        $currentYearRevenue = 0;
+        foreach ($monthlyStats[$currentYear] as $monthData) {
+            $currentYearRevenue += $monthData['revenue'];
+        }
+
+        $avgMonthlyRevenue = $currentYearRevenue / 12;
         $avgBookingsPerUser = $totalUsers > 0 ? $totalBookings / $totalUsers : 0;
 
         usort($userStats, fn ($a, $b) => $b['revenue'] <=> $a['revenue']);
         $topUsers = array_slice($userStats, 0, 15);
 
-        // --- 3. TAUX DE REMPLISSAGE (Mois en cours) ---
         $daysInCurrentMonth = (int) date('t');
         $numberOfZones = count($zoneStats) > 0 ? count($zoneStats) : 1;
         $monthlyCapacityHours = $daysInCurrentMonth * 12 * $numberOfZones;
@@ -99,7 +100,7 @@ class StatisticsController extends AbstractController
             'nationalities' => $nationalities,
             'cities' => $cities,
             'specialties' => $specialties,
-            'monthly' => $monthlyStats, // Structure: { 2026: { "01": {...}, "02": {...} } }
+            'monthly' => $monthlyStats,
             'zones' => $zoneStats,
             'topUsers' => $topUsers,
         ];
