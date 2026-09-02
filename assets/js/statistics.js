@@ -221,23 +221,17 @@ document.addEventListener('DOMContentLoaded', () => {
     updateZoneChart();
 
     // --- GRAPHIQUE 5 : Top Users ---
-    new Chart(document.getElementById('topUsersChart').getContext('2d'), {
+    const topUsersStartFilter = document.getElementById('topusers-start-filter');
+    const topUsersEndFilter = document.getElementById('topusers-end-filter');
+    const topUsersCtx = document.getElementById('topUsersChart').getContext('2d');
+
+    const topUsersChart = new Chart(topUsersCtx, {
         type: 'bar',
         data: {
-            labels: data.topUsers.map((u) => u.name),
+            labels: [],
             datasets: [
-                {
-                    label: 'Dépenses (¥)',
-                    data: data.topUsers.map((u) => u.revenue),
-                    backgroundColor: '#8B5CF6',
-                    yAxisID: 'y'
-                },
-                {
-                    label: 'Réservations',
-                    data: data.topUsers.map((u) => u.count),
-                    backgroundColor: '#EC4899',
-                    yAxisID: 'y1'
-                }
+                { label: 'Dépenses (¥)', data: [], backgroundColor: '#8B5CF6', yAxisID: 'y' },
+                { label: 'Réservations', data: [], backgroundColor: '#EC4899', yAxisID: 'y1' }
             ]
         },
         options: {
@@ -250,6 +244,38 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    function updateTopUsersChart() {
+        const startDate = topUsersStartFilter ? topUsersStartFilter.value : '';
+        const endDate = topUsersEndFilter ? topUsersEndFilter.value : '';
+        const userStats = {};
+
+        data.rawBookings.forEach((booking) => {
+            if (startDate !== '' && booking.startDate < startDate) return;
+            if (endDate !== '' && booking.startDate > endDate) return;
+
+            if (!userStats[booking.userName]) {
+                userStats[booking.userName] = { count: 0, revenue: 0 };
+            }
+            userStats[booking.userName].count++;
+            userStats[booking.userName].revenue += booking.price;
+        });
+
+        const sortedUsers = Object.keys(userStats)
+            .map((name) => ({ name, ...userStats[name] }))
+            .sort((a, b) => b.revenue - a.revenue)
+            .slice(0, 15);
+
+        topUsersChart.data.labels = sortedUsers.map((u) => u.name);
+        topUsersChart.data.datasets[0].data = sortedUsers.map((u) => u.revenue);
+        topUsersChart.data.datasets[1].data = sortedUsers.map((u) => u.count);
+        topUsersChart.update();
+    }
+
+    if (topUsersStartFilter) topUsersStartFilter.addEventListener('change', updateTopUsersChart);
+    if (topUsersEndFilter) topUsersEndFilter.addEventListener('change', updateTopUsersChart);
+
+    updateTopUsersChart();
 
     // --- 6. CARTE LEAFLET ---
     const map = L.map('residenceMap').setView([36.2048, 138.2529], 5);

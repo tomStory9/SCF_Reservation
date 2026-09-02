@@ -148,9 +148,20 @@
         <section class="scf-dashboard__lists-grid">
             <article class="scf-panel">
                 <header class="scf-panel__header">
-                    <h3>Top Utilisateurs</h3>
+                    <h3 style="margin-bottom: 15px;">Top Utilisateurs</h3>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Du</label>
+                            <input type="date" id="topusers-start-filter" value="{{ "now"|date("Y") }}-01-01" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Au</label>
+                            <input type="date" id="topusers-end-filter" value="{{ "now"|date("Y") }}-12-31" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                    </div>
                 </header>
-                <div class="chart-container" style="height: 400px;">
+                <div class="chart-container" style="height: 400px; padding-top: 10px;">
                     <canvas id="topUsersChart"></canvas>
                 </div>
             </article>

@@ -97,6 +97,7 @@ class StatisticsController extends AbstractController
 
             $serializedBookingsForJS[] = [
                 'userId' => $userId,
+                'userName' => $b['userFirstName'].' '.$b['userLastName'],
                 'zoneName' => $zoneName,
                 'price' => $price,
                 'startDate' => $start->format('Y-m-d'),
