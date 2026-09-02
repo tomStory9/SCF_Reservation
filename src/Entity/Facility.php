@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Repository\FacilityRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: FacilityRepository::class)]
@@ -24,9 +23,6 @@ class Facility
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $internationalAddress = null;
-
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $mapLink = null;
 
     /**
      * @var Collection<int, Zone>
@@ -76,18 +72,6 @@ class Facility
     public function setInternationalAddress(?string $internationalAddress): static
     {
         $this->internationalAddress = $internationalAddress;
-
-        return $this;
-    }
-
-    public function getMapLink(): ?string
-    {
-        return $this->mapLink;
-    }
-
-    public function setMapLink(string $mapLink): static
-    {
-        $this->mapLink = $mapLink;
 
         return $this;
     }
