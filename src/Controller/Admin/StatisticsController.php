@@ -44,12 +44,13 @@ class StatisticsController extends AbstractController
         $avgPracticeYears = $userRepository->getAveragePracticeYears();
         $totalUsers = $userRepository->countTotalUsers();
 
-        $bookings = $bookingRepository->getRawDataForStatistics($selectedYear);
+        $bookings = $bookingRepository->getRawDataForStatistics();
 
         $monthlyStats = [];
-        for ($i = 1; $i <= 12; ++$i) {
-            $monthKey = sprintf('%04d-%02d', $selectedYear, $i);
-            $monthlyStats[$monthKey] = ['label' => sprintf('%02d', $i), 'count' => 0, 'revenue' => 0];
+        foreach ($availableYears as $year) {
+            for ($i = 1; $i <= 12; ++$i) {
+                $monthlyStats[$year][sprintf('%02d', $i)] = ['count' => 0, 'revenue' => 0];
+            }
         }
 
         $zoneStats = [];
@@ -66,14 +67,15 @@ class StatisticsController extends AbstractController
             /** @var \DateTimeImmutable $end */
             $end = $b['endDate'];
 
-            $monthKey = $start->format('Y-m');
+            $y = $start->format('Y');
+            $m = $start->format('m');
             $price = (int) $b['price'];
 
             $totalRevenue += $price;
 
-            if (isset($monthlyStats[$monthKey])) {
-                ++$monthlyStats[$monthKey]['count'];
-                $monthlyStats[$monthKey]['revenue'] += $price;
+            if (isset($monthlyStats[$y][$m])) {
+                ++$monthlyStats[$y][$m]['count'];
+                $monthlyStats[$y][$m]['revenue'] += $price;
             }
 
             $hours = $b['isFullDay'] ? 12 : (($end->getTimestamp() - $start->getTimestamp()) / 3600);
@@ -102,11 +104,13 @@ class StatisticsController extends AbstractController
         }
 
         $currentMonthKey = date('Y-m');
-        $currentMonthRevenue = $monthlyStats[$currentMonthKey]['revenue'] ?? 0;
+        $currentMonthRevenue = $monthlyStats[$currentYear][date('m')]['revenue'] ?? 0;
 
         $currentYearRevenue = 0;
-        foreach ($monthlyStats as $monthData) {
-            $currentYearRevenue += $monthData['revenue'];
+        if (isset($monthlyStats[$currentYear])) {
+            foreach ($monthlyStats[$currentYear] as $monthData) {
+                $currentYearRevenue += $monthData['revenue'];
+            }
         }
         $avgMonthlyRevenue = $currentYearRevenue / 12;
 
