@@ -36,10 +36,110 @@ body {
     overflow-wrap: anywhere;
 }
 
+.auth-page,
+.auth-main {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.auth-visual {
+    height: 100vh;
+    height: 100dvh;
+}
+
 .auth-form-error ul {
     display: grid;
     gap: 0.25rem;
     list-style: none;
     margin: 0;
     padding: 0;
+}
+
+@media (max-height: 55rem) {
+    .auth-logo-row {
+        margin-bottom: 0.75rem;
+    }
+
+    .auth-logo {
+        height: 2.5rem;
+    }
+
+    .auth-heading {
+        margin-bottom: 0.75rem;
+    }
+
+    .auth-heading h1 {
+        font-size: 1.5rem;
+        line-height: 2rem;
+    }
+
+    .auth-heading p {
+        line-height: 1.35;
+        margin-top: 0.125rem;
+    }
+
+    .auth-oauth,
+    .auth-divider {
+        margin-bottom: 0.75rem;
+    }
+
+    .auth-alert {
+        margin-bottom: 0.5rem;
+    }
+
+    .auth-alert-box {
+        gap: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .auth-alert-icon {
+        height: 2rem;
+        width: 2rem;
+    }
+
+    .auth-form,
+    .auth-form > .grid {
+        gap: 0.625rem;
+    }
+
+    .auth-form > div > label:first-child,
+    .auth-form > .grid > div > label:first-child {
+        margin-bottom: 0.25rem;
+    }
+
+    .auth-form input:not([type='hidden']):not([type='checkbox']) {
+        padding-bottom: 0.55rem;
+        padding-top: 0.55rem;
+    }
+
+    .auth-form-error {
+        margin-top: 0.25rem;
+    }
+
+    .auth-form button[type='submit'] {
+        padding-bottom: 0.6rem;
+        padding-top: 0.6rem;
+    }
+
+    .auth-options {
+        gap: 0.5rem;
+    }
+
+    .auth-footer {
+        margin-top: 0.75rem;
+    }
+}
+
+@media (min-width: 64rem) and (max-height: 55rem) {
+    .auth-main {
+        padding-bottom: 0.75rem;
+        padding-top: 0.75rem;
+    }
+}
+
+@media (max-width: 63.999rem) and (max-height: 55rem) {
+    .auth-main {
+        padding-bottom: 1rem;
+        padding-top: 5rem;
+    }
 }

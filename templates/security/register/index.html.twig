@@ -8,26 +8,26 @@
     {{ encore_entry_script_tags('carousel') }}
 {% endblock %}
 {% block body %}
-<div class="flex min-h-dvh overflow-x-hidden bg-white lg:h-dvh lg:overflow-hidden">
+<div class="auth-page flex items-start overflow-x-hidden bg-white">
 
-    <main class="flex min-h-dvh w-full min-w-0 overflow-x-hidden px-4 pb-8 pt-24 sm:px-6 lg:h-dvh lg:min-h-0 lg:w-1/2 lg:overflow-y-auto lg:p-8">
+    <main class="auth-main flex w-full min-w-0 overflow-x-hidden px-4 pb-8 pt-24 sm:px-6 lg:w-1/2 lg:px-8 lg:py-6">
         <div class="mx-auto my-auto w-full min-w-0 max-w-lg">
 
-            <div class="mb-4 flex items-center justify-center gap-3 sm:mb-6 sm:gap-4">
+            <div class="auth-logo-row mb-4 flex items-center justify-center gap-3 sm:mb-6 sm:gap-4">
                 <img
                     src="{{ asset('build/images/scf.svg') }}"
                     alt="{{ 'app.logo_1'|trans }}"
-                    class="h-11 w-auto max-w-[45%] sm:h-14"
+                    class="auth-logo h-11 w-auto max-w-[45%] sm:h-14"
                 >
 
                 <img
                     src="{{ asset('build/images/kitokuras.svg') }}"
                     alt="{{ 'app.logo_2'|trans }}"
-                    class="h-11 w-auto max-w-[45%] sm:h-14"
+                    class="auth-logo h-11 w-auto max-w-[45%] sm:h-14"
                 >
             </div>
 
-            <div class="mb-4 text-center sm:mb-6">
+            <div class="auth-heading mb-4 text-center sm:mb-6">
                 <h1 class="text-2xl font-bold text-primary sm:text-3xl">
                     {{ 'register.title'|trans }}
                 </h1>
@@ -45,7 +45,7 @@
 
             {{ form_start(registrationForm, {
                 attr: {
-                    class: 'space-y-4'
+                    class: 'auth-form grid gap-4'
                 }
             }) }}
 
@@ -167,7 +167,7 @@
 
             {{ form_end(registrationForm) }}
 
-            <div class="mt-6 text-center text-sm text-state">
+            <div class="auth-footer mt-6 text-center text-sm text-state">
                 {{ 'register.already_account'|trans }}
 
                 <a
@@ -181,7 +181,7 @@
         </div>
     </main>
 
-    <aside class="hidden lg:block lg:h-dvh lg:w-1/2">
+    <aside class="auth-visual sticky top-0 hidden lg:block lg:w-1/2">
         <div class="relative h-full w-full overflow-hidden">
             <div class="embla login-carousel h-full w-full">
                 <div class="embla__viewport h-full w-full">

@@ -9,29 +9,29 @@
 {% endblock %}
 {% block body %}
 
-<div class="flex min-h-dvh overflow-x-hidden bg-white lg:h-dvh lg:overflow-hidden">
+<div class="auth-page flex items-start overflow-x-hidden bg-white">
 
-    <main class="flex min-h-dvh w-full min-w-0 overflow-x-hidden px-4 pb-8 pt-24 sm:px-6 lg:h-dvh lg:min-h-0 lg:w-1/2 lg:overflow-y-auto lg:p-8">
+    <main class="auth-main flex w-full min-w-0 overflow-x-hidden px-4 pb-8 pt-24 sm:px-6 lg:w-1/2 lg:px-8 lg:py-6">
 
         <div class="mx-auto my-auto w-full min-w-0 max-w-lg">
 
-            <div class="mb-4 flex items-center justify-center gap-3 sm:mb-6 sm:gap-4">
+            <div class="auth-logo-row mb-4 flex items-center justify-center gap-3 sm:mb-6 sm:gap-4">
 
                 <img
                     src="{{ asset('build/images/scf.svg') }}"
                     alt="{{ 'app.logo_1'|trans({}, 'messages') }}"
-                    class="h-11 w-auto max-w-[45%] sm:h-14"
+                    class="auth-logo h-11 w-auto max-w-[45%] sm:h-14"
                 >
 
                 <img
                     src="{{ asset('build/images/kitokuras.svg') }}"
                     alt="{{ 'app.logo_2'|trans({}, 'messages') }}"
-                    class="h-11 w-auto max-w-[45%] sm:h-14"
+                    class="auth-logo h-11 w-auto max-w-[45%] sm:h-14"
                 >
 
             </div>
 
-            <div class="mb-4 text-center sm:mb-6">
+            <div class="auth-heading mb-4 text-center sm:mb-6">
 
                 <h1 class="text-2xl font-bold text-primary sm:text-3xl">
                     {{ 'login.title'|trans }}
@@ -49,14 +49,14 @@
 
             {% if flashes is not empty %}
 
-                <div class="mb-4 space-y-3 sm:mb-6">
+                <div class="auth-alert mb-4 space-y-3 sm:mb-6">
 
                     {% for label, messages in flashes %}
 
                         {% for message in messages %}
 
                             <div
-                                class="flex min-w-0 items-start gap-3 rounded-2xl border p-3 sm:gap-4 sm:p-4
+                                class="auth-alert-box flex min-w-0 items-start gap-3 rounded-2xl border p-3 sm:gap-4 sm:p-4
 
                                 {% if label == 'success' %}
                                     border-primary/30 bg-primary/10
@@ -74,7 +74,7 @@
                             ">
 
                                 <div
-                                    class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-bold sm:h-10 sm:w-10
+                                    class="auth-alert-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-bold sm:h-10 sm:w-10
 
                                     {% if label == 'success' %}
                                         bg-primary text-secondary
@@ -137,11 +137,11 @@
 
             {% if error %}
 
-                <div class="mb-4 sm:mb-6">
+                <div class="auth-alert mb-4 sm:mb-6">
 
-                    <div class="flex min-w-0 items-start gap-3 rounded-2xl border border-danger bg-danger/10 p-3 sm:gap-4 sm:p-4">
+                    <div class="auth-alert-box flex min-w-0 items-start gap-3 rounded-2xl border border-danger bg-danger/10 p-3 sm:gap-4 sm:p-4">
 
-                        <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-danger font-bold text-white sm:h-10 sm:w-10">
+                        <div class="auth-alert-icon mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-danger font-bold text-white sm:h-10 sm:w-10">
                             !
                         </div>
 
@@ -155,7 +155,7 @@
 
             {% endif %}
 
-            <div class="mb-4 grid min-w-0 grid-cols-2 gap-3 sm:mb-6">
+            <div class="auth-oauth mb-4 grid min-w-0 grid-cols-2 gap-3 sm:mb-6">
 
                 <a
                     href="{{ path('connect_google') }}"
@@ -193,7 +193,7 @@
 
             </div>
 
-            <div class="relative mb-4 sm:mb-6">
+            <div class="auth-divider relative mb-4 sm:mb-6">
 
                 <div class="absolute inset-0 flex items-center">
                     <div class="w-full border-t border-state"></div>
@@ -209,7 +209,7 @@
 
             </div>
 
-            <form method="post" class="space-y-4">
+            <form method="post" class="auth-form grid gap-4">
 
                 <input
                     type="hidden"
@@ -260,7 +260,7 @@
 
                 </div>
 
-                <div class="flex flex-wrap items-center justify-between gap-3 text-sm">
+                <div class="auth-options flex flex-wrap items-center justify-between gap-3 text-sm">
 
                     <label class="flex min-w-0 items-center gap-2">
 
@@ -294,7 +294,7 @@
 
             </form>
 
-            <div class="mt-6 text-center text-sm text-state sm:mt-8">
+            <div class="auth-footer mt-6 text-center text-sm text-state sm:mt-8">
 
                 {{ 'login.no_account'|trans }}
 
@@ -311,7 +311,7 @@
 
     </main>
 
-    <aside class="hidden lg:block lg:h-dvh lg:w-1/2">
+    <aside class="auth-visual sticky top-0 hidden lg:block lg:w-1/2">
         <div class="relative h-full w-full overflow-hidden">
             <div class="embla login-carousel h-full w-full">
                 <div class="embla__viewport h-full w-full">
