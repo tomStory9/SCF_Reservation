@@ -5,9 +5,7 @@ namespace App\Controller\Admin;
 use App\Entity\Booking;
 use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
-use App\Service\MailerService;
-use App\Service\StripePaiementService;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Service\BookingService;
 use Doctrine\ORM\QueryBuilder;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -34,12 +32,10 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 final class PendingBookingCrudController extends AbstractCrudController
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
         private readonly AdminUrlGenerator $adminUrlGenerator,
         private readonly BookingRepository $bookingRepository,
-        private readonly MailerService $mailerService,
-        private readonly StripePaiementService $stripePaymentService,
         private readonly TranslatorInterface $translator,
+        private readonly BookingService $bookingService,
     ) {
     }
 
@@ -328,110 +324,47 @@ final class PendingBookingCrudController extends AbstractCrudController
         );
     }
 
-    #[AdminRoute(
-        path: '/approve-booking',
-        name: 'approve_booking',
-    )]
-    public function approveBooking(
-        AdminContext $context,
-    ): RedirectResponse {
+    #[AdminRoute(path: '/approve-booking', name: 'approve_booking')]
+    public function approveBooking(AdminContext $context): RedirectResponse
+    {
         /** @var Booking|null $booking */
-        $booking = $context
-            ->getEntity()
-            ?->getInstance();
+        $booking = $context->getEntity()?->getInstance();
 
-        if (!$booking instanceof Booking) {
-            $this->addFlash(
-                'error',
-                'admin.flash.booking_not_found',
-            );
+        if (!$booking) {
+            $this->addFlash('error', 'admin.flash.booking_not_found');
 
-            return $this->redirect(
-                $this->getIndexUrl(),
-            );
+            return $this->redirect($this->getIndexUrl());
         }
 
-        if (
-            BookingStatus::PENDING
-            !== $booking->getBookingStatus()
-        ) {
-            $this->addFlash(
-                'warning',
-                'admin.flash.booking_no_longer_pending',
-            );
-
-            return $this->redirect(
-                $this->getIndexUrl(),
-            );
+        try {
+            $this->bookingService->approveBooking($booking);
+            $this->addFlash('success', 'admin.flash.booking_approved');
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
-        $booking->setStripeCheckoutUrl($this->stripePaymentService->createPaymentLink($booking->getTotalPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
-        $booking->setBookingStatus(
-            BookingStatus::APPROVED,
-        );
-        $this->mailerService->sendBookingConfirmationEmail($booking->getUserBooking(), $booking);
 
-        $this->entityManager->flush();
-
-        $this->addFlash(
-            'success',
-            'admin.flash.booking_approved',
-        );
-
-        return $this->redirect(
-            $this->getIndexUrl(),
-        );
+        return $this->redirect($this->getIndexUrl());
     }
 
-    #[AdminRoute(
-        path: '/decline-booking',
-        name: 'decline_booking',
-    )]
-    public function declineBooking(
-        AdminContext $context,
-    ): RedirectResponse {
+    #[AdminRoute(path: '/decline-booking', name: 'decline_booking')]
+    public function declineBooking(AdminContext $context): RedirectResponse
+    {
         /** @var Booking|null $booking */
-        $booking = $context
-            ->getEntity()
-            ?->getInstance();
+        $booking = $context->getEntity()?->getInstance();
 
-        if (!$booking instanceof Booking) {
-            $this->addFlash(
-                'error',
-                'admin.flash.booking_not_found',
-            );
+        if (!$booking) {
+            $this->addFlash('error', 'admin.flash.booking_not_found');
 
-            return $this->redirect(
-                $this->getIndexUrl(),
-            );
+            return $this->redirect($this->getIndexUrl());
         }
 
-        if (
-            BookingStatus::PENDING
-            !== $booking->getBookingStatus()
-        ) {
-            $this->addFlash(
-                'warning',
-                'admin.flash.booking_no_longer_pending',
-            );
-
-            return $this->redirect(
-                $this->getIndexUrl(),
-            );
+        try {
+            $this->bookingService->declineBooking($booking);
+            $this->addFlash('success', 'admin.flash.booking_declined');
+        } catch (\Exception $e) {
+            $this->addFlash('error', $e->getMessage());
         }
 
-        $booking->setBookingStatus(
-            BookingStatus::DECLINED,
-        );
-        $this->mailerService->sendBookingDeniedEmail($booking->getUserBooking(), $booking);
-        $this->entityManager->flush();
-
-        $this->addFlash(
-            'success',
-            'admin.flash.booking_declined',
-        );
-
-        return $this->redirect(
-            $this->getIndexUrl(),
-        );
+        return $this->redirect($this->getIndexUrl());
     }
 }

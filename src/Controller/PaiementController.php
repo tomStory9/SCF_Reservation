@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Transaction;
+use App\Enum\BookingStatus;
 use App\Repository\BookingRepository;
 use App\Repository\UserRepository;
 use App\Service\MailerService;
-use App\Service\StripePaiementService;
 use Doctrine\ORM\EntityManagerInterface;
 use Stripe\StripeClient;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,35 +30,44 @@ final class PaiementController extends AbstractController
     ): Response {
         $stripe = new StripeClient($stripeSecretKey);
 
-        $session = $stripe->checkout->sessions->retrieve(
-            $session_id,
-            [
-                'expand' => [
-                    'payment_intent.latest_charge.balance_transaction',
-                ],
-            ]
-        );
-        while (!$session->payment_intent || !$session->payment_intent->latest_charge || !$session->payment_intent->latest_charge->balance_transaction) {
-            $session = $stripe->checkout->sessions->retrieve(
-                $session_id,
-                [
-                    'expand' => [
-                        'payment_intent.latest_charge.balance_transaction',
-                    ],
-                ]
-            );
-        }
-        $transaction = new Transaction();
-        $transaction->setPaidPrice($session->amount_total);
-        $transaction->setStripeFee($session->payment_intent->latest_charge->balance_transaction->fee);
-        $transaction->setTimestamp(new \DateTime());
-        $transaction->setBooking($bookingRepository->findOneById($session->metadata->booking_id));
+        $session = $stripe->checkout->sessions->retrieve($session_id, [
+            'expand' => ['payment_intent.latest_charge.balance_transaction'],
+        ]);
 
+        $booking = $bookingRepository->findOneById($session->metadata->booking_id);
         $user = $userRepository->findOneById($session->metadata->user_id);
+        $isHold = ($session->metadata->is_hold ?? 'true') === 'true';
 
-        $entityManager->persist($transaction);
-        $entityManager->flush();
-        $mailerService->sendPaymentConfirmationEmail($user, $transaction);
+        if ($isHold) {
+            $transaction = new Transaction();
+            $transaction->setPaidPrice($session->amount_total);
+            $transaction->setStripeFee(null);
+            $transaction->setStripePaymentIntentId(is_string($session->payment_intent) ? $session->payment_intent : $session->payment_intent->id);
+            $transaction->setTimestamp(new \DateTime());
+            $transaction->setBooking($booking);
+
+            $entityManager->persist($transaction);
+            $entityManager->flush();
+
+            $mailerService->sendBookingPending($booking, $user);
+        } else {
+            $transaction = $booking->getTransaction() ?? new Transaction();
+            $transaction->setPaidPrice($session->amount_total);
+            $transaction->setTimestamp(new \DateTime());
+            $transaction->setBooking($booking);
+
+            if ($session->payment_intent && !is_string($session->payment_intent) && $session->payment_intent->latest_charge && !is_string($session->payment_intent->latest_charge) && $session->payment_intent->latest_charge->balance_transaction) {
+                $transaction->setStripeFee($session->payment_intent->latest_charge->balance_transaction->fee);
+            }
+
+            $booking->setBookingStatus(BookingStatus::PAID);
+            $booking->setStripeCheckoutUrl(null);
+
+            $entityManager->persist($transaction);
+            $entityManager->flush();
+
+            $mailerService->sendPaymentConfirmationEmail($user, $transaction);
+        }
 
         return $this->render('paiement/success.html.twig', [
             'controller_name' => 'PaiementController',
@@ -68,14 +77,6 @@ final class PaiementController extends AbstractController
     #[Route('/paiement/cancel', name: 'app_paiement_cancel')]
     public function cancel(): Response
     {
-        return $this->render('paiement/cancel.html.twig', [
-            'controller_name' => 'PaiementController',
-        ]);
-    }
-
-    #[Route('/paiement/test', name: 'app_paiement_test')]
-    public function test(StripePaiementService $test): Response
-    {
-        dd($test->createPaymentLink(2000, 3, 9));
+        return $this->render('paiement/cancel.html.twig', []);
     }
 }
