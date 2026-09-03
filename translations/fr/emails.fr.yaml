@@ -67,6 +67,7 @@ common:
   checkout: 'Départ'
   location: 'Lieu'
   address: 'Adresse'
+  amount_paid: "Montant payé"
 
 booking_confirmation:
   title: 'Merci pour votre réservation'
@@ -77,6 +78,12 @@ booking_confirmation:
   link_fallback: 'Si le bouton ne s’affiche pas, ouvrez le lien suivant :'
   payment_note: 'Votre réservation sera confirmée dès que le paiement aura été effectué.'
   ignore: 'Si vous n’êtes pas à l’origine de cette réservation, n’ouvrez pas le lien et supprimez cet e-mail.'
+  fallback_thanks: "Excellente nouvelle, votre demande de réservation est approuvée !"
+  fallback_instructions: "Cependant, le délai d'autorisation de votre carte bancaire a expiré avant notre validation. Afin de bloquer définitivement votre créneau, merci de bien vouloir procéder au règlement."
+
+  success_thanks: "Excellente nouvelle, votre réservation est confirmée !"
+  success_instructions: "Le paiement a été prélevé avec succès sur la carte bancaire que vous avez utilisée lors de votre demande. Nous avons hâte de vous accueillir !"
+  payment_success_prompt: "Paiement validé avec succès ✓"
 
 booking_pending:
   title: 'Votre demande de réservation a bien été reçue'
@@ -84,6 +91,8 @@ booking_pending:
   review: 'Nous vérifions actuellement votre demande. Vous recevrez prochainement un e-mail vous indiquant si elle a été acceptée ou refusée.'
   no_payment_yet: 'Aucun paiement n’est demandé à ce stade'
   payment_later: 'Si votre réservation est approuvée, nous vous enverrons les instructions de paiement dans un nouvel e-mail.'
+  hold_placed: 'Empreinte bancaire confirmée'
+  hold_info: 'Une autorisation a été placée sur votre carte bancaire. Vous ne serez débité que si l’administration valide définitivement votre réservation.'
 
 booking_rejected:
   title: 'Information concernant votre réservation'
@@ -91,6 +100,7 @@ booking_rejected:
   denied: 'Nous sommes désolés, mais nous ne pouvons pas approuver cette réservation.'
   no_payment: 'Cet e-mail ne contient aucun lien de paiement.'
   contact: 'Si vous n’êtes pas à l’origine de cette demande ou si vous pensez qu’il s’agit d’une erreur, veuillez contacter l’administration du site.'
+  hold_released: 'L’empreinte bancaire placée sur votre carte a été automatiquement annulée. Aucun montant ne vous sera débité.'
 
 booking_reminder:
   heading: 'Rappel de réservation'

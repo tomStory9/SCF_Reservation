@@ -3,429 +3,387 @@
 <!DOCTYPE html>
 <html lang="{{ emailLocale|default('ja') }}">
 
-	<head>
-		<meta charset="UTF-8">
-		<title>{{ 'booking_confirmation.title'|trans }}</title>
-
-		<style>
-			body {
-				margin: 0;
-				padding: 40px 20px;
-				background: #f5f7fa;
-				font-family: Arial, Helvetica, sans-serif;
-				color: #4b5563;
-			}
-
-			table {
-				border-collapse: collapse;
-				border-spacing: 0;
-			}
-
-			.wrapper {
-				width: 100%;
-			}
-
-			.card {
-				width: 100%;
-				max-width: 620px;
-				margin: auto;
-				background: #ffffff;
-				border-radius: 20px;
-				overflow: hidden;
-				box-shadow: 0 15px 40px rgba(3, 56, 98, 0.08);
-			}
-
-			.header {
-				background: #033862;
-				padding: 45px 40px;
-				text-align: center;
-			}
-
-			.logo-box {
-				display: inline-block;
-				background: #ffffff;
-				border-radius: 14px;
-				padding: 18px 28px;
-				margin-bottom: 30px;
-			}
-
-			.logo-box img {
-				height: 50px;
-				vertical-align: middle;
-			}
-
-			.logo-box img:first-child {
-				margin-right: 18px;
-			}
-
-			h1 {
-				margin: 0;
-				color: #ffffff;
-				font-size: 30px;
-				font-weight: bold;
-			}
-
-			.content {
-				padding: 50px;
-			}
-
-			.content p {
-				margin: 0 0 22px;
-				line-height: 1.8;
-				font-size: 16px;
-			}
-
-			.greeting {
-				font-size: 18px;
-				font-weight: bold;
-				color: #111827;
-				margin: 0 0 24px;
-			}
-
-			.section-title {
-				margin: 0 0 12px;
-				font-size: 14px;
-				font-weight: bold;
-				color: #033862;
-				text-transform: uppercase;
-				letter-spacing: 0.5px;
-			}
-
-			.details-box {
-				margin: 0 0 24px;
-				border: 1px solid #e5e7eb;
-				border-radius: 12px;
-				overflow: hidden;
-			}
-
-			.details-box table {
-				width: 100%;
-			}
-
-			.details-box td {
-				padding: 12px 18px;
-				font-size: 14px;
-				line-height: 1.6;
-				border-bottom: 1px solid #f0f0f0;
-			}
-
-			.details-box tr:last-child td {
-				border-bottom: none;
-			}
-
-			.details-box td.label {
-				width: 40%;
-				color: #6b7280;
-				background: #fafafa;
-			}
-
-			.details-box td.value {
-				color: #111827;
-				font-weight: bold;
-			}
-
-			.payment-box {
-				margin: 24px 0;
-				padding: 24px 20px;
-				border: 1px solid #f3d37c;
-				border-radius: 12px;
-				background: #fff8e5;
-				text-align: center;
-			}
-
-			.payment-box .label {
-				margin: 0 0 8px;
-				color: #033862;
-				font-size: 14px;
-				line-height: 1.6;
-			}
-
-			.payment-box .amount {
-				margin: 0 0 18px;
-				color: #111827;
-				font-size: 26px;
-				font-weight: bold;
-				line-height: 1.4;
-			}
-
-			.payment-box .prompt {
-				margin: 0 0 18px;
-				color: #033862;
-				font-size: 16px;
-				font-weight: bold;
-				line-height: 1.6;
-			}
-
-			.button-wrapper {
-				text-align: center;
-				padding: 20px 0 10px;
-			}
-
-			.button {
-				display: inline-block;
-				padding: 16px 36px;
-				background: #e9b94d;
-				color: #033862 !important;
-				text-decoration: none;
-				font-size: 16px;
-				font-weight: bold;
-				border-radius: 12px;
-			}
-
-			.fallback {
-				margin-top: 20px;
-				color: #6b7280;
-				font-size: 12px;
-				line-height: 1.7;
-				word-break: break-all;
-			}
-
-			.divider {
-				margin: 40px 0;
-				border-top: 1px solid #ececec;
-			}
-
-			.info {
-				background: #fff8e5;
-				border: 1px solid #f3d37c;
-				border-radius: 12px;
-				padding: 18px 20px;
-				font-size: 14px;
-				line-height: 1.6;
-			}
-
-			.footer {
-				background: #fafafa;
-				border-top: 1px solid #ececec;
-				padding: 30px;
-				text-align: center;
-				font-size: 13px;
-				color: #6b7280;
-				line-height: 1.7;
-			}
-
-			@media only screen and(max-width:600px) {
-
-				body {
-					padding: 20px 10px;
-				}
-
-				.content {
-					padding: 32px 24px;
-				}
-
-				.logo-box {
-					padding: 15px 20px;
-				}
-
-				.logo-box img {
-					height: 40px;
-				}
-
-				h1 {
-					font-size: 24px;
-				}
-
-				.button {
-					display: block;
-				}
-
-			}
-		</style>
-
-	</head>
-
-	<body>
-
-		<table class="wrapper" role="presentation">
-
-			<tr>
-
-				<td align="center">
-
-					<table class="card" role="presentation">
-
-						<tr>
-
-							<td class="header">
-
-								<div class="logo-box">
-
-									<img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
-
-									<img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
-
-								</div>
-
-								<h1>
-									{{ 'booking_confirmation.title'|trans }}
-								</h1>
-
-							</td>
-
-						</tr>
-
-						<tr>
-
-							<td class="content">
-
-								<p class="greeting">
-									{{ 'common.dear'|trans({'%name%': user.fullName}) }}
-								</p>
-
-								<p>
-									{{ 'booking_confirmation.thanks'|trans }}
-								</p>
-
-								<p>
-									{{ 'booking_confirmation.payment_instructions'|trans }}
-								</p>
-
-								<p class="section-title">
-									{{ 'common.booking_details'|trans }}
-								</p>
-
-								<div class="details-box">
-
-									<table role="presentation">
-
-										<tr>
-											<td class="label">{{ 'common.zone'|trans }}</td>
-											<td class="value">{{ booking.zone.name }}</td>
-										</tr>
-
-										<tr>
-											<td class="label">{{ 'common.start'|trans }}</td>
-											<td class="value">{{ booking.startDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
-										</tr>
-
-										<tr>
-											<td class="label">{{ 'common.end'|trans }}</td>
-											<td class="value">{{ booking.endDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
-										</tr>
-
-										<tr>
-											<td class="label">{{ 'common.guests'|trans }}</td>
-											<td class="value">{{ 'common.people'|trans({'%count%': booking.guestCount}) }}</td>
-										</tr>
-
-									</table>
-
-								</div>
-
-								{% if booking.bookingEquipment|length > 0 %}
-
-									<p class="section-title">
-										{{ 'common.equipment_used'|trans }}
-									</p>
-
-									<div class="details-box">
-
-										<table role="presentation">
-
-											{% for be in booking.bookingEquipment %}
-												<tr>
-													<td class="value">{{ be.equipment.name }} × {{ be.quantity }}</td>
-													<td class="value" style="text-align:right; width:35%;">{{ 'common.yen'|trans({'%amount%': be.totalPrice}) }}</td>
-												</tr>
-											{% endfor %}
-
-										</table>
-
-									</div>
-
-								{% endif %}
-
-								<p class="section-title">
-									{{ 'common.price_details'|trans }}
-								</p>
-
-								<div class="details-box">
-
-									<table role="presentation">
-
-										<tr>
-											<td class="label">{{ 'common.zone_price'|trans }}</td>
-											<td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.price}) }}</td>
-										</tr>
-
-										<tr>
-											<td class="label">{{ 'common.equipment_price'|trans }}</td>
-											<td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.equipmentPrice}) }}</td>
-										</tr>
-
-									</table>
-
-								</div>
-
-								<div class="payment-box">
-
-									<p class="label">
-										{{ 'common.payment_amount'|trans }}
-									</p>
-
-									<p class="amount">
-										{{ 'common.yen'|trans({'%amount%': booking.totalPrice}) }}
-									</p>
-
-									<p class="prompt">
-										{{ 'booking_confirmation.payment_prompt'|trans }}
-									</p>
-
-									<div class="button-wrapper">
-
-										<a href="{{ stripe_checkout_url|e('html_attr') }}" class="button">
-											{{ 'booking_confirmation.payment_button'|trans }}
-										</a>
-
-									</div>
-
-									<p class="fallback">
-										{{ 'booking_confirmation.link_fallback'|trans }}<br>
-										<a href="{{ stripe_checkout_url|e('html_attr') }}">
-											{{ stripe_checkout_url|e }}
-										</a>
-									</p>
-
-								</div>
-
-								<p style="margin:0; color:#4b5563; font-size:14px;">
-									{{ 'booking_confirmation.payment_note'|trans }}<br>
-									{{ 'common.reply_contact'|trans }}
-								</p>
-
-							</td>
-
-						</tr>
-
-						<tr>
-
-							<td class="footer">
-
-								<strong>{{ 'common.footer_brand'|trans }}</strong>
-
-								<br><br>
-
-								©
-								{{ "now"|date("Y") }}
-
-								<br><br>
-
-								{{ 'common.important_booking'|trans }}<br>
-								{{ 'booking_confirmation.ignore'|trans }}
-
-							</td>
-
-						</tr>
-
-					</table>
-
-				</td>
-
-			</tr>
-
-		</table>
-
-	</body>
-
+<head>
+    <meta charset="UTF-8">
+    <title>{{ 'booking_confirmation.title'|trans }}</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: #f5f7fa;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #4b5563;
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        .wrapper {
+            width: 100%;
+        }
+
+        .card {
+            width: 100%;
+            max-width: 620px;
+            margin: auto;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 40px rgba(3, 56, 98, 0.08);
+        }
+
+        .header {
+            background: #033862;
+            padding: 45px 40px;
+            text-align: center;
+        }
+
+        .logo-box {
+            display: inline-block;
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 18px 28px;
+            margin-bottom: 30px;
+        }
+
+        .logo-box img {
+            height: 50px;
+            vertical-align: middle;
+        }
+
+        .logo-box img:first-child {
+            margin-right: 18px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .content {
+            padding: 50px;
+        }
+
+        .content p {
+            margin: 0 0 22px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .greeting {
+            font-size: 18px;
+            font-weight: bold;
+            color: #111827;
+            margin: 0 0 24px;
+        }
+
+        .section-title {
+            margin: 0 0 12px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #033862;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .details-box {
+            margin: 0 0 24px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .details-box table {
+            width: 100%;
+        }
+
+        .details-box td {
+            padding: 12px 18px;
+            font-size: 14px;
+            line-height: 1.6;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .details-box tr:last-child td {
+            border-bottom: none;
+        }
+
+        .details-box td.label {
+            width: 40%;
+            color: #6b7280;
+            background: #fafafa;
+        }
+
+        .details-box td.value {
+            color: #111827;
+            font-weight: bold;
+        }
+
+        /* Boîte de paiement (Plan B) */
+        .payment-box {
+            margin: 24px 0;
+            padding: 24px 20px;
+            border: 1px solid #f3d37c;
+            border-radius: 12px;
+            background: #fff8e5;
+            text-align: center;
+        }
+
+        .payment-box .label {
+            margin: 0 0 8px;
+            color: #033862;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .payment-box .amount {
+            margin: 0 0 18px;
+            color: #111827;
+            font-size: 26px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .payment-box .prompt {
+            margin: 0 0 18px;
+            color: #033862;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .success-box {
+            margin: 24px 0;
+            padding: 24px 20px;
+            border: 1px solid #10b981;
+            border-radius: 12px;
+            background: #ecfdf5;
+            text-align: center;
+        }
+
+        .success-box .label {
+            margin: 0 0 8px;
+            color: #047857;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .success-box .amount {
+            margin: 0 0 10px;
+            color: #111827;
+            font-size: 26px;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .success-box .prompt {
+            margin: 0;
+            color: #047857;
+            font-size: 16px;
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .button-wrapper {
+            text-align: center;
+            padding: 20px 0 10px;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 16px 36px;
+            background: #e9b94d;
+            color: #033862 !important;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 12px;
+        }
+
+        .fallback {
+            margin-top: 20px;
+            color: #6b7280;
+            font-size: 12px;
+            line-height: 1.7;
+            word-break: break-all;
+        }
+
+        .footer {
+            background: #fafafa;
+            border-top: 1px solid #ececec;
+            padding: 30px;
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.7;
+        }
+
+        @media only screen and (max-width:600px) {
+            body { padding: 20px 10px; }
+            .content { padding: 32px 24px; }
+            .logo-box { padding: 15px 20px; }
+            .logo-box img { height: 40px; }
+            h1 { font-size: 24px; }
+            .button { display: block; }
+        }
+    </style>
+</head>
+
+<body>
+<table class="wrapper" role="presentation">
+    <tr>
+        <td align="center">
+            <table class="card" role="presentation">
+                <tr>
+                    <td class="header">
+                        <div class="logo-box">
+                            <img src="{{ absolute_url(asset('build/images/scf.svg')) }}" alt="{{ 'common.scf_logo'|trans }}">
+                            <img src="{{ absolute_url(asset('build/images/kitokuras.svg')) }}" alt="{{ 'common.kitokuras_logo'|trans }}">
+                        </div>
+                        <h1>
+                            {{ 'booking_confirmation.title'|trans }}
+                        </h1>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="content">
+                        <p class="greeting">
+                            {{ 'common.dear'|trans({'%name%': user.fullName}) }}
+                        </p>
+
+                        {% if stripe_checkout_url is not null %}
+                            <p>{{ 'booking_confirmation.fallback_thanks'|trans }}</p>
+                            <p>{{ 'booking_confirmation.fallback_instructions'|trans }}</p>
+                        {% else %}
+                            <p>{{ 'booking_confirmation.success_thanks'|trans }}</p>
+                            <p>{{ 'booking_confirmation.success_instructions'|trans }}</p>
+                        {% endif %}
+
+                        <p class="section-title">
+                            {{ 'common.booking_details'|trans }}
+                        </p>
+
+                        <div class="details-box">
+                            <table role="presentation">
+                                <tr>
+                                    <td class="label">{{ 'common.zone'|trans }}</td>
+                                    <td class="value">{{ booking.zone.name }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">{{ 'common.start'|trans }}</td>
+                                    <td class="value">{{ booking.startDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">{{ 'common.end'|trans }}</td>
+                                    <td class="value">{{ booking.endDate|date('Y/m/d H:i', 'Asia/Tokyo') }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">{{ 'common.guests'|trans }}</td>
+                                    <td class="value">{{ 'common.people'|trans({'%count%': booking.guestCount}) }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        {% if booking.bookingEquipment|length > 0 %}
+                            <p class="section-title">
+                                {{ 'common.equipment_used'|trans }}
+                            </p>
+                            <div class="details-box">
+                                <table role="presentation">
+                                    {% for be in booking.bookingEquipment %}
+                                        <tr>
+                                            <td class="value">{{ be.equipment.name }} × {{ be.quantity }}</td>
+                                            <td class="value" style="text-align:right; width:35%;">{{ 'common.yen'|trans({'%amount%': be.totalPrice}) }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        {% endif %}
+
+                        <p class="section-title">
+                            {{ 'common.price_details'|trans }}
+                        </p>
+                        <div class="details-box">
+                            <table role="presentation">
+                                <tr>
+                                    <td class="label">{{ 'common.zone_price'|trans }}</td>
+                                    <td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.price}) }}</td>
+                                </tr>
+                                <tr>
+                                    <td class="label">{{ 'common.equipment_price'|trans }}</td>
+                                    <td class="value" style="text-align:right;">{{ 'common.yen'|trans({'%amount%': booking.equipmentPrice}) }}</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        {% if stripe_checkout_url is not null %}
+                            <div class="payment-box">
+                                <p class="label">
+                                    {{ 'common.payment_amount'|trans }}
+                                </p>
+                                <p class="amount">
+                                    {{ 'common.yen'|trans({'%amount%': booking.totalPrice}) }}
+                                </p>
+                                <p class="prompt">
+                                    {{ 'booking_confirmation.payment_prompt'|trans }}
+                                </p>
+                                <div class="button-wrapper">
+                                    <a href="{{ stripe_checkout_url|e('html_attr') }}" class="button">
+                                        {{ 'booking_confirmation.payment_button'|trans }}
+                                    </a>
+                                </div>
+                                <p class="fallback">
+                                    {{ 'booking_confirmation.link_fallback'|trans }}<br>
+                                    <a href="{{ stripe_checkout_url|e('html_attr') }}">
+                                        {{ stripe_checkout_url|e }}
+                                    </a>
+                                </p>
+                            </div>
+
+                            <p style="margin:0; color:#4b5563; font-size:14px;">
+                                {{ 'booking_confirmation.payment_note'|trans }}<br>
+                                {{ 'common.reply_contact'|trans }}
+                            </p>
+                        {% else %}
+                            <div class="success-box">
+                                <p class="label">
+                                    {{ 'common.amount_paid'|trans }}
+                                </p>
+                                <p class="amount">
+                                    {{ 'common.yen'|trans({'%amount%': booking.totalPrice}) }}
+                                </p>
+                                <p class="prompt">
+                                    {{ 'booking_confirmation.payment_success_prompt'|trans }}
+                                </p>
+                            </div>
+
+                            <p style="margin:0; color:#4b5563; font-size:14px;">
+                                {{ 'common.reply_contact'|trans }}
+                            </p>
+                        {% endif %}
+
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="footer">
+                        <strong>{{ 'common.footer_brand'|trans }}</strong>
+                        <br><br>
+                        © {{ "now"|date("Y") }}
+                        <br><br>
+                        {{ 'common.important_booking'|trans }}<br>
+                        {{ 'booking_confirmation.ignore'|trans }}
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
 </html>

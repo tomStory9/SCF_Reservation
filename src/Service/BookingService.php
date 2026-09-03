@@ -14,6 +14,7 @@ use App\Repository\PricingRepository;
 use App\Repository\UserRoleRepository;
 use App\Repository\ZoneRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Stripe\Exception\ApiErrorException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -147,7 +148,7 @@ readonly class BookingService
      * @throws \DateMalformedStringException
      * @throws \Exception
      */
-    public function createBooking(array $data, User $user): void
+    public function createBooking(array $data, User $user): ?string
     {
         $zone = $this->zoneRepository->find($data['zoneId']);
 
@@ -238,30 +239,92 @@ readonly class BookingService
             $this->entityManager->persist($bookingEquipment);
             $booking->addBookingEquipment($bookingEquipment);
         }
+
         $booking->setEquipmentPrice($this->equipmentRepository->calculateTotalEquipmentPrice($booking));
         $booking->setTotalPrice($booking->getPrice() + $booking->getEquipmentPrice());
         $this->entityManager->persist($booking);
         $this->entityManager->flush();
+
         $this->mailerService->sendNewBookingAdmin($booking, $booking->getUserBooking());
+
+        if ($booking->getTotalPrice() > 0) {
+            return $this->stripePaymentService->createPaymentLink(
+                $booking->getTotalPrice(),
+                $user->getId(),
+                $booking->getId(),
+                'jpy',
+                null,
+                null,
+                true
+            );
+        }
+
         $this->mailerService->sendBookingPending($booking, $booking->getUserBooking());
+
+        return null;
     }
 
+    /**
+     * @throws ApiErrorException
+     * @throws \Exception
+     */
     public function approveBooking(Booking $booking): void
     {
         if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
             throw new \Exception($this->translator->trans('admin.flash.booking_no_longer_pending'));
         }
 
+        $transaction = $booking->getTransaction();
+        $captureSuccess = false;
+
+        if ($transaction && $transaction->getStripePaymentIntentId()) {
+            try {
+                $fee = $this->stripePaymentService->captureHoldAndGetFee($transaction->getStripePaymentIntentId());
+                if (null !== $fee) {
+                    $transaction->setStripeFee($fee);
+                }
+                $captureSuccess = true;
+            } catch (\Exception $e) {
+                $captureSuccess = false;
+            }
+        }
+
+        if (!$captureSuccess && $booking->getTotalPrice() > 0) {
+            $checkoutUrl = $this->stripePaymentService->createPaymentLink(
+                $booking->getTotalPrice(),
+                $booking->getUserBooking()->getId(),
+                $booking->getId(),
+                'jpy',
+                null,
+                null,
+                false
+            );
+            $booking->setStripeCheckoutUrl($checkoutUrl);
+        } else {
+            $booking->setStripeCheckoutUrl(null);
+        }
+
         $booking->setBookingStatus(BookingStatus::APPROVED);
-        $booking->setStripeCheckoutUrl($this->stripePaymentService->createPaymentLink($booking->getTotalPrice(), $booking->getUserBooking()->getId(), $booking->getId()));
         $this->entityManager->flush();
         $this->mailerService->sendBookingConfirmationEmail($booking->getUserBooking(), $booking);
     }
 
+    /**
+     * @throws \Exception
+     */
     public function declineBooking(Booking $booking): void
     {
         if (BookingStatus::PENDING !== $booking->getBookingStatus()) {
             throw new \Exception($this->translator->trans('admin.flash.booking_no_longer_pending'));
+        }
+
+        $transaction = $booking->getTransaction();
+
+        if ($transaction && $transaction->getStripePaymentIntentId()) {
+            try {
+                $this->stripePaymentService->releaseHold($transaction->getStripePaymentIntentId());
+            } catch (\Exception $e) {
+            }
         }
 
         $booking->setBookingStatus(BookingStatus::DECLINED);

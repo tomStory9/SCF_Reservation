@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use Stripe\Exception\ApiErrorException;
 use Stripe\StripeClient;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
@@ -16,6 +17,9 @@ class StripePaiementService
         $this->defaultUri = $_ENV['DEFAULT_URI'];
     }
 
+    /**
+     * @throws ApiErrorException
+     */
     public function createPaymentLink(
         int $price,
         int $userId,
@@ -23,11 +27,12 @@ class StripePaiementService
         string $currency = 'jpy',
         ?string $name = null,
         ?string $description = null,
+        bool $isHold = true
     ): string {
         $name ??= $this->translator->trans('stripe.booking_name');
         $description ??= $this->translator->trans('stripe.booking_description');
 
-        $session = $this->stripeClient->checkout->sessions->create([
+        $sessionData = [
             'mode' => 'payment',
             'line_items' => [[
                 'price_data' => [
@@ -43,16 +48,47 @@ class StripePaiementService
             'metadata' => [
                 'booking_id' => $reservationId,
                 'user_id' => $userId,
+                'is_hold' => $isHold ? 'true' : 'false',
             ],
             'success_url' => $this->defaultUri.'/paiement/success?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $this->defaultUri.'/paiement/cancel',
-        ]);
+        ];
+
+        if ($isHold) {
+            $sessionData['payment_intent_data'] = [
+                'capture_method' => 'manual',
+            ];
+        }
+
+        $session = $this->stripeClient->checkout->sessions->create($sessionData);
 
         return $session->url;
     }
 
-    private function createSubscriptionInvoice()
+    /**
+     * @throws ApiErrorException
+     */
+    public function captureHoldAndGetFee(string $paymentIntentId): ?int
     {
-        throw new \Exception('Not implemented yet');
+        $pi = $this->stripeClient->paymentIntents->capture($paymentIntentId);
+
+        if ($pi->latest_charge) {
+            $charge = $this->stripeClient->charges->retrieve(
+                is_string($pi->latest_charge) ? $pi->latest_charge : $pi->latest_charge->id,
+                ['expand' => ['balance_transaction']]
+            );
+
+            return $charge->balance_transaction->fee ?? null;
+        }
+
+        return null;
+    }
+
+    /**
+     * @throws ApiErrorException
+     */
+    public function releaseHold(string $paymentIntentId): \Stripe\PaymentIntent
+    {
+        return $this->stripeClient->paymentIntents->cancel($paymentIntentId);
     }
 }

@@ -105,71 +105,62 @@ final class BookingController extends AbstractController
         }
 
         try {
-            $this->bookingService->createBooking($data, $user);
+            $stripeUrl = $this->bookingService->createBooking($data, $user);
+
+            if (null === $stripeUrl) {
+                $this->addFlash(
+                    'success',
+                    $this->translator->trans('flash.booking_created')
+                );
+            }
         } catch (\Exception $exception) {
             return new JsonResponse([
                 'success' => false,
                 'error' => $exception->getMessage(),
             ], Response::HTTP_BAD_REQUEST);
         }
-        $this->addFlash(
-            'success',
-            $this->translator->trans('flash.booking_created')
-        );
 
         return new JsonResponse([
             'success' => true,
-            'redirectUrl' => $this->generateUrl('app_home_user'),
+            'redirectUrl' => $stripeUrl ?? $this->generateUrl('app_home_user'),
         ]);
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route(
-        '/booking/{bookingId}/approve',
-        name: 'app_booking_approve',
-        methods: ['POST']
-    )]
+    #[Route('/booking/{bookingId}/approve', name: 'app_booking_approve', methods: ['POST'])]
     public function approveBooking(int $bookingId): JsonResponse
     {
         $booking = $this->bookingRepository->find($bookingId);
 
         if (!$booking) {
-            return new JsonResponse([
-                'success' => false,
-                'error' => $this->translator->trans('admin.flash.booking_not_found'),
-            ], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['success' => false, 'error' => $this->translator->trans('admin.flash.booking_not_found')], Response::HTTP_NOT_FOUND);
         }
 
-        $this->bookingService->approveBooking($booking);
+        try {
+            $this->bookingService->approveBooking($booking);
 
-        return new JsonResponse([
-            'success' => true,
-            'message' => $this->translator->trans('admin.flash.booking_approved'),
-        ]);
+            return new JsonResponse(['success' => true, 'message' => $this->translator->trans('admin.flash.booking_approved')]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 
     #[IsGranted('ROLE_ADMIN')]
-    #[Route(
-        '/booking/{bookingId}/decline',
-        name: 'app_booking_decline',
-        methods: ['POST']
-    )]
+    #[Route('/booking/{bookingId}/decline', name: 'app_booking_decline', methods: ['POST'])]
     public function declineBooking(int $bookingId): JsonResponse
     {
         $booking = $this->bookingRepository->find($bookingId);
 
         if (!$booking) {
-            return new JsonResponse([
-                'success' => false,
-                'error' => $this->translator->trans('admin.flash.booking_not_found'),
-            ], Response::HTTP_NOT_FOUND);
+            return new JsonResponse(['success' => false, 'error' => $this->translator->trans('admin.flash.booking_not_found')], Response::HTTP_NOT_FOUND);
         }
 
-        $this->bookingService->declineBooking($booking);
+        try {
+            $this->bookingService->declineBooking($booking);
 
-        return new JsonResponse([
-            'success' => true,
-            'message' => $this->translator->trans('admin.flash.booking_declined'),
-        ]);
+            return new JsonResponse(['success' => true, 'message' => $this->translator->trans('admin.flash.booking_declined')]);
+        } catch (\Exception $e) {
+            return new JsonResponse(['success' => false, 'error' => $e->getMessage()], Response::HTTP_BAD_REQUEST);
+        }
     }
 }
