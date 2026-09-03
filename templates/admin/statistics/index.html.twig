@@ -1,15 +1,188 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
 
 {% block content_title %}
-    {{ 'admin.statistics.title'|trans }}
+    {{ 'admin.statistics.title'|trans({}, 'messages')|default('Statistiques') }}
 {% endblock %}
 
 {% block page_actions %}
     <a class="btn btn-secondary" href="{{ path('admin') }}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i>
-        {{ 'admin.statistics.back_to_dashboard'|trans }}
+        <i class="fa fa-arrow-left" aria-hidden="true"></i> Retour
     </a>
 {% endblock %}
 
+{% block head_stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('statistics') }}
+{% endblock %}
+
 {% block main %}
+    <div id="stats-data" data-charts="{{ chartData|e('html_attr') }}" style="display: none;"></div>
+
+    <div class="scf-dashboard">
+
+        <!-- LIGNE 1 : KPIs (Avec tes classes .scf-stat) -->
+        <section class="scf-dashboard__stats--6">
+            <div class="scf-stat scf-stat--primary">
+                <span class="scf-stat__icon"><i class="fa fa-users" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">Utilisateurs</span>
+                    <strong>{{ kpis.totalUsers }}</strong>
+                </span>
+            </div>
+
+            <div class="scf-stat scf-stat--success">
+                <span class="scf-stat__icon"><i class="fa fa-dumbbell" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">Pratique moy.</span>
+                    <strong>{{ kpis.avgPracticeYears }}<small style="font-size:1rem; margin-left:4px;">ans</small></strong>
+                </span>
+            </div>
+
+            <div class="scf-stat scf-stat--primary">
+                <span class="scf-stat__icon"><i class="fa fa-ticket" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">Résa / Compte</span>
+                    <strong>{{ kpis.avgBookingsPerUser }}</strong>
+                </span>
+            </div>
+
+            <div class="scf-stat scf-stat--warning">
+                <span class="scf-stat__icon"><i class="fa fa-yen-sign" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">Revenus (Ce mois)</span>
+                    <strong>¥{{ kpis.currentMonthRevenue|number_format(0, '.', ',') }}</strong>
+                </span>
+            </div>
+
+            <div class="scf-stat scf-stat--danger">
+                <span class="scf-stat__icon"><i class="fa fa-chart-line" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">Moyenne mensuelle (cette année)</span>
+                    <strong>¥{{ kpis.avgMonthlyRevenue|number_format(0, '.', ',') }}</strong>
+                </span>
+            </div>
+
+            <div class="scf-stat scf-stat--success">
+                <span class="scf-stat__icon"><i class="fa fa-percent" aria-hidden="true"></i></span>
+                <span class="scf-stat__content">
+                    <span class="scf-stat__label">Taux occupation</span>
+                    <strong>{{ kpis.occupancyRate }}%</strong>
+                </span>
+            </div>
+        </section>
+
+        <!-- LIGNE 2 : MOIS ET NATIONALITÉS -->
+        <section class="scf-dashboard__main-grid">
+            <article class="scf-panel">
+                <header class="scf-panel__header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0;">Réservations et Revenus par Mois</h3>
+
+                    <!-- SÉLECTEUR QUI NE GÈRE QUE CE GRAPHIQUE VIA JAVASCRIPT -->
+                    {% if availableYears|length > 1 %}
+                        <select id="monthly-year-filter" style="background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 4px 8px; cursor: pointer; outline: none; font-size: 0.85rem;">
+                            {% for year in availableYears %}
+                                <option value="{{ year }}">{{ year }}</option>
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <span class="badge" style="background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); font-size: 0.85rem;">Année {{ availableYears[0] }}</span>
+                    {% endif %}
+                </header>
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </article>
+
+            <aside class="scf-panel">
+                <header class="scf-panel__header">
+                    <h3>Nationalités</h3>
+                </header>
+                <div class="chart-container">
+                    <canvas id="nationalityChart"></canvas>
+                </div>
+            </aside>
+        </section>
+
+        <!-- LIGNE 3 : ZONES ET SPÉCIALITÉS -->
+        <section class="scf-dashboard__lists-grid">
+            <article class="scf-panel">
+                <header class="scf-panel__header">
+                    <h3 style="margin-bottom: 15px;">Performances par Zone</h3>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 150px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Utilisateur</label>
+                            <select id="zone-user-filter" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px; outline: none; cursor: pointer;">
+                                <option value="">Tous les utilisateurs</option>
+                                {% for u in usersForFilter %}
+                                    <option value="{{ u.id }}">{{ u.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Du</label>
+                            <input type="date" id="zone-start-filter" value="{{ "now"|date("Y") }}-01-01" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Au</label>
+                            <input type="date" id="zone-end-filter" value="{{ "now"|date("Y") }}-12-31" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                    </div>
+                </header>
+                <div class="chart-container" style="padding-top: 10px;">
+                    <canvas id="zoneChart"></canvas>
+                </div>
+            </article>
+
+            <article class="scf-panel">
+                <header class="scf-panel__header">
+                    <h3>Spécialités de cirque</h3>
+                </header>
+                <div class="chart-container">
+                    <canvas id="specialtyChart"></canvas>
+                </div>
+            </article>
+        </section>
+
+        <!-- LIGNE 4 : TOP USERS ET CARTE -->
+        <section class="scf-dashboard__lists-grid">
+            <article class="scf-panel">
+                <header class="scf-panel__header">
+                    <h3 style="margin-bottom: 15px;">Top Utilisateurs</h3>
+
+                    <div style="display: flex; gap: 15px; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Du</label>
+                            <input type="date" id="topusers-start-filter" value="{{ "now"|date("Y") }}-01-01" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                        <div style="flex: 1; min-width: 120px;">
+                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Au</label>
+                            <input type="date" id="topusers-end-filter" value="{{ "now"|date("Y") }}-12-31" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
+                        </div>
+                    </div>
+                </header>
+                <div class="chart-container" style="height: 400px; padding-top: 10px;">
+                    <canvas id="topUsersChart"></canvas>
+                </div>
+            </article>
+
+            <article class="scf-panel">
+                <header class="scf-panel__header">
+                    <h3 style="display: flex; align-items: center; gap: 10px;">
+                        Carte des Résidences
+                        <!-- Petit loader de chargement API -->
+                        <span id="map-loading" class="d-none" style="display:inline-block; width:16px; height:16px; border:2px solid #e9b94d; border-right-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></span>
+                    </h3>
+                    <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
+                </header>
+                <div id="residenceMap"></div>
+            </article>
+        </section>
+
+    </div>
+{% endblock %}
+
+{% block body_javascript %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('statistics') }}
 {% endblock %}
