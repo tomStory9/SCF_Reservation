@@ -8,6 +8,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!dataElement) return;
 
     const data = JSON.parse(dataElement.dataset.charts);
+    const translations = {
+        practitioners: dataElement.dataset.practitionersLabel,
+        revenue: dataElement.dataset.revenueLabel,
+        bookings: dataElement.dataset.bookingsLabel,
+        spending: dataElement.dataset.spendingLabel,
+        residentSingular: dataElement.dataset.residentSingular,
+        residentPlural: dataElement.dataset.residentPlural,
+        geocodingError: dataElement.dataset.geocodingError
+    };
 
     const isDarkMode = document.body.classList.contains('ea-dark-scheme');
     const textColor = isDarkMode ? '#cbd5e1' : '#475569';
@@ -60,7 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: data.specialties.map((s) => s.name),
             datasets: [
                 {
-                    label: 'Nombre de pratiquants',
+                    label: translations.practitioners,
                     data: data.specialties.map((s) => s.count),
                     backgroundColor: '#3B82F6',
                     borderRadius: 4
@@ -81,14 +90,21 @@ document.addEventListener('DOMContentLoaded', () => {
           ? availableKeys.sort().reverse()[0]
           : null;
 
-    const monthLabels = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    const monthKeys = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+    const monthFormatter = new Intl.DateTimeFormat(dataElement.dataset.locale || 'fr', {
+        month: 'short',
+        timeZone: 'UTC'
+    });
+    const monthLabels = monthKeys.map((_, index) =>
+        monthFormatter.format(new Date(Date.UTC(2020, index, 1)))
+    );
 
     function getMonthlyDataForYear(year) {
         const yearData = monthlyDataAllYears[year] || {};
 
         return {
-            counts: monthLabels.map((m) => (yearData[m] ? yearData[m].count : 0)),
-            revenues: monthLabels.map((m) => (yearData[m] ? yearData[m].revenue : 0))
+            counts: monthKeys.map((m) => (yearData[m] ? yearData[m].count : 0)),
+            revenues: monthKeys.map((m) => (yearData[m] ? yearData[m].revenue : 0))
         };
     }
 
@@ -102,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
             datasets: [
                 {
                     type: 'line',
-                    label: 'Revenus (¥)',
+                    label: translations.revenue,
                     data: currentChartData.revenues,
                     borderColor: '#e9b94d',
                     backgroundColor: '#e9b94d',
@@ -112,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 },
                 {
                     type: 'bar',
-                    label: 'Réservations',
+                    label: translations.bookings,
                     data: currentChartData.counts,
                     backgroundColor: '#3B82F6',
                     borderRadius: 4,
@@ -127,13 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 y: {
                     type: 'linear',
                     position: 'left',
-                    title: { display: true, text: 'Réservations', color: textColor }
+                    title: { display: true, text: translations.bookings, color: textColor }
                 },
                 y1: {
                     type: 'linear',
                     position: 'right',
                     grid: { drawOnChartArea: false },
-                    title: { display: true, text: 'Revenus (¥)', color: textColor }
+                    title: { display: true, text: translations.revenue, color: textColor }
                 }
             }
         }
@@ -164,8 +180,13 @@ document.addEventListener('DOMContentLoaded', () => {
         data: {
             labels: allZoneNames,
             datasets: [
-                { label: 'Réservations', data: [], backgroundColor: '#10B981', yAxisID: 'y' },
-                { label: 'Revenus (¥)', data: [], backgroundColor: '#F59E0B', yAxisID: 'y1' }
+                {
+                    label: translations.bookings,
+                    data: [],
+                    backgroundColor: '#10B981',
+                    yAxisID: 'y'
+                },
+                { label: translations.revenue, data: [], backgroundColor: '#F59E0B', yAxisID: 'y1' }
             ]
         },
         options: {
@@ -175,13 +196,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 y: {
                     type: 'linear',
                     position: 'left',
-                    title: { display: true, text: 'Réservations', color: textColor }
+                    title: { display: true, text: translations.bookings, color: textColor }
                 },
                 y1: {
                     type: 'linear',
                     position: 'right',
                     grid: { drawOnChartArea: false },
-                    title: { display: true, text: 'Revenus (¥)', color: textColor }
+                    title: { display: true, text: translations.revenue, color: textColor }
                 }
             }
         }
@@ -230,8 +251,18 @@ document.addEventListener('DOMContentLoaded', () => {
         data: {
             labels: [],
             datasets: [
-                { label: 'Dépenses (¥)', data: [], backgroundColor: '#8B5CF6', yAxisID: 'y' },
-                { label: 'Réservations', data: [], backgroundColor: '#EC4899', yAxisID: 'y1' }
+                {
+                    label: translations.spending,
+                    data: [],
+                    backgroundColor: '#8B5CF6',
+                    yAxisID: 'y'
+                },
+                {
+                    label: translations.bookings,
+                    data: [],
+                    backgroundColor: '#EC4899',
+                    yAxisID: 'y1'
+                }
             ]
         },
         options: {
@@ -300,6 +331,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const lat = geoData[0].lat;
                     const lon = geoData[0].lon;
 
+                    const residentText = (
+                        city.count === 1
+                            ? translations.residentSingular
+                            : translations.residentPlural
+                    ).replace('%count%', city.count);
+                    const popup = document.createElement('div');
+                    const cityName = document.createElement('strong');
+                    const residentCount = document.createElement('span');
+                    cityName.style.color = '#1e293b';
+                    cityName.textContent = city.city;
+                    residentCount.style.color = '#475569';
+                    residentCount.textContent = residentText;
+                    popup.append(cityName, document.createElement('br'), residentCount);
+
                     L.circleMarker([lat, lon], {
                         radius: 8 + city.count * 2,
                         fillColor: '#e9b94d',
@@ -309,12 +354,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         fillOpacity: 0.8
                     })
                         .addTo(map)
-                        .bindPopup(
-                            `<b style="color:#1e293b;">${city.city}</b><br><span style="color:#475569;">${city.count} résident(s)</span>`
-                        );
+                        .bindPopup(popup);
                 }
-            } catch (e) {
-                console.warn('Impossible de trouver la ville : ' + city.city);
+            } catch {
+                // Keep a localized diagnostic when an individual city cannot be geocoded.
+                // eslint-disable-next-line no-console
+                console.warn(translations.geocodingError.replace('%city%', city.city));
             }
         }
         if (mapLoader) mapLoader.classList.add('d-none');

@@ -97,6 +97,36 @@ admin:
   statistics:
     title: "Statistiques"
     back_to_dashboard: "Retour au tableau de bord"
+    kpi:
+      total_users: "Utilisateurs"
+      average_practice: "Pratique moyenne"
+      years: "ans"
+      bookings_per_account: "Réservations par compte"
+      current_month_revenue: "Revenus du mois"
+      yearly_monthly_average: "Moyenne mensuelle de l’année"
+      occupancy_rate: "Taux d’occupation"
+    charts:
+      monthly: "Réservations et revenus par mois"
+      nationalities: "Nationalités"
+      zone_performance: "Performances par lieu"
+      specialties: "Spécialités de cirque"
+      top_users: "Classement des utilisateurs"
+      residence_map: "Carte des lieux de résidence"
+    filters:
+      year: "Année"
+      user: "Utilisateur"
+      all_users: "Tous les utilisateurs"
+      from: "Du"
+      to: "Au"
+    datasets:
+      practitioners: "Nombre de pratiquants"
+      revenue: "Revenus (¥)"
+      bookings: "Réservations"
+      spending: "Dépenses (¥)"
+    map:
+      resident_singular: "%count% résident"
+      resident_plural: "%count% résidents"
+      geocoding_error: "Impossible de trouver la ville : %city%"
   menu:
     return_to_app: "Retour à l'application"
     dashboard: "Tableau de bord"

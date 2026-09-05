@@ -90,6 +90,36 @@ admin:
     statistics:
         title: 'Statistics'
         back_to_dashboard: 'Back to dashboard'
+        kpi:
+            total_users: 'Users'
+            average_practice: 'Average experience'
+            years: 'years'
+            bookings_per_account: 'Bookings per account'
+            current_month_revenue: 'Revenue this month'
+            yearly_monthly_average: 'Monthly average this year'
+            occupancy_rate: 'Occupancy rate'
+        charts:
+            monthly: 'Bookings and revenue by month'
+            nationalities: 'Nationalities'
+            zone_performance: 'Performance by location'
+            specialties: 'Circus specialties'
+            top_users: 'Top users'
+            residence_map: 'Residence map'
+        filters:
+            year: 'Year'
+            user: 'User'
+            all_users: 'All users'
+            from: 'From'
+            to: 'To'
+        datasets:
+            practitioners: 'Number of practitioners'
+            revenue: 'Revenue (¥)'
+            bookings: 'Bookings'
+            spending: 'Spending (¥)'
+        map:
+            resident_singular: '%count% resident'
+            resident_plural: '%count% residents'
+            geocoding_error: 'Could not find the city: %city%'
     menu:
         return_to_app: 'Back to application'
         dashboard: 'Dashboard'

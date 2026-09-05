@@ -1,12 +1,12 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
 
 {% block content_title %}
-    {{ 'admin.statistics.title'|trans({}, 'messages')|default('Statistiques') }}
+    {{ 'admin.statistics.title'|trans }}
 {% endblock %}
 
 {% block page_actions %}
     <a class="btn btn-secondary" href="{{ path('admin') }}">
-        <i class="fa fa-arrow-left" aria-hidden="true"></i> Retour
+        <i class="fa fa-arrow-left" aria-hidden="true"></i> {{ 'admin.statistics.back_to_dashboard'|trans }}
     </a>
 {% endblock %}
 
@@ -16,7 +16,19 @@
 {% endblock %}
 
 {% block main %}
-    <div id="stats-data" data-charts="{{ chartData|e('html_attr') }}" style="display: none;"></div>
+    <div
+        id="stats-data"
+        data-charts="{{ chartData|e('html_attr') }}"
+        data-locale="{{ app.request.locale|e('html_attr') }}"
+        data-practitioners-label="{{ 'admin.statistics.datasets.practitioners'|trans|e('html_attr') }}"
+        data-revenue-label="{{ 'admin.statistics.datasets.revenue'|trans|e('html_attr') }}"
+        data-bookings-label="{{ 'admin.statistics.datasets.bookings'|trans|e('html_attr') }}"
+        data-spending-label="{{ 'admin.statistics.datasets.spending'|trans|e('html_attr') }}"
+        data-resident-singular="{{ 'admin.statistics.map.resident_singular'|trans|e('html_attr') }}"
+        data-resident-plural="{{ 'admin.statistics.map.resident_plural'|trans|e('html_attr') }}"
+        data-geocoding-error="{{ 'admin.statistics.map.geocoding_error'|trans|e('html_attr') }}"
+        hidden
+    ></div>
 
     <div class="scf-dashboard">
 
@@ -25,7 +37,7 @@
             <div class="scf-stat scf-stat--primary">
                 <span class="scf-stat__icon"><i class="fa fa-users" aria-hidden="true"></i></span>
                 <span class="scf-stat__content">
-                    <span class="scf-stat__label">Utilisateurs</span>
+                    <span class="scf-stat__label">{{ 'admin.statistics.kpi.total_users'|trans }}</span>
                     <strong>{{ kpis.totalUsers }}</strong>
                 </span>
             </div>
@@ -33,15 +45,15 @@
             <div class="scf-stat scf-stat--success">
                 <span class="scf-stat__icon"><i class="fa fa-dumbbell" aria-hidden="true"></i></span>
                 <span class="scf-stat__content">
-                    <span class="scf-stat__label">Pratique moy.</span>
-                    <strong>{{ kpis.avgPracticeYears }}<small style="font-size:1rem; margin-left:4px;">ans</small></strong>
+                    <span class="scf-stat__label">{{ 'admin.statistics.kpi.average_practice'|trans }}</span>
+                    <strong>{{ kpis.avgPracticeYears }}<small style="font-size:1rem; margin-left:4px;">{{ 'admin.statistics.kpi.years'|trans }}</small></strong>
                 </span>
             </div>
 
             <div class="scf-stat scf-stat--primary">
                 <span class="scf-stat__icon"><i class="fa fa-ticket" aria-hidden="true"></i></span>
                 <span class="scf-stat__content">
-                    <span class="scf-stat__label">Résa / Compte</span>
+                    <span class="scf-stat__label">{{ 'admin.statistics.kpi.bookings_per_account'|trans }}</span>
                     <strong>{{ kpis.avgBookingsPerUser }}</strong>
                 </span>
             </div>
@@ -49,7 +61,7 @@
             <div class="scf-stat scf-stat--warning">
                 <span class="scf-stat__icon"><i class="fa fa-yen-sign" aria-hidden="true"></i></span>
                 <span class="scf-stat__content">
-                    <span class="scf-stat__label">Revenus (Ce mois)</span>
+                    <span class="scf-stat__label">{{ 'admin.statistics.kpi.current_month_revenue'|trans }}</span>
                     <strong>¥{{ kpis.currentMonthRevenue|number_format(0, '.', ',') }}</strong>
                 </span>
             </div>
@@ -57,7 +69,7 @@
             <div class="scf-stat scf-stat--danger">
                 <span class="scf-stat__icon"><i class="fa fa-chart-line" aria-hidden="true"></i></span>
                 <span class="scf-stat__content">
-                    <span class="scf-stat__label">Moyenne mensuelle (cette année)</span>
+                    <span class="scf-stat__label">{{ 'admin.statistics.kpi.yearly_monthly_average'|trans }}</span>
                     <strong>¥{{ kpis.avgMonthlyRevenue|number_format(0, '.', ',') }}</strong>
                 </span>
             </div>
@@ -65,7 +77,7 @@
             <div class="scf-stat scf-stat--success">
                 <span class="scf-stat__icon"><i class="fa fa-percent" aria-hidden="true"></i></span>
                 <span class="scf-stat__content">
-                    <span class="scf-stat__label">Taux occupation</span>
+                    <span class="scf-stat__label">{{ 'admin.statistics.kpi.occupancy_rate'|trans }}</span>
                     <strong>{{ kpis.occupancyRate }}%</strong>
                 </span>
             </div>
@@ -75,7 +87,7 @@
         <section class="scf-dashboard__main-grid">
             <article class="scf-panel">
                 <header class="scf-panel__header" style="display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin: 0;">Réservations et Revenus par Mois</h3>
+                    <h3 style="margin: 0;">{{ 'admin.statistics.charts.monthly'|trans }}</h3>
 
                     <!-- SÉLECTEUR QUI NE GÈRE QUE CE GRAPHIQUE VIA JAVASCRIPT -->
                     {% if availableYears|length > 1 %}
@@ -85,20 +97,20 @@
                             {% endfor %}
                         </select>
                     {% else %}
-                        <span class="badge" style="background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); font-size: 0.85rem;">Année {{ availableYears[0] }}</span>
+                        <span class="badge" style="background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); font-size: 0.85rem;">{{ 'admin.statistics.filters.year'|trans }} {{ availableYears[0] }}</span>
                     {% endif %}
                 </header>
                 <div class="chart-container">
-                    <canvas id="monthlyChart"></canvas>
+                    <canvas id="monthlyChart" role="img" aria-label="{{ 'admin.statistics.charts.monthly'|trans }}"></canvas>
                 </div>
             </article>
 
             <aside class="scf-panel">
                 <header class="scf-panel__header">
-                    <h3>Nationalités</h3>
+                    <h3>{{ 'admin.statistics.charts.nationalities'|trans }}</h3>
                 </header>
                 <div class="chart-container">
-                    <canvas id="nationalityChart"></canvas>
+                    <canvas id="nationalityChart" role="img" aria-label="{{ 'admin.statistics.charts.nationalities'|trans }}"></canvas>
                 </div>
             </aside>
         </section>
@@ -107,39 +119,39 @@
         <section class="scf-dashboard__lists-grid">
             <article class="scf-panel">
                 <header class="scf-panel__header">
-                    <h3 style="margin-bottom: 15px;">Performances par Zone</h3>
+                    <h3 style="margin-bottom: 15px;">{{ 'admin.statistics.charts.zone_performance'|trans }}</h3>
 
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 150px;">
-                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Utilisateur</label>
+                            <label for="zone-user-filter" style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">{{ 'admin.statistics.filters.user'|trans }}</label>
                             <select id="zone-user-filter" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 6px; outline: none; cursor: pointer;">
-                                <option value="">Tous les utilisateurs</option>
+                                <option value="">{{ 'admin.statistics.filters.all_users'|trans }}</option>
                                 {% for u in usersForFilter %}
                                     <option value="{{ u.id }}">{{ u.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         <div style="flex: 1; min-width: 120px;">
-                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Du</label>
+                            <label for="zone-start-filter" style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">{{ 'admin.statistics.filters.from'|trans }}</label>
                             <input type="date" id="zone-start-filter" value="{{ "now"|date("Y") }}-01-01" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
                         </div>
                         <div style="flex: 1; min-width: 120px;">
-                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Au</label>
+                            <label for="zone-end-filter" style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">{{ 'admin.statistics.filters.to'|trans }}</label>
                             <input type="date" id="zone-end-filter" value="{{ "now"|date("Y") }}-12-31" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
                         </div>
                     </div>
                 </header>
                 <div class="chart-container" style="padding-top: 10px;">
-                    <canvas id="zoneChart"></canvas>
+                    <canvas id="zoneChart" role="img" aria-label="{{ 'admin.statistics.charts.zone_performance'|trans }}"></canvas>
                 </div>
             </article>
 
             <article class="scf-panel">
                 <header class="scf-panel__header">
-                    <h3>Spécialités de cirque</h3>
+                    <h3>{{ 'admin.statistics.charts.specialties'|trans }}</h3>
                 </header>
                 <div class="chart-container">
-                    <canvas id="specialtyChart"></canvas>
+                    <canvas id="specialtyChart" role="img" aria-label="{{ 'admin.statistics.charts.specialties'|trans }}"></canvas>
                 </div>
             </article>
         </section>
@@ -148,34 +160,34 @@
         <section class="scf-dashboard__lists-grid">
             <article class="scf-panel">
                 <header class="scf-panel__header">
-                    <h3 style="margin-bottom: 15px;">Top Utilisateurs</h3>
+                    <h3 style="margin-bottom: 15px;">{{ 'admin.statistics.charts.top_users'|trans }}</h3>
 
                     <div style="display: flex; gap: 15px; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 120px;">
-                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Du</label>
+                            <label for="topusers-start-filter" style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">{{ 'admin.statistics.filters.from'|trans }}</label>
                             <input type="date" id="topusers-start-filter" value="{{ "now"|date("Y") }}-01-01" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
                         </div>
                         <div style="flex: 1; min-width: 120px;">
-                            <label style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">Au</label>
+                            <label for="topusers-end-filter" style="font-size: 0.75rem; color: var(--scf-muted); font-weight: bold; text-transform: uppercase; margin-bottom: 4px; display: block;">{{ 'admin.statistics.filters.to'|trans }}</label>
                             <input type="date" id="topusers-end-filter" value="{{ "now"|date("Y") }}-12-31" style="width: 100%; background-color: var(--body-bg); color: var(--text-color); border: 1px solid var(--border-color); border-radius: 4px; padding: 5px; outline: none;">
                         </div>
                     </div>
                 </header>
                 <div class="chart-container" style="height: 400px; padding-top: 10px;">
-                    <canvas id="topUsersChart"></canvas>
+                    <canvas id="topUsersChart" role="img" aria-label="{{ 'admin.statistics.charts.top_users'|trans }}"></canvas>
                 </div>
             </article>
 
             <article class="scf-panel">
                 <header class="scf-panel__header">
                     <h3 style="display: flex; align-items: center; gap: 10px;">
-                        Carte des Résidences
+                        {{ 'admin.statistics.charts.residence_map'|trans }}
                         <!-- Petit loader de chargement API -->
                         <span id="map-loading" class="d-none" style="display:inline-block; width:16px; height:16px; border:2px solid #e9b94d; border-right-color:transparent; border-radius:50%; animation:spin 1s linear infinite;"></span>
                     </h3>
                     <style>@keyframes spin { 100% { transform: rotate(360deg); } }</style>
                 </header>
-                <div id="residenceMap"></div>
+                <div id="residenceMap" role="img" aria-label="{{ 'admin.statistics.charts.residence_map'|trans }}"></div>
             </article>
         </section>
 

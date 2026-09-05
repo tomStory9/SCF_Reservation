@@ -16,7 +16,7 @@ final class Version20260902201034 extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE facility DROP map_link');
+        $this->addSql('ALTER TABLE facility DROP COLUMN IF EXISTS map_link');
         $this->addSql('ALTER TABLE zone ALTER jp_desc TYPE TEXT');
         $this->addSql('ALTER TABLE zone ALTER en_desc TYPE TEXT');
         $this->addSql('ALTER TABLE zone ALTER fr_desc TYPE TEXT');
@@ -24,7 +24,7 @@ final class Version20260902201034 extends AbstractMigration
 
     public function down(Schema $schema): void
     {
-        $this->addSql('ALTER TABLE facility ADD map_link TEXT NOT NULL');
+        $this->addSql("ALTER TABLE facility ADD COLUMN IF NOT EXISTS map_link TEXT DEFAULT 'todo' NOT NULL");
         $this->addSql('ALTER TABLE zone ALTER jp_desc TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE zone ALTER en_desc TYPE VARCHAR(255)');
         $this->addSql('ALTER TABLE zone ALTER fr_desc TYPE VARCHAR(255)');

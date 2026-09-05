@@ -90,6 +90,36 @@ admin:
     statistics:
         title: '統計'
         back_to_dashboard: 'ダッシュボードに戻る'
+        kpi:
+            total_users: 'ユーザー数'
+            average_practice: '平均経験年数'
+            years: '年'
+            bookings_per_account: 'アカウント当たりの予約数'
+            current_month_revenue: '今月の収益'
+            yearly_monthly_average: '今年の月平均収益'
+            occupancy_rate: '稼働率'
+        charts:
+            monthly: '月別の予約数と収益'
+            nationalities: '国籍'
+            zone_performance: '場所別実績'
+            specialties: 'サーカス専門種目'
+            top_users: '利用額上位ユーザー'
+            residence_map: '居住地マップ'
+        filters:
+            year: '年'
+            user: 'ユーザー'
+            all_users: 'すべてのユーザー'
+            from: '開始日'
+            to: '終了日'
+        datasets:
+            practitioners: '実践者数'
+            revenue: '収益（¥）'
+            bookings: '予約数'
+            spending: '利用額（¥）'
+        map:
+            resident_singular: '%count%人'
+            resident_plural: '%count%人'
+            geocoding_error: '都市が見つかりません：%city%'
     menu:
         return_to_app: 'アプリに戻る'
         dashboard: 'ダッシュボード'
