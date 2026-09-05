@@ -195,9 +195,15 @@
 									</p>
 								</div>
 
-								<p style="margin:0 0 16px; color:#4b5563; font-size:14px;">
-									{{ 'booking_rejected.no_payment'|trans }}
-								</p>
+                                {% if booking.totalPrice > 0 %}
+                                    <p style="margin:0 0 16px; color:#4b5563; font-size:14px;">
+                                        {{ 'booking_rejected.hold_released'|trans }}
+                                    </p>
+                                {% else %}
+                                    <p style="margin:0 0 16px; color:#4b5563; font-size:14px;">
+                                        {{ 'booking_rejected.no_payment'|trans }}
+                                    </p>
+                                {% endif %}
 
 								<p style="margin:0; color:#4b5563; font-size:14px;">
 									{{ 'booking_rejected.contact'|trans }}

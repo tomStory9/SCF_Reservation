@@ -22,20 +22,23 @@ class Transaction
     #[ORM\Column]
     private ?\DateTime $timestamp = null;
 
-    #[ORM\Column]
+    #[ORM\Column(nullable: true)]
     private ?int $stripeFee = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $stripePaymentIntentId = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBooking(): ?booking
+    public function getBooking(): ?Booking
     {
         return $this->booking;
     }
 
-    public function setBooking(?booking $booking): static
+    public function setBooking(?Booking $booking): static
     {
         $this->booking = $booking;
 
@@ -71,9 +74,21 @@ class Transaction
         return $this->stripeFee;
     }
 
-    public function setStripeFee(int $stripeFee): static
+    public function setStripeFee(?int $stripeFee): static
     {
         $this->stripeFee = $stripeFee;
+
+        return $this;
+    }
+
+    public function getStripePaymentIntentId(): ?string
+    {
+        return $this->stripePaymentIntentId;
+    }
+
+    public function setStripePaymentIntentId(?string $stripePaymentIntentId): static
+    {
+        $this->stripePaymentIntentId = $stripePaymentIntentId;
 
         return $this;
     }

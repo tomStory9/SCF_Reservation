@@ -8,7 +8,6 @@ use App\Repository\BookingRepository;
 use App\Repository\SettingsRepository;
 use App\Repository\UserRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
-use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminRoute;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Assets;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Dashboard;
@@ -138,12 +137,6 @@ class DashboardController extends AbstractDashboardController
                 'pendingUsers' => $this->generateAdminUrl(PendingUserCrudController::class),
             ],
         ]);
-    }
-
-    #[AdminRoute(path: '/statistics', name: 'statistics')]
-    public function statistics(): Response
-    {
-        return $this->render('admin/statistics/index.html.twig');
     }
 
     public function configureAssets(): Assets

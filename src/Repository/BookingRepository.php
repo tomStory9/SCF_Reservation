@@ -58,8 +58,6 @@ class BookingRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->andWhere('b.startDate >= :dayStart')
             ->andWhere('b.startDate < :dayEnd')
-            ->setParameter('dayStart', $targetDayStart)
-            ->setParameter('dayEnd', $targetDayEnd)
             ->getQuery()
             ->getResult();
     }
@@ -68,9 +66,9 @@ class BookingRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('b')
             ->andWhere('b.zone = :zone')
-            ->andWhere('b.bookingStatus = :status')
+            ->andWhere('b.bookingStatus IN (:statuses)')
             ->setParameter('zone', $zone)
-            ->setParameter('status', BookingStatus::APPROVED)
+            ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PAID]) // Ajout de PAID
             ->getQuery()
             ->getResult();
     }
@@ -94,6 +92,7 @@ class BookingRepository extends ServiceEntityRepository
             ->setParameter('statuses', [
                 BookingStatus::PENDING,
                 BookingStatus::APPROVED,
+                BookingStatus::PAID,
             ])
             ->orderBy('booking.startDate', 'ASC')
             ->getQuery()
@@ -108,6 +107,8 @@ class BookingRepository extends ServiceEntityRepository
      *     total: int,
      *     perPage: int
      * }
+     *
+     * @throws \Exception
      */
     public function paginateForUser(
         User $user,
@@ -174,8 +175,11 @@ class BookingRepository extends ServiceEntityRepository
             ->select('COUNT(booking.id) AS total')
             ->addSelect('SUM(CASE WHEN booking.endDate >= :now AND booking.bookingStatus != :declinedStatus THEN 1 ELSE 0 END) AS upcoming')
             ->addSelect('SUM(CASE WHEN booking.bookingStatus = :pendingStatus THEN 1 ELSE 0 END) AS pending')
-            ->addSelect('SUM(CASE WHEN booking.bookingStatus = :approvedStatus THEN 1 ELSE 0 END) AS paymentDue')
-            ->addSelect('SUM(CASE WHEN booking.bookingStatus = :paidStatus THEN 1 ELSE 0 END) AS paid')
+
+            ->addSelect('SUM(CASE WHEN booking.bookingStatus = :approvedStatus AND booking.StripeCheckoutUrl IS NOT NULL THEN 1 ELSE 0 END) AS paymentDue')
+
+            ->addSelect('SUM(CASE WHEN booking.bookingStatus = :paidStatus OR (booking.bookingStatus = :approvedStatus AND booking.StripeCheckoutUrl IS NULL) THEN 1 ELSE 0 END) AS paid')
+
             ->andWhere('booking.userBooking = :user')
             ->setParameter('user', $user)
             ->setParameter('now', $now, Types::DATETIME_IMMUTABLE)
@@ -216,10 +220,10 @@ class BookingRepository extends ServiceEntityRepository
 
         if ($this->settingsRepository->getSettings()->isPendingBookingBlocking()) {
             $qb->andWhere('b.bookingStatus IN (:statuses)')
-                ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PENDING]);
+                ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PAID, BookingStatus::PENDING]); // Ajout de PAID
         } else {
-            $qb->andWhere('b.bookingStatus = :status')
-                ->setParameter('status', BookingStatus::APPROVED);
+            $qb->andWhere('b.bookingStatus IN (:statuses)')
+                ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PAID]); // Ajout de PAID
         }
 
         if (null !== $excludeBookingId) {
@@ -285,8 +289,6 @@ class BookingRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('b')
             ->andWhere('b.startDate >= :startOfMonth')
             ->andWhere('b.startDate < :endOfMonth')
-            ->setParameter('startOfMonth', $startOfMonth)
-            ->setParameter('endOfMonth', $endOfMonth)
             ->getQuery()
             ->getResult();
     }
@@ -296,7 +298,7 @@ class BookingRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('b')
             ->join('b.zone', 'z');
 
-        $allowedStatuses = [BookingStatus::APPROVED];
+        $allowedStatuses = [BookingStatus::APPROVED, BookingStatus::PAID];
 
         if ('room' === $type && $this->settingsRepository->getSettings()->isPendingRoomBlocking()) {
             $allowedStatuses[] = BookingStatus::PENDING;
@@ -496,5 +498,43 @@ class BookingRepository extends ServiceEntityRepository
         }
 
         return array_values($grouped);
+    }
+
+    /**
+     * Trouve l'année de la plus ancienne réservation validée/payée.
+     */
+    public function getOldestBookingYear(): int
+    {
+        $result = $this->createQueryBuilder('b')
+            ->select('MIN(b.startDate)')
+            ->where('b.bookingStatus IN (:statuses)')
+            ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PAID])
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        if (!$result) {
+            return (int) date('Y');
+        }
+
+        return (int) new \DateTimeImmutable($result)->format('Y');
+    }
+
+    /**
+     * Ajout du paramètre $year pour filtrer les résultats sur une année précise.
+     */
+    public function getRawDataForStatistics(): array
+    {
+        return $this->createQueryBuilder('b')
+            ->select('
+                b.id, b.startDate, b.endDate, b.TotalPrice as price, b.isFullDay,
+                z.name as zoneName, u.id as userId, u.name as userFirstName, u.lastname as userLastName
+            ')
+            ->join('b.zone', 'z')
+            ->join('b.userBooking', 'u')
+            ->where('b.bookingStatus IN (:statuses)')
+            ->setParameter('statuses', [BookingStatus::APPROVED, BookingStatus::PAID])
+            ->orderBy('b.startDate', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
     }
 }

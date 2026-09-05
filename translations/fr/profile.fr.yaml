@@ -119,6 +119,8 @@ account:
         rooms_short: 'Chambres'
         language_label: 'Choisir la langue'
 
+        fallback_payment_required_text: 'L’autorisation de votre carte a expiré. Veuillez procéder au paiement manuel pour finaliser.'
+
     profile:
         section: 'Profil'
         lastname: 'Nom'

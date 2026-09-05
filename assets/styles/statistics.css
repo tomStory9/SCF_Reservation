@@ -1,0 +1,25 @@
+.scf-dashboard__stats--6 {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.chart-container {
+    position: relative;
+    height: 350px;
+    width: 100%;
+    padding: 1.25rem 1.35rem;
+}
+
+#residenceMap {
+    height: 400px;
+    z-index: 1;
+    border-radius: 0 0 0.95rem 0.95rem;
+}
+
+body.ea-dark-scheme .leaflet-layer,
+body.ea-dark-scheme .leaflet-control-zoom-in,
+body.ea-dark-scheme .leaflet-control-zoom-out,
+body.ea-dark-scheme .leaflet-control-attribution {
+    filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}

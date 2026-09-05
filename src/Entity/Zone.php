@@ -6,6 +6,7 @@ use App\Enum\ZoneType;
 use App\Repository\ZoneRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ZoneRepository::class)]
@@ -46,13 +47,13 @@ class Zone
     #[ORM\OneToMany(targetEntity: Equipment::class, mappedBy: 'zone')]
     private Collection $equipment;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $jpDesc = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $enDesc = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $frDesc = null;
 
     public function __construct()

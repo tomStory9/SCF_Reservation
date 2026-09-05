@@ -279,13 +279,21 @@
 
 								{% endif %}
 
-								<div class="info">
-									<strong>
-										{{ 'booking_pending.no_payment_yet'|trans }}
-									</strong>
-									<br>
-									{{ 'booking_pending.payment_later'|trans }}
-								</div>
+                                <div class="info">
+                                    {% if booking.totalPrice > 0 %}
+                                        <strong>
+                                            {{ 'booking_pending.hold_placed'|trans }}
+                                        </strong>
+                                        <br>
+                                        {{ 'booking_pending.hold_info'|trans }}
+                                    {% else %}
+                                        <strong>
+                                            {{ 'booking_pending.no_payment_yet'|trans }}
+                                        </strong>
+                                        <br>
+                                        {{ 'booking_pending.payment_later'|trans }}
+                                    {% endif %}
+                                </div>
 
 								<p style="margin-top:32px">
 									{{ 'common.reply_contact'|trans }}
