@@ -17,9 +17,19 @@ class BlockoutPeriodCrudController extends AbstractCrudController
 
     public function configureFields(string $pageName): iterable
     {
-        yield DateTimeField::new('startDate', 'admin.field.start_date');
-        yield DateTimeField::new('endDate', 'admin.field.end_date');
+        yield $this->createHourlyDateTimeField('startDate', 'admin.field.start_date');
+        yield $this->createHourlyDateTimeField('endDate', 'admin.field.end_date');
         yield BooleanField::new('active', 'admin.field.active');
+    }
+
+    private function createHourlyDateTimeField(string $property, string $label): DateTimeField
+    {
+        return DateTimeField::new($property, $label)
+            ->renderAsChoice()
+            ->setFormTypeOptions([
+                'with_minutes' => false,
+                'with_seconds' => false,
+            ]);
     }
 
     public function configureCrud(Crud $crud): Crud

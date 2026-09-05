@@ -34,7 +34,7 @@ class BlockoutPeriod
 
     public function setStartDate(\DateTimeImmutable $startDate): static
     {
-        $this->startDate = $startDate;
+        $this->startDate = $startDate->setTime((int) $startDate->format('H'), 0);
 
         return $this;
     }
@@ -46,7 +46,7 @@ class BlockoutPeriod
 
     public function setEndDate(\DateTimeImmutable $endDate): static
     {
-        $this->endDate = $endDate;
+        $this->endDate = $endDate->setTime((int) $endDate->format('H'), 0);
 
         return $this;
     }
