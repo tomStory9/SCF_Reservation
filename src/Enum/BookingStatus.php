@@ -11,6 +11,7 @@ enum BookingStatus: string implements TranslatableInterface
     case APPROVED = 'approved';
     case DECLINED = 'declined';
     case PAID = 'paid';
+    case cancelled = 'cancelled';
 
     public function trans(TranslatorInterface $translator, ?string $locale = null): string
     {
