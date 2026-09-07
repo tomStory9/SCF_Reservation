@@ -1,501 +1,541 @@
 {% extends 'base.html.twig' %}
 
+
 {% block locale_switcher %}{% endblock %}
 {% trans_default_domain 'reservation' %}
 
+
 {% block title %}
-    {{ 'page.title'|trans }}
+	{{ 'page.title'|trans }}
 {% endblock %}
 
+
 {% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('reservation') }}
+	{{ parent() }}
+	{{ encore_entry_link_tags('reservation') }}
 {% endblock %}
+
 
 {% block body %}
 
+	 <script id="calendar-config" type="application/json">
+		        {{
+		            {
+		                locale: app.request.locale,
+		                maxDate: maxEndDate|date('Y-m-d'),
+		                blockedPeriods: blockedPeriods|default([]),
+		                minDays: minDays,
+		            
+		                periods: periods|default([]),
+		                endpoints: {
+		                    zones: '/facility/{facilityId}/zones',
+		                    pricings: '/zone/{zoneId}/pricings',
+		                    bookings: '/zone/{zoneId}/bookings',
+		                    equipments: '/zone/{zoneId}/equipments',
+		                    createBooking: '/booking/create'
+		                },
+		
+		
+		                texts: {
+		                    blockedPeriod: 'js.blocked_period'|trans,
+		                    zonePlaceholder: 'js.zone_placeholder'|trans,
+		                    noZoneAvailable: 'js.no_zone_available'|trans,
+		                    undefined: 'js.undefined'|trans,
+		
+		
+		                    bookingByHour: 'js.booking_by_hour'|trans,
+		                    bookingByPeriod: 'js.booking_by_period'|trans,
+		
+		
+		                    today: 'js.today'|trans,
+		                    month: 'js.month'|trans,
+		                    week: 'js.week'|trans,
+		
+		
+		                    selectedDay: 'js.selected_day'|trans,
+		                    selectedPeriod: 'js.selected_period'|trans,
+		                    hourlySlot: 'js.hourly_slot'|trans,
+		                    fullDaySelection: 'js.full_day_selection'|trans,
+		
+		
+		                    date: 'js.date'|trans,
+		                    hours: 'js.hours'|trans,
+		                    duration: 'js.duration'|trans,
+		                    location: 'js.location'|trans,
+		
+		
+		                    morning: 'js.morning'|trans,
+		                    afternoon: 'js.afternoon'|trans,
+		                    evening: 'js.evening'|trans,
+		
+		
+		                    periodModeHelp: 'js.period_mode_help'|trans,
+		                    hourModeHelp: 'js.hour_mode_help'|trans,
+		                    noSelection: 'js.no_selection'|trans,
+		
+		
+		                    selectSlot: 'js.select_slot'|trans,
+		                    fullDayConflict: 'js.full_day_conflict'|trans,
+		                    periodConflict: 'js.period_conflict'|trans,
+		                    blockedDay: 'js.blocked_day'|trans,
+		                    overlappingEvent: 'js.overlapping_event'|trans,
+		
+		
+		                    loading: 'js.loading'|trans,
+		                    submitBooking: 'js.submit_booking'|trans,
+		
+		
+		                    bookingErrorTitle: 'js.booking_error_title'|trans,
+		                    bookingError: 'js.booking_error'|trans,
+		                    acceptTerms: 'js.accept_terms'|trans,
+		
+		
+		                    networkErrorTitle: 'js.network_error_title'|trans,
+		                    networkError: 'js.network_error'|trans,
+		
+		
+		                    pricingLoadingError: 'js.pricing_loading_error'|trans,
+		                    zonesLoadingError: 'js.zones_loading_error'|trans,
+		                    bookingsLoadingError: 'js.bookings_loading_error'|trans,
+		                    equipmentsLoadingError: 'js.equipments_loading_error'|trans,
+		
+		
+		                    loadingEquipments: 'js.loading_equipments'|trans,
+		                    noEquipmentsAvailable: 'js.no_equipments_available'|trans,
+		                    unavailableEquipment: 'js.unavailable_equipment'|trans,
+		                    availableEquipment: 'js.available_equipment'|trans,
+		                    maximum: 'js.maximum'|trans,
+		                    equipmentTotal: 'js.equipment_total'|trans,
+		                    grandTotal: 'js.grand_total'|trans,
+		
+		
+		                    usedHours: 'js.used_hours'|trans,
+		                    selectedPeriodEvent: 'js.selected_period_event'|trans,
+		
+		
+		                    freeHoursUsedPattern: 'js.free_hours_used_pattern'|trans,
+		                    paidHoursPattern: 'js.paid_hours_pattern'|trans,
+		                    fullyFree: 'js.fully_free'|trans,
+		                    freeHoursRemainingPattern: 'js.free_hours_remaining_pattern'|trans,
+		                    hoursUnit: 'js.hours_unit'|trans
+		                }
+		            }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
+		        }}
+		    </script>
 
-    <script id="calendar-config" type="application/json">
-        {{
-            {
-                locale: app.request.locale,
-                maxDate: maxEndDate|date('Y-m-d'),
-                blockedPeriods: blockedPeriods|default([]),
-                minDays: minDays,
-            
-                periods: periods|default([]),
-                endpoints: {
-                    zones: '/facility/{facilityId}/zones',
-                    pricings: '/zone/{zoneId}/pricings',
-                    bookings: '/zone/{zoneId}/bookings',
-                    equipments: '/zone/{zoneId}/equipments',
-                    createBooking: '/booking/create'
-                },
-
-                texts: {
-                    blockedPeriod: 'js.blocked_period'|trans,
-                    zonePlaceholder: 'js.zone_placeholder'|trans,
-                    noZoneAvailable: 'js.no_zone_available'|trans,
-                    undefined: 'js.undefined'|trans,
-
-                    bookingByHour: 'js.booking_by_hour'|trans,
-                    bookingByPeriod: 'js.booking_by_period'|trans,
-
-                    today: 'js.today'|trans,
-                    month: 'js.month'|trans,
-                    week: 'js.week'|trans,
-
-                    selectedDay: 'js.selected_day'|trans,
-                    selectedPeriod: 'js.selected_period'|trans,
-                    hourlySlot: 'js.hourly_slot'|trans,
-                    fullDaySelection: 'js.full_day_selection'|trans,
-
-                    date: 'js.date'|trans,
-                    hours: 'js.hours'|trans,
-                    duration: 'js.duration'|trans,
-                    location: 'js.location'|trans,
-
-                    morning: 'js.morning'|trans,
-                    afternoon: 'js.afternoon'|trans,
-                    evening: 'js.evening'|trans,
-
-                    periodModeHelp: 'js.period_mode_help'|trans,
-                    hourModeHelp: 'js.hour_mode_help'|trans,
-                    noSelection: 'js.no_selection'|trans,
-
-                    selectSlot: 'js.select_slot'|trans,
-                    fullDayConflict: 'js.full_day_conflict'|trans,
-                    periodConflict: 'js.period_conflict'|trans,
-                    blockedDay: 'js.blocked_day'|trans,
-                    overlappingEvent: 'js.overlapping_event'|trans,
-
-                    loading: 'js.loading'|trans,
-                    submitBooking: 'js.submit_booking'|trans,
-
-                    bookingErrorTitle: 'js.booking_error_title'|trans,
-                    bookingError: 'js.booking_error'|trans,
-                    acceptTerms: 'js.accept_terms'|trans,
-
-                    networkErrorTitle: 'js.network_error_title'|trans,
-                    networkError: 'js.network_error'|trans,
-
-                    pricingLoadingError: 'js.pricing_loading_error'|trans,
-                    zonesLoadingError: 'js.zones_loading_error'|trans,
-                    bookingsLoadingError: 'js.bookings_loading_error'|trans,
-                    equipmentsLoadingError: 'js.equipments_loading_error'|trans,
-
-                    loadingEquipments: 'js.loading_equipments'|trans,
-                    noEquipmentsAvailable: 'js.no_equipments_available'|trans,
-                    unavailableEquipment: 'js.unavailable_equipment'|trans,
-                    availableEquipment: 'js.available_equipment'|trans,
-                    maximum: 'js.maximum'|trans,
-                    equipmentTotal: 'js.equipment_total'|trans,
-                    grandTotal: 'js.grand_total'|trans,
-
-                    usedHours: 'js.used_hours'|trans,
-                    selectedPeriodEvent: 'js.selected_period_event'|trans,
-
-                        freeHoursUsedPattern: 'js.free_hours_used_pattern'|trans,
-    paidHoursPattern: 'js.paid_hours_pattern'|trans,
-    fullyFree: 'js.fully_free'|trans,
-    freeHoursRemainingPattern: 'js.free_hours_remaining_pattern'|trans,
-    hoursUnit: 'js.hours_unit'|trans
-                }
-            }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
-        }}
-    </script>
-
-    <script id="user-booking-data" type="application/json">
-        {{
-            {
-                freeHours: remainingHours|default(0)
-            }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
-        }}
-    </script>
-
-    <div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
-        {% include 'user/_partials/_navbar.html.twig' %}
-
-        <div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
-            <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
-
-
-                <section class="flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-
-                    <div class="mb-5 flex items-center justify-between">
-                        <div>
-                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
-                                {{ 'ui.planning'|trans }}
-                            </p>
-
-                            <h2 class="text-xl font-semibold text-secondary">
-                                {{ 'ui.calendar_title'|trans }}
-                            </h2>
-                        </div>
-
-                        <div class="hidden text-right lg:block">
-                            <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">
-                                {{ 'ui.active_mode'|trans }}
-                            </p>
-
-                            <p class="text-sm text-state">
-                                <span
-                                    id="active-booking-mode-label"
-                                    class="font-semibold text-primary"
-                                >
-                                    {{ 'ui.booking_by_hour'|trans }}
-                                </span>
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                        <div>
-                            <p class="text-sm font-semibold text-secondary">
-                                {{ 'ui.booking_mode'|trans }}
-                            </p>
-
-                            <div class="mt-2 flex flex-wrap items-center gap-5 text-sm">
-                                <button
-                                    type="button"
-                                    class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary"
-                                    data-mode="hour"
-                                    aria-pressed="true"
-                                >
-                                    {{ 'ui.booking_by_hour'|trans }}
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary"
-                                    data-mode="period"
-                                    aria-pressed="false"
-                                >
-                                    {{ 'ui.booking_by_period'|trans }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="text-sm text-state lg:hidden">
-                            <span class="font-semibold text-secondary">
-                                {{ 'ui.active_mode'|trans }} :
-                            </span>
-
-                            <span
-                                id="active-booking-mode-label-mobile"
-                                class="font-semibold text-primary"
-                            >
-                                {{ 'ui.booking_by_hour'|trans }}
-                            </span>
-                        </div>
-                    </div>
-
-                    <div class="flex flex-1 flex-col">
-                        <div class="flex justify-center">
-                            <div
-                                id="calendar-holder"
-                                class="reservation-calendar w-full max-w-[940px]"
-                            ></div>
-                        </div>
-
-                        <div
-                            id="calendar-legend"
-                            class="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-4"
-                        >
-                            <p class="text-sm font-semibold text-secondary">
-                                {{ 'ui.occupancy_title'|trans }}
-                            </p>
-
-                            <div class="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
-                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-                                    <span class="h-4 w-4 rounded-full bg-slate-400"></span>
-                                    <span class="text-sm text-secondary">
-                                        {{ 'ui.occupancy_full'|trans }}
-                                    </span>
-                                </div>
-
-                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-                                    <span class="h-4 w-4 rounded-full bg-red-500"></span>
-                                    <span class="text-sm text-secondary">
-                                        {{ 'ui.occupancy_high'|trans }}
-                                    </span>
-                                </div>
-
-                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-                                    <span class="h-4 w-4 rounded-full bg-orange-400"></span>
-                                    <span class="text-sm text-secondary">
-                                        {{ 'ui.occupancy_medium'|trans }}
-                                    </span>
-                                </div>
-
-                                <div class="flex items-center gap-3 rounded-xl bg-white px-3 py-3 ring-1 ring-slate-200">
-                                    <span class="h-4 w-4 rounded-full bg-yellow-300"></span>
-                                    <span class="text-sm text-secondary">
-                                        {{ 'ui.occupancy_low'|trans }}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <ul class="mt-4 space-y-2 text-sm text-state">
-                                <li>
-                                    - {{ 'ui.help_month'|trans }}
-                                </li>
-
-                                <li>
-                                    - {{ 'ui.help_full_day'|trans }}
-                                </li>
-
-                                <li>
-                                    - {{ 'ui.help_hour'|trans }}
-                                </li>
-
-                                <li>
-                                    - {{ 'ui.help_period'|trans }}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </section>
-
-                <aside class="flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-
-                    <div class="border-b border-slate-200">
-                        <nav
-                            class="-mb-px flex w-full flex-wrap justify-evenly gap-2 sm:gap-3"
-                            aria-label="{{ 'ui.locations'|trans }}"
-                        >
-                            {% for facility in facilities %}
-                                {% set isActive = loop.first %}
-
-                                <button
-                                    type="button"
-                                    class="location-tab rounded-t-xl border px-5 py-3 text-sm font-semibold transition {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}"
-                                    data-location="{{ facility.id }}"
-                                    aria-selected="{{ isActive ? 'true' : 'false' }}"
-                                >
-                                    {{ facility.name }}
-                                </button>
-                            {% endfor %}
-                        </nav>
-                    </div>
-
-                    <div class="flex flex-1 flex-col rounded-b-2xl border border-t-0 border-slate-200 bg-white p-6">
-
-                        <div class="mb-6">
-                            <p class="text-base font-semibold text-secondary">
-                                {{ 'ui.location_information'|trans }}
-                            </p>
-
-                            <p class="mt-2 text-sm text-state">
-                                {{ 'ui.location_help'|trans }}
-                            </p>
-                        </div>
-
-                        <div class="mb-6">
-                            <div class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-
-                                <div>
-                                    <label
-                                        for="zone-select"
-                                        class="mb-2 block text-sm font-semibold text-secondary"
-                                    >
-                                        {{ 'ui.selected_zone'|trans }}
-                                    </label>
-
-                                    <select
-                                        id="zone-select"
-                                        name="zone"
-                                        class="w-full"
-                                    >
-                                        <option value="">
-                                            {{ 'ui.loading_zones'|trans }}
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    <label
-                                        for="guest-count-input"
-                                        class="mb-2 block text-sm font-semibold text-secondary"
-                                    >
-                                        {{ 'ui.guest_count'|trans }}
-                                    </label>
-
-                                    <input
-                                        type="number"
-                                        id="guest-count-input"
-                                        name="guest_count"
-                                        min="1"
-                                        value="1"
-                                        class="block h-[35px] w-full rounded border border-slate-200 bg-white px-3 py-2 text-sm text-slate-800 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                                    >
-                                </div>
-                            </div>
-
-                            <p class="mt-4 text-sm font-semibold text-secondary">
-                                {{ 'ui.description'|trans }}
-                            </p>
-
-                            <p
-                                id="location-description"
-                                class="mt-2 text-sm leading-6 text-state"
-                            >
-                                {{ 'ui.default_description'|trans }}
-                            </p>
-                        </div>
-
-                        <div class="mb-6 border-b border-slate-200 pb-3">
-                            <div class="flex flex-wrap items-center gap-6 text-sm">
-
-                                <button
-                                    type="button"
-                                    class="booking-mode-link is-active text-sm font-semibold text-secondary transition hover:text-primary"
-                                    data-mode="hour"
-                                    aria-pressed="true"
-                                >
-                                    {{ 'ui.booking_by_hour'|trans }}
-                                </button>
-
-                                <button
-                                    type="button"
-                                    class="booking-mode-link text-sm font-semibold text-state transition hover:text-primary"
-                                    data-mode="period"
-                                    aria-pressed="false"
-                                >
-                                    {{ 'ui.booking_by_period'|trans }}
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="flex flex-1 flex-col">
-                            <p class="text-base font-semibold text-secondary">
-                                {{ 'ui.summary'|trans }}
-                            </p>
-
-                            <p class="mt-2 text-sm text-state">
-                                {{ 'ui.summary_help'|trans }}
-                            </p>
-
-                            <div
-                                id="selection-preview"
-                                class="mt-5 text-sm leading-6 text-state"
-                            >
-                                {{ 'ui.no_selection'|trans }}
-                            </div>
-
-                            <div
-                                id="price-container"
-                                class="mt-4 hidden border-t border-slate-200 pt-4"
-                            >
-                                <p class="text-sm text-state">
-                                    <span class="font-semibold text-secondary">
-                                        {{ 'ui.price'|trans }}
-                                    </span>
-
-                                    <span
-                                        id="price-display"
-                                        class="text-base font-bold text-primary"
-                                    >
-                                        0 ¥
-                                    </span>
-                                </p>
-                            </div>
-
-                            <div
-                                id="equipment-section"
-                                class="mt-6"
-                            >
-                                <div class="flex items-center justify-between gap-3">
-                                    <p class="text-sm font-semibold text-secondary">
-                                        {{ 'ui.optional_equipment'|trans }}
-                                    </p>
-
-                                    <p class="text-right text-xs text-state">
-                                        {{ 'ui.equipment_availability'|trans }}
-                                    </p>
-                                </div>
-
-                                <div
-                                    id="equipment-list"
-                                    class="mt-3 overflow-hidden divide-y divide-slate-200 rounded-xl border border-slate-200 bg-slate-50"
-                                >
-                                    <p class="px-3 py-2 text-xs text-state">
-                                        {{ 'ui.select_for_equipment'|trans }}
-                                    </p>
-                                </div>
-
-                                <div
-                                    id="equipment-total-container"
-                                    class="mt-3 hidden items-center justify-between text-sm"
-                                >
-                                    <span class="font-semibold text-secondary">
-                                        {{ 'ui.equipment_total'|trans }}
-                                    </span>
-
-                                    <span
-                                        id="equipment-total-display"
-                                        class="text-base font-bold text-primary"
-                                    >
-                                        0 ¥
-                                    </span>
-                                </div>
-
-                                <div
-                                    id="grand-total-container"
-                                    class="mt-2 hidden items-center justify-between text-sm"
-                                >
-                                    <span class="font-semibold text-secondary">
-                                        {{ 'ui.grand_total'|trans }}
-                                    </span>
-
-                                    <span
-                                        id="grand-total-display"
-                                        class="text-lg font-bold text-secondary"
-                                    >
-                                        0 ¥
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div
-                                id="button_submit_booking"
-                                class="mt-6 pt-2"
-                            >
-                                <div class="mb-4 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                                    <input
-                                        id="terms-consent"
-                                        type="checkbox"
-                                        required
-                                        aria-required="true"
-                                        class="mt-1 h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
-                                    >
-                                    <label for="terms-consent" class="text-sm leading-6 text-state">
-                                        {{ 'ui.terms_consent_before'|trans }}<a
-                                            href="{{ path('app_terms') }}"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="font-semibold text-primary underline hover:text-secondary"
-                                        >{{ 'ui.terms_link'|trans }}</a>{{ 'ui.terms_consent_after'|trans }}
-                                        <span aria-hidden="true" class="text-red-600">*</span>
-                                    </label>
-                                </div>
-                                <button
-                                    id="submit_booking"
-                                    type="button"
-                                    class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg"
-                                >
-                                    {{ 'ui.submit'|trans }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-            </div>
-        </div>
-    </div>
+
+	 <script id="user-booking-data" type="application/json">
+		        {{
+		            {
+		                freeHours: remainingHours|default(0)
+		            }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw
+		        }}
+		    </script>
+
+
+		<div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900"> {% include 'user/_partials/_navbar.html.twig' %}
+
+
+		<div class="mx-auto w-full max-w-[1850px] px-3 py-4 sm:px-6 sm:py-5 lg:px-10 xl:px-12">
+			<div
+				class="grid grid-cols-1 items-start gap-4 lg:grid-cols-[minmax(0,1.05fr)_700px]">
+
+
+				<!-- Calendrier -->
+				<section class="flex flex-col rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:rounded-3xl sm:p-5 lg:p-7">
+
+
+					<div class="mb-3 flex items-center justify-between sm:mb-5">
+						<div>
+							<p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-state sm:text-xs">
+								{{ 'ui.planning'|trans }}
+							</p>
+
+
+							<h2 class="text-base font-semibold text-secondary sm:text-xl">
+								{{ 'ui.calendar_title'|trans }}
+							</h2>
+						</div>
+
+
+						<div class="hidden text-right lg:block">
+							<p class="text-[10px] font-semibold uppercase tracking-[0.2em] text-state sm:text-xs">
+								{{ 'ui.active_mode'|trans }}
+							</p>
+
+
+							<p class="text-xs text-state sm:text-sm">
+								<span id="active-booking-mode-label" class="font-semibold text-primary">
+									{{ 'ui.booking_by_hour'|trans }}
+								</span>
+							</p>
+						</div>
+					</div>
+
+
+					<div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 sm:mb-5">
+						<div>
+							<p class="text-xs font-semibold text-secondary">
+								{{ 'ui.booking_mode'|trans }}
+							</p>
+
+
+							<div class="mt-1 flex flex-wrap items-center gap-3 text-xs sm:mt-2 sm:gap-5 sm:text-sm">
+								<button type="button" class="booking-mode-link is-active text-xs font-semibold text-secondary transition hover:text-primary sm:text-sm" data-mode="hour" aria-pressed="true">
+									{{ 'ui.booking_by_hour'|trans }}
+								</button>
+
+
+								<button type="button" class="booking-mode-link text-xs font-semibold text-state transition hover:text-primary sm:text-sm" data-mode="period" aria-pressed="false">
+									{{ 'ui.booking_by_period'|trans }}
+								</button>
+							</div>
+						</div>
+
+
+						<div class="text-xs text-state sm:text-sm lg:hidden">
+							<span class="font-semibold text-secondary">
+								{{ 'ui.active_mode'|trans }}
+								:
+							</span>
+
+
+							<span id="active-booking-mode-label-mobile" class="font-semibold text-primary">
+								{{ 'ui.booking_by_hour'|trans }}
+							</span>
+						</div>
+					</div>
+
+
+					<div class="flex flex-1 flex-col">
+						<div id="calendar-holder" class="
+								        reservation-calendar
+								        w-full
+								        max-w-full
+								        overflow-hidden
+								        text-[9px]
+								        sm:max-w-[940px]
+								        sm:text-sm
+							
+								        [&_.fc]:text-[9px]
+								        sm:[&_.fc]:text-sm
+							
+								        [&_.fc-toolbar]:gap-1
+								        [&_.fc-toolbar]:flex-wrap
+								        sm:[&_.fc-toolbar]:gap-2
+								        sm:[&_.fc-toolbar]:flex-nowrap
+							
+								        [&_.fc-toolbar-title]:text-[11px]
+								        [&_.fc-toolbar-title]:leading-tight
+								        sm:[&_.fc-toolbar-title]:text-lg
+							
+								        [&_.fc-button]:px-1.5
+								        [&_.fc-button]:py-1
+								        [&_.fc-button]:text-[8px]
+								        [&_.fc-button]:leading-none
+								        sm:[&_.fc-button]:px-3
+								        sm:[&_.fc-button]:py-1.5
+								        sm:[&_.fc-button]:text-sm
+							
+								        [&_.fc-col-header-cell]:p-0
+								        [&_.fc-col-header-cell]:text-[8px]
+								        [&_.fc-col-header-cell]:leading-none
+								        sm:[&_.fc-col-header-cell]:text-sm
+							
+								        [&_.fc-col-header-cell-cushion]:px-px
+								        [&_.fc-col-header-cell-cushion]:py-1
+								        [&_.fc-col-header-cell-cushion]:text-[8px]
+								        [&_.fc-col-header-cell-cushion]:leading-none
+								        [&_.fc-col-header-cell-cushion]:whitespace-nowrap
+								        sm:[&_.fc-col-header-cell-cushion]:px-1
+								        sm:[&_.fc-col-header-cell-cushion]:py-2
+								        sm:[&_.fc-col-header-cell-cushion]:text-sm
+							
+								        [&_.fc-daygrid-day]:min-h-[1.75rem]
+								        sm:[&_.fc-daygrid-day]:min-h-[3rem]
+							
+								        [&_.fc-daygrid-day-frame]:min-h-[1.75rem]
+								        sm:[&_.fc-daygrid-day-frame]:min-h-[3rem]
+							
+								        [&_.fc-daygrid-day-number]:px-1
+								        [&_.fc-daygrid-day-number]:py-0.5
+								        [&_.fc-daygrid-day-number]:text-[9px]
+								        [&_.fc-daygrid-day-number]:leading-none
+								        sm:[&_.fc-daygrid-day-number]:px-2
+								        sm:[&_.fc-daygrid-day-number]:py-1
+								        sm:[&_.fc-daygrid-day-number]:text-sm
+							
+								        [&_.fc-daygrid-event]:mx-px
+								        [&_.fc-daygrid-event]:text-[7px]
+								        [&_.fc-daygrid-event]:leading-none
+								        sm:[&_.fc-daygrid-event]:text-xs
+							
+								        [&_.fc-event-title]:text-[7px]
+								        [&_.fc-event-time]:text-[7px]
+								        sm:[&_.fc-event-title]:text-xs
+								        sm:[&_.fc-event-time]:text-xs
+							
+								        [&_.fc-daygrid-more-link]:text-[7px]
+								        sm:[&_.fc-daygrid-more-link]:text-xs
+								    "></div>
+
+
+						<div id="calendar-legend" class="mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3 sm:mt-6 sm:rounded-2xl sm:p-4">
+							<p class="text-xs font-semibold text-secondary sm:text-sm">
+								{{ 'ui.occupancy_title'|trans }}
+							</p>
+
+
+							<div class="mt-3 grid grid-cols-1 gap-2 sm:mt-4 sm:grid-cols-2 xl:grid-cols-4">
+								<div class="flex items-center gap-2 rounded-lg bg-white px-2 py-2 ring-1 ring-slate-200 sm:gap-3 sm:rounded-xl sm:px-3 sm:py-3">
+									<span class="h-3 w-3 rounded-full bg-slate-400 sm:h-4 sm:w-4"></span>
+									<span class="text-xs text-secondary sm:text-sm">
+										{{ 'ui.occupancy_full'|trans }}
+									</span>
+								</div>
+
+
+								<div class="flex items-center gap-2 rounded-lg bg-white px-2 py-2 ring-1 ring-slate-200 sm:gap-3 sm:rounded-xl sm:px-3 sm:py-3">
+									<span class="h-3 w-3 rounded-full bg-red-500 sm:h-4 sm:w-4"></span>
+									<span class="text-xs text-secondary sm:text-sm">
+										{{ 'ui.occupancy_high'|trans }}
+									</span>
+								</div>
+
+
+								<div class="flex items-center gap-2 rounded-lg bg-white px-2 py-2 ring-1 ring-slate-200 sm:gap-3 sm:rounded-xl sm:px-3 sm:py-3">
+									<span class="h-3 w-3 rounded-full bg-orange-400 sm:h-4 sm:w-4"></span>
+									<span class="text-xs text-secondary sm:text-sm">
+										{{ 'ui.occupancy_medium'|trans }}
+									</span>
+								</div>
+
+
+								<div class="flex items-center gap-2 rounded-lg bg-white px-2 py-2 ring-1 ring-slate-200 sm:gap-3 sm:rounded-xl sm:px-3 sm:py-3">
+									<span class="h-3 w-3 rounded-full bg-yellow-300 sm:h-4 sm:w-4"></span>
+									<span class="text-xs text-secondary sm:text-sm">
+										{{ 'ui.occupancy_low'|trans }}
+									</span>
+								</div>
+							</div>
+
+
+							<ul class="mt-3 space-y-1 text-xs text-state sm:mt-4 sm:space-y-2 sm:text-sm">
+								<li>
+									-
+									{{ 'ui.help_month'|trans }}
+								</li>
+
+
+								<li>
+									-
+									{{ 'ui.help_full_day'|trans }}
+								</li>
+
+
+								<li>
+									-
+									{{ 'ui.help_hour'|trans }}
+								</li>
+
+
+								<li>
+									-
+									{{ 'ui.help_period'|trans }}
+								</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+
+				<!-- Sidebar -->
+				<aside class="flex flex-col rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:rounded-3xl sm:p-5 lg:p-7">
+
+
+					<div class="border-b border-slate-200">
+						<nav class="-mb-px flex w-full flex-wrap justify-evenly gap-1 sm:gap-2" aria-label="{{ 'ui.locations'|trans }}">
+							{% for facility in facilities %}
+								{% set isActive = loop.first %}
+
+
+								<button type="button" class="location-tab rounded-t-lg border px-3 py-2 text-xs font-semibold transition sm:rounded-t-xl sm:px-5 sm:py-3 sm:text-sm {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}" data-location="{{ facility.id }}" aria-selected="{{ isActive ? 'true' : 'false' }}">
+									{{ facility.name }}
+								</button>
+							{% endfor %}
+						</nav>
+					</div>
+
+
+					<div class="flex flex-1 flex-col rounded-b-xl border border-t-0 border-slate-200 bg-white p-3 sm:rounded-b-2xl sm:p-6">
+
+
+						<div class="mb-4 sm:mb-6">
+							<p class="text-sm font-semibold text-secondary">
+								{{ 'ui.location_information'|trans }}
+							</p>
+
+
+							<p class="mt-1 text-xs text-state sm:mt-2 sm:text-sm">
+								{{ 'ui.location_help'|trans }}
+							</p>
+						</div>
+
+
+						<div class="mb-4 sm:mb-6">
+							<div class="mb-4 grid grid-cols-1 gap-3 sm:mb-6 sm:grid-cols-2">
+
+
+								<div>
+									<label for="zone-select" class="mb-1 block text-xs font-semibold text-secondary sm:mb-2 sm:text-sm">
+										{{ 'ui.selected_zone'|trans }}
+									</label>
+
+
+									<select id="zone-select" name="zone" class="w-full text-xs sm:text-sm">
+										<option value="">
+											{{ 'ui.loading_zones'|trans }}
+										</option>
+									</select>
+								</div>
+
+
+								<div>
+									<label for="guest-count-input" class="mb-1 block text-xs font-semibold text-secondary sm:mb-2 sm:text-sm">
+										{{ 'ui.guest_count'|trans }}
+									</label>
+
+
+									<input type="number" id="guest-count-input" name="guest_count" min="1" value="1" class="block h-[32px] w-full rounded border border-slate-200 bg-white px-2 py-1 text-xs text-slate-800 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:h-[35px] sm:px-3 sm:py-2 sm:text-sm">
+								</div>
+							</div>
+
+
+							<p class="mt-2 text-xs font-semibold text-secondary sm:mt-4 sm:text-sm">
+								{{ 'ui.description'|trans }}
+							</p>
+
+
+							<p id="location-description" class="mt-1 text-xs leading-5 text-state sm:mt-2 sm:text-sm sm:leading-6">
+								{{ 'ui.default_description'|trans }}
+							</p>
+						</div>
+
+
+						<div class="mb-4 border-b border-slate-200 pb-2 sm:mb-6 sm:pb-3">
+							<div class="flex flex-wrap items-center gap-4 text-xs sm:gap-6 sm:text-sm">
+
+
+								<button type="button" class="booking-mode-link is-active text-xs font-semibold text-secondary transition hover:text-primary sm:text-sm" data-mode="hour" aria-pressed="true">
+									{{ 'ui.booking_by_hour'|trans }}
+								</button>
+
+
+								<button type="button" class="booking-mode-link text-xs font-semibold text-state transition hover:text-primary sm:text-sm" data-mode="period" aria-pressed="false">
+									{{ 'ui.booking_by_period'|trans }}
+								</button>
+							</div>
+						</div>
+
+
+						<div class="flex flex-1 flex-col">
+							<p class="text-sm font-semibold text-secondary">
+								{{ 'ui.summary'|trans }}
+							</p>
+
+
+							<p class="mt-1 text-xs text-state sm:mt-2 sm:text-sm">
+								{{ 'ui.summary_help'|trans }}
+							</p>
+
+
+							<div id="selection-preview" class="mt-3 text-xs leading-5 text-state sm:mt-5 sm:text-sm sm:leading-6">
+								{{ 'ui.no_selection'|trans }}
+							</div>
+
+
+							<div id="price-container" class="mt-2 hidden border-t border-slate-200 pt-2 sm:mt-4 sm:pt-4">
+								<p class="text-xs text-state sm:text-sm">
+									<span class="font-semibold text-secondary">
+										{{ 'ui.price'|trans }}
+									</span>
+
+
+									<span id="price-display" class="text-sm font-bold text-primary sm:text-base">
+										0 ¥
+									</span>
+								</p>
+							</div>
+
+
+							<div id="equipment-section" class="mt-4 sm:mt-6">
+								<div class="flex items-center justify-between gap-2 sm:gap-3">
+									<p class="text-xs font-semibold text-secondary sm:text-sm">
+										{{ 'ui.optional_equipment'|trans }}
+									</p>
+
+
+									<p class="text-right text-[10px] text-state sm:text-xs">
+										{{ 'ui.equipment_availability'|trans }}
+									</p>
+								</div>
+
+
+								<div id="equipment-list" class="mt-2 overflow-hidden divide-y divide-slate-200 rounded-lg border border-slate-200 bg-slate-50 sm:mt-3 sm:rounded-xl">
+									<p class="px-2 py-1 text-[10px] text-state sm:px-3 sm:py-2 sm:text-xs">
+										{{ 'ui.select_for_equipment'|trans }}
+									</p>
+								</div>
+
+
+								<div id="equipment-total-container" class="mt-2 hidden items-center justify-between text-xs sm:mt-3 sm:text-sm">
+									<span class="font-semibold text-secondary">
+										{{ 'ui.equipment_total'|trans }}
+									</span>
+
+
+									<span id="equipment-total-display" class="text-sm font-bold text-primary sm:text-base">
+										0 ¥
+									</span>
+								</div>
+
+
+								<div id="grand-total-container" class="mt-1 hidden items-center justify-between text-xs sm:mt-2 sm:text-sm">
+									<span class="font-semibold text-secondary">
+										{{ 'ui.grand_total'|trans }}
+									</span>
+
+
+									<span id="grand-total-display" class="text-base font-bold text-secondary sm:text-lg">
+										0 ¥
+									</span>
+								</div>
+							</div>
+
+
+							<div id="button_submit_booking" class="mt-4 pt-1 sm:mt-6 sm:pt-2">
+								<div class="mb-3 flex items-start gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2 sm:mb-4 sm:gap-3 sm:rounded-xl sm:p-4">
+									<input id="terms-consent" type="checkbox" required aria-required="true" class="mt-0.5 h-3.5 w-3.5 rounded border-slate-300 text-primary focus:ring-primary sm:mt-1 sm:h-4 sm:w-4">
+									<label for="terms-consent" class="text-xs leading-5 text-state sm:text-sm sm:leading-6">
+										{{ 'ui.terms_consent_before'|trans }}<a href="{{ path('app_terms') }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary underline hover:text-secondary">{{ 'ui.terms_link'|trans }}</a>
+										{{ 'ui.terms_consent_after'|trans }}
+										<span aria-hidden="true" class="text-red-600">*</span>
+									</label>
+								</div>
+								<button id="submit_booking" type="button" class="w-full rounded-lg bg-secondary py-2 text-xs font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg sm:rounded-xl sm:py-3 sm:text-sm">
+									{{ 'ui.submit'|trans }}
+								</button>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
+
 {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('reservation') }}
+	{{ parent() }}
+	{{ encore_entry_script_tags('reservation') }}
 {% endblock %}
