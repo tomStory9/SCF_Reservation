@@ -273,6 +273,7 @@ admin:
       approved: "Approuvée"
       declined: "Refusée"
       paid: "Payée"
+      cancelled: "Remboursée"
     user_status:
       pending: "En attente"
       approved: "Approuvé"

@@ -45,7 +45,7 @@ readonly class RoomBookingService
      * @throws \DateMalformedStringException
      * @throws \Exception
      */
-    public function createRoomBooking(array $data, User $user): void
+    public function createRoomBooking(array $data, User $user): ?string
     {
         $zone = $this->zoneRepository->find($data['roomId']);
 
@@ -118,5 +118,18 @@ readonly class RoomBookingService
         $this->entityManager->flush();
         $this->mailerService->sendRoomBookingConfirmationEmail($booking, $booking->getUserBooking());
         $this->mailerService->sendNewBookingAdmin($booking, $booking->getUserBooking());
+        if ($booking->getTotalPrice() > 0) {
+            return $this->stripePaymentService->createPaymentLink(
+                $booking->getTotalPrice(),
+                $user->getId(),
+                $booking->getId(),
+                'jpy',
+                null,
+                null,
+                true
+            );
+        }
+
+        return null;
     }
 }

@@ -134,6 +134,23 @@ function replaceTextPattern(pattern, replacements = {}) {
     );
 }
 
+function getCalendarHeight() {
+    const width = window.innerWidth || document.documentElement.clientWidth;
+
+    if (width < 640) {
+        // mobile
+        return 320;
+    }
+
+    if (width < 1024) {
+        // tablette
+        return 420;
+    }
+
+    // desktop
+    return 'auto';
+}
+
 export function createCalendar({
     calendarEl,
     config,
@@ -324,7 +341,7 @@ export function createCalendar({
         locale: calendarLocales[config.locale] ?? enGbLocale,
         firstDay: 1,
 
-        height: 'auto',
+        height: getCalendarHeight(),
         contentHeight: 'auto',
         expandRows: false,
 
@@ -653,6 +670,18 @@ export function createCalendar({
                         : '')
             );
         }
+    });
+
+    // Responsive : mettre à jour la hauteur au resize
+    let resizeTimeout;
+
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            if (calendar) {
+                calendar.setOption('height', getCalendarHeight());
+            }
+        }, 150);
     });
 
     return calendar;

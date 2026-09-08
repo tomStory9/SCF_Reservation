@@ -266,6 +266,7 @@ admin:
             approved: 'Approved'
             declined: 'Declined'
             paid: 'Paid'
+            cancelled: 'Reimbursed'
         user_status:
             pending: 'Pending'
             approved: 'Approved'

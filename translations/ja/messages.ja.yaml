@@ -266,6 +266,7 @@ admin:
             approved: '承認済み'
             declined: '却下'
             paid: '支払い済み'
+            cancelled: 'キャンセル済み'
         user_status:
             pending: '承認待ち'
             approved: '承認済み'
