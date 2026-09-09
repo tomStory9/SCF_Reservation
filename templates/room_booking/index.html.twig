@@ -4,125 +4,178 @@
 {% trans_default_domain 'roomReservation' %}
 
 {% block title %}
-    {{ 'page.title'|trans }}
+	{{ 'page.title'|trans }}
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('room_reservation') }}
+	{{ parent() }}
+	{{ encore_entry_link_tags('room_reservation') }}
 {% endblock %}
 
 {% block body %}
-    <script id="room-booking-config" type="application/json">
-        {{ {
-            locale: app.request.locale,
-            blockedPeriods: blockedPeriods|default([]),
-            minDays: minDays,
-            texts: {
-                noSelection: 'js.no_selection'|trans,
-                room: 'js.room'|trans,
-                arrival: 'js.arrival'|trans,
-                departure: 'js.departure'|trans,
-                duration: 'js.duration'|trans,
-                nights: 'js.nights'|trans,
-                warningTitle: 'js.warning_title'|trans,
-                selectDates: 'js.select_dates'|trans,
-                loading: 'js.loading'|trans,
-                errorTitle: 'js.error_title'|trans,
-                bookingError: 'js.booking_error'|trans,
-                acceptTerms: 'js.accept_terms'|trans,
-                networkErrorTitle: 'js.network_error_title'|trans,
-                networkError: 'js.network_error'|trans,
-                submit: 'js.submit'|trans,
-                blockedPeriod: 'js.blocked_period'|trans,
-                reserve: 'js.reserve'|trans,
-            }
-        }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}
-    </script>
+	 <script id="room-booking-config" type="application/json">
+	        {{ {
+	            locale: app.request.locale,
+	            blockedPeriods: blockedPeriods|default([]),
+	            minDays: minDays,
+	            texts: {
+	                noSelection: 'js.no_selection'|trans,
+	                room: 'js.room'|trans,
+	                arrival: 'js.arrival'|trans,
+	                departure: 'js.departure'|trans,
+	                duration: 'js.duration'|trans,
+	                nights: 'js.nights'|trans,
+	                warningTitle: 'js.warning_title'|trans,
+	                selectDates: 'js.select_dates'|trans,
+	                loading: 'js.loading'|trans,
+	                errorTitle: 'js.error_title'|trans,
+	                bookingError: 'js.booking_error'|trans,
+	                acceptTerms: 'js.accept_terms'|trans,
+	                networkErrorTitle: 'js.network_error_title'|trans,
+	                networkError: 'js.network_error'|trans,
+	                submit: 'js.submit'|trans,
+	                blockedPeriod: 'js.blocked_period'|trans,
+	                reserve: 'js.reserve'|trans,
+	            }
+	        }|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}
+	    </script>
 
-    <div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
-        {% include 'user/_partials/_navbar.html.twig' %}
+	<div class="min-h-screen overflow-x-hidden bg-slate-50 text-slate-900">
+		{% include 'user/_partials/_navbar.html.twig' %}
 
-        <div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
-            <div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
+		<div class="mx-auto w-full max-w-[1850px] px-4 py-5 sm:px-6 lg:px-10 xl:px-12">
+			<div class="grid grid-cols-1 items-start gap-6 lg:grid-cols-[minmax(0,1.05fr)_700px]">
 
-                <section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
-                    <div class="mb-5">
-                        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">{{ 'ui.planning'|trans }}</p>
-                        <h2 class="text-xl font-semibold text-secondary">{{ 'ui.calendar_title'|trans }}</h2>
-                    </div>
+				<section class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+					<div class="mb-5">
+						<p class="text-xs font-semibold uppercase tracking-[0.2em] text-state">{{ 'ui.planning'|trans }}</p>
+						<h2 class="text-xl font-semibold text-secondary">{{ 'ui.calendar_title'|trans }}</h2>
+					</div>
 
-                    <div class="flex justify-center">
-                        <div id="calendar-holder" class="reservation-calendar w-full max-w-[940px]"></div>
-                    </div>
-                </section>
+					<div id="calendar-holder" class="
+							        reservation-calendar
+							        w-full
+							        max-w-full
+							        overflow-hidden
+							        text-[9px]
+							        sm:max-w-[940px]
+							        sm:text-sm
+						
+							        [&_.fc]:text-[9px]
+							        sm:[&_.fc]:text-sm
+						
+							        [&_.fc-toolbar]:gap-1
+							        [&_.fc-toolbar]:flex-wrap
+							        sm:[&_.fc-toolbar]:gap-2
+							        sm:[&_.fc-toolbar]:flex-nowrap
+						
+							        [&_.fc-toolbar-title]:text-[11px]
+							        [&_.fc-toolbar-title]:leading-tight
+							        sm:[&_.fc-toolbar-title]:text-lg
+						
+							        [&_.fc-button]:px-1.5
+							        [&_.fc-button]:py-1
+							        [&_.fc-button]:text-[8px]
+							        [&_.fc-button]:leading-none
+							        sm:[&_.fc-button]:px-3
+							        sm:[&_.fc-button]:py-1.5
+							        sm:[&_.fc-button]:text-sm
+						
+							        [&_.fc-col-header-cell]:p-0
+							        [&_.fc-col-header-cell]:text-[8px]
+							        [&_.fc-col-header-cell]:leading-none
+							        sm:[&_.fc-col-header-cell]:text-sm
+						
+							        [&_.fc-col-header-cell-cushion]:px-px
+							        [&_.fc-col-header-cell-cushion]:py-1
+							        [&_.fc-col-header-cell-cushion]:text-[8px]
+							        [&_.fc-col-header-cell-cushion]:leading-none
+							        [&_.fc-col-header-cell-cushion]:whitespace-nowrap
+							        sm:[&_.fc-col-header-cell-cushion]:px-1
+							        sm:[&_.fc-col-header-cell-cushion]:py-2
+							        sm:[&_.fc-col-header-cell-cushion]:text-sm
+						
+							        [&_.fc-daygrid-day]:min-h-[1.75rem]
+							        sm:[&_.fc-daygrid-day]:min-h-[3rem]
+						
+							        [&_.fc-daygrid-day-frame]:min-h-[1.75rem]
+							        sm:[&_.fc-daygrid-day-frame]:min-h-[3rem]
+						
+							        [&_.fc-daygrid-day-number]:px-1
+							        [&_.fc-daygrid-day-number]:py-0.5
+							        [&_.fc-daygrid-day-number]:text-[9px]
+							        [&_.fc-daygrid-day-number]:leading-none
+							        sm:[&_.fc-daygrid-day-number]:px-2
+							        sm:[&_.fc-daygrid-day-number]:py-1
+							        sm:[&_.fc-daygrid-day-number]:text-sm
+						
+							        [&_.fc-daygrid-event]:mx-px
+							        [&_.fc-daygrid-event]:text-[7px]
+							        [&_.fc-daygrid-event]:leading-none
+							        sm:[&_.fc-daygrid-event]:text-xs
+						
+							        [&_.fc-event-title]:text-[7px]
+							        [&_.fc-event-time]:text-[7px]
+							        sm:[&_.fc-event-title]:text-xs
+							        sm:[&_.fc-event-time]:text-xs
+						
+							        [&_.fc-daygrid-more-link]:text-[7px]
+							        sm:[&_.fc-daygrid-more-link]:text-xs
+							    "></div>
 
-                <aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
+				</section>
 
-                    <div class="border-b border-slate-200">
-                        <nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="{{ 'ui.rooms'|trans }}">
-                            {% for room in rooms %}
-                                {% set isActive = loop.first %}
-                                <button type="button"
-                                        class="room-tab rounded-t-xl border px-5 py-3 text-sm font-semibold transition {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}"
-                                        data-room-id="{{ room.id }}"
-                                        data-room-name="{{ room.name }}"
-                                        data-room-pricing="{{ room.pricing|json_encode|e('html_attr') }}"
-                                        aria-selected="{{ isActive ? 'true' : 'false' }}">
-                                    {{ room.name }}
-                                </button>
-                            {% endfor %}
-                        </nav>
-                    </div>
+				<aside class="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6 lg:p-7">
 
-                    <div class="rounded-b-2xl border border-t-0 border-slate-200 bg-white p-6">
-                        <div class="min-h-[360px] flex flex-col">
-                            <p class="text-base font-semibold text-secondary">{{ 'ui.stay_title'|trans }}</p>
-                            <p class="mt-2 text-sm text-state">{{ 'ui.stay_help'|trans }}</p>
+					<div class="border-b border-slate-200">
+						<nav class="-mb-px flex flex-wrap w-full justify-evenly gap-2 sm:gap-3" aria-label="{{ 'ui.rooms'|trans }}">
+							{% for room in rooms %}
+								{% set isActive = loop.first %}
+								<button type="button" class="room-tab rounded-t-xl border px-5 py-3 text-sm font-semibold transition {{ isActive ? 'is-active border-b-0 border-slate-200 bg-white text-primary' : 'border-transparent text-slate-500 hover:text-secondary' }}" data-room-id="{{ room.id }}" data-room-name="{{ room.name }}" data-room-pricing="{{ room.pricing|json_encode|e('html_attr') }}" aria-selected="{{ isActive ? 'true' : 'false' }}">
+									{{ room.name }}
+								</button>
+							{% endfor %}
+						</nav>
+					</div>
 
-                            <div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
-                                {{ 'ui.no_selection'|trans }}
-                            </div>
+					<div class="rounded-b-2xl border border-t-0 border-slate-200 bg-white p-6">
+						<div class="min-h-[360px] flex flex-col">
+							<p class="text-base font-semibold text-secondary">{{ 'ui.stay_title'|trans }}</p>
+							<p class="mt-2 text-sm text-state">{{ 'ui.stay_help'|trans }}</p>
 
-                            <div id="price-container" class="hidden mt-4 pt-4 border-t border-slate-200">
-                                <p class="text-sm text-state flex justify-between items-center">
-                                    <span class="font-semibold text-secondary">{{ 'ui.total'|trans }}</span>
-                                    <span id="price-display" class="text-2xl font-bold text-primary">0 ¥</span>
-                                </p>
-                            </div>
+							<div id="selection-preview" class="mt-5 text-sm leading-6 text-state">
+								{{ 'ui.no_selection'|trans }}
+							</div>
 
-                            <div class="mt-auto pt-6">
-                                <div class="mb-4 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
-                                    <input
-                                        id="terms-consent"
-                                        type="checkbox"
-                                        required
-                                        aria-required="true"
-                                        class="mt-1 h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary"
-                                    >
-                                    <label for="terms-consent" class="text-sm leading-6 text-state">
-                                        {{ 'ui.terms_consent_before'|trans }}<a
-                                            href="{{ path('app_terms') }}"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            class="font-semibold text-primary underline hover:text-secondary"
-                                        >{{ 'ui.terms_link'|trans }}</a>{{ 'ui.terms_consent_after'|trans }}
-                                        <span aria-hidden="true" class="text-red-600">*</span>
-                                    </label>
-                                </div>
-                                <button id="submit_booking" class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg disabled:opacity-50">
-                                    {{ 'ui.submit'|trans }}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </aside>
-            </div>
-        </div>
-    </div>
+							<div id="price-container" class="hidden mt-4 pt-4 border-t border-slate-200">
+								<p class="text-sm text-state flex justify-between items-center">
+									<span class="font-semibold text-secondary">{{ 'ui.total'|trans }}</span>
+									<span id="price-display" class="text-2xl font-bold text-primary">0 ¥</span>
+								</p>
+							</div>
+
+							<div class="mt-auto pt-6">
+								<div class="mb-4 flex items-start gap-3 rounded-xl border border-slate-200 bg-slate-50 p-4">
+									<input id="terms-consent" type="checkbox" required aria-required="true" class="mt-1 h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary">
+									<label for="terms-consent" class="text-sm leading-6 text-state">
+										{{ 'ui.terms_consent_before'|trans }}<a href="{{ path('app_terms') }}" target="_blank" rel="noopener noreferrer" class="font-semibold text-primary underline hover:text-secondary">{{ 'ui.terms_link'|trans }}</a>
+										{{ 'ui.terms_consent_after'|trans }}
+										<span aria-hidden="true" class="text-red-600">*</span>
+									</label>
+								</div>
+								<button id="submit_booking" class="w-full rounded-xl bg-secondary py-3 font-semibold text-white transition duration-200 hover:bg-secondary/90 hover:shadow-lg disabled:opacity-50">
+									{{ 'ui.submit'|trans }}
+								</button>
+							</div>
+						</div>
+					</div>
+				</aside>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('room_reservation') }}
+	{{ parent() }}
+	{{ encore_entry_script_tags('room_reservation') }}
 {% endblock %}
