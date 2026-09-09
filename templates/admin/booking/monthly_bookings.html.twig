@@ -1,18 +1,91 @@
 {% extends '@EasyAdmin/page/content.html.twig' %}
 
 {% block content %}
+    <style>
+        .monthly-bookings-modal .modal-dialog {
+            max-width: min(1140px, calc(100vw - 2rem));
+        }
+
+        .monthly-bookings-modal .modal-content {
+            width: 100%;
+            max-width: 100%;
+            max-height: 90vh;
+            overflow: hidden;
+        }
+
+        .monthly-bookings-modal .modal-body {
+            min-width: 0;
+            overflow-x: hidden !important;
+            overflow-y: auto;
+        }
+
+        .monthly-bookings-modal .row {
+            margin-right: 0;
+            margin-left: 0;
+        }
+
+        .monthly-bookings-modal .row > * {
+            min-width: 0;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table-wrapper {
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table {
+            width: 100%;
+            max-width: 100%;
+            margin-bottom: 0;
+            table-layout: fixed;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table th,
+        .monthly-bookings-modal .monthly-bookings-table td {
+            min-width: 0;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table th:nth-child(1),
+        .monthly-bookings-modal .monthly-bookings-table td:nth-child(1) {
+            width: 20%;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table th:nth-child(2),
+        .monthly-bookings-modal .monthly-bookings-table td:nth-child(2) {
+            width: 20%;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table th:nth-child(3),
+        .monthly-bookings-modal .monthly-bookings-table td:nth-child(3) {
+            width: 18%;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table th:nth-child(4),
+        .monthly-bookings-modal .monthly-bookings-table td:nth-child(4) {
+            width: 25%;
+        }
+
+        .monthly-bookings-modal .monthly-bookings-table th:nth-child(5),
+        .monthly-bookings-modal .monthly-bookings-table td:nth-child(5) {
+            width: 17%;
+        }
+    </style>
+
     <div
-        class="modal d-block"
+        class="modal d-block monthly-bookings-modal"
         tabindex="-1"
         role="dialog"
         style="background: rgba(0, 0, 0, .55);"
     >
         <div
-            class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+            class="modal-dialog modal-xl modal-dialog-centered"
             role="document"
         >
-            <div class="modal-content shadow">
-
+            <div class="modal-content shadow d-flex flex-column">
                 <div class="modal-header">
                     <div>
                         <h4 class="modal-title mb-1">
@@ -31,7 +104,7 @@
                     ></a>
                 </div>
 
-                <div class="modal-body">
+                <div class="modal-body flex-grow-1">
                     <div class="row g-3 mb-4">
                         <div class="col-md-6">
                             <div class="card border-0 bg-light h-100">
@@ -88,8 +161,8 @@
                             {{ 'admin.monthly.empty'|trans }}
                         </div>
                     {% else %}
-                        <div class="table-responsive">
-                            <table class="table table-hover align-middle">
+                        <div class="monthly-bookings-table-wrapper">
+                            <table class="table table-hover align-middle monthly-bookings-table">
                                 <thead>
                                     <tr>
                                         <th>{{ 'admin.monthly.date'|trans }}</th>
@@ -114,24 +187,15 @@
                                         >
                                             <td>
                                                 <strong>
-                                                    {{
-                                                        userBooking.startDate
-                                                        |date('d/m/Y')
-                                                    }}
+                                                    {{ userBooking.startDate|date('d/m/Y') }}
                                                 </strong>
 
                                                 <br>
 
                                                 <small class="text-muted">
-                                                    {{
-                                                        userBooking.startDate
-                                                        |date('H:i')
-                                                    }}
+                                                    {{ userBooking.startDate|date('H:i') }}
                                                     -
-                                                    {{
-                                                        userBooking.endDate
-                                                        |date('H:i')
-                                                    }}
+                                                    {{ userBooking.endDate|date('H:i') }}
                                                 </small>
                                             </td>
 
@@ -160,7 +224,12 @@
                                                     </span>
                                                 {% else %}
                                                     <span class="badge text-bg-secondary">
-                                                        {{ ('admin.enum.booking_status.' ~ userBooking.bookingStatus.value)|trans }}
+                                                        {{
+                                                            (
+                                                                'admin.enum.booking_status.'
+                                                                ~ userBooking.bookingStatus.value
+                                                            )|trans
+                                                        }}
                                                     </span>
                                                 {% endif %}
                                             </td>
@@ -198,7 +267,6 @@
                         {{ 'admin.monthly.back'|trans }}
                     </a>
                 </div>
-
             </div>
         </div>
     </div>
