@@ -50,6 +50,11 @@ class StripePaiementService
                 'user_id' => $userId,
                 'is_hold' => $isHold ? 'true' : 'false',
             ],
+            'payment_intent_data' => [
+                'metadata' => [
+                    'lieu' => 'koda',
+                ],
+            ],
             'success_url' => $this->defaultUri.'/paiement/success?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => $this->defaultUri.'/paiement/cancel',
         ];
