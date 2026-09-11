@@ -24,12 +24,13 @@ class StripePaiementService
         int $price,
         int $userId,
         int $reservationId,
+        string $location,
         string $currency = 'jpy',
         ?string $name = null,
         ?string $description = null,
         bool $isHold = true
     ): string {
-        $name ??= $this->translator->trans('stripe.booking_name');
+        $name ??= $this->translator->trans('stripe.booking_name').' - '.$location;
         $description ??= $this->translator->trans('stripe.booking_description');
 
         $sessionData = [

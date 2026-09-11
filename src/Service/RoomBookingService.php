@@ -21,7 +21,8 @@ readonly class RoomBookingService
         private EntityManagerInterface $entityManager,
         private ValidatorInterface $validator,
         private TranslatorInterface $translator,
-        private readonly MailerService $mailerService
+        private readonly MailerService $mailerService,
+        private readonly StripePaiementService $stripePaymentService
     ) {
     }
 
@@ -124,6 +125,7 @@ readonly class RoomBookingService
                 $user->getId(),
                 $booking->getId(),
                 'jpy',
+                $booking->getZone()->getName(),
                 null,
                 null,
                 true
