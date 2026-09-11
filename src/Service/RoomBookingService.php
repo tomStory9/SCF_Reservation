@@ -124,8 +124,8 @@ readonly class RoomBookingService
                 $booking->getTotalPrice(),
                 $user->getId(),
                 $booking->getId(),
-                'jpy',
                 $booking->getZone()->getName(),
+                'jpy',
                 null,
                 null,
                 true

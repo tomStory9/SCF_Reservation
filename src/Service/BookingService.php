@@ -252,8 +252,8 @@ readonly class BookingService
                 $booking->getTotalPrice(),
                 $user->getId(),
                 $booking->getId(),
-                'jpy',
                 $booking->getZone()->getName(),
+                'jpy',
                 null,
                 null,
                 true
@@ -295,8 +295,8 @@ readonly class BookingService
                 $booking->getTotalPrice(),
                 $booking->getUserBooking()->getId(),
                 $booking->getId(),
-                'jpy',
                 $booking->getZone()->getName(),
+                'jpy',
                 null,
                 null,
                 false
