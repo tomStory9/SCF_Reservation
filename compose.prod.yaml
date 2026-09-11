@@ -50,7 +50,7 @@ services:
       default:
       caddy:
     labels:
-      caddy: adminer.reservation.or.jp
+      caddy: adminer.reservation.scf.or.jp
       caddy.reverse_proxy: "{{upstreams 80}}"
 
 networks:
