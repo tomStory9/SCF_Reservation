@@ -28,7 +28,7 @@ services:
       default:
       caddy:
     labels:
-      caddy: reservation.scf.panini.simon511000.fr
+      caddy: reservation.scf.or.jp
       caddy.reverse_proxy: "{{upstreams 80}}"
 
   messenger:
@@ -50,7 +50,7 @@ services:
       default:
       caddy:
     labels:
-      caddy: adminer.reservation.scf.panini.simon511000.fr
+      caddy: adminer.reservation.or.jp
       caddy.reverse_proxy: "{{upstreams 80}}"
 
 networks:
