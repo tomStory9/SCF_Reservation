@@ -77,7 +77,10 @@ class LineAuthenticator extends OAuth2Authenticator implements AuthenticationEnt
                     $user->setIsVerified(true);
                     $user->setPhone($lineData['phone_number'] ?? ''); // TODO : try with a line account with phone number added and name lastname or find other solution
                     $user->setIsVerified(false);
-
+                    $user->setNationalitie('');
+                    $user->setResidenceCity('');
+                    $user->setBirthDate(new \DateTimeImmutable('1970-01-01'));
+                    $user->setPracticeStartYear((int) date('Y'));
                     $settings = $this->settingsRepository->getSettings();
                     if ($settings->isUserValidationRequired()) {
                         $user->setUserStatus(UserStatus::PENDING);

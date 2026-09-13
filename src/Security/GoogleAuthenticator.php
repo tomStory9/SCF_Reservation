@@ -78,6 +78,10 @@ class GoogleAuthenticator extends OAuth2Authenticator implements AuthenticationE
                     $user->setPhone($googleData['phone_number'] ?? '');
                     $user->setFilledInfo(false);
                     $user->setIsVerified(true);
+                    $user->setNationalitie('');
+                    $user->setResidenceCity('');
+                    $user->setBirthDate(new \DateTimeImmutable('1970-01-01'));
+                    $user->setPracticeStartYear((int) date('Y'));
                     $settings = $this->settingsRepository->getSettings();
 
                     if ($settings->isUserValidationRequired()) {
