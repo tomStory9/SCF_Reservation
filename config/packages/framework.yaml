@@ -6,6 +6,9 @@ framework:
     assets:
         json_manifest_path: '%kernel.project_dir%/public/build/manifest.json'
     # Note that the session will be started ONLY if you read or write from it.
+    trusted_proxies: '%env(TRUSTED_PROXIES)%'
+    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
+    
     session:
         enabled: true
         handler_id: null
@@ -13,9 +16,7 @@ framework:
         cookie_samesite: lax
     #esi: true
     #fragments: true
-    trusted_proxies: '%env(TRUSTED_PROXIES)%'
-    trusted_headers: ['x-forwarded-for', 'x-forwarded-host', 'x-forwarded-proto', 'x-forwarded-port', 'x-forwarded-prefix']
-    
+
 when@test:
     framework:
         test: true
